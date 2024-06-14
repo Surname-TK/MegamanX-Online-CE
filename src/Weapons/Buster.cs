@@ -139,7 +139,7 @@ public class Buster : Weapon {
 						shootTime = 0;
 					}
 					player.character.changeState(new X3ChargeShot(null), true);
-					shootSound = "";
+				// nothing else needs to be here, right?
 				}
 			} else if (player.hasArmArmor(0) || player.hasArmArmor(1)) {
 				new Anim(pos.clone(), "buster4_muzzle_flash", xDir, null, true);
@@ -226,6 +226,7 @@ public class BusterProj : Projectile {
 		fadeSprite = "buster1_fade";
 		reflectable = true;
 		maxTime = 0.5175f;
+		fadeOnAutoDestroy = true;
 		if (type == 0) projId = (int)ProjIds.Buster;
 		else if (type == 1) projId = (int)ProjIds.ZBuster;
 
@@ -251,6 +252,7 @@ public class Buster2Proj : Projectile {
 		reflectable = true;
 		maxTime = 0.5f;
 		projId = (int)ProjIds.Buster2;
+		fadeOnAutoDestroy = true;
 		/*
 		var busterWeapon = weapon as Buster;
 		if (busterWeapon != null) {
@@ -280,6 +282,7 @@ public class Buster3Proj : Projectile {
 		this.type = type;
 		maxTime = 0.5f;
 		fadeSprite = "buster3_fade";
+		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.Buster3;
 		reflectable = true;
 
@@ -290,6 +293,17 @@ public class Buster3Proj : Projectile {
 		// Regular yellow charge
 		if (type == 0) {
 			damager.flinch = Global.halfFlinch;
+			damager.damage = 3;
+			projId = (int)ProjIds.Buster3;
+			reflectable = true;
+			fadeSprite = "buster3_fade";
+			fadeOnAutoDestroy = true;
+			if (player.hasArmArmor(ArmorId.Giga)) {
+				changeSprite("buster3_x2", true);
+				}
+			if (player.hasArmArmor(ArmorId.Max)) {
+				changeSprite("buster3_x3", true);
+			}
 		}
 		// Double buster part 1
 		if (type == 1) {
@@ -310,32 +324,82 @@ public class Buster3Proj : Projectile {
 			projId = (int)ProjIds.Buster4;
 			reflectable = false;
 		}
-		// X3 buster part 1
-		if (type == 3) {
+		// Max buster Final Part
+		if (type == 5) {
 			damager.damage = 4;
+			damager.flinch = Global.defFlinch;
 			changeSprite("buster4_x3", true);
 			fadeSprite = "buster4_x2_fade";
 			vel.x = 0;
-			maxTime = 0.75f;
 			projId = (int)ProjIds.Buster4;
 			reflectable = false;
+			fadeOnAutoDestroy = true;
 		}
-		/*var busterWeapon = weapon as Buster;
-		if (busterWeapon != null) {
-			damager.damage = busterWeapon.getDamage(damager.damage);
-		}*/
-		fadeOnAutoDestroy = true;
-	}
+		// Used to be Max Buster part 1, can easily be deleted at this point
+		if (type == 3) {
+			damager.damage = 3;
+			changeSprite("buster4", true);
+			fadeSprite = "buster4_x2_fade";
+			vel.x = 0;
+			maxTime = 1f;
+			projId = (int)ProjIds.Buster3;
+			reflectable = false; 
+			}
 
+		// Max Buster part 2, it could be removed in favor of spawning the type 0 as the second shot
+		if (type == 4) {
+			damager.flinch = Global.halfFlinch;
+			damager.damage = 3;
+			changeSprite("buster3_x3", true);
+			maxTime = 0.50f;
+			projId = (int)ProjIds.Buster3;
+			reflectable = false;
+			}
+	}
+	// Down here is where the Cross Shot actually happens
+	public override void onCollision(CollideData other) {
+		base.onCollision(other);	
+				if (type == 4) {
+				if (!ownedByLocalPlayer) return;
+				if (other.gameObject is BusterX3Proj1 && ownedByLocalPlayer && !destroyed) {
+					fadeSprite = "buster4_x3_muzzle"; destroySelf();
+					Global.level.delayedActions.Add(new DelayedAction(delegate { 
+					new Buster3Proj(weapon, pos, xDir, 5, owner, owner.getNextActorNetId(), rpc: true);
+					new BusterX3Proj3(weapon, pos, xDir, 0, owner, owner.getNextActorNetId(), rpc: true);
+					new BusterX3Proj3(weapon, pos, xDir, 1, owner, owner.getNextActorNetId(), rpc: true);
+					new BusterX3Proj3(weapon, pos, xDir, 2, owner, owner.getNextActorNetId(), rpc: true);
+					new BusterX3Proj3(weapon, pos, xDir, 3, owner, owner.getNextActorNetId(), rpc: true);
+					}, 20f / 60f ));
+			}
+	}
+}
 	public override void update() {
 		base.update();
 		if (type == 3) {
-			vel.x += Global.spf * xDir * 550;
-			if (MathF.Abs(vel.x) > 300) vel.x = 300 * xDir;
+			vel.x += Global.spf * xDir * 325;
+			if (MathF.Abs(vel.x) > 400) vel.x = 400 * xDir;
 			partTime += Global.spf;
 			if (partTime > 0.05f) {
 				partTime = 0;
-				new Anim(pos.addRand(0, 16), "buster4_x3_part", 1, null, true) { acc = new Point(-vel.x * 3f, 0) };
+				new Anim(pos.addRand(0, 16), "buster4_x3_part", 1, null, true) { acc = new Point(Math.Abs(vel.x + 10) * 3f * -xDir, 0) };
+				}
+		}
+		if (type == 4 || type == 0 && owner.hasArmArmor(ArmorId.Max)) {
+			vel.x += Global.spf * xDir * 550;
+			if (MathF.Abs(vel.x) > 350) vel.x = 350 * xDir;
+			partTime += Global.spf;
+			if (partTime > 0.075f) {
+			partTime = 0;
+			new Anim(pos.addxy(20 * xDir, 0).addRand(0, 16), "buster4_x3_part", 1, null, true) {acc = new Point(-vel.x / 2, 0) };
+		}
+	}
+		if (type == 5) {
+			vel.x += Global.spf * xDir * 450;
+			if (MathF.Abs(vel.x) > 350) { vel.x = 350 * xDir; }
+			partTime += Global.spf;
+			if (partTime > 0.05f) {
+				partTime = 0;
+				new Anim(pos.addRand(0, 16), "buster4_x3_part", 1, null, true) { acc = new Point((MathF.Abs(vel.x) + 50) * 3f * -xDir, 0) };
 			}
 		}
 	}
@@ -542,17 +606,8 @@ public class X3ChargeShot : CharState {
 				Point shootPos = character.getShootPos();
 				int shootDir = character.getShootXDir();
 				if (!player.hasUltimateArmor()) {
-					new Anim(
-						shootPos, "buster4_x3_muzzle", shootDir,
-						player.getNextActorNetId(), true, sendRpc: true
-					);
-					new Buster3Proj(
-						player.weapon, shootPos, shootDir,
-						3, player, player.getNextActorNetId(), rpc: true
-					);
-					if (!(player.weapon is HyperBuster)) {
-						character.playSound("buster3X3", sendRpc: true);
-					}
+					new BusterX3Proj1(player.weapon, shootPos, shootDir, 0, player, player.getNextActorNetId(), rpc: true);
+					character.playSound("buster3X3", sendRpc: true);
 				} else {
 					new Anim(shootPos, "buster4_muzzle_flash", shootDir, null, true);
 					new BusterPlasmaProj(
@@ -565,24 +620,13 @@ public class X3ChargeShot : CharState {
 				if (hyperBusterWeapon != null) {
 					hyperBusterWeapon.ammo -= hyperBusterWeapon.getChipFactoredAmmoUsage(player);
 				}
-				character.playSound("buster3X3", sendRpc: true);
 				float xDir = character.getShootXDir();
-				new BusterX3Proj2(
-					player.weapon, character.getShootPos().addxy(6 * xDir, -2), character.getShootXDir(), 0,
+
+				new Buster3Proj(
+					player.weapon, character.getShootPos(), character.getShootXDir(), 4,
 					player, player.getNextActorNetId(), rpc: true
 				);
-				new BusterX3Proj2(
-					player.weapon, character.getShootPos().addxy(6 * xDir, -2), character.getShootXDir(), 1,
-					player, player.getNextActorNetId(), rpc: true
-				);
-				new BusterX3Proj2(
-					player.weapon, character.getShootPos().addxy(6 * xDir, -2), character.getShootXDir(), 2,
-					player, player.getNextActorNetId(), rpc: true
-				);
-				new BusterX3Proj2(
-					player.weapon, character.getShootPos().addxy(6 * xDir, -2), character.getShootXDir(), 3,
-					player, player.getNextActorNetId(), rpc: true
-				);
+				character.playSound("buster3X3", sendRpc: true);
 			}
 		}
 		if (character.isAnimOver()) {
@@ -668,6 +712,113 @@ public class X3ChargeShot : CharState {
 	}
 }
 
+public class BusterX3Proj1 : Projectile {
+	public int type;
+	public List<Sprite> spriteMids = new List<Sprite>();
+	float offsetTime = 0;
+	float initY = 0;
+	float line1Y = 0;
+	float line2Y = -2;
+	float line3Y = 2;
+	float partTime;
+		public BusterX3Proj1(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
+		base(weapon, pos, xDir, 350, 1, player, "buster2", Global.halfFlinch, 0f, netProjId, player.ownedByLocalPlayer) {
+		this.type = type;
+		maxTime = 1.05f;
+		vel.x = 0;
+		fadeSprite = "buster3_fade";
+		fadeOnAutoDestroy = true;
+		projId = (int)ProjIds.BusterX3Proj1;
+		reflectable = false;
+		// probably could delete this part as well
+		for (int i = 0; i < 6; i++) {
+				var midSprite = Global.sprites["buster4_max_orb2"].clone();
+				spriteMids.Add(midSprite);
+			}
+
+		if (rpc) {
+			rpcCreate(pos, player, netProjId, xDir, (byte)type);
+		}
+
+	}
+	public override void update() {
+		base.update();
+		vel.x += Global.spf * xDir * 325;
+		if (MathF.Abs(vel.x) > 400) { vel.x = 400 * xDir; }
+		base.frameIndex = type;
+		float currentOffsetTime = offsetTime;
+		if (time < 5f / 60f) {
+			currentOffsetTime *= time / 5f * 60f;
+		}
+		float zLayer = 0;
+		line1Y = initY + (MathF.Sin((time + currentOffsetTime) * (MathF.PI * 6)) * 15f);
+		line2Y = initY + (MathF.Sin((time + currentOffsetTime) * (MathF.PI * 6)) * 15f);
+		line3Y = initY + (MathF.Sin((time + currentOffsetTime) * (MathF.PI * 6)) * 15f);
+		float y = initY + (MathF.Sin((time + currentOffsetTime) * (MathF.PI * 6)) * 15f);
+		if (y > 0) zLayer = 1;
+		else if (y < 0) zLayer = -1;
+		new Anim(new Point(pos.x - 4, pos.y + line1Y), "buster4_max_orb1", 1, null, true, zIndex == zLayer);
+		new Anim(new Point(pos.x, pos.y - 4 + (line2Y * -1)), "buster4_max_orb2", xDir, null, true, zIndex == zLayer);
+		new Anim(new Point(pos.x + 4, pos.y + line3Y), "buster4_max_orb3", xDir, null, true, zIndex == zLayer);
+	}
+	// might also have to delete this
+	 /* public override void render(float x, float y) {
+		base.render(x, y);
+			float piHalf = MathF.PI / 2;
+			float xOffset = 8;
+			float partTime = (time * 0.75f);
+			for (int i = 0; i < 6; i++) {
+				float t = 0;
+				float xOff2 = 0;
+				float sinX = 0;
+				if (i < 3) {
+					t = partTime - (i * 0.025f);
+					xOff2 = i * xDir * 3;
+					sinX = 5 * MathF.Cos(partTime * 20);
+				} else {
+					t = partTime + (MathF.PI / 4) - ((i - 3) * 0.025f);
+					xOff2 = (i - 3) * xDir * 3;
+					sinX = 5 * MathF.Sin((partTime) * 20);
+				}
+				float sinY = 15 * MathF.Sin(t * 20);
+				long zIndexTarget = zIndex - 1;
+				float currentOffset = (t * 20) % (MathF.PI * 2);
+				if (currentOffset > piHalf && currentOffset < piHalf * 3) {
+					zIndexTarget = zIndex + 1;
+				}
+				spriteMids[i].draw(
+					spriteMids[i].frameIndex,
+					pos.x + x + sinX - xOff2 + xOffset,
+					pos.y + y + sinY, xDir, yDir,
+					getRenderEffectSet(), 1, 1, 1, zIndexTarget
+				);
+				spriteMids[i].update();
+			}
+		} */
+	public override void onCollision(CollideData other) {
+		base.onCollision(other);
+		if(ownedByLocalPlayer && !destroyed)
+			if(other.gameObject is Buster3Proj){
+				Global.level.delayedActions.Add(new DelayedAction(delegate { 
+					fadeSprite = null;
+					// is there any better code to use no fadeSprite?
+					destroySelf();
+					}, 2f / 60f ));
+			}
+		}
+	// This down here is meant for the split shot when hitting another character
+	public override void onHitDamagable(IDamagable damagable) {
+		base.onHitDamagable(damagable);
+		if (ownedByLocalPlayer) {
+				destroySelf();
+				Global.level.delayedActions.Add(new DelayedAction(delegate { 
+					new BusterX3Proj2(weapon, pos, xDir, 0, owner, owner.getNextActorNetId(), rpc: true);
+					new BusterX3Proj2(weapon, pos, xDir, 1, owner, owner.getNextActorNetId(), rpc: true);
+				}, 2f / 60f ));
+		}
+	}
+}
+
 public class BusterX3Proj2 : Projectile {
 	public int type = 0;
 	public List<Point> lastPositions = new List<Point>();
@@ -675,19 +826,62 @@ public class BusterX3Proj2 : Projectile {
 		Weapon weapon, Point pos, int xDir, int type,
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 400, 1,
+		weapon, pos, xDir, 400, 2,
+		player, type == 0 || type == 1 ? "buster4_max_orb1" : "buster4_max_orb3",
+		0, 0, netProjId, player.ownedByLocalPlayer
+	) {
+		fadeSprite = "buster4_fade";
+		this.type = type;
+		reflectable = true;
+		maxTime = 1f;
+		projId = (int)ProjIds.BusterX3Proj2;
+		if (type == 0) { changeSprite("buster4_max_orb3", true); vel = new Point(-250 * xDir, -75);}
+		if (type == 1) { changeSprite("buster4_max_orb1", true); vel = new Point(-250 * xDir, 75);}
+		frameSpeed = 0;
+		frameIndex = 0;
+
+		if (rpc) {
+			rpcCreate(pos, player, netProjId, xDir, (byte)type);
+		}
+	}
+
+	public override void update() {
+		base.update();
+		float maxSpeed = 300;
+		vel.inc(new Point(Global.spf * 750 * xDir, 0));
+		if (MathF.Abs(vel.x) > maxSpeed) vel.x = maxSpeed * xDir;
+		lastPositions.Add(pos);
+		if (lastPositions.Count > 4) lastPositions.RemoveAt(0);
+	}
+
+	public override void render(float x, float y) {
+		string spriteName = type == 0 || type == 1 ? "buster4_max_orb3" : "buster4_max_orb1";
+		//if (lastPositions.Count > 3) Global.sprites[spriteName].draw(1, lastPositions[3].x + x, lastPositions[3].y + y, 1, 1, null, 1, 1, 1, zIndex);
+		if (lastPositions.Count > 2) Global.sprites[spriteName].draw(2, lastPositions[2].x + x, lastPositions[2].y + y, 1, 1, null, 1, 1, 1, zIndex);
+		if (lastPositions.Count > 1) Global.sprites[spriteName].draw(3, lastPositions[1].x + x, lastPositions[1].y + y, 1, 1, null, 1, 1, 1, zIndex);
+		base.render(x, y);
+	}
+}
+public class BusterX3Proj3 : Projectile {
+	public int type = 0;
+	public List<Point> lastPositions = new List<Point>();
+	public BusterX3Proj3(
+		Weapon weapon, Point pos, int xDir, int type,
+		Player player, ushort netProjId, bool rpc = false
+	) : base(
+		weapon, pos, xDir, 400, 2,
 		player, type == 0 || type == 3 ? "buster4_x3_orbit" : "buster4_x3_orbit2",
 		0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		fadeSprite = "buster4_fade";
 		this.type = type;
 		reflectable = true;
-		maxTime = 0.675f;
-		projId = (int)ProjIds.BusterX3Proj2;
-		if (type == 0) vel = new Point(-200 * xDir, -100);
-		if (type == 1) vel = new Point(-150 * xDir, -50);
-		if (type == 2) vel = new Point(-150 * xDir, 50);
-		if (type == 3) vel = new Point(-200 * xDir, 100);
+		maxTime = 1f;
+		projId = (int)ProjIds.BusterX3Proj3;
+		if (type == 0) vel = new Point(-450 * xDir, -75);
+		if (type == 1) vel = new Point(-400 * xDir, -50);
+		if (type == 2) vel = new Point(-400 * xDir, 50);
+		if (type == 3) vel = new Point(-450 * xDir, 75);
 		frameSpeed = 0;
 		frameIndex = 0;
 
