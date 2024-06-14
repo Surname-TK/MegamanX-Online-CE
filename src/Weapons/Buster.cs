@@ -329,6 +329,7 @@ public class Buster3Proj : Projectile {
 				changeSprite("buster3_x3", true);
 			}
 		}
+		
 		// Double buster part 1
 		if (type == 1) {
 			damager.flinch = Global.defFlinch;
