@@ -72,8 +72,14 @@ public partial class RPCCreateProj : RPC {
 			case (int)ProjIds.Buster3:
 				proj = new Buster3Proj(new Buster(), pos, xDir, extraData[0], player, netProjByte);
 				break;
+			case (int)ProjIds.BusterX3Proj1:
+				proj = new BusterX3Proj1(new Buster(), pos, xDir, extraData[0], player, netProjByte);
+				break;
 			case (int)ProjIds.BusterX3Proj2:
 				proj = new BusterX3Proj2(new Buster(), pos, xDir, extraData[0], player, netProjByte);
+				break;
+			case (int)ProjIds.BusterX3Proj3:
+				proj = new BusterX3Proj3(new Buster(), pos, xDir, extraData[0], player, netProjByte);
 				break;
 			case (int)ProjIds.BusterX3Plasma:
 				proj = new BusterPlasmaProj(new Buster(), pos, xDir, player, netProjByte);
