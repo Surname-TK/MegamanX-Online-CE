@@ -524,7 +524,6 @@ public partial class Character : Actor, IDamagable {
 	}
 
 	public virtual bool canWallClimb() {
-		if (!charState.normalCtrl) return false;
 		if (rideArmorPlatform != null) return false;
 		if (isSoftLocked()) return false;
 		if (charState is VileHover) {
@@ -1072,7 +1071,7 @@ public partial class Character : Actor, IDamagable {
 		}
 
 		if (player.isVile && !player.isAI && !player.isDisguisedAxl && player.getVileWeightActive() > VileLoadout.maxWeight && charState is not WarpIn && charState is not Die) {
-			applyDamage(null, null, Damager.envKillDamage, null);
+			applyDamage(Damager.envKillDamage, player, this, null, null);
 			return;
 		}
 
@@ -1103,7 +1102,7 @@ public partial class Character : Actor, IDamagable {
 				if (charState is not Die) {
 					incPos(new Point(0, 25));
 				}
-				applyDamage(null, null, Damager.envKillDamage, null);
+				applyDamage(Damager.envKillDamage, player, this, null, null);
 			}
 		}
 
@@ -1188,7 +1187,7 @@ public partial class Character : Actor, IDamagable {
 
 	public override void statePostUpdate() {
 		base.statePostUpdate();
-		charState.frameTime += 1f * Global.speedMul;
+		charState.stateFrames += 1f * Global.speedMul;
 	}
 
 	public virtual bool updateCtrl() {
@@ -1201,8 +1200,9 @@ public partial class Character : Actor, IDamagable {
 		if (charState.exitOnAirborne && !grounded) {
 			changeState(new Fall());
 		}
-		if (((canWallClimb() && !grounded &&
-			charState.airMove && vel.y > 0) || charState is WallSlide) &&
+		if (canWallClimb() &&
+			(charState.normalCtrl || charState.airMove || charState is WallSlide) &&
+			!grounded && vel.y >= 0 &&
 			wallKickTimer <= 0 &&
 			player.input.isPressed(Control.Jump, player) &&
 			(charState.wallKickLeftWall != null || charState.wallKickRightWall != null)
@@ -1234,7 +1234,11 @@ public partial class Character : Actor, IDamagable {
 				xDir = -wallKickDir;
 			}
 			wallKickTimer = maxWallKickTime;
-			changeState(new WallKick(), true);
+			if (charState.normalCtrl || charState is WallSlide) {
+				changeState(new WallKick(), true);
+			} else {
+				playSound("jump", sendRpc: true);
+			}
 			var wallSparkPoint = pos.addxy(12 * xDir, 0);
 			var rect = new Rect(wallSparkPoint.addxy(-2, -2), wallSparkPoint.addxy(2, 2));
 			if (Global.level.checkCollisionShape(rect.getShape(), null) != null) {
@@ -1252,6 +1256,20 @@ public partial class Character : Actor, IDamagable {
 		}
 		if (charState.airMove && !grounded) {
 			airMove();
+		}
+		if (charState.canJump && (grounded || canAirJump())) {
+			if (player.input.isPressed(Control.Jump, player)) {
+				if (!grounded) {
+					dashedInAir++;
+				} else {
+					grounded = false;
+				}
+				vel.y = -getJumpPower();
+				playSound("jump", sendRpc: true);
+				if (charState.airSprite != null && charState.airSprite != "") {
+					changeSprite(charState.airSprite, false);
+				}
+			}
 		}
 		if (charState.normalCtrl) {
 			normalCtrl();
@@ -2012,7 +2030,10 @@ public partial class Character : Actor, IDamagable {
 		if (shootAnimTime > 0 && newState.canShoot() == true) {
 			changeSprite(getSprite(newState.shootSprite), true);
 		} else {
-			if (sprite != null && sprite.name == newState.sprite && this is not MegamanX) {
+			string spriteName = sprite?.name ?? "";
+			changeSprite(getSprite(newState.sprite), true);
+
+			if (sprite != null && spriteName == sprite.name && this is not MegamanX) {
 				sprite.frameIndex = 0;
 				sprite.frameTime = 0;
 				sprite.time = 0;
@@ -2020,7 +2041,6 @@ public partial class Character : Actor, IDamagable {
 				sprite.loopCount = 0;
 				sprite.visible = true;
 			}
-			changeSprite(getSprite(newState.sprite), true);
 		}
 		CharState? oldState = charState;
 		oldState?.onExit(newState);
@@ -2625,7 +2645,7 @@ public partial class Character : Actor, IDamagable {
 		deductLabelY(labelNameOffY);
 	}
 
-	public void applyDamage(Player attacker, int? weaponIndex, float fDamage, int? projId) {
+	public virtual void applyDamage(float fDamage, Player? attacker, Actor? actor, int? weaponIndex, int? projId) {
 		if (!ownedByLocalPlayer) return;
 		decimal damage = decimal.Parse(fDamage.ToString());
 		decimal originalDamage = damage;
@@ -2635,7 +2655,7 @@ public partial class Character : Actor, IDamagable {
 		MegamanX? mmx = this as MegamanX;
 
 		// For Dark Hold break.
-		if (damage > 0 && charState is DarkHoldState dhs && dhs.frameTime > 10 && !Damager.isDot(projId)) {
+		if (damage > 0 && charState is DarkHoldState dhs && dhs.stateFrames > 10 && !Damager.isDot(projId)) {
 			changeToIdleOrFall();
 		}
 
@@ -3015,7 +3035,7 @@ public partial class Character : Actor, IDamagable {
 			return;
 		}
 		if (charState is Hurt hurtState) {
-			if (hurtState.frameTime <= flinchFrames) {
+			if (hurtState.stateFrames <= flinchFrames) {
 				// You can probably add a check here that sets "hurtState.yStartPos" to null if you.
 				// Want to add a flinch attack that pushes up on chain-flinch.
 				changeState(new Hurt(dir, flinchFrames, false, hurtState.flinchYPos), true);

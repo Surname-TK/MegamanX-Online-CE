@@ -1056,16 +1056,15 @@ public partial class Player {
 				throw new Exception("Error: Non-valid char ID: " + charNum);
 			}
 			// Hyper mode overrides (POST)
-			if (Global.level.isHyper1v1() && ownedByLocalPlayer) {
+			if (Global.level.isHyperMatch() && ownedByLocalPlayer) {
 				if (isX) {
 					setUltimateArmor(true);
 				}
 				if (character is Zero zero) {
 					if (loadout.zeroLoadout.hyperMode == 0) {
-						zero.blackZeroTime = 100000;
+						zero.blackZeroTime = Zero.maxBlackZeroTime;
 					} else {
-						zero.awakenedZeroTime = 0;
-						currency = 9999;
+						zero.awakenedPhase = 1;
 					}
 				}
 				if (character is Axl axl) {
@@ -2086,7 +2085,7 @@ public partial class Player {
 	}
 
 	public void maverick1v1Kill() {
-		character?.applyDamage(null, null, 1000, null);
+		character?.applyDamage(1000, null, null, null, null);
 		character?.destroySelf();
 		character = null;
 		respawnTime = getRespawnTime() * (suicided ? 2 : 1);
@@ -2098,17 +2097,17 @@ public partial class Player {
 	public void forceKill() {
 		if (maverick1v1 != null && Global.level.is1v1()) {
 			//character?.applyDamage(null, null, 1000, null);
-			currentMaverick?.applyDamage(null, null, 1000, null);
+			currentMaverick?.applyDamage(1000, this, character, null, null);
 			return;
 		}
 
 		if (currentMaverick != null && isTagTeam()) {
 			destroyCharacter();
 		} else {
-			character?.applyDamage(null, null, 1000, null);
+			character?.applyDamage(1000, this, character, null, null);
 		}
 		foreach (var maverick in mavericks) {
-			maverick.applyDamage(null, null, 1000, null);
+			maverick.applyDamage(1000, this, character, null, null);
 		}
 	}
 

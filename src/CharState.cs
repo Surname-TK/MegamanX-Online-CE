@@ -21,7 +21,7 @@ public class CharState {
 	public Collider wallKickLeftWall;
 	public Collider wallKickRightWall;
 	public float stateTime;
-	public float frameTime;
+	public float stateFrames;
 	public string enterSound;
 	public float framesJumpNotHeld = 0;
 	public bool once;
@@ -57,6 +57,7 @@ public class CharState {
 	public bool[] altCtrls = new bool[1];
 	public bool normalCtrl;
 	public bool airMove;
+	public bool canJump;
 	public bool canStopJump;
 	public bool exitOnLanding;
 	public bool exitOnAirborne;
@@ -133,7 +134,7 @@ public class CharState {
 			character.stopMoving();
 		}
 		wasGrounded = character.grounded;
-		if (this is not Jump && oldState?.canStopJump == false) {
+		if (this is not Jump and not WallKick && oldState?.canStopJump == false) {
 			canStopJump = false;
 		}
 	}
@@ -609,7 +610,7 @@ public class Run : CharState {
 		base.update();
 		var move = new Point(0, 0);
 		float runSpeed = character.getRunSpeed();
-		if (frameTime <= 4) {
+		if (stateFrames <= 4) {
 			runSpeed = 60 * character.getRunDebuffs();
 		}
 		if (player.input.isHeld(Control.Left, player)) {
