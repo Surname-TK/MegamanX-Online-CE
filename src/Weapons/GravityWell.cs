@@ -5,7 +5,8 @@ namespace MMXOnline;
 public class GravityWell : Weapon {
 	public GravityWell() : base() {
 		shootSounds = new string[] { "buster", "buster", "buster", "warpIn" };
-		rateOfFire = 0.5f;
+		rateOfFire = 2.25f;
+		switchCooldown = 2;
 		index = (int)WeaponIds.GravityWell;
 		weaponBarBaseIndex = 22;
 		weaponBarIndex = weaponBarBaseIndex;
@@ -16,7 +17,7 @@ public class GravityWell : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 2;
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -55,7 +56,7 @@ public class GravityWellProj : Projectile, IDamagable {
 	float velX;
 
 	public GravityWellProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 2, player, "gravitywell_start", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 1, player, "gravitywell_start", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		maxActiveTime = 2;
 		maxTime = maxActiveTime + 5;
 		projId = (int)ProjIds.GravityWell;

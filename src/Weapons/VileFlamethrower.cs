@@ -33,7 +33,7 @@ public class VileFlamethrower : Weapon {
 			displayName = "Wild Horse Kick";
 			projSprite = "flamethrower_whk";
 			projFadeSprite = "flamethrower_whk_fade";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			projId = (int)ProjIds.WildHorseKick;
 			description = new string[] { "Shoot jets of flame from your leg.", "Strong, but not energy efficient." };
 			killFeedIndex = 117;
@@ -43,7 +43,7 @@ public class VileFlamethrower : Weapon {
 			displayName = "Sea Dragon's Rage";
 			projSprite = "flamethrower_sdr";
 			projFadeSprite = "flamethrower_sdr_fade";
-			vileAmmoUsage = 5;
+			vileAmmoUsage = 4;
 			projId = (int)ProjIds.SeaDragonRage;
 			description = new string[] { "This powerful flamethrower can freeze", "enemies and even be used underwater." };
 			killFeedIndex = 119;
@@ -52,7 +52,7 @@ public class VileFlamethrower : Weapon {
 			displayName = "Dragon's Wrath";
 			projSprite = "flamethrower_dw";
 			projFadeSprite = "flamethrower_dw_fade";
-			vileAmmoUsage = 24;
+			vileAmmoUsage = 21;
 			description = new string[] { "A long arching flamethrower,", "useful against faraway enemies." };
 			killFeedIndex = 118;
 			projId = (int)ProjIds.DragonsWrath;
@@ -214,6 +214,7 @@ public class FlamethrowerProj : Projectile {
 		base.onHitDamagable(damagable);
 		if (weapon.type == (int)VileFlamethrowerType.WildHorseKick) {
 			var character = damagable as Character;
+			character?.unfreezeIfFrozen();
 		}
 	}
 }

@@ -36,6 +36,7 @@ public class ElectricSparkProj : Projectile {
 	) {
 		projId = (int)ProjIds.ElectricSpark;
 		maxTime = 1.2f;
+		fadeOnAutoDestroy = true;
 
 		if (vel != null) {
 			maxTime = 0.4f;
@@ -102,7 +103,7 @@ public class ElectricSparkProjChargedStart : Projectile {
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId
 	) : base(
 		weapon, pos, xDir, 0, 4, player, "electric_spark_charge_start",
-		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.defFlinch, 0.25f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.ElectricSparkCharged;
 		destroyOnHit = false;
@@ -131,11 +132,11 @@ public class ElectricSparkProjCharged : Projectile {
 	public ElectricSparkProjCharged(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 450, 4, player, "electric_spark_charge",
-		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 400, 2, player, "electric_spark_charge",
+		Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.ElectricSparkCharged;
-		maxTime = 0.3f;
+		maxTime = 0.5f;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 		if (rpc) {

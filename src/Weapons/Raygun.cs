@@ -183,7 +183,7 @@ public class RayGunAltProj : Projectile {
 
 		if (axl != null) {
 			if (axl.isWhiteAxl()) {
-				damager.damage = 4;
+				damager.damage = 3;
 				damager.hitCooldown = 0.125f;
 			}
 		}
@@ -291,7 +291,7 @@ public class RayGunAltProj : Projectile {
 			damager.hitCooldown = 0.15f;
 			angle = 90;
 		} else if (getChargeLevel() == 2) {
-			damager.damage = 4;
+			damager.damage = 3;
 			damager.hitCooldown = 0.125f;
 			angle = 180;
 		}

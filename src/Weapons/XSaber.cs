@@ -82,4 +82,8 @@ public class X6SaberState : CharState {
 			else character.changeState(new Fall(), true);
 		}
 	}
+
+	public override void onExit(CharState newState) {
+		base.onExit(newState);
+	}
 }

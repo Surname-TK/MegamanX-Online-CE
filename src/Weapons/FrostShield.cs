@@ -17,7 +17,7 @@ public class FrostShield : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 2;
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -28,17 +28,17 @@ public class FrostShield : Weapon {
 				var cfs = new FrostShieldProjPlatform(this, pos, xDir, player, netProjId);
 			} else {
 				var cfs = new FrostShieldProjCharged(this, pos, xDir, player, netProjId);
-				if (player.character != null) {
-					if (player.character.ownedByLocalPlayer && player.character is MegamanX mmx) {
-						mmx.chargedFrostShield = cfs;
-					}
-				}	
+				if (player.character.ownedByLocalPlayer && player.character is MegamanX mmx) {
+					mmx.chargedFrostShield = cfs;
+				}
 			}
 		}
 	}
 }
 
-public class FrostShieldProj : Projectile {
+public class FrostShieldProj : Projectile, IDamagable {
+	public float health = 4;
+	public float maxHealth = 4;
 	int state = 0;
 	float stateTime;
 	public Anim exhaust;
@@ -53,6 +53,11 @@ public class FrostShieldProj : Projectile {
 		destroyOnHit = true;
 		exhaust = new Anim(pos, "frostshield_exhaust", xDir, null, false);
 		isShield = true;
+		if (player.input.isHeld(Control.Up, player) && player.input.isHeld(Control.Down, player)) { vel.y = 0; }
+		else if (player.input.isHeld(Control.Up, player)) { vel.y -= 7.5f; }
+		else if (player.input.isHeld(Control.Down, player)) { vel.y += 7.5f; }
+		else vel.y = 0;
+
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
@@ -93,6 +98,25 @@ public class FrostShieldProj : Projectile {
 		exhaust?.destroySelf();
 		shatter();
 	}
+	public void applyDamage(Player owner, int? weaponIndex, float damage, int? projId) {
+		health -= damage;
+		if (health <= 0) {
+			destroySelf();
+		}
+	}
+
+	public bool canBeDamaged(int damagerAlliance, int? damagerPlayerId, int? projId) {
+		return owner.alliance != damagerAlliance;
+	}
+	public bool isInvincible(Player attacker, int? projId) {
+		return false;
+	}
+
+	public bool canBeHealed(int healerAlliance) {
+		return false;
+	}
+	public void heal(Player healer, float healAmount, bool allowStacking = true, bool drawHealText = false) {
+	}
 }
 
 public class FrostShieldProjAir : Projectile {
@@ -104,6 +128,7 @@ public class FrostShieldProjAir : Projectile {
 		maxTime = 3;
 		projId = (int)ProjIds.FrostShieldAir;
 		useGravity = true;
+		isShield = false;
 		destroyOnHit = false;
 		collider.wallOnly = true;
 		canBeLocal = false; // TODO: Allow local.
@@ -137,7 +162,7 @@ public class FrostShieldProjGround : Projectile, IDamagable {
 		maxTime = 5;
 		projId = (int)ProjIds.FrostShieldGround;
 		destroyOnHit = true;
-		isShield = true;
+		isShield = false;
 		playSound("frostShield");
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
@@ -149,8 +174,8 @@ public class FrostShieldProjGround : Projectile, IDamagable {
 		updateProjectileCooldown();
 		moveWithMovingPlatform();
 	}
-
-	public void applyDamage(float damage, Player? owner, Actor? actor, int? weaponIndex, int? projId) {
+	
+		public void applyDamage(Player owner, int? weaponIndex, float damage, int? projId) {
 		health -= damage;
 		if (health <= 0) {
 			destroySelf();
@@ -158,21 +183,17 @@ public class FrostShieldProjGround : Projectile, IDamagable {
 	}
 
 	public bool canBeDamaged(int damagerAlliance, int? damagerPlayerId, int? projId) {
-		return damagerAlliance != owner.alliance;
+		return owner.alliance != damagerAlliance;
+	}
+	public bool isInvincible(Player attacker, int? projId) {
+		return false;
 	}
 
 	public bool canBeHealed(int healerAlliance) {
 		return false;
 	}
-
 	public void heal(Player healer, float healAmount, bool allowStacking = true, bool drawHealText = false) {
 	}
-
-	public bool isInvincible(Player attacker, int? projId) {
-		if (projId == null) return true;
-		return !Damager.canDamageFrostShield(projId.Value);
-	}
-
 	public override void onDestroy() {
 		base.onDestroy();
 		breakFreeze(owner);
@@ -242,7 +263,7 @@ public class FrostShieldProjChargedGround : Projectile {
 	public Anim slideAnim;
 	public Character character;
 	public FrostShieldProjChargedGround(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 3, player, "frostshield_charged_ground", Global.defFlinch, 1, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 3, player, "rolling_shield", Global.defFlinch, 1, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 4;
 		projId = (int)ProjIds.FrostShieldChargedGrounded;
 		destroyOnHit = true;

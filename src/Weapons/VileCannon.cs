@@ -31,8 +31,8 @@ public class VileCannon : Weapon {
 			description = new string[] { "Do not equip a cannon." };
 			killFeedIndex = 126;
 		} else if (vileCannonType == VileCannonType.FrontRunner) {
-			rateOfFire = 0.75f;
-			vileAmmoUsage = 8;
+			rateOfFire = 0.50f;
+			vileAmmoUsage = 7;
 			displayName = "Front Runner";
 			projSprite = "vile_mk2_proj";
 			fadeSprite = "vile_mk2_proj_fade";
@@ -40,7 +40,7 @@ public class VileCannon : Weapon {
 			vileWeight = 2;
 		} else if (vileCannonType == VileCannonType.FatBoy) {
 			rateOfFire = 0.75f;
-			vileAmmoUsage = 24;
+			vileAmmoUsage = 14;
 			displayName = "Fat Boy";
 			projSprite = "vile_mk2_fb_proj";
 			fadeSprite = "vile_mk2_fb_proj_fade";
@@ -51,7 +51,7 @@ public class VileCannon : Weapon {
 		}
 		if (vileCannonType == VileCannonType.LongshotGizmo) {
 			rateOfFire = 0.1f;
-			vileAmmoUsage = 4;
+			vileAmmoUsage = 3;
 			displayName = "Longshot Gizmo";
 			projSprite = "vile_mk2_lg_proj";
 			fadeSprite = "vile_mk2_lg_proj_fade";
@@ -135,10 +135,10 @@ public class VileCannonProj : Projectile {
 		destroyOnHit = true;
 
 		if (weapon.type == (int)VileCannonType.FrontRunner) {
-			// Nothing.
+			damager.damage = 2;
 		} else if (weapon.type == (int)VileCannonType.FatBoy) {
 			xScale = xDir;
-			damager.damage = 4;
+			damager.damage = 3;
 			damager.flinch = Global.defFlinch;
 			projId = (int)ProjIds.FatBoy;
 			maxTime = 0.35f;
@@ -146,8 +146,8 @@ public class VileCannonProj : Projectile {
 			damager.damage = 1;
 			/*
 			if (ownedByLocalPlayer) {
-				if (player.vileAmmo >= 32 - weapon.vileAmmoUsage) { damager.damage = 3; }
-				else if (player.vileAmmo >= 32 - weapon.vileAmmoUsage * 2) { damager.damage = 2; }
+				if (player.vileAmmo >= 28 - weapon.vileAmmoUsage) { damager.damage = 3; }
+				else if (player.vileAmmo >= 28 - weapon.vileAmmoUsage * 2) { damager.damage = 2; }
 				else { damager.damage = 1; }
 			}*/
 			projId = (int)ProjIds.LongshotGizmo;

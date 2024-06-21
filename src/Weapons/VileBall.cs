@@ -31,18 +31,18 @@ public class VileBall : Weapon {
 			killFeedIndex = 126;
 		} else if (vileBallType == VileBallType.ExplosiveRound) {
 			displayName = "Explosive Round";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "These bombs split into two", "upon contact with the ground." };
 			vileWeight = 3;
 		} else if (vileBallType == VileBallType.SpreadShot) {
 			displayName = "Spread Shot";
-			vileAmmoUsage = 5;
+			vileAmmoUsage = 4;
 			description = new string[] { "Unleash a fan of energy shots", "that stun enemies in their tracks." };
 			killFeedIndex = 55;
 			vileWeight = 3;
 		} else if (vileBallType == VileBallType.PeaceOutRoller) {
 			displayName = "Peace Out Roller";
-			vileAmmoUsage = 16;
+			vileAmmoUsage = 14;
 			rateOfFire = 1.25f;
 			description = new string[] { "This electric bombs splits into two upon", "upon contact with the ground." };
 			killFeedIndex = 80;
@@ -152,6 +152,7 @@ public class PeaceOutRollerProj : Projectile {
 			gravityModifier = 0.5f;
 		} else {
 		}
+
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}

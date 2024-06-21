@@ -25,9 +25,9 @@ public class Vulcan : Weapon {
 			description = new string[] { "Do not equip a Vulcan." };
 			killFeedIndex = 126;
 		} else if (vulcanType == VulcanType.CherryBlast) {
-			rateOfFire = 0.1f;
+			rateOfFire = 0.18f;
 			displayName = "Cherry Blast";
-			vileAmmoUsage = 0.25f;
+			vileAmmoUsage = 0.1f;
 			muzzleSprite = "vulcan_muzzle";
 			projSprite = "vulcan_proj";
 			description = new string[] { "With a range of approximately 20 feet,", "this vulcan is easy to use." };
@@ -35,7 +35,7 @@ public class Vulcan : Weapon {
 		} else if (vulcanType == VulcanType.DistanceNeedler) {
 			rateOfFire = 0.25f;
 			displayName = "Distance Needler";
-			vileAmmoUsage = 6f;
+			vileAmmoUsage = 4f;
 			muzzleSprite = "vulcan_dn_muzzle";
 			projSprite = "vulcan_dn_proj";
 			killFeedIndex = 88;
@@ -43,9 +43,9 @@ public class Vulcan : Weapon {
 			description = new string[] { "This vulcan has good range and speed,", "but cannot fire rapidly." };
 			vileWeight = 2;
 		} else if (vulcanType == VulcanType.BuckshotDance) {
-			rateOfFire = 0.12f;
+			rateOfFire = 0.2f;
 			displayName = "Buckshot Dance";
-			vileAmmoUsage = 0.3f;
+			vileAmmoUsage = 0.2f;
 			muzzleSprite = "vulcan_bd_muzzle";
 			projSprite = "vulcan_bd_proj";
 			killFeedIndex = 89;
@@ -164,5 +164,13 @@ public class VulcanCharState : CharState {
 
 		if (player.input.isHeld(Control.Left, player)) character.xDir = -1;
 		if (player.input.isHeld(Control.Right, player)) character.xDir = 1;
+	}
+
+	public override void onEnter(CharState oldState) {
+		base.onEnter(oldState);
+	}
+
+	public override void onExit(CharState newState) {
+		base.onExit(newState);
 	}
 }

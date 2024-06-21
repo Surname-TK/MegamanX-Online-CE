@@ -59,7 +59,7 @@ public class MechMenuWeapon : Weapon {
 
 public class MechPunchWeapon : Weapon {
 	public MechPunchWeapon(Player player) : base() {
-		damager = new Damager(player, 3, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 2, Global.halfFlinch, 0.25f);
 		ammo = 0;
 		index = (int)WeaponIds.MechPunch;
 		killFeedIndex = 18;
@@ -68,7 +68,7 @@ public class MechPunchWeapon : Weapon {
 
 public class MechKangarooPunchWeapon : Weapon {
 	public MechKangarooPunchWeapon(Player player) : base() {
-		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 3, Global.defFlinch, 0.25f);
 		ammo = 0;
 		index = (int)WeaponIds.MechKangarooPunch;
 		killFeedIndex = 49;
@@ -77,7 +77,7 @@ public class MechKangarooPunchWeapon : Weapon {
 
 public class MechGoliathPunchWeapon : Weapon {
 	public MechGoliathPunchWeapon(Player player) : base() {
-		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 3, Global.defFlinch, 0.25f);
 		ammo = 0;
 		index = (int)WeaponIds.MechGoliathPunch;
 		killFeedIndex = 57;
@@ -86,7 +86,7 @@ public class MechGoliathPunchWeapon : Weapon {
 
 public class MechDevilBearPunchWeapon : Weapon {
 	public MechDevilBearPunchWeapon(Player player) : base() {
-		damager = new Damager(player, 2, Global.defFlinch, 0.25f);
+		damager = new Damager(player, 2, Global.halfFlinch, 0.25f);
 		ammo = 0;
 		index = (int)WeaponIds.MechDevilBearPunch;
 		killFeedIndex = 176;
@@ -95,7 +95,7 @@ public class MechDevilBearPunchWeapon : Weapon {
 
 public class MechStompWeapon : Weapon {
 	public MechStompWeapon(Player player) : base() {
-		damager = new Damager(player, 3, Global.defFlinch, 0.75f);
+		damager = new Damager(player, 2, 0, 0.5f);
 		ammo = 0;
 		index = (int)WeaponIds.MechStomp;
 		killFeedIndex = 19;
@@ -104,7 +104,7 @@ public class MechStompWeapon : Weapon {
 
 public class MechKangarooStompWeapon : Weapon {
 	public MechKangarooStompWeapon(Player player) : base() {
-		damager = new Damager(player, 3, Global.defFlinch, 0.75f);
+		damager = new Damager(player, 2, 0, 0.5f);
 		ammo = 0;
 		index = (int)WeaponIds.MechKangarooStomp;
 		killFeedIndex = 58;
@@ -150,7 +150,7 @@ public class MechFrogStompShockwave : Projectile {
 
 public class MechHawkStompWeapon : Weapon {
 	public MechHawkStompWeapon(Player player) : base() {
-		damager = new Damager(player, 3, Global.defFlinch, 0.75f);
+		damager = new Damager(player, 2, Global.halfFlinch, 1f);
 		ammo = 0;
 		index = (int)WeaponIds.MechHawkStomp;
 		killFeedIndex = 59;
@@ -159,7 +159,7 @@ public class MechHawkStompWeapon : Weapon {
 
 public class MechGoliathStompWeapon : Weapon {
 	public MechGoliathStompWeapon(Player player) : base() {
-		damager = new Damager(player, 3, Global.defFlinch, 0.75f);
+		damager = new Damager(player, 2, 0, 0.5f);
 		ammo = 0;
 		index = (int)WeaponIds.MechGoliathStomp;
 		killFeedIndex = 60;
@@ -168,7 +168,7 @@ public class MechGoliathStompWeapon : Weapon {
 
 public class MechDevilBearStompWeapon : Weapon {
 	public MechDevilBearStompWeapon(Player player) : base() {
-		damager = new Damager(player, 3, Global.defFlinch, 0.75f);
+		damager = new Damager(player, 2, 0, 0.5f);
 		ammo = 0;
 		index = (int)WeaponIds.MechDevilBearStomp;
 		killFeedIndex = 177;
@@ -177,7 +177,7 @@ public class MechDevilBearStompWeapon : Weapon {
 
 public class MechChainChargeWeapon : Weapon {
 	public MechChainChargeWeapon(Player player) : base() {
-		damager = new Damager(player, 1, Global.defFlinch, 0.1f);
+		damager = new Damager(player, 1, Global.halfFlinch, 0.1f);
 		ammo = 0;
 		index = (int)WeaponIds.MechChainCharge;
 		killFeedIndex = 49;
@@ -186,7 +186,7 @@ public class MechChainChargeWeapon : Weapon {
 
 public class MechChainWeapon : Weapon {
 	public MechChainWeapon(Player player) : base() {
-		damager = new Damager(player, 1, Global.defFlinch, 0.1f);
+		damager = new Damager(player, 3, Global.defFlinch, 5f);
 		ammo = 0;
 		index = (int)WeaponIds.MechChain;
 		killFeedIndex = 49;
@@ -195,7 +195,7 @@ public class MechChainWeapon : Weapon {
 
 public class MechMissileWeapon : Weapon {
 	public MechMissileWeapon(Player player) : base() {
-		damager = new Damager(player, 1, Global.defFlinch, 0.1f);
+		damager = new Damager(player, 2, Global.halfFlinch, 0.2f);
 		ammo = 0;
 		index = (int)WeaponIds.MechMissile;
 		killFeedIndex = 50;
@@ -263,7 +263,7 @@ public class MechMissileProj : Projectile, IDamagable {
 
 public class MechTorpedoWeapon : Weapon {
 	public MechTorpedoWeapon(Player player) : base() {
-		damager = new Damager(player, 1, Global.defFlinch, 0.1f);
+		damager = new Damager(player, 2, Global.halfFlinch, 0.2f);
 		ammo = 0;
 		index = (int)WeaponIds.MechTorpedo;
 		weaponBarBaseIndex = 52;
@@ -293,7 +293,7 @@ public class MechChainProj : Projectile {
 
 public class MechBusterWeapon : Weapon {
 	public MechBusterWeapon(Player player) : base() {
-		damager = new Damager(player, 3, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 2, Global.defFlinch, 0.5f);
 		ammo = 0;
 		index = (int)WeaponIds.MechBuster;
 		weaponBarBaseIndex = 53;

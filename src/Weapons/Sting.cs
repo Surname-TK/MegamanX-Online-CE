@@ -33,10 +33,12 @@ public class StingProj : Projectile {
 		projId = (int)ProjIds.Sting;
 		maxTime = 0.6f;
 		if (type == 1) {
+			damager.damage = 1;
 			var sprite = "sting_flat";
 			changeSprite(sprite, false);
 			reflectable = true;
 		} else if (type == 2 || type == 3) {
+			damager.damage = 1;
 			var sprite = "sting_up";
 			if (type == 3) {
 				vel.y = -150;
@@ -46,7 +48,6 @@ public class StingProj : Projectile {
 			}
 			changeSprite(sprite, false);
 			reflectable = true;
-			damager.damage = 2;
 			projId = (int)ProjIds.StingDiag;
 		}
 		fadeSprite = "buster1_fade";

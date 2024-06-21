@@ -79,16 +79,16 @@ public class BubbleSplash : Weapon {
 public class BubbleSplashProj : Projectile {
 	public BubbleSplashProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 75, 1, player, "bubblesplash_proj_start", 0, 0f, netProjId, player.ownedByLocalPlayer) {
-		maxTime = 0.75f;
+		maxTime = Helpers.randomRange(0.75f, 1.25f);
 		useGravity = false;
-		vel.y = -20 * Helpers.randomRange(0.75f, 1.25f);
-		vel.x *= Helpers.randomRange(0.75f, 1.25f);
+		vel.y = -20 * Helpers.randomRange(0.75f, 1f);
+		vel.x *= Helpers.randomRange(0.75f, 1f);
 
 		if (!player.input.isHeld(Control.Up, player)) {
 			vel.y *= 0.5f;
-			vel.x *= 1.75f;
+			vel.x *= 1.25f;
 		} else {
-			vel.y *= 3;
+			vel.y *= 2;
 		}
 
 		fadeSprite = "bubblesplash_pop";
@@ -104,10 +104,16 @@ public class BubbleSplashProj : Projectile {
 	public override void update() {
 		base.update();
 		if (sprite.name == "bubblesplash_proj_start" && isAnimOver()) {
-			int randColor = Helpers.randomRange(0, 2);
-			if (randColor == 0) changeSprite("bubblesplash_proj", true);
-			if (randColor == 1) changeSprite("bubblesplash_proj2", true);
-			if (randColor == 2) changeSprite("bubblesplash_proj3", true);
+			int randColor = Helpers.randomRange(0, 8);
+			if (randColor == 0) changeSprite("bubblesplash_proj1_small", true);
+			if (randColor == 1) changeSprite("bubblesplash_proj1_medium", true);
+			if (randColor == 2) changeSprite("bubblesplash_proj1_large", true);
+			if (randColor == 3) changeSprite("bubblesplash_proj2_small", true);
+			if (randColor == 4) changeSprite("bubblesplash_proj2_medium", true);
+			if (randColor == 5) changeSprite("bubblesplash_proj2_large", true);
+			if (randColor == 6) changeSprite("bubblesplash_proj3_small", true);
+			if (randColor == 7) changeSprite("bubblesplash_proj3_medium", true);
+			if (randColor == 8) changeSprite("bubblesplash_proj3_large", true);
 		}
 		vel.y -= Global.spf * 100;
 	}
@@ -122,9 +128,16 @@ public class BubbleSplashProjCharged : Projectile {
 		useGravity = false;
 		fadeSprite = "bubblesplash_pop";
 
-		int randColor = Helpers.randomRange(0, 2);
-		if (randColor == 0) changeSprite("bubblesplash_proj2", true);
-		if (randColor == 1) changeSprite("bubblesplash_proj3", true);
+		int randColor = Helpers.randomRange(0, 8);
+			if (randColor == 0) changeSprite("bubblesplash_proj1_small", true);
+			if (randColor == 1) changeSprite("bubblesplash_proj1_medium", true);
+			if (randColor == 2) changeSprite("bubblesplash_proj1_large", true);
+			if (randColor == 3) changeSprite("bubblesplash_proj2_small", true);
+			if (randColor == 4) changeSprite("bubblesplash_proj2_medium", true);
+			if (randColor == 5) changeSprite("bubblesplash_proj2_large", true);
+			if (randColor == 6) changeSprite("bubblesplash_proj3_small", true);
+			if (randColor == 7) changeSprite("bubblesplash_proj3_medium", true);
+			if (randColor == 8) changeSprite("bubblesplash_proj3_large", true);
 		character = (player.character as MegamanX);
 		initTime = time;
 		this.time = time;

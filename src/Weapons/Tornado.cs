@@ -18,7 +18,7 @@ public class Tornado : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 2;
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -41,10 +41,10 @@ public class TornadoProj : Projectile {
 	public float blowModifier = 0.25f;
 
 	public TornadoProj(Weapon weapon, Point pos, int xDir, bool isStormE, Player player, ushort netProjId, bool sendRpc = false) :
-		base(weapon, pos, xDir, 400, 1, player, "tornado_mid", 0, 0.25f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 400, 1, player, "tornado_mid", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		projId = isStormE ? (int)ProjIds.StormETornado : (int)ProjIds.Tornado;
 		if (isStormE) {
-			blowModifier = 1;
+			blowModifier = 0.5f;
 			damager.hitCooldown = 0.5f;
 		}
 		maxTime = 2;
@@ -117,8 +117,8 @@ public class TornadoProj : Projectile {
 			character.setFall();
 		} else if (!character.pushedByTornadoInFrame) {
 			float modifier = 1;
-			if (character.grounded) modifier = 0.5f;
-			if (character.charState is Crouch) modifier = 0.25f;
+			if (character.grounded) modifier = 0.25f;
+			if (character.charState is Crouch) modifier = 0.125f;
 			character.move(new Point(maxSpeed * 0.9f * xDir * modifier * blowModifier, 0));
 			character.pushedByTornadoInFrame = true;
 		}

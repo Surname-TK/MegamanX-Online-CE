@@ -291,9 +291,7 @@ public class SpiralMagnumProj : Projectile {
 
 			if (hitChar is MegamanX rockmanX && rockmanX.chargedRollingShieldProj != null) {
 				float decAmount = damager.damage * 2;
-				rockmanX.chargedRollingShieldProj.decAmmo(decAmount);
 				var bytes = BitConverter.GetBytes(decAmount);
-				Global.serverClient?.rpc(RPC.decShieldAmmo, (byte)hitChar.player.id, bytes[0], bytes[1], bytes[2], bytes[3]);
 			} else {
 				float overrideDamage = weakness ? (damager.damage * Damager.headshotModifier) : damager.damage;
 				if (weapon is AssassinBullet && weakness) {

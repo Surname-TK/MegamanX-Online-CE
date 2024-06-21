@@ -14,7 +14,7 @@ public class ShotgunIce : Weapon {
 		weaponSlotIndex = 8;
 		weaknessIndex = 4;
 		shootSounds = new string[] { "shotgunIce", "shotgunIce", "shotgunIce", "icyWind" };
-		rateOfFire = 0.5f;
+		rateOfFire = 0.75f;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -58,7 +58,7 @@ public class ShotgunIceProj : Projectile {
 		weapon, pos, xDir, 400, 2, player, "shotgun_ice", 0, 0.01f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.ShotgunIce;
-		maxTime = 0.4f;
+		maxTime = 0.5f;
 		this.hitChar = hitChar;
 		if (type == 1) {
 			changeSprite("shotgun_ice_piece", true);
@@ -70,6 +70,7 @@ public class ShotgunIceProj : Projectile {
 			vel = new Point(maxSpeed * velOverride.Value.x, maxSpeed * (velOverride.Value.y * 0.5f));
 		}
 		reflectable = true;
+		useGravity = false;
 		//this.fadeSound = "explosion";
 		if (rpc) {
 			byte[] extraArgs;

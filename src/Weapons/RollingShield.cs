@@ -25,7 +25,6 @@ public class RollingShield : Weapon {
 	}
 }
 
-
 public class RollingShieldProj : Projectile {
 	public RollingShieldProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId) :
 		base(weapon, pos, xDir, 200, 2, player, "rolling_shield", 0, 0, netProjId, player.ownedByLocalPlayer) {
@@ -122,26 +121,28 @@ public class RollingShieldProjCharged : Projectile {
 			rollingShieldSound.play();
 		}
 		changePos(mmx.getCenterPos());
-		if (ammoDecCooldown > 0) {
-			ammoDecCooldown += Global.spf;
-			if (ammoDecCooldown > 0.2) ammoDecCooldown = 0;
+		
+	}
+
+	public void applyDamage(Player owner, int? weaponIndex, float damage, int? projId) {
+		mmx.player.weapon.ammo -= damage;
+		if (mmx.player.weapon.ammo <= 0) {
+			destroySelf();
 		}
 	}
 
-	public override void onHitDamagable(IDamagable damagable) {
-		if (mmx is not null) {
-			base.onHitDamagable(mmx);
-		}
-		decAmmo(1);
+	public bool canBeDamaged(int damagerAlliance, int? damagerPlayerId, int? projId) {
+		return owner.alliance != damagerAlliance;
+	}
+	public bool isInvincible(Player attacker, int? projId) {
+		return false;
 	}
 
-	public void decAmmo(float amount = 1) {
-		if (ammoDecCooldown == 0) {
-			ammoDecCooldown = Global.spf;
-			damager.owner.weapon.addAmmo(-amount, damager.owner);
-		}
+	public bool canBeHealed(int healerAlliance) {
+		return false;
 	}
-
+	public void heal(Player healer, float healAmount, bool allowStacking = true, bool drawHealText = false) {
+	}
 	public override void onDestroy() {
 		if (damager.owner.character != null) {
 			if (mmx is not null) {

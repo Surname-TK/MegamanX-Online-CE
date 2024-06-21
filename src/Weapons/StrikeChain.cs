@@ -72,8 +72,8 @@ public class StrikeChainProj : Projectile {
 		if (type == 1) {
 			changeSprite(xDir == 1 ? "strikechain_charged" : "strikechain_charged_left", true);
 			maxDist = 180;
-			damager.damage = 4;
-			speed *= 1.5f;
+			damager.damage = 3;
+			speed *= 1.2f;
 		}
 
 		if (player?.character?.flag != null) {

@@ -8,7 +8,7 @@ namespace MMXOnline;
 public class CrystalHunter : Weapon {
 	public CrystalHunter() : base() {
 		shootSounds = new string[] { "crystalHunter", "crystalHunter", "crystalHunter", "crystalHunterCharged" };
-		rateOfFire = 1.25f;
+		rateOfFire = 0.75f;
 		index = (int)WeaponIds.CrystalHunter;
 		weaponBarBaseIndex = 9;
 		weaponBarIndex = weaponBarBaseIndex;
@@ -20,7 +20,7 @@ public class CrystalHunter : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 2;
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {

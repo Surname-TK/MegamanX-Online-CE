@@ -56,8 +56,8 @@ public class Weapon {
 	public bool drawRoundedDown = false;
 
 	public Weapon() {
-		ammo = 32;
-		maxAmmo = 32;
+		ammo = 28;
+		maxAmmo = 28;
 		rateOfFire = 0.15f;
 		shootSounds = new string[] { "", "", "", "" };
 	}
@@ -269,7 +269,7 @@ public class Weapon {
 
 	// ToDo: Remove default values from this.
 	public virtual float getAmmoUsage(int chargeLevel) {
-		if (chargeLevel >= 3) return 8;
+		if (chargeLevel >= 3) return 7;
 		else return 1;
 	}
 

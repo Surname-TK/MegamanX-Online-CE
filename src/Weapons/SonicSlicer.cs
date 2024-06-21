@@ -55,8 +55,8 @@ public class SonicSlicerProj : Projectile {
 	public Sprite twin;
 	int type;
 	public SonicSlicerProj(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 200, 2, player, "sonicslicer_proj", 0, 0, netProjId, player.ownedByLocalPlayer) {
-		maxTime = 0.75f;
+		base(weapon, pos, xDir, 0, 2, player, "sonicslicer_proj", 0, 0, netProjId, player.ownedByLocalPlayer) {
+		maxTime = 1.5f;
 		this.type = type;
 		collider.wallOnly = true;
 		projId = (int)ProjIds.SonicSlicer;
@@ -64,11 +64,9 @@ public class SonicSlicerProj : Projectile {
 		twin = Global.sprites["sonicslicer_twin"].clone();
 
 		vel.y = 50;
+
 		if (type == 1) {
-			vel.x *= 1.25f;
 			frameIndex = 1;
-		}
-		if (type == 1) {
 			vel.y = 0;
 		}
 
@@ -79,7 +77,13 @@ public class SonicSlicerProj : Projectile {
 
 	public override void update() {
 		base.update();
-		if (type == 0) vel.y -= Global.spf * 100;
+		if (time < 0.25f) vel.x = 0;
+		else if (time > 0.25f) vel.x = 250 * xDir;
+
+		if (type == 0) {
+		if (time < 0.25f) vel.y = 0;
+		else if (time > 0.25f) vel.y -= Global.spf * 100;
+		}
 		else vel.y -= Global.spf * 50;
 
 		var collideData = Global.level.checkCollisionActor(this, xDir, 0, vel);
@@ -107,7 +111,7 @@ public class SonicSlicerProj : Projectile {
 		base.render(x, y);
 		float ox = -vel.x * Global.spf * 3;
 		float oy = -vel.y * Global.spf * 3;
-		twin.draw(frameIndex, pos.x + x + ox, pos.y + y + oy, 1, 1, null, 0.5f, 1, 1, zIndex);
+		twin.draw(frameIndex, pos.x + x + ox, pos.y + y + oy, 1, 1, null, 1, 1, 1, zIndex);
 	}
 }
 

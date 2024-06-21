@@ -18,7 +18,7 @@ public class TriadThunder : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel >= 3) {
-			return 8;
+			return 7;
 		}
 		return 3;
 	}
@@ -50,7 +50,7 @@ public class TriadThunderProj : Projectile {
 		Point pos, int xDir, int yDir, Player player, ushort netProjId, bool rpc = false
 	) : base(
 		TriadThunder.netWeapon, pos, xDir, 0, 1, player, "triadthunder_proj",
-		Global.miniFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.fourFrameFlinch, 0.75f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.TriadThunder;
 		character = player.character;
@@ -150,7 +150,7 @@ public class TriadThunderBall : Projectile {
 		Weapon weapon, Point pos, int xDir, Player player
 	) : base(
 		weapon, pos, xDir, 0, 2, player, "triadthunder_ball",
-		Global.miniFlinch, 0.5f, null, player.ownedByLocalPlayer
+		Global.fourFrameFlinch, 0.75f, null, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.TriadThunder;
 		destroyOnHit = false;
@@ -283,7 +283,7 @@ public class TriadThunderProjCharged : Projectile {
 
 public class TriadThunderQuake : Projectile {
 	public TriadThunderQuake(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 3, player, "triadthunder_charged_quake", Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 0, player, "triadthunder_charged_quake", Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer) {
 		useGravity = false;
 		projId = (int)ProjIds.TriadThunderQuake;
 		maxTime = 0.25f;
@@ -313,6 +313,8 @@ public class TriadThunderChargedState : CharState {
 	bool groundedOnce;
 	public TriadThunderChargedState(bool grounded) : base(!grounded ? "fall" : "punch_ground", "", "", "") {
 		superArmor = true;
+		airMove = true;
+		useDashJumpSpeed = false;
 	}
 
 	public override void update() {

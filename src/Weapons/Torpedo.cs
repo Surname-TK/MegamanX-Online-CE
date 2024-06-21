@@ -108,7 +108,7 @@ public class TorpedoProj : Projectile, IDamagable {
 
 
 			if (target != null) {
-				if (time < 3f) {
+				if (time < 5f) {
 					var dTo = pos.directionTo(target.getCenterPos()).normalize();
 					var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
 					destAngle = Helpers.to360(destAngle);
@@ -118,7 +118,7 @@ public class TorpedoProj : Projectile, IDamagable {
 				}
 			}
 			if (time >= 0.15) {
-				target = Global.level.getClosestTarget(pos, damager.owner.alliance, true, aMaxDist: Global.screenW * 0.75f);
+				target = Global.level.getClosestTarget(pos, damager.owner.alliance, true, aMaxDist: Global.screenW * 1.75f);
 			} else if (time < 0.15) {
 				//this.vel.x += this.xDir * Global.spf * 300;
 			}

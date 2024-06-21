@@ -28,14 +28,14 @@ public class RocketPunch : Weapon {
 		} else if (rocketPunchType == RocketPunchType.GoGetterRight) {
 			rateOfFire = 1f;
 			displayName = "Go-Getter Right";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			projSprite = "rocket_punch_proj";
 			description = new string[] { "A rocket punch sends your fist", "flying to teach enemies a lesson." };
 			vileWeight = 3;
 		} else if (rocketPunchType == RocketPunchType.SpoiledBrat) {
 			rateOfFire = 0.2f;
 			displayName = "Spoiled Brat";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			projSprite = "rocket_punch_sb_proj";
 			description = new string[] { "Though lacking in power, this", "rocket punch offers intense speed." };
 			killFeedIndex = 77;
@@ -44,7 +44,7 @@ public class RocketPunch : Weapon {
 		if (rocketPunchType == RocketPunchType.InfinityGig) {
 			rateOfFire = 1f;
 			displayName = "Infinity Gig";
-			vileAmmoUsage = 16;
+			vileAmmoUsage = 14;
 			projSprite = "rocket_punch_ig_proj";
 			description = new string[] { "Advanced homing technology can be", "difficult to get a handle on." };
 			killFeedIndex = 78;
