@@ -538,11 +538,11 @@ public class LevelData {
 		{ "robotjunkyard", "morphMoth" },
 		{ "volcaniczone", "flameStag" },
 		{ "weathercontrol", "wireSponge" },
-		{ "xhunter1", "counterHunter2" },
-		{ "xhunter2", "counterHunter1" },
+		{ "xhunter1", "counterHunter1" },
+		{ "xhunter2", "counterHunter2" },
 		// X3 stuff.
 		{ "aircraftcarrier", "gravityBeetle" },
-		{ "dopplerlab", "dopplerStage" },
+		{ "dopplerlab", "dopplerLab" },
 		{ "frozentown", "blizzardBuffalo" },
 		{ "giantdam", "toxicSeahorse" },
 		{ "giantdam2", "toxicSeahorse" },
@@ -634,5 +634,67 @@ public class LevelData {
 			return false;
 		}
 		return supportsMirrored && !mirroredOnly;
+	}
+	public string getLooseTheme() {
+		if (name.Contains("xhunter1") ||
+			name.Contains("deepseabase") ||
+			name.Contains("maverickfactory") ||
+			name.Contains("robotjunkyard") ||
+			name.Contains("volcaniczone") ||
+			name.Contains("dinosaurtank") ||
+			name.Contains("centralcomputer") ||
+			name.Contains("crystalmine") ||
+			name.Contains("desertbase") ||
+			name.Contains("weathercontrol")
+		) {
+			return "password_X2";
+		}
+		if (name.Contains("hunterbase") ||
+			name.Contains("giantdam") ||
+			name.Contains("weaponsfactory") ||
+			name.Contains("frozentown") ||
+			name.Contains("aircraftcarrier") ||
+			name.Contains("powercenter") ||
+			name.Contains("shipyard") ||
+			name.Contains("quarry") ||
+			name.Contains("safaripark") ||
+			name.Contains("dopplerlab")
+		) {
+			return "password_X3";
+		}
+		if (isCustomMap) {
+			return Helpers.randomRange(0, 2) switch {
+				1 => "password_X2",
+				2 => "password_X3",
+				_ => "password_X1"
+			};
+		}
+
+		return "password_X1";
+	}
+	public string getTitleTheme()
+	{
+		return Helpers.randomRange(1,19) switch {
+			1 => "title_X1",
+			2 => "title_X2",
+			3 => "title_X3",
+			4 => "stageSelect_X1",
+			5 => "stageSelect2_X1",
+			6 => "stageSelect_X2",
+			7 => "stageSelect2_X2",
+			8 => "stageSelect_X3",
+			9 => "stageSelect2_X3",
+			10 => "opening_X3",
+			11 => "opening_X2",
+			12 => "ending_X3",
+			13 => "ending_X2",
+			14 => "ending_X1",
+			15 => "credits_X1",
+			16 => "demo_X2",
+			17 => "demo_X3",
+			18 => "laboratory_X3",
+			19 => "sigmaFortress4",	
+			_ => "zero_X2"	
+		};
 	}
 }

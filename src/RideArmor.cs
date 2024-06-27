@@ -605,7 +605,7 @@ public class RideArmor : Actor, IDamagable {
 		}
 	}
 
-	public override Projectile getProjFromHitbox(Collider hitbox, Point centerPoint) {
+	public override Projectile? getProjFromHitbox(Collider hitbox, Point centerPoint) {
 		if (hitbox == null || player == null || sprite?.name == null) {
 			return null;
 		}

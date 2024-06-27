@@ -50,7 +50,7 @@ public class TriadThunderProj : Projectile {
 		Point pos, int xDir, int yDir, Player player, ushort netProjId, bool rpc = false
 	) : base(
 		TriadThunder.netWeapon, pos, xDir, 0, 1, player, "triadthunder_proj",
-		Global.fourFrameFlinch, 0.75f, netProjId, player.ownedByLocalPlayer
+		Global.miniFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.TriadThunder;
 		character = player.character;

@@ -959,61 +959,59 @@ public class AI {
 		doZeroAIAttack(zero);
 		//WildDance(zero);
 		if (zero.charState.attackCtrl && !player.isDead && zero.sprite.name != null && zero.charState.canAttack() && !zero.isSpriteInvulnerable() && !zero.isInvulnerable()) {
-			int ZSattack = Helpers.randomRange(0, 10);
+			int ZSattack = Helpers.randomRange(0, 11);
 			if (!(zero.sprite.name == "zero_attack" || zero.sprite.name == "zero_attack3" || zero.sprite.name == "zero_attack2")) {
 				switch (ZSattack) {
 					//Randomizador
-					case 0 when zero.grounded: // Attack
-						if (!zero.isAwakened) {
-							zero.changeSprite("zero_attack", true);
-						} else {
-							player.press(Control.Shoot);
-						}
+					case 0 when zero.grounded: // Attack	
+						player.press(Control.Shoot);					
 						break;
 					case 1 when isTargetSuperClose && zero.grounded: //Uppercut 	
-						zero.changeState(
-							new ZeroUppercut(zero.uppercutA.type, zero.isUnderwater()), forceChange: true
-						);
+						zero.changeState(new ZeroUppercut(zero.uppercutA.type, zero.isUnderwater()), true);
 						break;
 					case 2 when isTargetSuperClose && zero.grounded:
-						zero.changeState(new ZeroUppercut(
-							zero.uppercutS.type, zero.isUnderwater()), forceChange: true
-						);
+						zero.changeState(new ZeroUppercut(zero.uppercutA.type, zero.isUnderwater()), true);
+						break;				
+					case 3 when isTargetSuperClose && zero.grounded && zero.canCrouch(): //Crouch slash
+						zero.changeState(new ZeroCrouchSlashState(), true);
 						break;
-					//Crouch slash
-					case 3 when isTargetSuperClose && zero.grounded && zero.canCrouch():
-						zero.changeSprite("zero_attack_crouch", true);
-						break;
-					// If Zero is dashing, press special and do shippuga
+					// If Zero is dashing, do shippuga
 					case 4 when zero.charState is Dash && isTargetClose:
-						zero.changeSprite("zero_attack_dash2", true);
+						zero.changeState(new ZeroShippuugaState(), true);
+						break;		
+					// If Zero is on the ground and has giga attack ammo of at least 8 to above do "Rakuhouha"		
+					case 5 when zero.grounded:
+						if (zero.gigaAttack is RekkohaWeapon && zero.gigaAttack.ammo == 32f) {
+							zero.gigaAttack.addAmmo(-zero.gigaAttack.getAmmoUsage(0), player);
+							zero.changeState(new Rekkoha(zero.gigaAttack), true);
+						} else if (zero.gigaAttack.ammo >= 8) {
+							zero.gigaAttack.addAmmo(-zero.gigaAttack.getAmmoUsage(0), player);
+							zero.changeState(new Rakuhouha(zero.gigaAttack), true);
+						}
 						break;
-					// If Zero is on the ground and has giga attack ammo of at least 8 to above do "Rakuhouha"
-					case 5 when zero.grounded && zero.gigaAttack.ammo >= 8f:
-						player.press(Control.Down);
-						player.press(Control.Special1);
+					case 6 when zero.charState is Fall or Jump: // Air special
+					zero.changeState(new ZeroRollingSlashtate(), true);
 						break;
-					case 6 when zero.charState is Fall or Jump: // Air speciar		
-						zero.changeSprite(Options.main.getSpecialAirAttack(), true);
-						break;
-					// if the character is on fall state, Downthrust attack
-					case 7 when zero.charState is Fall && zero.charState is not ZeroUppercut:
-						zero.changeState(new ZeroDownthrust(zero.uppercutA.type));
-						break;
+					case 7 when zero.charState is Fall or Jump: // Air attack
+					zero.changeState(new ZeroAirSlashState(), true);
+						break;	
 					// if the character is on fall state, Downthrust attack
 					case 8 when zero.charState is Fall && zero.charState is not ZeroUppercut:
-						zero.changeState(new ZeroDownthrust(zero.uppercutS.type));
+						zero.changeState(new ZeroDownthrust(zero.downThrustA.type));
 						break;
-					case 9 when zero.charState is Dash && isTargetClose: // Dash slash
-						zero.changeSprite("zero_attack_dash", true);
+					case 9 when zero.charState is Fall && zero.charState is not ZeroUppercut:
+						zero.changeState(new ZeroDownthrust(zero.downThrustS.type));
 						break;
-					case 10 when zero.grounded && isTargetClose: // Special attack
+					case 10 when zero.charState is Dash && isTargetClose: // Dash slash
+						zero.changeState(new ZeroDashSlashState(), true);
+						break;
+					case 11 when zero.grounded && isTargetClose: // Special attack
 						zero.groundSpecial.attack(zero);
 						break;
 				}
 			}
 			// Hypermode attacks
-			if (zero.hypermodeActive()) {
+			if (zero.hypermodeActive() && !player.isMainPlayer) {
 				switch (Helpers.randomRange(0, 96)) {
 					case 1:
 						zero.changeState(new Rakuhouha(zero.gigaAttack), true);
@@ -1027,11 +1025,7 @@ public class AI {
 				}
 			}
 			if (!player.isMainPlayer && isTargetInAir && !zero.grounded && zero.charState is Fall or Jump) {
-				zero.changeState(
-					new ZeroUppercut(
-						zero.downThrustA.type, zero.isUnderwater()
-					), forceChange: true
-				);
+
 			}
 
 		}
