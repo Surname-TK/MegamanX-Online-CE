@@ -3,7 +3,7 @@
 namespace MMXOnline;
 
 public class HyperBuster : Weapon {
-	public const float ammoUsage = 8;
+	public const float ammoUsage = 4;
 	public const float weaponAmmoUsage = 8;
 
 	public HyperBuster() : base() {
@@ -12,8 +12,8 @@ public class HyperBuster : Weapon {
 		weaponBarBaseIndex = 32;
 		weaponBarIndex = 31;
 		weaponSlotIndex = 36;
-		shootSounds = new List<string>() { "buster3X3", "buster3X3", "buster3X3", "buster3X3" };
-		rateOfFire = 2f;
+		// shootSounds = new List<string>() { "buster3X3", "buster3X3", "buster3X3", "buster3X3" };
+		rateOfFire = 1.5f;
 		switchCooldown = 0.25f;
 		ammo = 0;
 	}
