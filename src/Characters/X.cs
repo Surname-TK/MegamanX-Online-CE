@@ -69,7 +69,7 @@ public partial class MegamanX : Character {
 	public bool stockedX3Saber;
 
 	public float xSaberCooldown;
-	public float stockedChargeFlashTime;
+	// public float stockedChargeFlashTime;
 
 	public BeeSwarm? beeSwarm;
 
@@ -789,7 +789,7 @@ public partial class MegamanX : Character {
 		if (chargeLevel >= 3 && player.hasArmArmor(3)) {
 			stockedX3Charge = true;
 			if (player.weapon is Buster) {
-				shootTime = hasUltimateArmorBS.getValue() ? 0.5f : 0.25f;
+				shootTime = hasUltimateArmor? 0.25f : 0.125f;
 			} else shootTime = 0.5f;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Charge);
 		} else if (stockedX3Charge) {
@@ -1319,10 +1319,7 @@ public partial class MegamanX : Character {
 	}
 
 	public bool canUseFgMove() {
-		return !isInvulnerableAttack() && chargedRollingShieldProj == null && !stingActive && canAffordFgMove() && hadoukenCooldownTime == 0 && player.weapon is Buster && player.fgMoveAmmo >= 32;
-=======
-		return !isInvulnerableAttack() && chargedRollingShieldProj == null && !isInvisibleBS.getValue() && canAffordFgMove() && hadoukenCooldownTime == 0 && player.weapon is Buster && player.fgMoveAmmo >= 28;
->>>>>>> Stashed changes
+		return !isInvulnerableAttack() && chargedRollingShieldProj == null && !stingActive && canAffordFgMove() && hadoukenCooldownTime == 0 && player.weapon is Buster && player.fgMoveAmmo >= 28;
 	}
 
 	public bool shouldDrawFgCooldown() {

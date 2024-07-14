@@ -13,7 +13,7 @@ public partial class Player {
 	public Character lastCharacter;
 	public bool ownedByLocalPlayer;
 	public int? awakenedCurrencyEnd;
-	public float fgMoveAmmo = 32;
+	public float fgMoveAmmo = 28;
 	public bool isDefenderFavoredNonOwner;
 
 	public bool isDefenderFavored {

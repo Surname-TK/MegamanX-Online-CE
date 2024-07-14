@@ -2863,7 +2863,7 @@ public partial class Character : Actor, IDamagable {
 					}
 				}
 				//fgMoveAmmo += gigaAmmoToAdd;
-				//if (fgMoveAmmo > 32) fgMoveAmmo = 32;
+				//if (fgMoveAmmo > 32) fgMoveAmmo = 28;
 			}
 			if (this is NeoSigma) {
 				player.sigmaAmmo = Helpers.clampMax(player.sigmaAmmo + gigaAmmoToAdd, player.sigmaMaxAmmo);
@@ -2920,6 +2920,7 @@ public partial class Character : Actor, IDamagable {
 				var otherPlayer = Global.level.nonSpecPlayers().Find(p => p.id != player.id);
 				if (otherPlayer != null) {
 					otherPlayer.addKill();
+					otherPlayer.awardCurrency();
 				}
 			}
 

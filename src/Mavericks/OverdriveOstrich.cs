@@ -15,7 +15,7 @@ public class OverdriveOstrich : Maverick {
 		base(player, pos, destPos, xDir, netId, ownedByLocalPlayer) {
 		stateCooldowns.Add(typeof(OverdriveOShootState), new MaverickStateCooldown(false, true, 0.75f));
 		stateCooldowns.Add(typeof(OverdriveOShoot2State), new MaverickStateCooldown(true, true, 2f));
-		stateCooldowns.Add(typeof(OverdriveOJumpKickState), new MaverickStateCooldown(true, true, 1f));
+		stateCooldowns.Add(typeof(OverdriveOJumpKickState), new MaverickStateCooldown(true, true, 1.5f));
 
 		weapon = getWeapon();
 

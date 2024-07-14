@@ -435,6 +435,7 @@ public class VoltCSparkleProj : Projectile {
 		projId = (int)ProjIds.VoltCSparkle;
 		vel = new Point(Helpers.randomRange(-200, 200), Helpers.randomRange(-400, -200));
 		useGravity = true;
+		destroyOnHit = true;
 		maxTime = 0.75f;
 
 		if (rpc) {

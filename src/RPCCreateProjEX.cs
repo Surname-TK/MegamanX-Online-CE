@@ -22,16 +22,14 @@ public partial class RPCCreateProj : RPC {
 		{ (int)ProjIds.DZBuster, DZBusterProj.rpcInvoke },
 		{ (int)ProjIds.DZBuster2, DZBuster2Proj.rpcInvoke },
 		{ (int)ProjIds.DZBuster3, DZBuster3Proj.rpcInvoke },
-		// Mavericks
-		{ (int)ProjIds.VoltCSuck, VoltCSuckProj.rpcInvoke }
-=======
 		{ (int)ProjIds.DZBuster4, DZBuster3Proj.rpcInvoke },
 		// Sigma Novelties
-		// { (int)ProjIds.ChillPIceShot, RaySplasherProj.rpcInvoke },
+		// Mavericks
+		{ (int)ProjIds.VoltCSuck, VoltCSuckProj.rpcInvoke },
+		// { (int)ProjIds.ChillPIceShot, ChillPIceProj.rpcInvoke },
 		{ (int)ProjIds.BBuffaloQuake, TriadThunderQuake.rpcInvoke },
 		{ (int)ProjIds.TunnelRQuake, TriadThunderQuake.rpcInvoke },
 
->>>>>>> Stashed changes
 	};
 
 }

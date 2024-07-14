@@ -27,8 +27,7 @@ public class RakuhouhaWeapon : Weapon {
 		weaponSlotIndex = 51;
 		type = (int)ZeroGigaType.Rakuhouha;
 		displayName = "Rakuhouha";
-<<<<<<< Updated upstream
-		description = new string[] { "Channels stored energy in one blast.", "Energy cost: 16" };
+		description = new string[] { "Channels stored energy in one blast.", "Energy cost: 14" };
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
 	}
@@ -62,8 +61,7 @@ public class RekkohaWeapon : Weapon {
 		weaponSlotIndex = 63;
 		type = (int)ZeroGigaType.Rekkoha;
 		displayName = "Rekkoha";
-<<<<<<< Updated upstream
-		description = new string[] { "Summon down pillars of light energy.", "Energy cost: 32" };
+		description = new string[] { "Summon down pillars of light energy.", "Energy cost: 28" };
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
 	}
@@ -88,8 +86,7 @@ public class CFlasher : Weapon {
 		weaponSlotIndex = 64;
 		type = (int)ZeroGigaType.CFlasher;
 		displayName = "Messenkou";
-<<<<<<< Updated upstream
-		description = new string[] { "A less damaging blast that can pierce enemies.", "Energy cost: 8" };
+		description = new string[] { "A less damaging blast that can pierce enemies.", "Energy cost: 7" };
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
 	}

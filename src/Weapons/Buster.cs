@@ -121,6 +121,8 @@ public class Buster : Weapon {
 				_ => shootSound
 			};
 		}
+		
+		bool hasUltArmor = ((player.character as MegamanX)?.hasUltimateArmor == true);
 		if (mmx.stockedX3Charge) {
 			if (player.ownedByLocalPlayer) {
 				if (player.character.charState is WallSlide) {
@@ -150,8 +152,6 @@ public class Buster : Weapon {
 			}
 			return;
 		}
-		bool hasUltArmor = ((player.character as MegamanX)?.hasUltimateArmor == true);
-=======
 		else if (mmx.stockedX2Charge) {
 			if (player.ownedByLocalPlayer) {
 				if (player.character.charState is WallSlide) {
@@ -179,10 +179,7 @@ public class Buster : Weapon {
 				}
 			}
 		}
-		bool hasUltArmor = player.character.hasUltimateArmorBS.getValue();
->>>>>>> Stashed changes
 		bool isHyperX = ((player.character as MegamanX)?.isHyperX == true);
-
 		if (isHyperX && chargeLevel > 0) {
 			new BusterUnpoProj(this, pos, xDir, player, netProjId);
 			new Anim(pos, "buster_unpo_muzzle", xDir, null, true);
@@ -437,6 +434,7 @@ public class Buster3Proj : Projectile {
 				changeSprite("buster3_x3", true);
 			}
 		}
+		
 		// Double buster part 1
 		if (type == 1) {
 			damager.flinch = Global.defFlinch;

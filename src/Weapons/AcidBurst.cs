@@ -48,7 +48,6 @@ public class AcidBurstProj : Projectile {
 		vel = new Point(xDir * 100, -200);
 		fadeSound = "acidBurst";
 		checkUnderwater();
-
 		// TODO: Fix this
 		canBeLocal = false;
 

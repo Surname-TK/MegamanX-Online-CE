@@ -594,7 +594,7 @@ public class KaiserSigmaMissileProj : Projectile {
 	public float maxSpeed = 150;
 	public float health = 2;
 	public KaiserSigmaMissileProj(Weapon weapon, Point pos, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, 1, 0, 2, player, "kaisersigma_missile", Global.defFlinch, 0f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, 1, 0, 2, player, "sigma3_kaiser_missile", Global.halfFlinch, 0f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.Sigma3KaiserMissile;
 		maxTime = 2f;
 		fadeOnAutoDestroy = true;
@@ -670,7 +670,7 @@ public class KaiserSigmaMineProj : Projectile, IDamagable {
 	int type;
 	bool startWall;
 	public KaiserSigmaMineProj(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 100, 4, player, "kaisersigma_mine", Global.defFlinch, 0.15f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 100, 3, player, "sigma3_kaiser_mine", Global.defFlinch, 0.15f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.Sigma3KaiserMine;
 		maxTime = 4f;
 		this.type = type;

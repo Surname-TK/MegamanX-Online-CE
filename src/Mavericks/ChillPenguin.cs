@@ -143,6 +143,8 @@ public class ChillPenguin : Maverick {
 
 #region weapons
 public class ChillPIceShotWeapon : Weapon {
+	
+	public static ChillPIceShotWeapon netWeapon = new ChillPIceShotWeapon();
 	public ChillPIceShotWeapon() {
 		index = (int)WeaponIds.ChillPIceShot;
 		killFeedIndex = 93;
@@ -188,8 +190,8 @@ public class ChillPIceProj : Projectile {
 		Weapon weapon, Point pos, int xDir, Player player,
 		int type, ushort netProjId, Character hitChar = null, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 250, 3, player, "chillp_proj_ice",
-		0, 0.01f, netProjId, player.ownedByLocalPlayer
+		ChillPIceShotWeapon.netWeapon, pos, xDir, 250, 2, player, "chillp_proj_ice",
+		0, 0.1f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.ChillPIceShot;
 		maxTime = 0.75f;
@@ -207,6 +209,11 @@ public class ChillPIceProj : Projectile {
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
+	}
+	public static Projectile rpcInvoke(ProjParameters args) {
+		return new ChillPIceProj(
+			ChillPIceShotWeapon.netWeapon, args.pos, args.xDir, args.player, args.extraData[0] - 2, args.netId
+		);
 	}
 
 	public override void update() {
@@ -230,6 +237,14 @@ public class ChillPIceProj : Projectile {
 		onHit();
 		destroySelf();
 	}
+	public override void onCollision(CollideData other) {
+		base.onCollision(other);
+		if (other.gameObject is ChillPIceStatueProj) {
+			onHit();
+			destroySelf();
+		}
+	}
+	
 
 	bool hit;
 	public void onHit() {

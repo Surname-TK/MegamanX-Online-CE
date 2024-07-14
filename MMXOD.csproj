@@ -4,9 +4,9 @@
 		<LangVersion>12.0</LangVersion>
 		<AssemblyName>MMXOD</AssemblyName>
 		<OutputType>WinExe</OutputType>
-		<Version>20</Version>
-		<AssemblyVersion>20.0</AssemblyVersion>
 		<Nullable>disable</Nullable>
+		<Version>29.02</Version>
+		<AssemblyVersion>29.02</AssemblyVersion>
 		<ApplicationIcon>app.ico</ApplicationIcon>
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>

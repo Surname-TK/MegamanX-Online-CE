@@ -12,8 +12,7 @@ public class NovaStrike : Weapon {
 		weaponBarIndex = 36;
 		weaponSlotIndex = 95;
 		killFeedIndex = 104;
-<<<<<<< Updated upstream
-		ammo = 32;
+		ammo = 28;
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
 	}

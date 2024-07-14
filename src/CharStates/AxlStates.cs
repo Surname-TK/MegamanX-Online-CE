@@ -138,12 +138,9 @@ public class DodgeRoll : CharState {
 		base.onEnter(oldState);
 		axl = character as Axl;
 		character.isDashing = true;
-		character.burnTime -= 1;
-=======
 		character.burnTime -= 2;
 		character.acidTime -= 1;
 		character.igFreezeProgress -= 2;
->>>>>>> Stashed changes
 		if (character.burnTime < 0) {
 			character.burnTime = 0;
 		}
