@@ -701,7 +701,7 @@ public class GameMode {
 			}
 			if (drawPlayer.character is Axl axl2 && axl2.dodgeRollCooldown > 0) {
 				float cooldown = 1 - Helpers.progress(axl2.dodgeRollCooldown, Axl.maxDodgeRollCooldown);
-				drawGigaWeaponCooldown(50, cooldown, y: 170);
+				// drawGigaWeaponCooldown(50, cooldown, y: 170);
 			}
 			if (drawPlayer.weapons.Count > 1) {
 				drawWeaponSwitchHUD(drawPlayer);
@@ -1333,7 +1333,7 @@ public class GameMode {
 	const int grayAmmoIndex = 30;
 	public void renderAmmo(
 		float baseX, ref float baseY, int baseIndex,
-		int barIndex, float ammo, float grayAmmo = 0, float maxAmmo = 32,
+		int barIndex, float ammo, float grayAmmo = 0, float maxAmmo = 28,
 		bool allowSmall = true
 	) {
 		baseY += 25;
@@ -1445,7 +1445,7 @@ public class GameMode {
 			baseY -= 16;
 			for (var i = 0; i < MathF.Ceiling(player.vileMaxAmmo * ammoDisplayMultiplier); i++) {
 				if (i < Math.Ceiling(player.vileAmmo * ammoDisplayMultiplier)) {
-					Global.sprites["hud_weapon_full"].drawToHUD(32, baseX, baseY);
+					Global.sprites["hud_weapon_full"].drawToHUD(28, baseX, baseY);
 				} else {
 					Global.sprites["hud_health_empty"].drawToHUD(0, baseX, baseY);
 				}
@@ -1480,6 +1480,7 @@ public class GameMode {
 				}
 				if (i < floorOrCeiling) {
 					int spriteIndex = weapon.weaponBarIndex;
+<<<<<<< Updated upstream
 					if (weapon.drawGrayOnLowAmmo && weapon.ammo < weapon.getAmmoUsage(0) ||
 						(weapon is GigaCrush && !weapon.canShoot(0, player)) ||
 						(weapon is NovaStrike && !weapon.canShoot(0, player)) ||
@@ -1956,6 +1957,10 @@ public class GameMode {
 			drawWeaponText(x, y, level.mainPlayer.magnetMines.Count.ToString());
 		}
 
+		if (weapon is FrostShield && level.mainPlayer.frostShields.Count > 0) {
+			drawWeaponText(x, y, level.mainPlayer.frostShields.Count.ToString());
+		}
+		
 		if (weapon is RaySplasher && level.mainPlayer.turrets.Count > 0) {
 			// drawWeaponText(x, y, level.mainPlayer.turrets.Count.ToString());
 		}
@@ -2263,12 +2268,12 @@ public class GameMode {
 			if (sigmaForm == 0) weapons.Add(new Weapon() {
 				weaponSlotIndex = 111,
 				ammo = dnaCore.rakuhouhaAmmo,
-				maxAmmo = 32,
+				maxAmmo = 28,
 			});
 			if (sigmaForm == 1) weapons.Add(new Weapon() {
 				weaponSlotIndex = 110,
 				ammo = dnaCore.rakuhouhaAmmo,
-				maxAmmo = 32,
+				maxAmmo = 28,
 			});
 		}
 		int counter = 0;

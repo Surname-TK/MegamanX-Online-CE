@@ -1,17 +1,18 @@
 ﻿namespace MMXOnline;
 
 public class NovaStrike : Weapon {
-	public const float ammoUsage = 16;
+	public const float ammoUsage = 14;
 	public NovaStrike(Player? player) : base() {
 		if (player != null) {
-			damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+			damager = new Damager(player, 2, Global.halfFlinch, 0.5f);
 		}
-		rateOfFire = 1.5f;
+		rateOfFire = 1f;
 		index = (int)WeaponIds.NovaStrike;
 		weaponBarBaseIndex = 42;
 		weaponBarIndex = 36;
 		weaponSlotIndex = 95;
 		killFeedIndex = 104;
+<<<<<<< Updated upstream
 		ammo = 32;
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;

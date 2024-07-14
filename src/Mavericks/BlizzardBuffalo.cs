@@ -195,7 +195,7 @@ public class BBuffaloIceProj : Projectile {
 }
 
 public class BBuffaloIceProjGround : Projectile, IDamagable {
-	float health = 6;
+	float health = 8;
 	public BBuffaloIceProjGround(
 		Weapon weapon, Point pos, float angle, Player player, ushort netProjId, bool sendRpc = false
 	) : base(

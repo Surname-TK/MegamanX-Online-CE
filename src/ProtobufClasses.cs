@@ -44,6 +44,15 @@ public class MagnetMineResponseModel {
 }
 
 [ProtoContract]
+public class FrostShieldResponseModel {
+	[ProtoMember(1)] public float x;
+	[ProtoMember(2)] public float y;
+	[ProtoMember(3)] public ushort netId;
+	[ProtoMember(4)] public int playerId;
+	public FrostShieldResponseModel() { }
+}
+
+[ProtoContract]
 public class TurretResponseModel {
 	[ProtoMember(1)] public float x;
 	[ProtoMember(2)] public float y;
@@ -58,7 +67,8 @@ public class JoinLateResponseModel {
 	[ProtoMember(2)] public ServerPlayer newPlayer;
 	[ProtoMember(3)] public List<ControlPointResponseModel> controlPoints;
 	[ProtoMember(4)] public List<MagnetMineResponseModel> magnetMines;
-	[ProtoMember(5)] public List<TurretResponseModel> turrets;
+	[ProtoMember(5)] public List<FrostShieldResponseModel> frostShields;
+	[ProtoMember(6)] public List<TurretResponseModel> turrets;
 	public JoinLateResponseModel() { }
 }
 

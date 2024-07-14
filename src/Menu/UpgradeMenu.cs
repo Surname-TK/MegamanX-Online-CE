@@ -43,11 +43,11 @@ public class UpgradeMenu : IMainMenu {
 	}
 
 	public int getMaxHeartTanks() {
-		return Global.level.server?.customMatchSettings?.maxHeartTanks ?? 4;
+		return Global.level.server?.customMatchSettings?.maxHeartTanks ?? 8;
 	}
 
 	public int getMaxSubTanks() {
-		return Global.level.server?.customMatchSettings?.maxSubTanks ?? 2;
+		return Global.level.server?.customMatchSettings?.maxSubTanks ?? 4;
 	}
 
 	public Player mainPlayer {

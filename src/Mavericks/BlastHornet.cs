@@ -232,7 +232,7 @@ public class BHornetHomingBeeProj : Projectile, IDamagable {
 	public Point lastMoveAmount;
 	const float maxSpeed = 150;
 	public BHornetHomingBeeProj(Weapon weapon, Point pos, int xDir, Actor target, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 4, player, "bhornet_proj_wasp_small_glowing", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 3, player, "bhornet_proj_wasp_small_glowing", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		this.weapon = weapon;
 		fadeSprite = "explosion";
 		fadeSound = "explosion";

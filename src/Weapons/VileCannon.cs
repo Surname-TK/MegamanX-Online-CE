@@ -31,16 +31,17 @@ public class VileCannon : Weapon {
 			description = new string[] { "Do not equip a cannon." };
 			killFeedIndex = 126;
 		} else if (vileCannonType == VileCannonType.FrontRunner) {
-			rateOfFire = 0.75f;
-			vileAmmoUsage = 8;
+			rateOfFire = 0.5f;
+			vileAmmoUsage = 7;
 			displayName = "Front Runner";
 			projSprite = "vile_mk2_proj";
 			fadeSprite = "vile_mk2_proj_fade";
 			description = new string[] { "This cannon not only offers power,", "but can be aimed up and down." };
 			vileWeight = 2;
 		} else if (vileCannonType == VileCannonType.FatBoy) {
-			rateOfFire = 0.75f;
-			vileAmmoUsage = 24;
+			rateOfFire = 0.65f;
+			
+			vileAmmoUsage = 14;
 			displayName = "Fat Boy";
 			projSprite = "vile_mk2_fb_proj";
 			fadeSprite = "vile_mk2_fb_proj_fade";
@@ -51,7 +52,7 @@ public class VileCannon : Weapon {
 		}
 		if (vileCannonType == VileCannonType.LongshotGizmo) {
 			rateOfFire = 0.1f;
-			vileAmmoUsage = 4;
+			vileAmmoUsage = 3;
 			displayName = "Longshot Gizmo";
 			projSprite = "vile_mk2_lg_proj";
 			fadeSprite = "vile_mk2_lg_proj_fade";
@@ -127,9 +128,10 @@ public class VileCannonProj : Projectile {
 		VileCannon weapon, Point pos, float byteAngle, Player player,
 		ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, 1, 300, 3, player, weapon.projSprite, 0, 0f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, 1, 300, 2, player, weapon.projSprite, 0, 0f, netProjId, player.ownedByLocalPlayer
 	) {
 		fadeSprite = weapon.fadeSprite;
+		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.FrontRunner;
 		maxTime = 0.5f;
 		destroyOnHit = true;
@@ -137,13 +139,16 @@ public class VileCannonProj : Projectile {
 		if (weapon.type == (int)VileCannonType.FrontRunner) {
 			// Nothing.
 		} else if (weapon.type == (int)VileCannonType.FatBoy) {
+			fadeOnAutoDestroy = true;
 			xScale = xDir;
-			damager.damage = 4;
+			damager.damage = 3;
 			damager.flinch = Global.defFlinch;
 			projId = (int)ProjIds.FatBoy;
-			maxTime = 0.35f;
+			maxTime = 0.45f;
 		} else if (weapon.type == (int)VileCannonType.LongshotGizmo) {
-			damager.damage = 1;
+			fadeOnAutoDestroy = true;
+			damager.damage = 0.5f;
+			damager.flinch = Global.halfFlinch;
 			/*
 			if (ownedByLocalPlayer) {
 				if (player.vileAmmo >= 32 - weapon.vileAmmoUsage) { damager.damage = 3; }

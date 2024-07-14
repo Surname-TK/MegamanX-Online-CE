@@ -126,7 +126,7 @@ public class StormETornadoWeapon : Weapon {
 
 public class StormEDiveWeapon : Weapon {
 	public StormEDiveWeapon(Player player) {
-		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 3, Global.defFlinch, 0.5f);
 		index = (int)WeaponIds.StormEDive;
 		killFeedIndex = 99;
 	}
@@ -241,7 +241,7 @@ public class StormEBirdProj : Projectile, IDamagable {
 }
 
 public class StormEGustProj : Projectile {
-	float maxSpeed = 250;
+	float maxSpeed = 200;
 	public StormEGustProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 250, 0, player, "storme_proj_gust", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.StormEGust;

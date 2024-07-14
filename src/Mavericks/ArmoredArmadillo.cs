@@ -33,9 +33,9 @@ public class ArmoredArmadillo : Maverick {
 		// Ammo.
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
-		grayAmmoLevel = 8;
+		ammo = 28;
+		maxAmmo = 28;
+		grayAmmoLevel = 7;
 		barIndexes = (56, 45);
 	}
 
@@ -82,8 +82,8 @@ public class ArmoredArmadillo : Maverick {
 						changeState(new ArmoredAGuardState());
 					}
 				} else if (input.isPressed(Control.Dash, player)) {
-					if (ammo >= 8) {
-						deductAmmo(8);
+					if (ammo >= 7) {
+						deductAmmo(7);
 						changeState(new ArmoredARollEnterState());
 					}
 				}

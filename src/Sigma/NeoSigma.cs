@@ -127,27 +127,27 @@ public class NeoSigma : BaseSigma {
 			),
 			"sigma2_attack_air" => new GenericMeleeProj(
 				player.sigmaClawWeapon, centerPoint, ProjIds.Sigma2Claw, player,
-				3, 0, 0.375f
+				2, 0, 0.375f
 			),
 			"sigma2_attack_dash" => new GenericMeleeProj(
 				player.sigmaClawWeapon, centerPoint, ProjIds.Sigma2Claw, player,
-				3, 0, 0.375f
+				2, 0, 0.375f
 			),
 			"sigma2_upslash" or "sigma2_downslash" => new GenericMeleeProj(
 				player.sigmaClawWeapon, centerPoint, ProjIds.Sigma2UpDownClaw, player,
-				3, Global.defFlinch, 0.5f
+				2, Global.halfFlinch, 0.5f
 			),
 			"sigma2_ladder_attack" => new GenericMeleeProj(
 				player.sigmaSlashWeapon, centerPoint, ProjIds.Sigma2Claw, player,
-				3, 0, 0.25f
+				2, 0, 0.25f
 			),
 			"sigma2_wall_slide_attack" => new GenericMeleeProj(
 				player.sigmaSlashWeapon, centerPoint, ProjIds.Sigma2Claw, player,
-				3, 0, 0.25f
+				2, 0, 0.25f
 			),
 			"sigma2_shoot2" => new GenericMeleeProj(
 				new SigmaElectricBall2Weapon(), centerPoint, ProjIds.Sigma2Ball2, player,
-				6, Global.defFlinch, 1f
+				4, Global.halfFlinch, 1f
 			),
 			_ => null
 		};

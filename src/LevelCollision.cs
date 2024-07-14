@@ -566,10 +566,10 @@ public partial class Level {
 		float? aMaxDist = null, bool isRequesterAI = false,
 		bool includeAllies = false, Actor callingActor = null
 	) {
-		float maxDist = aMaxDist ?? Global.screenW * 0.75f;
+		float maxDist = aMaxDist ?? Global.screenW * 0.25f;
 		var targets = new List<Actor>();
 		Shape shape = Rect.createFromWH(
-			pos.x - Global.halfScreenW, pos.y - (Global.screenH * 0.75f),
+			pos.x - Global.halfScreenW, pos.y - (Global.screenH * 0.25f),
 			Global.screenW, Global.screenH).getShape();
 		//DrawWrappers.DrawRectWH(
 		//pos.x - Global.halfScreenW, pos.y - (Global.screenH * 0.75f),

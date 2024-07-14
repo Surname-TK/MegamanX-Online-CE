@@ -18,9 +18,9 @@ public class TriadThunder : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel >= 3) {
-			return 8;
+			return 7;
 		}
-		return 3;
+		return 2;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -50,7 +50,7 @@ public class TriadThunderProj : Projectile {
 		Point pos, int xDir, int yDir, Player player, ushort netProjId, bool rpc = false
 	) : base(
 		TriadThunder.netWeapon, pos, xDir, 0, 1, player, "triadthunder_proj",
-		Global.miniFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.miniFlinch, 1f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.TriadThunder;
 		character = player.character;
@@ -150,11 +150,11 @@ public class TriadThunderBall : Projectile {
 		Weapon weapon, Point pos, int xDir, Player player
 	) : base(
 		weapon, pos, xDir, 0, 2, player, "triadthunder_ball",
-		Global.miniFlinch, 0.5f, null, player.ownedByLocalPlayer
+		Global.miniFlinch, 1f, null, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.TriadThunder;
 		destroyOnHit = false;
-		shouldShieldBlock = false;
+		shouldShieldBlock = true;
 
 		isMelee = true;
 		if (player.character != null) {
@@ -168,6 +168,7 @@ public class TriadThunderBall : Projectile {
 			startDropTime += Global.spf;
 			if (startDropTime > 0.075f) {
 				useGravity = true;
+				damager.damage = 0;
 				maxTime = 1;
 			}
 		}
@@ -180,7 +181,8 @@ public class TriadThunderBeam : Actor {
 	float time = 1;
 	Player player;
 	public List<TriadThunderBeamPiece> pieces = new List<TriadThunderBeamPiece>();
-	public TriadThunderBeam(Point pos, int type, int xDir, int yDir, Player player, bool ownedByLocalPlayer) : base("empty", pos, null, ownedByLocalPlayer, false) {
+	public TriadThunderBeam(Point pos, int type, int xDir, int yDir, Player player, bool ownedByLocalPlayer
+	) : base("empty", pos, null, ownedByLocalPlayer, false) {
 		this.xDir = xDir;
 		this.yDir = yDir;
 		this.type = type;
@@ -243,20 +245,21 @@ public class TriadThunderBeamPiece : Projectile {
 
 public class TriadThunderProjCharged : Projectile {
 	public TriadThunderProjCharged(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 4, player, "triadthunder_charged", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 3, player, "triadthunder_charged", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.TriadThunderCharged;
+		netcodeOverride = NetcodeModel.FavorDefender;
 		if (type == 1) {
-			maxTime = 1f;
+			maxTime = 2f;
 			projId = (int)ProjIds.SparkMSpark;
-			// netcodeOverride = NetcodeModel.FavorDefender;
 			changeSprite("sparkm_proj_spark", true);
 		} else if (type == 2) {
 			projId = (int)ProjIds.VoltCBall;
 			changeSprite("voltc_proj_ground_thunder", true);
-			maxTime = 0.75f;
+			maxTime = 1.5f;
 			wallCrawlSpeed = 150;
 		} else {
-			maxTime = 1f;
+			maxTime = 1.25f;
+			wallCrawlSpeed = 150;
 		}
 
 		destroyOnHit = false;
@@ -283,7 +286,7 @@ public class TriadThunderProjCharged : Projectile {
 
 public class TriadThunderQuake : Projectile {
 	public TriadThunderQuake(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 3, player, "triadthunder_charged_quake", Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 0, player, "triadthunder_charged_quake", Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer) {
 		useGravity = false;
 		projId = (int)ProjIds.TriadThunderQuake;
 		maxTime = 0.25f;
@@ -313,6 +316,8 @@ public class TriadThunderChargedState : CharState {
 	bool groundedOnce;
 	public TriadThunderChargedState(bool grounded) : base(!grounded ? "fall" : "punch_ground", "", "", "") {
 		superArmor = true;
+		airMove = true;
+		useDashJumpSpeed = false;
 	}
 
 	public override void update() {

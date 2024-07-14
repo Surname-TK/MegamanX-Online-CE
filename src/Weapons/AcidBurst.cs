@@ -43,7 +43,7 @@ public class AcidBurstProj : Projectile {
 	public AcidBurstProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 300, 0, player, "acidburst_proj", 0, 0f, netProjId, player.ownedByLocalPlayer) {
 		useGravity = true;
-		maxTime = 1.5f;
+		maxTime = 1.75f;
 		projId = (int)ProjIds.AcidBurst;
 		vel = new Point(xDir * 100, -200);
 		fadeSound = "acidBurst";
@@ -51,6 +51,20 @@ public class AcidBurstProj : Projectile {
 
 		// TODO: Fix this
 		canBeLocal = false;
+
+		if (ownedByLocalPlayer) {
+			if (!owner.isDead) {
+				if (owner.input.isHeld(Control.Up, owner)) {
+					vel.x = 0;
+					vel.y = -500;
+				}
+				if (owner.input.isHeld(Control.Down, owner)) {
+					vel.x = 0;
+					vel.y = 250;
+				}
+			}
+		}
+		
 
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);

@@ -26,7 +26,7 @@ public partial class MegamanX : Character {
 	public TunnelFangProjCharged? chargedTunnelFang;
 	public GravityWellProj? gravityWell;
 	public int totalChipHealAmount;
-	public const int maxTotalChipHealAmount = 32;
+	public const int maxTotalChipHealAmount = 64;
 	public int unpoShotCount {
 		get {
 			if (player.weapon is not Buster { isUnpoBuster: true }) {
@@ -64,10 +64,9 @@ public partial class MegamanX : Character {
 	public bool boughtUltimateArmorOnce;
 	public bool boughtGoldenArmorOnce;
 
-	public bool stockedCharge;
-	public bool stockedXSaber;
-
-	public bool stockedX3Buster;
+	public bool stockedX2Charge;
+	public bool stockedX3Charge;
+	public bool stockedX3Saber;
 
 	public float xSaberCooldown;
 	public float stockedChargeFlashTime;
@@ -113,15 +112,15 @@ public partial class MegamanX : Character {
 		fgMotion = false;
 		base.update();
 
-		if (stockedCharge) {
+		if (stockedX2Charge) {
 			addRenderEffect(RenderEffectType.ChargePink, 0.033333f, 0.1f);
 		}
-		if (stockedXSaber) {
+		if (stockedX3Saber) {
 			addRenderEffect(RenderEffectType.ChargeGreen, 0.05f, 0.1f);
 		}
-		if (stockedX3Buster) {
+		if (stockedX3Charge) {
 			if (player.weapon is not Buster) {
-				stockedX3Buster = false;
+				stockedX3Charge = false;
 			} else {
 				addRenderEffect(RenderEffectType.ChargeOrange, 0.05f, 0.1f);
 			}
@@ -168,7 +167,7 @@ public partial class MegamanX : Character {
 
 		if (hasFgMoveEquipped()) {
 			player.fgMoveAmmo += Global.spf;
-			if (player.fgMoveAmmo > 32) player.fgMoveAmmo = 32;
+			if (player.fgMoveAmmo > 28) player.fgMoveAmmo = 28;
 		}
 
 		if (stingChargeTime > 0) {
@@ -338,7 +337,7 @@ public partial class MegamanX : Character {
 			!charState.isGrabbing
 		) {
 			if (xSaberCooldown == 0) {
-				xSaberCooldown = 1f;
+				xSaberCooldown = 0f;
 				changeState(new X6SaberState(grounded), true);
 				return;
 			}
@@ -453,7 +452,7 @@ public partial class MegamanX : Character {
 				shootPressed ||
 				(framesSinceLastShootPressed < Global.normalizeFrames(6) &&
 				framesSinceLastShootReleased > Global.normalizeFrames(30)) ||
-				(shootHeld && player.weapon.isStream && chargeTime < charge1Time)
+				(shootHeld && player.weapon.isStream && chargeTime < charge3Time)
 			);
 			if (!fgMotion && offCooldown && shootCondition) {
 				shoot(false);
@@ -641,17 +640,25 @@ public partial class MegamanX : Character {
 		}
 	}
 
-	public void stockCharge(bool stockOrUnstock) {
-		stockedCharge = stockOrUnstock;
+	public void stockX2Charge(bool stockOrUnstock) {
+		stockedX2Charge = stockOrUnstock;
 		if (ownedByLocalPlayer) {
 			RPC.playerToggle.sendRpc(
-				player.id, stockOrUnstock ? RPCToggleType.StockCharge : RPCToggleType.UnstockCharge
+				player.id, stockOrUnstock ? RPCToggleType.StockX2Charge : RPCToggleType.UnstockX2Charge
+			);
+		}
+	}
+	public void stockX3Charge(bool stockOrUnstock) {
+		stockedX3Charge = stockOrUnstock;
+		if (ownedByLocalPlayer) {
+			RPC.playerToggle.sendRpc(
+				player.id, stockOrUnstock ? RPCToggleType.StockX3Charge : RPCToggleType.UnstockX3Charge
 			);
 		}
 	}
 
 	public void stockSaber(bool stockOrUnstock) {
-		stockedXSaber = stockOrUnstock;
+		stockedX3Saber = stockOrUnstock;
 		if (ownedByLocalPlayer) {
 			RPC.playerToggle.sendRpc(
 				player.id, stockOrUnstock ? RPCToggleType.StockSaber : RPCToggleType.UnstockSaber
@@ -717,7 +724,7 @@ public partial class MegamanX : Character {
 			}
 		}
 
-		if (stockedXSaber) {
+		if (stockedX3Saber) {
 			if (xSaberCooldown == 0) {
 				stockSaber(false);
 				changeState(new XSaberState(grounded), true);
@@ -753,9 +760,9 @@ public partial class MegamanX : Character {
 
 		int cl = doCharge ? chargeLevel : 0;
 		if (player.weapon is GigaCrush) {
-			if (player.weapon.ammo < 16) cl = 0;
-			else if (player.weapon.ammo >= 16 && player.weapon.ammo < 24) cl = 1;
-			else if (player.weapon.ammo >= 24 && player.weapon.ammo < 32) cl = 2;
+			if (player.weapon.ammo < 14) cl = 0;
+			else if (player.weapon.ammo >= 14 && player.weapon.ammo < 21) cl = 1;
+			else if (player.weapon.ammo >= 21 && player.weapon.ammo < 28) cl = 2;
 			else cl = 3;
 		}
 		if (Buster.isWeaponUnpoBuster(player.weapon)) {
@@ -770,14 +777,24 @@ public partial class MegamanX : Character {
 		}
 
 		if (chargeLevel >= 3 && player.hasArmArmor(2)) {
-			stockedCharge = true;
+			stockedX2Charge = true;
 			if (player.weapon is Buster) {
 				shootTime = hasUltimateArmor ? 0.5f : 0.25f;
 			} else shootTime = 0.5f;
-			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockCharge);
-		} else if (stockedCharge) {
-			stockedCharge = false;
-			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockCharge);
+			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX2Charge);
+		} else if (stockedX2Charge) {
+			stockedX2Charge = false;
+			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
+		}
+		if (chargeLevel >= 3 && player.hasArmArmor(3)) {
+			stockedX3Charge = true;
+			if (player.weapon is Buster) {
+				shootTime = hasUltimateArmorBS.getValue() ? 0.5f : 0.25f;
+			} else shootTime = 0.5f;
+			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Charge);
+		} else if (stockedX3Charge) {
+			stockedX3Charge = false;
+			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
 		}
 
 		if (!player.weapon.isStream) {
@@ -847,7 +864,7 @@ public partial class MegamanX : Character {
 	}
 
 	public void shoot(Weapon weapon, Point pos, int xDir, Player player, int chargeLevel, ushort netProjId) {
-		if (stockedCharge) {
+		if (stockedX2Charge) {
 			chargeLevel = 3;
 		}
 
@@ -882,7 +899,7 @@ public partial class MegamanX : Character {
 						ammoUsage = Global.spf * 20;
 					}
 				} else {
-					ammoUsage = 8;
+					ammoUsage = 7;
 				}
 			} else {
 				ammoUsage = weapon.getAmmoUsage(chargeLevel);
@@ -1091,7 +1108,7 @@ public partial class MegamanX : Character {
 		Projectile? proj = null;
 
 		if (sprite.name.Contains("beam_saber") && sprite.name.Contains("2")) {
-			float overrideDamage = 3;
+			float overrideDamage = 2;
 			if (!grounded) overrideDamage = 2;
 			proj = new GenericMeleeProj(new XSaber(player), centerPoint, ProjIds.X6Saber, player, damage: overrideDamage, flinch: 0);
 		} else if (sprite.name.Contains("beam_saber")) {
@@ -1259,6 +1276,7 @@ public partial class MegamanX : Character {
 		setShootRaySplasher(false);
 
 		player.removeOwnedMines();
+		player.removeOwnedShields();
 		player.removeOwnedTurrets();
 
 		player.usedChipOnce = false;
@@ -1302,6 +1320,9 @@ public partial class MegamanX : Character {
 
 	public bool canUseFgMove() {
 		return !isInvulnerableAttack() && chargedRollingShieldProj == null && !stingActive && canAffordFgMove() && hadoukenCooldownTime == 0 && player.weapon is Buster && player.fgMoveAmmo >= 32;
+=======
+		return !isInvulnerableAttack() && chargedRollingShieldProj == null && !isInvisibleBS.getValue() && canAffordFgMove() && hadoukenCooldownTime == 0 && player.weapon is Buster && player.fgMoveAmmo >= 28;
+>>>>>>> Stashed changes
 	}
 
 	public bool shouldDrawFgCooldown() {

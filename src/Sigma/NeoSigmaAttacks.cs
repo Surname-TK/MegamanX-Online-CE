@@ -158,8 +158,8 @@ public class SigmaElectricBall2Proj : Projectile {
 		Weapon weapon, Point pos, int xDir,
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 300, 6, player, "sigma2_ball2",
-		Global.defFlinch, 0.2f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 300, 4, player, "sigma2_ball2",
+		Global.halfFlinch, 0.2f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Sigma2Ball2;
 		destroyOnHit = false;

@@ -28,7 +28,7 @@ public class StingProj : Projectile {
 	public StingProj(
 		Weapon weapon, Point pos, int xDir, Player player, int type, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 300, 2, player, "sting_start", 0, 0.25f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 300, 2, player, "sting_start", 0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Sting;
 		maxTime = 0.6f;
@@ -36,6 +36,7 @@ public class StingProj : Projectile {
 			var sprite = "sting_flat";
 			changeSprite(sprite, false);
 			reflectable = true;
+			damager.damage = 1;
 		} else if (type == 2 || type == 3) {
 			var sprite = "sting_up";
 			if (type == 3) {
@@ -46,7 +47,7 @@ public class StingProj : Projectile {
 			}
 			changeSprite(sprite, false);
 			reflectable = true;
-			damager.damage = 2;
+			damager.damage = 1;
 			projId = (int)ProjIds.StingDiag;
 		}
 		fadeSprite = "buster1_fade";

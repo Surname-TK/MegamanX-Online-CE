@@ -299,10 +299,14 @@ public class CrackedWall : Actor, IDamagable {
 		if (projId == (int)ProjIds.MechStomp) return null;
 		if (projId == (int)ProjIds.MechChain) return null;
 		if (projId == (int)ProjIds.MechMissile) return null;
+		if (projId == (int)ProjIds.FireWave) return null;
+		if (projId == (int)ProjIds.FireWaveChargedStart) return null;
+		if (projId == (int)ProjIds.FireWaveCharged) return null;
 		if (projId == (int)ProjIds.Torpedo) return null;
 		if (projId == (int)ProjIds.TorpedoCharged) return null;
 		if (projId == (int)ProjIds.MechTorpedo) return null;
 		if (projId == (int)ProjIds.MagnetMine) return null;
+		if (projId == (int)ProjIds.MagnetMineCharged) return null;
 		if (projId == (int)ProjIds.GreenSpinnerSplash) return null;
 		if (projId == (int)ProjIds.GreenSpinner) return null;
 		if (projId == (int)ProjIds.BlastLauncher) return null;
@@ -326,6 +330,7 @@ public class CrackedWall : Actor, IDamagable {
 		if (projId == (int)ProjIds.PZeroYoudantotsu) return null;
 		if (projId == (int)ProjIds.WheelGSpinWheel) return 3;
 		if (projId == (int)ProjIds.WheelGSpin) return 3;
+		if (projId == (int)ProjIds.BBuffaloCrash) return null;
 		if (projId == (int)ProjIds.TunnelRTornadoFang) return null;
 		if (projId == (int)ProjIds.TunnelRTornadoFang2) return null;
 		if (projId == (int)ProjIds.TunnelRTornadoFangDiag) return null;

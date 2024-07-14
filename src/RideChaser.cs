@@ -581,7 +581,7 @@ public class RideChaser : Actor, IDamagable {
 
 	public override Projectile getProjFromHitbox(Collider hitbox, Point centerPoint) {
 		if (player != null && canRunEnemyOver()) {
-			return new GenericMeleeProj(hitWeapon, centerPoint, ProjIds.RideChaserHit, player, 4, Global.defFlinch, 1);
+			return new GenericMeleeProj(hitWeapon, centerPoint, ProjIds.RideChaserHit, player, 3, Global.halfFlinch, 1);
 		} else if (player != null && canHurtEnemy()) {
 			return new GenericMeleeProj(hitWeapon, centerPoint, ProjIds.RideChaserHit, player, 2, 0, 1);
 		}
@@ -590,11 +590,11 @@ public class RideChaser : Actor, IDamagable {
 
 	public override void updateProjFromHitbox(Projectile proj) {
 		if (player != null && canRunEnemyOver()) {
-			proj.damager.damage = 4;
-			proj.damager.flinch = Global.defFlinch;
+			proj.damager.damage = 3;
+			proj.damager.flinch = Global.halfFlinch;
 			proj.damager.owner = player;
 		} else if (player != null && canHurtEnemy()) {
-			proj.damager.damage = 2;
+			proj.damager.damage = 1;
 			proj.damager.flinch = 0;
 			proj.damager.owner = player;
 		} else {

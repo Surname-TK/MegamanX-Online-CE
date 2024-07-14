@@ -26,7 +26,7 @@ public class SpiralMagnum : AxlWeapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel == 3 && altFire == 0) {
-			return 8;
+			return 7;
 		}
 		return 4;
 	}
@@ -360,8 +360,8 @@ public class SpiralMagnumProj : Projectile {
 
 public class SniperMissileProj : Projectile, IDamagable {
 	public Character target;
-	public float health = 6;
-	public float maxHealth = 6;
+	public float health = 3;
+	public float maxHealth = 3;
 	public float blinkTime;
 	public float maxBlinkTime = 1;
 	float? holdStartAngle;

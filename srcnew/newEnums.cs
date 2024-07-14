@@ -16,7 +16,7 @@ public enum ArmorP {
 
 public enum SpecialStateIds {
 	None,
-	AxlRoll,
+	/* AxlRoll,*/
 	HyorogaStart,
 	XTeleport,
 	PZeroParry

@@ -179,7 +179,7 @@ public class Zero : Character {
 	public override bool canCharge() {
 		return (
 			(charState.attackCtrl || getChargeLevel() > 0) &&
-			(player.currency > 0 || freeBusterShots > 0) &&
+			(player.currency > 0 || getChargeLevel() < 1 || freeBusterShots > 0) &&
 			donutsPending == 0
 		);
 	}
@@ -204,7 +204,7 @@ public class Zero : Character {
 
 		// Shoot stuff.
 		if (chargeLevel == 1) {
-			currencyUse = 1;
+			currencyUse = 0;
 			playSound("buster2X3", sendRpc: true);
 			new ZBuster2Proj(
 				shootPos, xDir, 0, player, player.getNextActorNetId(), rpc: true
@@ -217,7 +217,7 @@ public class Zero : Character {
 			);
 		} else if (chargeLevel == 3 || chargeLevel >= 4) {
 			currencyUse = 1;
-			playSound("buster4", sendRpc: true);
+			playSound("buster4X2", sendRpc: true);
 			new ZBuster4Proj(
 				shootPos, xDir, 0, player, player.getNextActorNetId(), rpc: true
 			);
@@ -577,7 +577,7 @@ public class Zero : Character {
 		// Damage based on tripleSlash time.
 		if (meleeId == (int)MeleeIds.HuhSlash) {
 			float timeSinceStart = zeroTripleSlashEndTime - zeroTripleStartTime;
-			float overrideDamage = 4;
+			float overrideDamage = 3;
 			int overrideFlinch = Global.defFlinch;
 			if (timeSinceStart < 0.5f) {
 				overrideDamage = 3;
@@ -587,7 +587,7 @@ public class Zero : Character {
 		}
 		// Damage based on fall speed.
 		else if (meleeId == (int)MeleeIds.Rakukojin) {
-			float damage = 3 + Helpers.clamp(MathF.Floor(deltaPos.y * 0.8f), 0, 10);
+			float damage = 2 + Helpers.clamp(MathF.Floor(deltaPos.y * 0.8f), 0, 6);
 			proj.damager.damage = damage;
 		}
 		return proj;
@@ -693,7 +693,7 @@ public class Zero : Character {
 			),
 			(int)MeleeIds.RollingSlash =>  new GenericMeleeProj(
 				KuuenzanWeapon.staticWeapon, projPos, ProjIds.ZSaberRollingSlash, player,
-				1, 0, 0.125f, isDeflectShield: true
+				1, 0, 0.125f, isDeflectShield: false
 			),
 			(int)MeleeIds.Hyoroga => new GenericMeleeProj(
 				HyorogaWeapon.staticWeapon, projPos, ProjIds.HyorogaSwing, player, 4, 0, 0.25f
@@ -713,7 +713,7 @@ public class Zero : Character {
 			),
 			// Up Specials
 			(int)MeleeIds.Ryuenjin => new GenericMeleeProj(
-				RyuenjinWeapon.staticWeapon, projPos, ProjIds.Ryuenjin, player, 4, 0, 0.2f
+				RyuenjinWeapon.staticWeapon, projPos, ProjIds.Ryuenjin, player, 3, 0, 0.2f
 			),
 			// Deals +2 burn damage to total is 5.
 			(int)MeleeIds.Denjin => new GenericMeleeProj(
@@ -724,13 +724,13 @@ public class Zero : Character {
 			),
 			// Down specials
 			(int)MeleeIds.Hyouretsuzan => new GenericMeleeProj(
-				HyouretsuzanWeapon.staticWeapon, projPos, ProjIds.Hyouretsuzan2, player, 4, 12, 0.5f
+				HyouretsuzanWeapon.staticWeapon, projPos, ProjIds.Hyouretsuzan2, player, 2, 0, 0.5f
 			),
 			(int)MeleeIds.Danchien => new GenericMeleeProj(
 				DanchienWeapon.staticWeapon, projPos, ProjIds.QuakeBlazer, player, 2, 0, 0.5f
 			),
 			(int)MeleeIds.Rakukojin => new GenericMeleeProj(
-				RakukojinWeapon.staticWeapon, projPos, ProjIds.Rakukojin, player, 2, 0, 0.5f
+				RakukojinWeapon.staticWeapon, projPos, ProjIds.Rakukojin, player, 2, Global.defFlinch, 0.5f
 			),
 			// Others
 			(int)MeleeIds.LadderSlash => new GenericMeleeProj(
@@ -748,7 +748,7 @@ public class Zero : Character {
 			),
 			(int)MeleeIds.AwakenedAura => new GenericMeleeProj(
 				awakenedAuraWeapon, projPos, ProjIds.AwakenedAura, player,
-				2, 0, 0.5f
+				1, 0, 0.5f
 			),
 			_ => null
 		};
@@ -764,8 +764,8 @@ public class Zero : Character {
 					float damage = 2;
 					int flinch = 0;
 					if (awakenedPhase >= 2) {
-						damage = 4;
-						flinch = Global.defFlinch;
+						damage = 3;
+						flinch = 0;
 					}
 					Projectile proj = new GenericMeleeProj(
 						awakenedAuraWeapon, centerPoint,
@@ -785,8 +785,8 @@ public class Zero : Character {
 	public override void updateProjFromHitbox(Projectile proj) {
 		if (proj.projId == (int)ProjIds.AwakenedAura) {
 			if (awakenedPhase >= 2) {
-				proj.damager.damage = 4;
-				proj.damager.flinch = Global.defFlinch;
+				proj.damager.damage = 2;
+				proj.damager.flinch = 0;
 			}
 		}
 	}

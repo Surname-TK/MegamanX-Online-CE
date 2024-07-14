@@ -2,7 +2,7 @@
 
 public class FlameStag : Maverick {
 	public static Weapon getWeapon() { return new Weapon(WeaponIds.FStagGeneric, 144); }
-	public static Weapon getUppercutWeapon(Player player) { return new Weapon(WeaponIds.FStagGeneric, 144, new Damager(player, 4, Global.defFlinch, 0.25f)); }
+	public static Weapon getUppercutWeapon(Player player) { return new Weapon(WeaponIds.FStagGeneric, 144, new Damager(player, 2, Global.defFlinch, 0.25f)); }
 	public Weapon uppercutWeapon;
 
 	public Sprite antler;

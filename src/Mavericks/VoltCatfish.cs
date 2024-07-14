@@ -37,8 +37,8 @@ public class VoltCatfish : Maverick {
 		usesAmmo = true;
 		canHealAmmo = true;
 		ammo = 0;
-		maxAmmo = 32;
-		grayAmmoLevel = 8;
+		maxAmmo = 28;
+		grayAmmoLevel = 7;
 		barIndexes = (65, 54);
 	}
 
@@ -60,9 +60,9 @@ public class VoltCatfish : Maverick {
 						changeState(new VoltCSuckState());
 					}
 				} else if (input.isPressed(Control.Dash, player)) {
-					if (ammo >= 32) {
+					if (ammo >= 28) {
 						changeState(new VoltCSpecialState());
-					} else if (ammo >= 8) {
+					} else if (ammo >= 7) {
 						changeState(new VoltCUpBeamState());
 					}
 				}
@@ -99,9 +99,9 @@ public class VoltCatfish : Maverick {
 	}
 
 	public MaverickState getDashState() {
-		if (ammo >= 32) {
+		if (ammo >= 28) {
 			return new VoltCSpecialState();
-		} else if (ammo >= 8) {
+		} else if (ammo >= 7) {
 			return new VoltCUpBeamState();
 		} else {
 			return null;
@@ -160,14 +160,14 @@ public class VoltCTriadThunderProj : Projectile {
 		VoltCatfish vc, Player player, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 0, 2, player, type == 0 ? "voltc_proj_triadt_deactivated" : "voltc_proj_ball",
-		0, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.miniFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.VoltCTriadThunder;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 		vel = velDir.normalize().times(150);
 		collider.wallOnly = true;
-		maxTime = 1.75f;
+		maxTime = 2f;
 		this.vc = vc;
 
 		if (rpc) {
@@ -205,7 +205,7 @@ public class VoltCTriadThunderProj : Projectile {
 			electrify();
 			ttp.destroySelf();
 		} else if (other.gameObject is VoltCatfish vc && vc.state is VoltCSuckState && vc.ownedByLocalPlayer && vc == this.vc) {
-			vc.addAmmo(electrified ? 8 : 4);
+			vc.addAmmo(electrified ? 7 : 4);
 			destroySelf();
 		}
 	}
@@ -392,12 +392,12 @@ public class VoltCUpBeamState : MaverickState {
 		if (!once && shootPos != null) {
 			once = true;
 			maverick.playSound("voltcWeakBolt", sendRpc: true);
-			if (isAI || maverick.ammo >= 8) {
-				if (!isAI) maverick.deductAmmo(8);
+			if (isAI || maverick.ammo >= 7) {
+				if (!isAI) maverick.deductAmmo(7);
 				new VoltCUpBeamProj(maverick.weapon, shootPos.Value, maverick.xDir, 0, player, player.getNextActorNetId(), rpc: true);
 			}
-			if (isAI || maverick.ammo >= 8) {
-				if (!isAI) maverick.deductAmmo(8);
+			if (isAI || maverick.ammo >= 7) {
+				if (!isAI) maverick.deductAmmo(7);
 				new VoltCUpBeamProj(maverick.weapon, shootPos2.Value, maverick.xDir, 0, player, player.getNextActorNetId(), rpc: true);
 			}
 		}
@@ -450,7 +450,7 @@ public class VoltCSpecialState : MaverickState {
 	VoltCChargeProj chargeProj2;
 	VoltCBarrierProj barrierProj1;
 	VoltCBarrierProj barrierProj2;
-	const float drainAmmoRate = 6;
+	const float drainAmmoRate = 4;
 	public VoltCSpecialState() : base("charge_start", "") {
 		superArmor = true;
 	}
@@ -458,7 +458,7 @@ public class VoltCSpecialState : MaverickState {
 	public override void update() {
 		base.update();
 		if (state == 0) {
-			maverick.ammo -= 8;
+			maverick.ammo -= 7;
 			var beamPos = maverick.pos.addxy(0, -150);
 			upBeamProj = new VoltCUpBeamProj(maverick.weapon, beamPos, maverick.xDir, 1, player, player.getNextActorNetId(), rpc: true);
 			maverick.playSound("voltcStrongBolt", sendRpc: true);

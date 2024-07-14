@@ -34,9 +34,9 @@ public class BoomerangKuwanger : Maverick {
 
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
-		grayAmmoLevel = 8;
+		ammo = 28;
+		maxAmmo = 28;
+		grayAmmoLevel = 7;
 		barIndexes = (58, 47);
 	}
 
@@ -71,8 +71,8 @@ public class BoomerangKuwanger : Maverick {
 				} else if (specialPressed() && !bald) {
 					changeState(new BoomerKDeadLiftState());
 				} else if (player.dashPressed(out string dashControl) && teleportCooldown == 0 && !bald) {
-					if (ammo >= 8) {
-						deductAmmo(8);
+					if (ammo >= 7) {
+						deductAmmo(7);
 						changeState(new BoomerKTeleportState());
 					}
 				}
@@ -156,7 +156,7 @@ public class BoomerangKBoomerangWeapon : Weapon {
 
 public class BoomerangKDeadLiftWeapon : Weapon {
 	public BoomerangKDeadLiftWeapon(Player player) {
-		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 2, Global.defFlinch, 0.5f);
 		index = (int)WeaponIds.BoomerangKDeadLift;
 		killFeedIndex = 97;
 	}

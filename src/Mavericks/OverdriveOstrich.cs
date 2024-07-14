@@ -145,7 +145,7 @@ public class OverdriveOstrich : Maverick {
 public class OverdriveOSonicSlicerProj : Projectile {
 	bool once;
 	public OverdriveOSonicSlicerProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 3, player, "overdriveo_slicer_start", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, "overdriveo_slicer_start", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.OverdriveOSonicSlicer;
 		maxTime = 0.5f;
 		destroyOnHit = false;
@@ -194,7 +194,7 @@ public class OverdriveOSonicSlicerUpProj : Projectile {
 	public Point dest;
 	public bool fall;
 	public OverdriveOSonicSlicerUpProj(Weapon weapon, Point pos, int num, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, 1, 0, 3, player, "overdriveo_slicer_vertical", Global.defFlinch, 0.25f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, 1, 0, 2, player, "overdriveo_slicer_vertical", Global.halfFlinch, 0.25f, netProjId, player.ownedByLocalPlayer) {
 		fadeSprite = "sonicslicer_charged_fade";
 		maxTime = 1;
 		projId = (int)ProjIds.OverdriveOSonicSlicerUp;

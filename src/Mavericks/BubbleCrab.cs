@@ -35,9 +35,9 @@ public class BubbleCrab : Maverick {
 
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
-		grayAmmoLevel = 8;
+		ammo = 28;
+		maxAmmo = 28;
+		grayAmmoLevel = 7;
 		barIndexes = (62, 51);
 
 		armorClass = ArmorClass.Light;
@@ -118,7 +118,7 @@ public class BubbleCrab : Maverick {
 	}
 
 	public MaverickState getSpecialState() {
-		if (shield == null && ammo >= 8) {
+		if (shield == null && ammo >= 7) {
 			return new BCrabShieldStartState();
 		} else if (crabs.Count < 3) {
 			return new BCrabSummonState();
@@ -395,7 +395,7 @@ public class BCrabShieldStartState : MaverickState {
 			Point? shootPos = maverick.getFirstPOI("shield");
 			if (!once && shootPos != null) {
 				once = true;
-				maverick.deductAmmo(8);
+				maverick.deductAmmo(7);
 				maverick.playSound("bcrabShield", sendRpc: true);
 				var shield = new BCrabShieldProj(
 					maverick.weapon, shootPos.Value, maverick.xDir, player, player.getNextActorNetId(), rpc: true

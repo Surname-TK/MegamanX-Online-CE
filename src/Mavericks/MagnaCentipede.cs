@@ -33,9 +33,9 @@ public class MagnaCentipede : Maverick {
 
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
-		grayAmmoLevel = 8;
+		ammo = 28;
+		maxAmmo = 28;
+		grayAmmoLevel = 7;
 		barIndexes = (59, 48);
 	}
 
@@ -77,8 +77,8 @@ public class MagnaCentipede : Maverick {
 					changeState(new MagnaCShootState());
 				} else if (input.isPressed(Control.Special1, player) && !noTail) {
 					changeState(new MagnaCMagnetPullState());
-				} else if (input.isPressed(Control.Dash, player) && ammo >= 8 && teleportCooldown == 0) {
-					deductAmmo(8);
+				} else if (input.isPressed(Control.Dash, player) && ammo >= 7 && teleportCooldown == 0) {
+					deductAmmo(7);
 					changeState(new MagnaCTeleportState());
 				}
 			} else if (state is MJump || state is MFall) {

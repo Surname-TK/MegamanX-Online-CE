@@ -41,9 +41,9 @@ public class StingChameleon : Maverick {
 
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
-		grayAmmoLevel = 8;
+		ammo = 28;
+		maxAmmo = 28;
+		grayAmmoLevel = 7;
 		barIndexes = (57, 46);
 	}
 
@@ -58,7 +58,7 @@ public class StingChameleon : Maverick {
 
 		if (!isCloakTransition()) {
 			if (isInvisible) {
-				drainAmmo(4);
+				drainAmmo(3);
 				if (ammo <= 0) {
 					uncloakTransitionTime = 1;
 					playSound("stingcCloak", sendRpc: true);
@@ -122,8 +122,8 @@ public class StingChameleon : Maverick {
 	public void cloakOrUncloak() {
 		if (isCloakTransition()) return;
 		if (!isInvisible) {
-			if (ammo >= 8) {
-				deductAmmo(8);
+			if (ammo >= 7) {
+				deductAmmo(7);
 				isInvisible = true;
 				cloakTransitionTime = 1;
 				playSound("76stingcCloak", sendRpc: true);
@@ -216,7 +216,7 @@ public class StingCStingWeapon : Weapon {
 
 public class StingCTongueWeapon : Weapon {
 	public StingCTongueWeapon(Player player) {
-		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 3, Global.halfFlinch, 0.5f);
 		index = (int)WeaponIds.StingCTongue;
 		killFeedIndex = 98;
 	}
@@ -233,7 +233,7 @@ public class StingCSpikeWeapon : Weapon {
 #region projectiles
 public class StingCStingProj : Projectile {
 	public StingCStingProj(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 2, player, "stingc_proj_csting", 0, 0, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 1, player, "stingc_proj_csting", 0, 0, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.StingCSting;
 		maxTime = 0.75f;
 

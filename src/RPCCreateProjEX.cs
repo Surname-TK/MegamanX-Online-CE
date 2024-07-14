@@ -24,6 +24,14 @@ public partial class RPCCreateProj : RPC {
 		{ (int)ProjIds.DZBuster3, DZBuster3Proj.rpcInvoke },
 		// Mavericks
 		{ (int)ProjIds.VoltCSuck, VoltCSuckProj.rpcInvoke }
+=======
+		{ (int)ProjIds.DZBuster4, DZBuster3Proj.rpcInvoke },
+		// Sigma Novelties
+		// { (int)ProjIds.ChillPIceShot, RaySplasherProj.rpcInvoke },
+		{ (int)ProjIds.BBuffaloQuake, TriadThunderQuake.rpcInvoke },
+		{ (int)ProjIds.TunnelRQuake, TriadThunderQuake.rpcInvoke },
+
+>>>>>>> Stashed changes
 	};
 
 }

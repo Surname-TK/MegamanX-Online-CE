@@ -139,6 +139,11 @@ public class DodgeRoll : CharState {
 		axl = character as Axl;
 		character.isDashing = true;
 		character.burnTime -= 1;
+=======
+		character.burnTime -= 2;
+		character.acidTime -= 1;
+		character.igFreezeProgress -= 2;
+>>>>>>> Stashed changes
 		if (character.burnTime < 0) {
 			character.burnTime = 0;
 		}
@@ -146,7 +151,7 @@ public class DodgeRoll : CharState {
 		initialDashDir = character.xDir;
 		if (player.input.isHeld(Control.Left, player)) initialDashDir = -1;
 		else if (player.input.isHeld(Control.Right, player)) initialDashDir = 1;
-		character.specialState = (int)SpecialStateIds.AxlRoll;
+		// character.specialState = (int)SpecialStateIds.AxlRoll;
 	}
 
 	public override void onExit(CharState newState) {

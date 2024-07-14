@@ -7,7 +7,7 @@ namespace MMXOnline;
 public class ViralSigmaTackleWeapon : Weapon {
 	public ViralSigmaTackleWeapon(Player player) : base() {
 		index = (int)WeaponIds.Sigma2ViralTackle;
-		damager = new Damager(player, 4, Global.defFlinch, 1f);
+		damager = new Damager(player, 3, Global.defFlinch, 1f);
 		killFeedIndex = 136;
 	}
 }
@@ -119,7 +119,7 @@ public class ViralSigmaPossessStart : CharState {
 		if (sigma.possessEnemyTime > sigma.maxPossessEnemyTime) {
 			sigma.possessEnemyTime = 0;
 			sigma.numPossesses++;
-			float ammoToRefill = 32; //character.player.health
+			float ammoToRefill = 28; //character.player.health
 			player.sigmaAmmo += ammoToRefill;
 			if (player.sigmaAmmo > player.sigmaMaxAmmo) player.sigmaAmmo = player.sigmaMaxAmmo;
 			target.player.startPossess(player, sendRpc: true);

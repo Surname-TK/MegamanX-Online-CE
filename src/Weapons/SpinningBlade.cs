@@ -74,6 +74,9 @@ public class SpinningBladeProj : Projectile {
 			spinSound.Play();
 			once = true;
 		}
+		if (time > 1f) {
+			damager.flinch = Global.defFlinch;
+		}
 		if (spinSound != null) {
 			spinSound.Volume = getSoundVolume() * 0.5f;
 			if (spinSound.Volume < 0.1) {

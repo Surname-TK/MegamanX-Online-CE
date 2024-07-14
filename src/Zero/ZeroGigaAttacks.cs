@@ -27,6 +27,7 @@ public class RakuhouhaWeapon : Weapon {
 		weaponSlotIndex = 51;
 		type = (int)ZeroGigaType.Rakuhouha;
 		displayName = "Rakuhouha";
+<<<<<<< Updated upstream
 		description = new string[] { "Channels stored energy in one blast.", "Energy cost: 16" };
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
@@ -61,6 +62,7 @@ public class RekkohaWeapon : Weapon {
 		weaponSlotIndex = 63;
 		type = (int)ZeroGigaType.Rekkoha;
 		displayName = "Rekkoha";
+<<<<<<< Updated upstream
 		description = new string[] { "Summon down pillars of light energy.", "Energy cost: 32" };
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
@@ -86,6 +88,7 @@ public class CFlasher : Weapon {
 		weaponSlotIndex = 64;
 		type = (int)ZeroGigaType.CFlasher;
 		displayName = "Messenkou";
+<<<<<<< Updated upstream
 		description = new string[] { "A less damaging blast that can pierce enemies.", "Energy cost: 8" };
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
@@ -235,9 +238,10 @@ public class RakuhouhaProj : Projectile {
 		Weapon weapon, Point pos, bool isCFlasher, float byteAngle,
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, 1, 300, 4, player, isCFlasher ? "cflasher" : "rakuhouha",
+		weapon, pos, 1, 300, 3, player, isCFlasher ? "cflasher" : "rakuhouha",
 		Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer
 	) {
+		netcodeOverride = NetcodeModel.FavorDefender;
 		this.isCFlasher = isCFlasher;
 		byteAngle = byteAngle % 256;
 
@@ -289,10 +293,11 @@ public class RakuhouhaProj : Projectile {
 public class ShinMessenkouProj : Projectile {
 	int state = 0;
 	public ShinMessenkouProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 4, player, "shinmessenkou_start", Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 3, player, "shinmessenkou_start", Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 0.6f;
 		destroyOnHit = false;
 		projId = (int)ProjIds.ShinMessenkou;
+		netcodeOverride = NetcodeModel.FavorDefender;
 
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
@@ -392,10 +397,11 @@ public class RekkohaProj : Projectile {
 	public RekkohaProj(
 		Weapon weapon, Point pos, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, 1, 0, 3, player, "rekkoha_proj",
+		weapon, pos, 1, 0, 2, player, "rekkoha_proj",
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Rekkoha;
+		// netcodeOverride = NetcodeModel.FavorDefender;
 		vel.y = 400;
 		maxTime = 1.6f;
 		destroyOnHit = false;
@@ -582,11 +588,12 @@ public class DarkHoldProj : Projectile {
 	public DarkHoldProj(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 0, 0, player, "empty", 0, 0.5f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 0, 0, player, "empty", 0, 1.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 3f;
 		vel = new Point();
 		projId = (int)ProjIds.DarkHold;
+		netcodeOverride = NetcodeModel.FavorDefender;
 		setIndestructableProperties();
 		Global.level.darkHoldProjs.Add(this);
 		if (Options.main.enablePostProcessing) {

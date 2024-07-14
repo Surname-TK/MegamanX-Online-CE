@@ -27,9 +27,9 @@ public class ToxicSeahorse : Maverick {
 
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
-		grayAmmoLevel = 8;
+		ammo = 28;
+		maxAmmo = 28;
+		grayAmmoLevel = 14;
 		barIndexes = (67, 56);
 	}
 
@@ -50,8 +50,8 @@ public class ToxicSeahorse : Maverick {
 				} else if (input.isPressed(Control.Special1, player)) {
 					changeState(new TSeahorseShoot2State());
 				} else if (input.isPressed(Control.Dash, player) && teleportCooldown == 0) {
-					if (ammo >= 8) {
-						deductAmmo(8);
+					if (ammo >= 14) {
+						deductAmmo(14);
 						changeState(new TSeahorseTeleportState());
 					}
 				}

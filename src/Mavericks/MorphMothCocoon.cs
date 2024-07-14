@@ -196,7 +196,7 @@ public class MorphMothCocoon : Maverick {
 			float damage = 1;
 			int flinch = 0;
 			if (deltaPos.magnitude > 300 * Global.spf * Helpers.progress(scrapAbsorbed, 32f)) {
-				damage = 4;
+				damage = 3;
 				flinch = Global.defFlinch;
 			} else if (deltaPos.magnitude > 200 * Global.spf * Helpers.progress(scrapAbsorbed, 32f)) {
 				damage = 2;
@@ -205,7 +205,7 @@ public class MorphMothCocoon : Maverick {
 			proj.damager.damage = damage;
 			proj.damager.flinch = flinch;
 		} else if (proj.projId == (int)ProjIds.MorphMCSwing) {
-			if (deltaPos.magnitude > 250 * Global.spf) proj.damager.damage = 4;
+			if (deltaPos.magnitude > 250 * Global.spf) proj.damager.damage = 3;
 			else proj.damager.damage = 0;
 		}
 	}

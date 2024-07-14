@@ -28,7 +28,7 @@ public class SilkShot : Weapon {
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
-		if (chargeLevel >= 3) return 8;
+		if (chargeLevel >= 3) return 7;
 		if (chargeLevel >= 2) return 4;
 		else return 1;
 	}

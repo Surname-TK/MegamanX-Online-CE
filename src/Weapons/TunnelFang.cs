@@ -20,7 +20,7 @@ public class TunnelFang : Weapon {
 			if (timeSinceLastShoot != null && timeSinceLastShoot < rateOfFire) return 1;
 			else return 2;
 		}
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -57,11 +57,12 @@ public class TunnelFangProj : Projectile {
 	) : base(
 		weapon, pos, xDir, 100, 1, player, "tunnelfang_proj", 0, 0.25f, netProjId, player.ownedByLocalPlayer
 	) {
-		maxTime = 1.5f;
+		maxTime = 1.25f;
 		projId = (int)ProjIds.TunnelFang;
 		exhaust = new Anim(pos, "tunnelfang_exhaust", xDir, null, false);
 		exhaust.setzIndex(zIndex - 100);
 		destroyOnHit = false;
+		shouldShieldBlock = true;
 		this.type = type;
 		if (type != 0) {
 			vel.x = 0;
@@ -111,7 +112,7 @@ public class TunnelFangProj : Projectile {
 
 		if (damagable is not CrackedWall) {
 			time -= Global.spf;
-			if (time < 0) time = 0;
+			if (time < 1) time = 1;
 		}
 
 		if (sparksCooldown == 0) {
@@ -137,12 +138,12 @@ public class TunnelFangProjCharged : Projectile {
 	public MegamanX? character;
 	float sparksCooldown;
 	public TunnelFangProjCharged(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 300, 1, player, "tunnelfang_charged", Global.defFlinch, 0.125f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 300, 1, player, "tunnelfang_charged", Global.halfFlinch, 0.15f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.TunnelFangCharged;
 		destroyOnHit = false;
-		shouldShieldBlock = false;
+		shouldShieldBlock = true;
 		shouldVortexSuck = false;
-		character = (player.character as MegamanX);
+		character = player.character as MegamanX;
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
@@ -160,7 +161,7 @@ public class TunnelFangProjCharged : Projectile {
 			return;
 		}
 
-		character.player.weapon.addAmmo(-Global.spf * 5, character.player);
+		character.player.weapon.addAmmo(-Global.spf * 2.5f, character.player);
 		if (character.player.weapon.ammo <= 0) {
 			destroySelf();
 			return;

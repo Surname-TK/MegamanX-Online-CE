@@ -107,7 +107,7 @@ public class FlameMStompWeapon : Weapon {
 	public FlameMStompWeapon(Player player) {
 		index = (int)WeaponIds.FlameMStomp;
 		killFeedIndex = 100;
-		damager = new Damager(player, 6, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
 	}
 }
 

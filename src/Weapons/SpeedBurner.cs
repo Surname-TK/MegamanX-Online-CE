@@ -6,7 +6,7 @@ namespace MMXOnline;
 public class SpeedBurner : Weapon {
 	public SpeedBurner(Player? player) : base() {
 		if (player != null) {
-			damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+			damager = new Damager(player, 3, Global.halfFlinch, 0.5f);
 		}
 		shootSounds = new string[] { "speedBurner", "speedBurner", "speedBurner", "speedBurnerCharged" };
 		rateOfFire = 1f;
@@ -149,18 +149,25 @@ public class SpeedBurnerCharState : CharState {
 			proj = null;
 		}
 
-		character.move(new Point(character.xDir * 350, 0));
+		character.move(new Point(character.xDir * 325, 0));
 
 		CollideData collideData = Global.level.checkCollisionActor(character, character.xDir, 0);
 		if (collideData != null && collideData.isSideWallHit() && character.ownedByLocalPlayer) {
 			character.applyDamage(2, player, character, (int)WeaponIds.SpeedBurner, (int)ProjIds.SpeedBurnerRecoil);
-			//character.changeState(new Hurt(-character.xDir, Global.defFlinch, 0), true);
+			character.changeState(new Hurt(-character.xDir, Global.halfFlinch), true);
 			character.changeState(new Idle(), true);
 			character.playSound("hurt", sendRpc: true);
 			return;
-		} else if (stateTime > 0.6f) {
-			character.changeState(new Idle(), true);
-			return;
+		} if (character.grounded){
+			if (stateTime > 0.45f) {
+				character.changeState(new Idle(), true);
+				return;
+			}
+		} else {
+			if (stateTime > 0.4f) {
+				character.changeState(new Idle(), true);
+				return;
+			}
 		}
 
 		if (proj != null) {

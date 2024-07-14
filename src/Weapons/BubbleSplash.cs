@@ -10,7 +10,7 @@ public class BubbleSplash : Weapon {
 
 	public BubbleSplash() : base() {
 		shootSounds = new string[] { "bubbleSplash", "bubbleSplash", "bubbleSplash", "bubbleSplashCharged" };
-		rateOfFire = 0.1f;
+		rateOfFire = 0.075f;
 		isStream = true;
 		index = (int)WeaponIds.BubbleSplash;
 		weaponBarBaseIndex = 10;
@@ -78,13 +78,17 @@ public class BubbleSplash : Weapon {
 
 public class BubbleSplashProj : Projectile {
 	public BubbleSplashProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 75, 1, player, "bubblesplash_proj_start", 0, 0f, netProjId, player.ownedByLocalPlayer) {
-		maxTime = 0.75f;
+		base(weapon, pos, xDir, 75, 0.5f, player, "bubblesplash_proj_start", 0, 0f, netProjId, player.ownedByLocalPlayer) {
+		maxTime = Helpers.randomRange(0.5f, 1f);
 		useGravity = false;
-		vel.y = -20 * Helpers.randomRange(0.75f, 1.25f);
-		vel.x *= Helpers.randomRange(0.75f, 1.25f);
-
-		if (!player.input.isHeld(Control.Up, player)) {
+		vel.y = -20 * Helpers.randomRange(0.5f, 1f);
+		vel.x *= Helpers.randomRange(0.5f, 1f);
+		if (ownedByLocalPlayer) {
+			if (player.character.isDashing && Math.Abs(player.character.vel.x) != 0) {
+				vel.x *= 1.5f;
+			}
+		}
+		if (!isUnderwater()) {
 			vel.y *= 0.5f;
 			vel.x *= 1.75f;
 		} else {
@@ -104,10 +108,13 @@ public class BubbleSplashProj : Projectile {
 	public override void update() {
 		base.update();
 		if (sprite.name == "bubblesplash_proj_start" && isAnimOver()) {
-			int randColor = Helpers.randomRange(0, 2);
-			if (randColor == 0) changeSprite("bubblesplash_proj", true);
-			if (randColor == 1) changeSprite("bubblesplash_proj2", true);
-			if (randColor == 2) changeSprite("bubblesplash_proj3", true);
+			int randColor = Helpers.randomRange(0, 5);
+			if (randColor == 0) changeSprite("bubblesplash_proj1_small", true);
+			if (randColor == 1) changeSprite("bubblesplash_proj1_medium", true);
+			if (randColor == 2) changeSprite("bubblesplash_proj2_small", true);
+			if (randColor == 3) changeSprite("bubblesplash_proj2_medium", true);
+			if (randColor == 4) changeSprite("bubblesplash_proj3_small", true);
+			if (randColor == 5) changeSprite("bubblesplash_proj3_medium", true);
 		}
 		vel.y -= Global.spf * 100;
 	}
@@ -118,13 +125,17 @@ public class BubbleSplashProjCharged : Projectile {
 	public float yPos;
 	public float initTime;
 	public BubbleSplashProjCharged(Weapon weapon, Point pos, int xDir, Player player, float time, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 75, 1, player, "bubblesplash_proj1", 0, 0, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 75, 0.5f, player, "bubblesplash_proj_start", 0, 0, netProjId, player.ownedByLocalPlayer) {
 		useGravity = false;
 		fadeSprite = "bubblesplash_pop";
 
-		int randColor = Helpers.randomRange(0, 2);
-		if (randColor == 0) changeSprite("bubblesplash_proj2", true);
-		if (randColor == 1) changeSprite("bubblesplash_proj3", true);
+		int randColor = Helpers.randomRange(0, 5);
+			if (randColor == 0) changeSprite("bubblesplash_proj1_small", true);
+			if (randColor == 1) changeSprite("bubblesplash_proj1_medium", true);
+			if (randColor == 2) changeSprite("bubblesplash_proj2_small", true);
+			if (randColor == 3) changeSprite("bubblesplash_proj2_medium", true);
+			if (randColor == 4) changeSprite("bubblesplash_proj3_small", true);
+			if (randColor == 5) changeSprite("bubblesplash_proj3_medium", true);
 		character = (player.character as MegamanX);
 		initTime = time;
 		this.time = time;

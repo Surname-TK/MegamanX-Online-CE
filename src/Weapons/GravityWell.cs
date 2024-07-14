@@ -5,7 +5,7 @@ namespace MMXOnline;
 public class GravityWell : Weapon {
 	public GravityWell() : base() {
 		shootSounds = new string[] { "buster", "buster", "buster", "warpIn" };
-		rateOfFire = 0.5f;
+		rateOfFire = 1f;
 		index = (int)WeaponIds.GravityWell;
 		weaponBarBaseIndex = 22;
 		weaponBarIndex = weaponBarBaseIndex;
@@ -16,7 +16,7 @@ public class GravityWell : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 2;
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -35,7 +35,7 @@ public class GravityWell : Weapon {
 		if (player.character is not MegamanX mmx) {
 			return false;
 		}
-		if (chargeLevel >= 3 || mmx.stockedCharge == true) {
+		if (chargeLevel >= 3 || mmx.stockedX2Charge == true) {
 			return base.canShoot(chargeLevel, player) && (
 				mmx.chargedGravityWell == null || mmx.chargedGravityWell.destroyed
 			);
@@ -55,7 +55,7 @@ public class GravityWellProj : Projectile, IDamagable {
 	float velX;
 
 	public GravityWellProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 2, player, "gravitywell_start", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 1, player, "gravitywell_start", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		maxActiveTime = 2;
 		maxTime = maxActiveTime + 5;
 		projId = (int)ProjIds.GravityWell;
@@ -214,8 +214,8 @@ public class GravityWellProj : Projectile, IDamagable {
 		if (actor is Character chr && chr.isCCImmune()) return;
 		if (actor is not Character && actor is not RideArmor && actor is not Maverick) return;
 
-		float mag = 100;
-		if (!actor.grounded) actor.vel.y = 0;
+		float mag = 50;
+		if (!actor.grounded) actor.vel.y *= 0.5f;
 		Point velVector = actor.getCenterPos().directionToNorm(pos).times(mag);
 		actor.move(velVector, true);
 	}

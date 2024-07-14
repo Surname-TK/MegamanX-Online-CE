@@ -7,7 +7,7 @@ public class ZBuster2Proj : Projectile {
 		Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false
 	) : base(
 		ZeroBuster.netWeapon, pos, xDir, 350, 2, player, "zbuster2",
-		Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer
+		0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		fadeOnAutoDestroy = true;
 		fadeSprite = "buster2_fade";
@@ -42,8 +42,8 @@ public class ZBuster3Proj : Projectile {
 	public ZBuster3Proj(
 		Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		ZeroBuster.netWeapon, pos, xDir, 350, 4, player, "zbuster3",
-		Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer
+		ZeroBuster.netWeapon, pos, xDir, 350, 3, player, "zbuster3",
+		Global.halfFlinch, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		fadeOnAutoDestroy = true;
 		fadeSprite = "buster3_fade";
@@ -68,7 +68,7 @@ public class ZBuster4Proj : Projectile {
 	public ZBuster4Proj(
 		Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		ZeroBuster.netWeapon, pos, xDir, 350, 6, player, "zbuster4",
+		ZeroBuster.netWeapon, pos, xDir, 350, 4, player, "zbuster4",
 		Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		fadeOnAutoDestroy = true;
@@ -184,7 +184,7 @@ public class GenmuProj : Projectile {
 	public GenmuProj(
 		Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		Genmu.netWeapon, pos, xDir, 300, 12, player, "genmu_proj",
+		Genmu.netWeapon, pos, xDir, 300, 6, player, "genmu_proj",
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		this.type = type;

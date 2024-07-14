@@ -64,6 +64,7 @@ public class BusterZeroDoubleBuster : CharState {
 		this.isSecond = isSecond;
 		this.isPinkCharge = isPinkCharge;
 		airMove = true;
+		useDashJumpSpeed = true;
 		superArmor = true;
 		landSprite = "doublebuster";
 		airSprite = "doublebuster_air";

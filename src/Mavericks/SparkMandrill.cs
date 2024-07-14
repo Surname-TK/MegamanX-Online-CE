@@ -17,9 +17,9 @@ public class SparkMandrill : Maverick {
 		sparkWeapon = new SparkMSparkWeapon(player);
 		stompWeapon = new SparkMStompWeapon(player);
 
-		stateCooldowns.Add(typeof(SparkMPunchState), new MaverickStateCooldown(true, true, 1f));
-		stateCooldowns.Add(typeof(SparkMDashPunchState), new MaverickStateCooldown(true, false, 0.75f));
-		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(true, true, 2f));
+		stateCooldowns.Add(typeof(SparkMPunchState), new MaverickStateCooldown(false, true, 0.75f));
+		stateCooldowns.Add(typeof(SparkMDashPunchState), new MaverickStateCooldown(false, false, 0.75f));
+		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(false, true, 1f));
 		spriteToCollider.Add("dash_punch", getDashCollider());
 
 		weapon = new Weapon(WeaponIds.SparkMGeneric, 94);
@@ -34,11 +34,11 @@ public class SparkMandrill : Maverick {
 			createActorRpc(player.id);
 		}
 
-		usesAmmo = false;
-		canHealAmmo = false;
-		ammo = 32;
-		maxAmmo = 32;
-		grayAmmoLevel = 31;
+		usesAmmo = true;
+		canHealAmmo = true;
+		ammo = 28;
+		maxAmmo = 28;
+		grayAmmoLevel = 14;
 		ammoRoundDown = true;
 		barIndexes = (55, 44);
 
@@ -48,13 +48,11 @@ public class SparkMandrill : Maverick {
 
 	public override void update() {
 		base.update();
-
-		//rechargeAmmo(8);
-
+		rechargeAmmo(4);
 		if (aiBehavior == MaverickAIBehavior.Control) {
 			if (state is MIdle || state is MRun) {
 				if (specialPressed()) {
-					//if (ammo >= 32)
+					if (ammo >= 14)
 					{
 						changeState(getShootState());
 					}
@@ -82,7 +80,7 @@ public class SparkMandrill : Maverick {
 		return new MShoot((Point pos, int xDir) => {
 			shakeCamera(sendRpc: true);
 			playSound("sparkmSparkX1", forcePlay: false, sendRpc: true);
-			//deductAmmo(32);
+			deductAmmo(14);
 			new TriadThunderProjCharged(sparkWeapon, pos, xDir, 1, player, player.getNextActorNetId(), rpc: true);
 			new TriadThunderProjCharged(sparkWeapon, pos, -xDir, 1, player, player.getNextActorNetId(), rpc: true);
 		}, null);
@@ -139,7 +137,7 @@ public class SparkMStompWeapon : Weapon {
 	public SparkMStompWeapon(Player player) {
 		index = (int)WeaponIds.SparkMStomp;
 		killFeedIndex = 94;
-		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 2, 0, 0.5f);
 	}
 }
 
@@ -147,7 +145,7 @@ public class SparkMPunchWeapon : Weapon {
 	public SparkMPunchWeapon(Player player) {
 		index = (int)WeaponIds.SparkMPunch;
 		killFeedIndex = 94;
-		damager = new Damager(player, 4, Global.defFlinch, 0.75f);
+		damager = new Damager(player, 3, Global.halfFlinch, 0.75f);
 	}
 }
 #endregion

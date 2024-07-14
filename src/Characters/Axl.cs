@@ -59,7 +59,7 @@ public class Axl : Character {
 	public LoopingSound iceGattlingSound;
 	public float whiteAxlTime;
 	public float dodgeRollCooldown;
-	public const float maxDodgeRollCooldown = 1.5f;
+	public const float maxDodgeRollCooldown = 0f;
 	public bool hyperAxlUsed;
 	//public ShaderWrapper axlPaletteShader;
 	public float maxHyperAxlTime = 30;

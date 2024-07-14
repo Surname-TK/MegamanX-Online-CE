@@ -210,7 +210,7 @@ public class RaySplasherTurret : Actor, IDamagable {
 			damage *= 2;
 		}
 
-		addDamageTextHelper(owner, damage, 4, false);
+		addDamageTextHelper(owner, damage, 8, false);
 
 		health -= damage;
 		if (health <= 0) {

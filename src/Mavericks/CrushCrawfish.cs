@@ -125,7 +125,7 @@ public class CrushCArmProj : Projectile {
 	float maxDistance2 = 100;
 	CrushCrawfish cc;
 	public CrushCArmProj(Weapon weapon, Point pos, int xDir, Point moveDir, CrushCrawfish cc, Player player, ushort netProjId, bool sendRpc = false) :
-		base(weapon, pos, xDir, 0, 4, player, getSprite(moveDir), Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 3, player, getSprite(moveDir), Global.halfFlinch, 0.8f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.CrushCArmProj;
 		this.moveDir = moveDir.normalize();
 		this.cc = cc;

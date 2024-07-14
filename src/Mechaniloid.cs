@@ -20,7 +20,7 @@ public class MechaniloidWeapon : Weapon {
 		projId = ProjIds.Sigma2BirdProj;
 		float damage = 3;
 		if (mechaniloidType == MechaniloidType.Bird) {
-			damage = 6;
+			damage = 3;
 		}
 		damager = new Damager(player, damage, Global.defFlinch, 1);
 		killFeedIndex = 137 + (int)mechaniloidType;
@@ -42,7 +42,7 @@ public class BirdMechaniloidProj : Projectile, IDamagable {
 	float health = 4;
 	int state = 0;
 	public BirdMechaniloidProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 3, player, "sigma2_bird", 0, 0f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, "sigma2_bird", 0, 0f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.Sigma2BirdProj;
 		fadeSprite = "explosion";
 		fadeSound = "explosion";
@@ -59,7 +59,7 @@ public class BirdMechaniloidProj : Projectile, IDamagable {
 		updateProjectileCooldown();
 
 		if (MathF.Abs(deltaPos.x) > 100 * Global.spf) {
-			damager.damage = 6;
+			damager.damage = 3;
 			damager.flinch = Global.defFlinch;
 		}
 
@@ -365,7 +365,7 @@ public class Mechaniloid : Actor, IDamagable {
 	public override Projectile getProjFromHitbox(Collider hitbox, Point centerPoint) {
 		Projectile proj = null;
 		if (sprite.name == "sigma2_hopper_attack") {
-			proj = new GenericMeleeProj(weapon, centerPoint, ProjIds.Sigma2HopperDrill, netOwner, 1, Global.defFlinch, 0.15f);
+			proj = new GenericMeleeProj(weapon, centerPoint, ProjIds.Sigma2HopperDrill, netOwner, 1, Global.halfFlinch, 0.15f);
 			proj.netcodeOverride = NetcodeModel.FavorDefender;
 		}
 		return proj;

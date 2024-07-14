@@ -5,7 +5,7 @@ namespace MMXOnline;
 
 public class ParasiticBomb : Weapon {
 	public static float carryRange = 120;
-	public static float beeRange = 120;
+	public static float beeRange = 240;
 
 	public ParasiticBomb() : base() {
 		shootSounds = new string[] { "", "", "", "" };
@@ -133,7 +133,7 @@ public class BeeSwarm {
 	public List<BeeCursorAnim> beeCursors = new List<BeeCursorAnim>();
 	int currentIndex;
 	float currentTime = 0f;
-	const float beeCooldown = 1f;
+	const float beeCooldown = 0.75f;
 
 	public BeeSwarm(MegamanX mmx) {
 		this.mmx = mmx;
@@ -250,7 +250,7 @@ public class BeeCursorAnim : Anim {
 				return;			
 			}
 			move(pos.directionToNorm(target.getCenterPos()).times(350));
-			if (pos.distanceTo(target.getCenterPos()) < 5) {
+			if (pos.distanceTo(target.getCenterPos()) < 15) {
 				state = 3;
 				changeSprite("parasite_cursor_lockon", true);
 			}		
@@ -282,9 +282,9 @@ public class BeeCursorAnim : Anim {
 public class ParasiticBombProjCharged : Projectile, IDamagable {
 	public Actor host;
 	public Point lastMoveAmount;
-	const float maxSpeed = 150;
+	const float maxSpeed = 450;
 	public ParasiticBombProjCharged(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, Actor host, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 4, player, "parasitebomb_bee", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, "parasitebomb_bee", Global.halfFlinch, 0f, netProjId, player.ownedByLocalPlayer) {
 		this.weapon = weapon;
 		this.host = host;
 		fadeSprite = "explosion";
@@ -306,7 +306,7 @@ public class ParasiticBombProjCharged : Projectile, IDamagable {
 
 		if (!host.destroyed) {
 			Point amount = pos.directionToNorm(host.getCenterPos()).times(150);
-			vel = Point.lerp(vel, amount, Global.spf * 4);
+			vel = Point.lerp(vel, amount, Global.spf * 2);
 			if (vel.magnitude > maxSpeed) vel = vel.normalize().times(maxSpeed);
 		} else {
 		}

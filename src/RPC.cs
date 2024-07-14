@@ -524,8 +524,10 @@ public enum RPCToggleType {
 	StartCrystalize,
 	StopCrystalize,
 	StrikeChainReversed,
-	StockCharge,
-	UnstockCharge,
+	StockX2Charge,
+	UnstockX2Charge,
+	StockX3Charge,
+	UnstockX3Charge,
 	StartRaySplasher,
 	StopRaySplasher,
 	StartBarrier,
@@ -564,13 +566,21 @@ public class RPCPlayerToggle : RPC {
 			player.character?.crystalizeEnd();
 		} else if (toggleId == RPCToggleType.StrikeChainReversed) {
 			(player?.character as MegamanX)?.strikeChainProj?.reverseDir();
-		} else if (toggleId == RPCToggleType.StockCharge) {
+		} else if (toggleId == RPCToggleType.StockX2Charge) {
 			if (player?.character is MegamanX mmx) {
-				mmx.stockedCharge = true;
+				mmx.stockedX2Charge = true;
 			}
-		} else if (toggleId == RPCToggleType.UnstockCharge) {
+		} else if (toggleId == RPCToggleType.UnstockX2Charge) {
 			if (player?.character is MegamanX mmx) {
-				mmx.stockedCharge = false;
+				mmx.stockedX2Charge = false;
+			}
+			} else if (toggleId == RPCToggleType.StockX3Charge) {
+			if (player?.character is MegamanX mmx) {
+				mmx.stockedX3Charge = true;
+			}
+		} else if (toggleId == RPCToggleType.UnstockX3Charge) {
+			if (player?.character is MegamanX mmx) {
+				mmx.stockedX3Charge = false;
 			}
 		} else if (toggleId == RPCToggleType.StartRaySplasher) {
 			if (player.character is MegamanX mmx) {
@@ -590,11 +600,11 @@ public class RPCPlayerToggle : RPC {
 			}
 		} else if (toggleId == RPCToggleType.StockSaber) {
 			if (player.character is MegamanX mmx) {
-				mmx.stockedXSaber = true;
+				mmx.stockedX3Saber = true;
 			}
 		} else if (toggleId == RPCToggleType.UnstockSaber) {
 			if (player.character is MegamanX mmx) {
-				mmx.stockedXSaber = false;
+				mmx.stockedX3Saber = false;
 			}
 		} else if (toggleId == RPCToggleType.SetBlackZero) {
 			if (player.character is Zero zero) {
@@ -958,6 +968,19 @@ public class RPCJoinLateRequest : RPC {
 			}
 		}
 
+		var frostShields = new List<FrostShieldResponseModel>();
+		foreach (var go in Global.level.gameObjects) {
+			var frostShield = go as FrostShieldProj;
+			if (frostShield != null && frostShield.netId != null && frostShield.player != null) {
+				frostShields.Add(new FrostShieldResponseModel() {
+					x = frostShield.pos.x,
+					y = frostShield.pos.y,
+					netId = frostShield.netId.Value,
+					playerId = frostShield.player.id
+				});
+			}
+		}
+
 		var turrets = new List<TurretResponseModel>();
 		foreach (var go in Global.level.gameObjects) {
 			var turret = go as RaySplasherTurret;
@@ -976,6 +999,7 @@ public class RPCJoinLateRequest : RPC {
 			newPlayer = serverPlayer,
 			controlPoints = controlPoints,
 			magnetMines = magnetMines,
+			frostShields = frostShields,
 			turrets = turrets
 		};
 
@@ -1010,6 +1034,7 @@ public class RPCJoinLateResponse : RPC {
 			Global.level.joinedLateSyncPlayers(joinLateResponseModel.players);
 			Global.level.joinedLateSyncControlPoints(joinLateResponseModel.controlPoints);
 			Global.level.joinedLateSyncMagnetMines(joinLateResponseModel.magnetMines);
+			Global.level.joinedLateSyncFrostShields(joinLateResponseModel.frostShields);
 			Global.level.joinedLateSyncTurrets(joinLateResponseModel.turrets);
 		} else {
 			Global.level.addPlayer(joinLateResponseModel.newPlayer, true);

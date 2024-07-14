@@ -836,9 +836,11 @@ public class RideArmor : Actor, IDamagable {
 
 	public float getRunSpeed() {
 		// Slow down the ride on push.
+		/*
 		if (xFlinchPushVel != 0) {
 			return 15;
 		}
+		*/
 		if (rideArmorState is RAFall raFall && raFall.hovering && raNum != 2) {
 			return 30;
 		}

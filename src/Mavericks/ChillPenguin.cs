@@ -268,8 +268,8 @@ public class ChillPIceProj : Projectile {
 
 
 public class ChillPIceStatueProj : Projectile, IDamagable {
-	public float health = 8;
-	public float maxHealth = 8;
+	public float health = 4;
+	public float maxHealth = 4;
 
 	public ChillPIceStatueProj(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool sendRpc = false
@@ -294,8 +294,8 @@ public class ChillPIceStatueProj : Projectile, IDamagable {
 		if (sprite.isAnimOver()) {
 			useGravity = true;
 			collider.wallOnly = true;
-			damager.flinch = Global.defFlinch;
-			damager.damage = 4;
+			damager.flinch = Global.halfFlinch;
+			damager.damage = 2;
 		}
 	}
 

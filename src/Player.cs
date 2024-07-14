@@ -67,7 +67,7 @@ public partial class Player {
 	public int axlBulletType;
 	public List<bool> axlBulletTypeBought = new List<bool>() { true, false, false, false, false, false, false };
 	public List<float> axlBulletTypeAmmo = new List<float>() { 0, 0, 0, 0, 0, 0, 0 };
-	public List<float> axlBulletTypeLastAmmo = new List<float>() { 32, 32, 32, 32, 32, 32, 32 };
+	public List<float> axlBulletTypeLastAmmo = new List<float>() { 28, 28, 28, 28, 28, 28, 28 };
 	public int lastDNACoreIndex = 4;
 	public DNACore lastDNACore;
 	public Point axlCursorPos;
@@ -134,7 +134,7 @@ public partial class Player {
 	public bool lastDeathWasSigmaHyper;
 	public bool lastDeathWasXHyper;
 	public const int zeroHyperCost = 10;
-	public const int zBusterZeroHyperCost = 10;
+	public const int zBusterZeroHyperCost = 5;
 	public const int AxlHyperCost = 10;
 	public const int reviveVileCost = 5;
 	public const int reviveSigmaCost = 10;
@@ -433,10 +433,10 @@ public partial class Player {
 
 	public int hyperChargeSlot;
 	public int xArmor1v1;
-	public float vileAmmo = 32;
-	public float vileMaxAmmo = 32;
-	public float sigmaAmmo = 32;
-	public float sigmaMaxAmmo = 32;
+	public float vileAmmo = 28;
+	public float vileMaxAmmo = 28;
+	public float sigmaAmmo = 28;
+	public float sigmaMaxAmmo = 28;
 	public int? maverick1v1;
 	public bool maverick1v1Spawned;
 	public bool isNon1v1MaverickSigma() {
@@ -592,16 +592,16 @@ public partial class Player {
 	}
 
 	public int getHeartTankModifier() {
-		return Helpers.clamp(Global.level.server?.customMatchSettings?.heartTankHp ?? 1, 1, 2);
+		return Helpers.clamp(Global.level.server?.customMatchSettings?.heartTankHp ?? 2, 2, 1);
 	}
 
 	public float getMaverickMaxHp() {
 		if (!Global.level.is1v1() && isTagTeam()) {
 			//return 16 + (heartTanks * getHeartTankModifier());
-			return MathF.Ceiling(24 * getHealthModifier());
+			return MathF.Ceiling(32 * getHealthModifier());
 		}
 
-		return MathF.Ceiling(24 * getHealthModifier());
+		return MathF.Ceiling(32 * getHealthModifier());
 	}
 
 	public bool hasAllItems() {
@@ -637,15 +637,15 @@ public partial class Player {
 	public float getMaxHealth() {
 		// 1v1 is the only mode without possible heart tanks/sub tanks
 		if (Global.level.is1v1()) {
-			return MathF.Ceiling(28 * getHealthModifier());
+			return MathF.Ceiling(32 * getHealthModifier());
 		}
 		int bonus = 0;
-		if (isSigma && isPuppeteer()) bonus = 4;
+		if (isSigma && isPuppeteer()) bonus = 0;
 		float hpModifier = getHealthModifier();
 		if (hpModifier < 1) {
-			return MathF.Ceiling((20 + bonus) * hpModifier) + heartTanks * getHeartTankModifier();
+			return MathF.Ceiling((16 + bonus) * hpModifier) + heartTanks * getHeartTankModifier();
 		}
-		return MathF.Ceiling((20 + bonus + (heartTanks * getHeartTankModifier())) * hpModifier);
+		return MathF.Ceiling((16 + bonus + (heartTanks * getHeartTankModifier())) * hpModifier);
 	}
 
 	public void creditHealing(float healAmount) {
@@ -1662,6 +1662,12 @@ public partial class Player {
 			magnetMines[i].destroySelf();
 		}
 	}
+	public List<FrostShieldProj> frostShields = new List<FrostShieldProj>();
+	public void removeOwnedShields() {
+		for (int i = frostShields.Count - 1; i >= 0; i--) {
+			frostShields[i].destroySelf();
+		}
+	}
 
 	public List<RaySplasherTurret> turrets = new List<RaySplasherTurret>();
 	public void removeOwnedTurrets() {
@@ -1773,9 +1779,9 @@ public partial class Player {
 		if (isVile) {
 			fillSubtank(2);
 		} else if (isAxl) {
-			fillSubtank(3);
+			fillSubtank(2);
 		} else {
-			fillSubtank(4);
+			fillSubtank(2);
 		}
 		if (character is Zero zero && zero.isViral) {
 			zero.freeBusterShots++;

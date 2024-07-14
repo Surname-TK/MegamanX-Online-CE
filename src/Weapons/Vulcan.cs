@@ -25,9 +25,9 @@ public class Vulcan : Weapon {
 			description = new string[] { "Do not equip a Vulcan." };
 			killFeedIndex = 126;
 		} else if (vulcanType == VulcanType.CherryBlast) {
-			rateOfFire = 0.1f;
+			rateOfFire = 0.15f;
 			displayName = "Cherry Blast";
-			vileAmmoUsage = 0.25f;
+			vileAmmoUsage = 0.15f;
 			muzzleSprite = "vulcan_muzzle";
 			projSprite = "vulcan_proj";
 			description = new string[] { "With a range of approximately 20 feet,", "this vulcan is easy to use." };
@@ -43,9 +43,9 @@ public class Vulcan : Weapon {
 			description = new string[] { "This vulcan has good range and speed,", "but cannot fire rapidly." };
 			vileWeight = 2;
 		} else if (vulcanType == VulcanType.BuckshotDance) {
-			rateOfFire = 0.12f;
+			rateOfFire = 0.16f;
 			displayName = "Buckshot Dance";
-			vileAmmoUsage = 0.3f;
+			vileAmmoUsage = 0.32f;
 			muzzleSprite = "vulcan_bd_muzzle";
 			projSprite = "vulcan_bd_proj";
 			killFeedIndex = 89;

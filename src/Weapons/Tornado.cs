@@ -18,7 +18,7 @@ public class Tornado : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 2;
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -38,16 +38,16 @@ public class TornadoProj : Projectile {
 	public float length = 1;
 	public float maxSpeed = 400;
 	public float tornadoTime;
-	public float blowModifier = 0.25f;
+	public float blowModifier = 0.5f;
 
 	public TornadoProj(Weapon weapon, Point pos, int xDir, bool isStormE, Player player, ushort netProjId, bool sendRpc = false) :
-		base(weapon, pos, xDir, 400, 1, player, "tornado_mid", 0, 0.25f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 400, 1, player, "tornado_mid", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		projId = isStormE ? (int)ProjIds.StormETornado : (int)ProjIds.Tornado;
 		if (isStormE) {
-			blowModifier = 1;
-			damager.hitCooldown = 0.5f;
+			blowModifier = 0.25f;
+			damager.hitCooldown = 0.75f;
 		}
-		maxTime = 2;
+		maxTime = 1.75f;
 		sprite.visible = false;
 		spriteStart = Global.sprites["tornado_start"].clone();
 		for (var i = 0; i < 6; i++) {
@@ -117,8 +117,8 @@ public class TornadoProj : Projectile {
 			character.setFall();
 		} else if (!character.pushedByTornadoInFrame) {
 			float modifier = 1;
-			if (character.grounded) modifier = 0.5f;
-			if (character.charState is Crouch) modifier = 0.25f;
+			if (character.grounded) modifier = 0.25f;
+			if (character.charState is Crouch) modifier = 0.125f;
 			character.move(new Point(maxSpeed * 0.9f * xDir * modifier * blowModifier, 0));
 			character.pushedByTornadoInFrame = true;
 		}
@@ -136,7 +136,7 @@ public class TornadoProjCharged : Projectile {
 	public float growTime = 0;
 	public float maxLengthTime = 0;
 
-	public TornadoProjCharged(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId) : base(weapon, pos, xDir, 0, 2, player, "tornado_charge", Global.defFlinch, 0.33f, netProjId, player.ownedByLocalPlayer) {
+	public TornadoProjCharged(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId) : base(weapon, pos, xDir, 0, 2, player, "tornado_charge", Global.defFlinch, 0.4f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.TornadoCharged;
 		sprite.visible = false;
 		spriteStart = Global.sprites["tornado_charge"].clone();

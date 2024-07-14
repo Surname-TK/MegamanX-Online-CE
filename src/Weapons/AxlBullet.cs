@@ -344,7 +344,7 @@ public class AncientGunProj : Projectile {
 
 public class CopyShotProj : Projectile {
 	public CopyShotProj(Weapon weapon, Point pos, int chargeLevel, Player player, Point bulletDir, ushort netProjId) :
-		base(weapon, pos, 1, 250, 2, player, "axl_bullet_charged", 0, 0, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, 1, 250, 1, player, "axl_bullet_charged", 0, 0, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.CopyShot;
 
 		xScale = 0.75f;
@@ -361,15 +361,15 @@ public class CopyShotProj : Projectile {
 		*/
 
 		if (chargeLevel == 2) {
-			damager.damage = 3;
-			speed *= 1.5f;
+			damager.damage = 2;
+			speed *= 1.25f;
 			maxTime /= 1.5f;
 			xScale = 1f;
 			yScale = 1f;
 		}
 		if (chargeLevel >= 3) {
-			damager.damage = 4;
-			speed *= 2f;
+			damager.damage = 3;
+			speed *= 1.5f;
 			maxTime /= 2f;
 			xScale = 1.25f;
 			yScale = 1.25f;

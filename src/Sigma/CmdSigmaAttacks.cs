@@ -42,8 +42,8 @@ public class SigmaSlashState : CharState {
 				off = new Point(20, -30);
 			}
 
-			float damage = character.grounded ? 4 : 3;
-			int flinch = character.grounded ? Global.defFlinch : 13;
+			float damage = character.grounded ? 3 : 2;
+			int flinch = character.grounded ? Global.halfFlinch : 13;
 			new SigmaSlashProj(
 				player.sigmaSlashWeapon, character.pos.addxy(off.x * character.xDir, off.y),
 				character.xDir, player, player.getNextActorNetId(), damage: damage, flinch: flinch, rpc: true
@@ -62,7 +62,7 @@ public class SigmaSlashState : CharState {
 public class SigmaSlashProj : Projectile {
 	public SigmaSlashProj(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId,
-		float damage = 6, int flinch = 26, bool rpc = false
+		float damage = 3, int flinch = 13, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 0, damage, player, "sigma_proj_slash", flinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {

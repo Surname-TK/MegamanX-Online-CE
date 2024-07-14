@@ -26,7 +26,7 @@ public class BoundBlaster : AxlWeapon {
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel == 0) return 1f;
 		if (altFire == 0) {
-			return 8;
+			return 7;
 		}
 		return 4;
 	}

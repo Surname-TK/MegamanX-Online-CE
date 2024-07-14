@@ -17,7 +17,7 @@ public class SpinWheel : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 2;
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -34,10 +34,10 @@ public class SpinWheelProj : Projectile {
 	float startedTime;
 	public Anim? sparks;
 	float soundTime;
-	float startMaxTime = 2.5f;
+	float startMaxTime = 1.75f;
 	float lastHitTime;
-	const float hitCooldown = 0.2f;
-	float maxTimeProj = 2.5f;
+	const float hitCooldown = 0.25f;
+	float maxTimeProj = 1.75f;
 
 	public SpinWheelProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 0, 1, player, "spinwheel_start", 0, hitCooldown, netProjId, player.ownedByLocalPlayer) {
@@ -127,6 +127,11 @@ public class SpinWheelProj : Projectile {
 
 		lastHitTime = hitCooldown;
 
+		/*if (damagable is not CrackedWall) {
+			time -= Global.spf;
+			if (time < 1) time = 1;
+		}*/
+
 		var chr = damagable as Character;
 		if (chr != null && chr.ownedByLocalPlayer && !chr.isImmuneToKnockback()) {
 			chr.vel = Point.lerp(chr.vel, Point.zero, Global.spf * 10);
@@ -139,7 +144,7 @@ public class SpinWheelProj : Projectile {
 
 public class SpinWheelProjChargedStart : Projectile {
 	public SpinWheelProjChargedStart(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 4, player, "spinwheel_charged_start", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 0, player, "spinwheel_charged_start", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.SpinWheelChargedStart;
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
@@ -166,7 +171,7 @@ public class SpinWheelProjChargedStart : Projectile {
 
 public class SpinWheelProjCharged : Projectile {
 	public SpinWheelProjCharged(Weapon weapon, Point pos, int xDir, int yDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 200, 1, player, "spinwheel_charged", Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 200, 0.5f, player, "spinwheel_charged", Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.SpinWheelCharged;
 		maxTime = 0.75f;
 

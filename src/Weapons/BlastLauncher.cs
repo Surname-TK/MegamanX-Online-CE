@@ -23,7 +23,7 @@ public class BlastLauncher : AxlWeapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 4;
-		return 8;
+		return 7;
 	}
 
 	public override float whiteAxlFireRateMod() {
@@ -222,7 +222,7 @@ public class GrenadeExplosionProj : Projectile {
 			rands.Add(Helpers.randomRange(-22, 22));
 		}
 		if (type == 1) {
-			damager.damage = 4;
+			damager.damage = 3;
 		}
 		if (ownedByLocalPlayer) {
 			rpcCreate(pos, owner, netProjId, xDir);

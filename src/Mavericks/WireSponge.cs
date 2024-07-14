@@ -6,7 +6,7 @@ namespace MMXOnline;
 
 public class WireSponge : Maverick {
 	public static Weapon getWeapon() { return new Weapon(WeaponIds.WSpongeGeneric, 141); }
-	public static Weapon getChainWeapon(Player player) { return new Weapon(WeaponIds.WSpongeStrikeChain, 141, new Damager(player, 4, Global.defFlinch, 0.5f)); }
+	public static Weapon getChainWeapon(Player player) { return new Weapon(WeaponIds.WSpongeStrikeChain, 141, new Damager(player, 3, Global.defFlinch, 0.5f)); }
 	public Weapon chainWeapon;
 
 	//public ShaderWrapper chargeShader;

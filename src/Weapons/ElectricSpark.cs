@@ -131,11 +131,11 @@ public class ElectricSparkProjCharged : Projectile {
 	public ElectricSparkProjCharged(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 450, 4, player, "electric_spark_charge",
-		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 350, 2, player, "electric_spark_charge",
+		Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.ElectricSparkCharged;
-		maxTime = 0.3f;
+		maxTime = 0.45f;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 		if (rpc) {

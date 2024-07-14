@@ -6,7 +6,7 @@ namespace MMXOnline;
 public class SonicSlicer : Weapon {
 	public SonicSlicer() : base() {
 		shootSounds = new string[] { "sonicSlicer", "sonicSlicer", "sonicSlicer", "sonicSlicerCharged" };
-		rateOfFire = 1f;
+		rateOfFire = 1.25f;
 		index = (int)WeaponIds.SonicSlicer;
 		weaponBarBaseIndex = 13;
 		weaponBarIndex = weaponBarBaseIndex;
@@ -55,21 +55,24 @@ public class SonicSlicerProj : Projectile {
 	public Sprite twin;
 	int type;
 	public SonicSlicerProj(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 200, 2, player, "sonicslicer_proj", 0, 0, netProjId, player.ownedByLocalPlayer) {
-		maxTime = 0.75f;
+		base(weapon, pos, xDir, 0, 2, player, "sonicslicer_proj", 0, 0, netProjId, player.ownedByLocalPlayer) {
+		maxTime = 1.25f;
 		this.type = type;
 		collider.wallOnly = true;
 		projId = (int)ProjIds.SonicSlicer;
 
 		twin = Global.sprites["sonicslicer_twin"].clone();
 
-		vel.y = 50;
-		if (type == 1) {
-			vel.x *= 1.25f;
-			frameIndex = 1;
-		}
-		if (type == 1) {
-			vel.y = 0;
+		if (time > 0.25f) {
+			vel.x = 200;
+			vel.y = 50;
+			if (type == 1) {
+				vel.x *= 1.25f;
+				frameIndex = 1;
+			}
+			if (type == 1) {
+				vel.y = 0;
+			}
 		}
 
 		if (rpc) {
@@ -79,8 +82,11 @@ public class SonicSlicerProj : Projectile {
 
 	public override void update() {
 		base.update();
-		if (type == 0) vel.y -= Global.spf * 100;
-		else vel.y -= Global.spf * 50;
+		if (time > 0.25f) {
+			vel.x = 200 * xDir;
+			if (type == 0) vel.y -= Global.spf * 100;
+			else vel.y -= Global.spf * 50;
+		}
 
 		var collideData = Global.level.checkCollisionActor(this, xDir, 0, vel);
 		if (collideData != null && collideData.hitData != null) {
@@ -115,7 +121,7 @@ public class SonicSlicerProjCharged : Projectile {
 	public Point dest;
 	public bool fall;
 	public SonicSlicerProjCharged(Weapon weapon, Point pos, int num, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, 1, 300, 4, player, "sonicslicer_charged", Global.defFlinch, 0.25f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, 1, 300, 2, player, "sonicslicer_charged", Global.defFlinch, 0.125f, netProjId, player.ownedByLocalPlayer) {
 		fadeSprite = "sonicslicer_charged_fade";
 		maxTime = 1;
 		projId = (int)ProjIds.SonicSlicerCharged;

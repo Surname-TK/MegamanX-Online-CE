@@ -485,7 +485,7 @@ public class PunchyZero : Character {
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.AirKick => new GenericMeleeProj(
-				meleeWeapon, projPos, ProjIds.PZeroAirKick, player, 3, 0, 0.25f,
+				meleeWeapon, projPos, ProjIds.PZeroAirKick, player, 2, 0, 0.25f,
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.Uppercut => new GenericMeleeProj(
@@ -497,7 +497,7 @@ public class PunchyZero : Character {
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.DropKick => new GenericMeleeProj(
-				DropKickWeapon.staticWeapon, projPos, ProjIds.PZeroEnkoukyaku, player, 4, Global.halfFlinch, 0.5f,
+				DropKickWeapon.staticWeapon, projPos, ProjIds.PZeroEnkoukyaku, player, 3, Global.halfFlinch, 0.5f,
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.Parry => new GenericMeleeProj(
@@ -535,8 +535,8 @@ public class PunchyZero : Character {
 					float damage = 2;
 					int flinch = 0;
 					if (secondPhaseHyper) {
-						damage = 4;
-						flinch = Global.defFlinch;
+						damage = 2;
+						flinch = 0;
 					}
 					Projectile proj = new GenericMeleeProj(
 						awakenedAuraWeapon, centerPoint,

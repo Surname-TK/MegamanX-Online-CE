@@ -780,7 +780,7 @@ public class HostMenu : IMainMenu {
 	}
 
 	public string getRandomServerName() {
-		return "match" + Helpers.randomRange(1, 999).ToString();
+		return "room #" + Helpers.randomRange(1, 99).ToString();
 	}
 
 	public void update() {

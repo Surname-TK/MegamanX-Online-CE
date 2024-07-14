@@ -18,7 +18,7 @@ public class IceGattling : AxlWeapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel == 3) {
-			return 8;
+			return 7;
 		}
 		return 0.5f;
 	}

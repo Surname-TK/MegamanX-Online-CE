@@ -1057,7 +1057,7 @@ public partial class Character : Actor, IDamagable {
 			{
 				alpha -= Global.spf * 4;
 				if (alpha < 0) alpha = 0;
-				removeRenderEffect(RenderEffectType.StockedCharge);
+				removeRenderEffect(RenderEffectType.StockedsexCharge);
 				removeRenderEffect(RenderEffectType.StockedSaber);
 			}
 			else
@@ -1620,7 +1620,7 @@ public partial class Character : Actor, IDamagable {
 			return true;
 		}
 		if (!ignoreRideArmorHide && !string.IsNullOrEmpty(sprite?.name) && sprite.name.Contains("ra_hide")) return true;
-		if (specialState == (int)SpecialStateIds.AxlRoll ||
+		if (/*specialState == (int)SpecialStateIds.AxlRoll ||*/
 			specialState == (int)SpecialStateIds.XTeleport
 		) {
 			return true;
@@ -3033,8 +3033,8 @@ public partial class Character : Actor, IDamagable {
 				mmx.chargedRollingShieldProj.destroySelf();
 			}
 			mmx.popAllBubbles();
-			mmx.stockedCharge = false;
-			mmx.stockedX3Buster = false;
+			mmx.stockedX2Charge = false;
+			mmx.stockedX3Charge = false;
 			if (mmx.beeSwarm != null) {
 				mmx.beeSwarm.destroy();
 			}
@@ -3137,7 +3137,7 @@ public partial class Character : Actor, IDamagable {
 	public void addParasite(Player attacker) {
 		if (!ownedByLocalPlayer) return;
 
-		Damager damager = new Damager(attacker, 4, Global.defFlinch, 0);
+		Damager damager = new Damager(attacker, 3, Global.halfFlinch, 0);
 		parasiteTime = Global.spf;
 		parasiteDamager = damager;
 		parasiteAnim = new ParasiteAnim(getCenterPos(), "parasitebomb_latch_start", player.getNextActorNetId(), true, true);

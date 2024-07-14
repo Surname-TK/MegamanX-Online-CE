@@ -9,7 +9,7 @@ public class DrDoppler : Maverick {
 		base(player, pos, destPos, xDir, netId, ownedByLocalPlayer) {
 		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(false, true, 0.75f));
 		stateCooldowns.Add(typeof(DrDopplerAbsorbState), new MaverickStateCooldown(false, true, 0.75f));
-		stateCooldowns.Add(typeof(DrDopplerDashStartState), new MaverickStateCooldown(false, false, 1.5f));
+		stateCooldowns.Add(typeof(DrDopplerDashStartState), new MaverickStateCooldown(false, false, 1f));
 
 		weapon = getWeapon();
 		canClimbWall = true;
@@ -27,9 +27,9 @@ public class DrDoppler : Maverick {
 
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
-		grayAmmoLevel = 8;
+		ammo = 28;
+		maxAmmo = 28;
+		grayAmmoLevel = 4;
 		barIndexes = (66, 55);
 	}
 
@@ -64,8 +64,8 @@ public class DrDoppler : Maverick {
 			if (state is MIdle || state is MRun) {
 				if (input.isPressed(Control.Shoot, player)) {
 					changeState(getShootState(false));
-				} else if (input.isPressed(Control.Special1, player) && ammo >= 8) {
-					deductAmmo(8);
+				} else if (input.isPressed(Control.Special1, player) && ammo >= 4) {
+					deductAmmo(4);
 					changeState(new DrDopplerAbsorbState());
 				} else if (input.isPressed(Control.Dash, player)) {
 					changeState(new DrDopplerDashStartState());
@@ -118,7 +118,7 @@ public class DrDoppler : Maverick {
 			addHealth(damage, true);
 			playSound("heal", sendRpc: true);
 			addDamageText(-damage);
-			ammo -= damage;
+			ammo -= damage / 2;
 			if (ammo < 0) ammo = 0;
 			RPC.addDamageText.sendRpc(attacker.id, netId, -damage);
 		}
@@ -129,7 +129,7 @@ public class DrDopplerBallProj : Projectile {
 	public DrDopplerBallProj(
 		Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool sendRpc = false
 	) : base(
-		weapon, pos, xDir, 250, 3, player, type == 0 ? "drdoppler_proj_ball" : "drdoppler_proj_ball2",
+		weapon, pos, xDir, 200, 2, player, type == 0 ? "drdoppler_proj_ball" : "drdoppler_proj_ball2",
 		Global.miniFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		if (type == 0) {
@@ -139,7 +139,7 @@ public class DrDopplerBallProj : Projectile {
 			damager.damage = 0;
 			destroyOnHit = false;
 		}
-		maxTime = 0.75f;
+		maxTime = 1f;
 
 		if (sendRpc) {
 			rpcCreate(pos, player, netProjId, xDir);

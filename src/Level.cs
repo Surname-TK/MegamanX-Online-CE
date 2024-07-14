@@ -937,6 +937,15 @@ public partial class Level {
 			new MagnetMineProj(new MagnetMine(), new Point(magnetMine.x, magnetMine.y), 1, 1, player, magnetMine.netId);
 		}
 	}
+	public void joinedLateSyncFrostShields(List<FrostShieldResponseModel> frostShields) {
+		if (frostShields == null) return;
+
+		foreach (var frostShield in frostShields) {
+			var player = getPlayerById(frostShield.playerId);
+			if (player == null) continue;
+			new FrostShieldProj(new FrostShield(), new Point(frostShield.x, frostShield.y), 1, 1, player, frostShield.netId);
+		}
+	}
 
 	public void joinedLateSyncTurrets(List<TurretResponseModel> turrets) {
 		if (turrets == null) return;
@@ -948,7 +957,7 @@ public partial class Level {
 		}
 	}
 
-	public Actor? getActorByNetId(ushort netId, bool getDestroyed = false) {
+	public Actor getActorByNetId(ushort netId, bool getDestroyed = false) {
 		/*
 		foreach (var go in gameObjects) {
 			var actor = go as Actor;
@@ -1266,7 +1275,7 @@ public partial class Level {
 		if (camPlayer.character != null) {
 			if (!camPlayer.character.stopCamUpdate) {
 				Point camPos = camPlayer.character.getCamCenterPos();
-				Actor? followActor = camPlayer.character?.getFollowActor();
+				Actor followActor = camPlayer.character?.getFollowActor();
 				Point expectedCamPos = computeCamPos(camPos, new Point(playerX, playerY));
 
 				float moveDeltaX = camX - MathF.Round(playerX);
@@ -1470,7 +1479,7 @@ public partial class Level {
 	}
 
 	public bool isTimeSlowed(GameObject go, out float slowAmount) {
-		slowAmount = 0.75f;
+		slowAmount = 0.5f;
 		var actor = go as Actor;
 		if (actor == null) return false;
 

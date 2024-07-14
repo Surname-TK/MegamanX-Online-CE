@@ -24,21 +24,21 @@ public class VileLaser : Weapon {
 		} else if (vileLaserType == VileLaserType.RisingSpecter) {
 			index = (int)WeaponIds.RisingSpecter;
 			displayName = "Rising Specter";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "It cannot be aimed,", "but its wide shape covers a large area." };
 			killFeedIndex = 120;
 			vileWeight = 3;
 		} else if (vileLaserType == VileLaserType.NecroBurst) {
 			index = (int)WeaponIds.NecroBurst;
 			displayName = "Necro Burst";
-			vileAmmoUsage = 5;
+			vileAmmoUsage = 14;
 			description = new string[] { "Use up all your energy at once to", "unleash a powerful energy burst." };
 			killFeedIndex = 75;
 			vileWeight = 3;
 		} else if (vileLaserType == VileLaserType.StraightNightmare) {
 			index = (int)WeaponIds.StraightNightmare;
 			displayName = "Straight Nightmare";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "Though slow, this laser can burn", "through multiple enemies in a row." };
 			killFeedIndex = 171;
 			vileWeight = 3;
@@ -47,9 +47,9 @@ public class VileLaser : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (type == (int)VileLaserType.NecroBurst) {
-			return 32;
+			return 14;
 		} else {
-			return 24;
+			return 7;
 		}
 	}
 
@@ -121,7 +121,7 @@ public class RisingSpecterProj : Projectile {
 	public float sinDampTime = 1;
 	public Anim muzzle;
 	public RisingSpecterProj(Weapon weapon, Point poi, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, poi, xDir, 0, 6, player, "empty", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, poi, xDir, 0, 4, player, "empty", Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 0.5f;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
@@ -243,7 +243,7 @@ public class NecroBurstProj : Projectile {
 	public float radius = 10;
 	public float attackRadius { get { return radius + 15; } }
 	public NecroBurstProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 6, player, "empty", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 4, player, "empty", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 0.5f;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
@@ -269,11 +269,11 @@ public class NecroBurstProj : Projectile {
 				float dist = actor.getCenterPos().distanceTo(pos);
 				if (dist > attackRadius) continue;
 
-				float overrideDamage = 4 + MathF.Round(4 * (1 - Helpers.clampMin0(dist / 200)));
+				float overrideDamage = 2 + MathF.Round(2 * (1 - Helpers.clampMin0(dist / 200)));
 				int overrideFlinch = Global.defFlinch;
-				if (overrideDamage == 6) overrideFlinch = (int)(Global.defFlinch * 0.75f);
-				if (overrideDamage <= 5) overrideFlinch = Global.defFlinch / 2;
-				if (overrideDamage == 4) overrideFlinch = 0;
+				if (overrideDamage == 4) overrideFlinch = (int)(Global.defFlinch * 0.75f);
+				if (overrideDamage <= 3) overrideFlinch = Global.defFlinch / 2;
+				if (overrideDamage == 2) overrideFlinch = 0;
 				if (isHurtSelf) overrideFlinch = 0;
 				damager.applyDamage(damagable, false, weapon, this, projId, overrideDamage: overrideDamage, overrideFlinch: overrideFlinch);
 			}
@@ -294,7 +294,7 @@ public class NecroBurstProj : Projectile {
 
 public class RAShrapnelProj : Projectile {
 	public RAShrapnelProj(Weapon weapon, Point pos, string spriteName, int xDir, bool hasRaColorShader, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 4, player, spriteName, Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, spriteName, Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 0.35f;
 		vel = new Point();
 		projId = (int)ProjIds.NecroBurstShrapnel;
@@ -355,7 +355,7 @@ public class StraightNightmareProj : Projectile {
 	public float soundTime;
 
 	public StraightNightmareProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool sendRpc = false) :
-		base(weapon, pos, xDir, 150, 1, player, "straightnightmare_proj", 0, 0.15f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 150, 1, player, "straightnightmare_proj", 0, 0.25f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.StraightNightmare;
 		maxTime = 2;
 		sprite.visible = false;

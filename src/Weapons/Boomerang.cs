@@ -156,16 +156,17 @@ public class BoomerangProjCharged : Projectile {
 	public float lerpTime;
 
 	public BoomerangProjCharged(Weapon weapon, Point pos, Point? lerpToPos, int xDir, Player player, float angle, int type, ushort netProjId, BoomerangProjCharged? twin) :
-		base(weapon, pos, xDir, 0, 2, player, type == 0 ? "boomerang_charge" : "boomerang_charge2", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, type == 0 ? "boomerang_charge" : "boomerang_charge2", Global.defFlinch, 0.1f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.BoomerangCharged;
-		maxTime = 1.2f;
+		maxTime = 1.25f;
 		customAngleRendering = true;
 		this.angle = angle;
 		this.type = type;
-		shouldShieldBlock = false;
+		shouldShieldBlock = true;
 		this.twin = twin;
-		destroyOnHit = false;
+		destroyOnHit = true;
 		canBeLocal = false;
+		netcodeOverride = NetcodeModel.FavorAttacker;
 
 		if (lerpToPos != null) {
 			lerpOffset = lerpToPos.Value.subtract(pos);

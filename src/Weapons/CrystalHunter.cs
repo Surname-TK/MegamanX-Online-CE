@@ -8,19 +8,19 @@ namespace MMXOnline;
 public class CrystalHunter : Weapon {
 	public CrystalHunter() : base() {
 		shootSounds = new string[] { "crystalHunter", "crystalHunter", "crystalHunter", "crystalHunterCharged" };
-		rateOfFire = 1.25f;
+		rateOfFire = 1f;
 		index = (int)WeaponIds.CrystalHunter;
 		weaponBarBaseIndex = 9;
 		weaponBarIndex = weaponBarBaseIndex;
 		weaponSlotIndex = 9;
 		killFeedIndex = 20;
 		weaknessIndex = 15;
-		switchCooldown = 0.5f;
+		switchCooldown = 0.75f;
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 2;
-		return 8;
+		return 7;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
@@ -67,11 +67,11 @@ public class CrystalHunterCharged : Actor {
 	public float time;
 	public Player owner;
 	public ShaderWrapper? timeSlowShader;
-	public const int radius = 120;
-	public float drawRadius = 120;
+	public const int radius = 160;
+	public float drawRadius = 160;
 	public float drawAlpha = 64;
 	public bool isSnails;
-	float maxTime = 4;
+	float maxTime = 6;
 	float soundTime;
 	public CrystalHunterCharged(Point pos, Player owner, ushort? netId, bool ownedByLocalPlayer, float? overrideTime = null, bool sendRpc = false) :
 		base("empty", pos, netId, ownedByLocalPlayer, false) {

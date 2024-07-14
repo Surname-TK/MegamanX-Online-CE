@@ -879,7 +879,7 @@ public class AI {
 						int gCrushSlot = player.weapons.FindIndex(w => w is GigaCrush);
 						if (player.hasBodyArmor(2)) {
 							megamanX.player.changeWeaponSlot(gCrushSlot);
-							if (megamanX.player.weapon.ammo == 32)
+							if (megamanX.player.weapon.ammo == 28)
 								megamanX.player.press(Control.Shoot);
 							else {
 								megamanX.player.changeWeaponSlot(getRandomWeaponIndex());
@@ -903,13 +903,13 @@ public class AI {
 						}
 						break;
 					case 10:
-						if (megamanX.stockedXSaber) {
+						if (megamanX.stockedX3Saber) {
 							megamanX.player.press(Control.Shoot);
 							megamanX.player.release(Control.Shoot);
 						}
 						break;
 					case 11:
-						if (megamanX.stockedCharge) {
+						if (megamanX.stockedX2Charge) {
 							megamanX.player.press(Control.Shoot);
 							megamanX.player.release(Control.Shoot);
 						}
@@ -995,8 +995,8 @@ public class AI {
 					case 4 when zero.charState is Dash && isTargetClose:
 						zero.changeSprite("zero_attack_dash2", true);
 						break;
-					// If Zero is on the ground and has giga attack ammo of at least 8 to above do "Rakuhouha"
-					case 5 when zero.grounded && zero.gigaAttack.ammo >= 8f:
+					// If Zero is on the ground and has giga attack ammo of at least 7 to above do "Rakuhouha"
+					case 5 when zero.grounded && zero.gigaAttack.ammo >= 7f:
 						player.press(Control.Down);
 						player.press(Control.Special1);
 						break;
@@ -1079,7 +1079,7 @@ public class AI {
 				pzero.changeState(new PZeroKick(), true);
 				break;
 			// If Zero is on the ground and has giga attack ammo of at least 8 to above do "Rakuhouha"
-			case 3 when pzero.grounded && pzero.gigaAttack.ammo >= 16:
+			case 3 when pzero.grounded && pzero.gigaAttack.ammo >= 14:
 				pzero.changeState(new Rakuhouha(pzero.gigaAttack), true);
 				pzero.gigaAttack.addAmmo(-16, player);
 				break;
@@ -1454,8 +1454,8 @@ public class AI {
 										player.press(Control.Special1);
 									}
 								}
-								// If Neo Sigma giga attack ammo is 32
-								else if (player.sigmaAmmo == 32) {
+								// If Neo Sigma giga attack ammo is 28
+								else if (player.sigmaAmmo == 28) {
 									if (Global.time > 0.3f) {
 										//Do "I-Frames E-Spark move"
 										//Original name: Electromagnetic Wave (電磁波 Denjiha) - Nightshade Electric Spark

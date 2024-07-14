@@ -6,7 +6,7 @@ namespace MMXOnline;
 
 public abstract class BaseSigma : Character {
 	public const float sigmaHeight = 50;
-	public float sigmaSaberMaxCooldown = 1f;
+	public float sigmaSaberMaxCooldown = 0f;
 	public float noBlockTime = 0;
 	public bool isHyperSigma;
 	public const float maxLeapSlashCooldown = 2;
@@ -525,10 +525,10 @@ public abstract class BaseSigma : Character {
 	}
 
 	public int getMaverickCost() {
-		if (player.isSummoner()) return 3;
+		if (player.isSummoner()) return 5;
 		if (player.isPuppeteer()) return 3;
-		if (player.isStriker()) return 0;
-		if (player.isTagTeam()) return 5;
+		if (player.isStriker()) return 1;
+		if (player.isTagTeam()) return 7;
 		return 3;
 	}
 
