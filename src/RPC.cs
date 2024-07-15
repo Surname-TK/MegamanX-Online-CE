@@ -45,7 +45,7 @@ public class RPC {
 	public static RPCSendKillFeedEntry sendKillFeedEntry;
 	public static RPCSendChatMessage sendChatMessage;
 	public static RPCSyncControlPoints syncControlPoints;
-	public static RPCSetHyperZeroTime setHyperZeroTime;
+	public static RPCSetHyperAxlTime setHyperAxlTime;
 	public static RPCAxlShoot axlShoot;
 	public static RPCAxlDisguise axlDisguise;
 	public static RPCReportPlayerRequest reportPlayerRequest;
@@ -92,13 +92,14 @@ public class RPC {
 	// For mods and stuff.
 	// It allow to not override stuff when developing mods.
 	public static RPCCustom custom;
+	public static RPCUnknown unknown = new();
 	public static RpcChangeOwnership changeOwnership = new();
 	public static RpcReflect reflect = new();
 	public static RpcDeflect deflect = new();
 	public static RpcUpdateMaxTime updateMaxTime = new();
+	public static RpcReviveSigma reviveSigma = new();
 
-	public static List<RPC> templates = new List<RPC>()
-	{
+	public static RPC[] templates = new RPC[] {
 			(sendString = new RPCSendString()),
 			(startLevel = new RPCStartLevel()),
 			(spawnCharacter = new RPCSpawnCharacter()),
@@ -128,7 +129,7 @@ public class RPC {
 			(sendKillFeedEntry = new RPCSendKillFeedEntry()),
 			(sendChatMessage = new RPCSendChatMessage()),
 			(syncControlPoints = new RPCSyncControlPoints()),
-			(setHyperZeroTime = new RPCSetHyperZeroTime()),
+			(setHyperAxlTime = new RPCSetHyperAxlTime()),
 			(axlShoot = new RPCAxlShoot()),
 			(axlDisguise = new RPCAxlDisguise()),
 			(reportPlayerRequest = new RPCReportPlayerRequest()),
@@ -534,14 +535,12 @@ public enum RPCToggleType {
 	StopBarrier,
 	StockSaber,
 	UnstockSaber,
-	SetBlackZero,
 	SetWhiteAxl,
 	ReviveVileTo2,
 	ReviveVileTo5,
 	ReviveX,
 	StartRev,
-	StopRev,
-	ReviveSigma
+	StopRev
 }
 
 public class RPCPlayerToggle : RPC {
@@ -605,11 +604,7 @@ public class RPCPlayerToggle : RPC {
 		} else if (toggleId == RPCToggleType.UnstockSaber) {
 			if (player.character is MegamanX mmx) {
 				mmx.stockedX3Saber = false;
-			}
-		} else if (toggleId == RPCToggleType.SetBlackZero) {
-			if (player.character is Zero zero) {
-				zero.blackZeroTime = Zero.maxBlackZeroTime;
-			}
+			} 
 		} else if (toggleId == RPCToggleType.SetWhiteAxl) {
 			if (player.character is Axl axl) {
 				axl.whiteAxlTime = axl.maxHyperAxlTime;
@@ -627,10 +622,6 @@ public class RPCPlayerToggle : RPC {
 		} else if (toggleId == RPCToggleType.StopRev) {
 			if (player.character is Axl axl) {
 				axl.isNonOwnerRev = false;
-			}
-		} else if (toggleId == RPCToggleType.ReviveSigma) {
-			if (player.character is BaseSigma) {
-				player.reviveSigmaNonOwner(player.character.pos);
 			}
 		}
 	}
@@ -661,7 +652,6 @@ public enum RPCActorToggleType {
 	ChangeToParriedState,
 	KaiserShellFadeOut,
 	AddVaccineTime,
-	ActivateBlackZero2,
 	AddWolfSigmaIntroMusicSource,
 }
 
@@ -750,10 +740,6 @@ public class RPCActorToggle : RPC {
 			(actor as Anim)?.setFadeOut(0.25f);
 		} else if (toggleId == RPCActorToggleType.AddVaccineTime) {
 			(actor as Character)?.addVaccineTime(2);
-		} else if (toggleId == RPCActorToggleType.ActivateBlackZero2) {
-			if (actor is Zero zero) {
-				zero.blackZeroTime = 9999;
-			}
 		}
 	}
 
@@ -1208,8 +1194,8 @@ public class RPCSyncControlPoints : RPC {
 	}
 }
 
-public class RPCSetHyperZeroTime : RPC {
-	public RPCSetHyperZeroTime() {
+public class RPCSetHyperAxlTime : RPC {
+	public RPCSetHyperAxlTime() {
 		netDeliveryMethod = NetDeliveryMethod.ReliableOrdered;
 	}
 
@@ -1218,10 +1204,6 @@ public class RPCSetHyperZeroTime : RPC {
 		int time = arguments[1];
 		int type = arguments[2];
 		var player = Global.level.getPlayerById(playerId);
-		if (player?.character is Zero zero) {
-			if (type == 0) zero.blackZeroTime = time;
-			if (type == 2) zero.awakenedZeroTime = time;
-		}
 		if (player?.character is Axl axl) {
 			if (type == 1) axl.whiteAxlTime = time;
 		}
