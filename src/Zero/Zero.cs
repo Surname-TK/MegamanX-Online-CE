@@ -213,7 +213,7 @@ public class Zero : Character {
 	}
 
 	public void shoot(int chargeLevel) {
-		if (player.currency <= 0 && freeBusterShots <= 0) { return; }
+		if (player.currency <= 0 && freeBusterShots <= 0 && getChargeLevel() > 1) { return; }
 		if (chargeLevel == 0) { return; }
 		int currencyUse = 0;
 

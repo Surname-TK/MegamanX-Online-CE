@@ -148,7 +148,7 @@ public class VileCannonProj : Projectile {
 		} else if (weapon.type == (int)VileCannonType.LongshotGizmo) {
 			fadeOnAutoDestroy = true;
 			damager.damage = 0.5f;
-			damager.flinch = Global.halfFlinch;
+			damager.flinch = Global.miniFlinch;
 			/*
 			if (ownedByLocalPlayer) {
 				if (player.vileAmmo >= 32 - weapon.vileAmmoUsage) { damager.damage = 3; }

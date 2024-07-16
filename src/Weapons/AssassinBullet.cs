@@ -49,7 +49,7 @@ public class AssassinBulletProj : Projectile {
 	Point hitPos;
 	public const float range = 150;
 	public AssassinBulletProj(Weapon weapon, Point pos, Point hitPos, int xDir, Player player, IDamagable target, Character headshotChar, ushort netProjId) :
-		base(weapon, pos, xDir, 1000, 8, player, "assassin_bullet_proj", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 1000, 6, player, "assassin_bullet_proj", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		this.target = target;
 
 		Point bulletDir = pos.directionToNorm(hitPos);

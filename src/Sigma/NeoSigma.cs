@@ -15,7 +15,7 @@ public class NeoSigma : BaseSigma {
 		player, x, y, xDir, isVisible,
 		netId, ownedByLocalPlayer, isWarpIn
 	) {
-		sigmaSaberMaxCooldown = 0.5f;
+		sigmaSaberMaxCooldown = 0f;
 	}
 
 	public override void update() {
@@ -90,10 +90,10 @@ public class NeoSigma : BaseSigma {
 			return true;
 		}
 		if (grounded && player.input.isPressed(Control.Special1, player) &&
-			flag == null && player.sigmaAmmo >= 16
+			flag == null && player.sigmaAmmo >= 14
 		) {
-			if (player.sigmaAmmo < 32) {
-				player.sigmaAmmo -= 16;
+			if (player.sigmaAmmo < 28) {
+				player.sigmaAmmo -= 14;
 				changeState(new SigmaElectricBallState(), true);
 				return true;
 			} else {

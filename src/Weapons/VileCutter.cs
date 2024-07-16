@@ -29,7 +29,7 @@ public class VileCutter : Weapon {
 			displayName = "Quick Homesick";
 			projId = ProjIds.QuickHomesick;
 			projSprite = "cutter_qh";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "This cutter travels in an arc like a", "boomerang. Use it to pick up items!" };
 			killFeedIndex = 114;
 			vileWeight = 3;
@@ -37,7 +37,7 @@ public class VileCutter : Weapon {
 			displayName = "Parasite Sword";
 			projId = ProjIds.ParasiteSword;
 			projSprite = "cutter_ps";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "Fires cutters that grow as they fly", "and can pierce enemies." };
 			killFeedIndex = 115;
 			vileWeight = 3;
@@ -45,7 +45,7 @@ public class VileCutter : Weapon {
 			displayName = "Marooned Tomahawk";
 			projId = ProjIds.MaroonedTomahawk;
 			projSprite = "cutter_mt";
-			vileAmmoUsage = 16;
+			vileAmmoUsage = 14;
 			description = new string[] { "This long-lasting weapon spins", "in place and goes through objects." };
 			killFeedIndex = 116;
 			vileWeight = 3;

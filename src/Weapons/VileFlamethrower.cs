@@ -33,7 +33,7 @@ public class VileFlamethrower : Weapon {
 			displayName = "Wild Horse Kick";
 			projSprite = "flamethrower_whk";
 			projFadeSprite = "flamethrower_whk_fade";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			projId = (int)ProjIds.WildHorseKick;
 			description = new string[] { "Shoot jets of flame from your leg.", "Strong, but not energy efficient." };
 			killFeedIndex = 117;

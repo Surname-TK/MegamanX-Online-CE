@@ -30,22 +30,22 @@ public class Napalm : Weapon {
 			killFeedIndex = 126;
 		} else if (napalmType == NapalmType.RumblingBang) {
 			displayName = "Rumbling Bang";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 14;
 			rateOfFire = 2f;
 			description = new string[] { "This napalm sports a wide horizontal", "range but cannot attack upward." };
 			vileWeight = 3;
 		}
 		if (napalmType == NapalmType.FireGrenade) {
 			displayName = "Flame Round";
-			vileAmmoUsage = 16;
-			rateOfFire = 4f;
+			vileAmmoUsage = 14;
+			rateOfFire = 3f;
 			description = new string[] { "This napalm travels along the", "ground, laying a path of fire." };
 			killFeedIndex = 54;
 			vileWeight = 3;
 		}
 		if (napalmType == NapalmType.SplashHit) {
 			displayName = "Splash Hit";
-			vileAmmoUsage = 16;
+			vileAmmoUsage = 14;
 			rateOfFire = 3f;
 			description = new string[] { "This napalm can attack foes above,", "but has a narrow horizontal range." };
 			killFeedIndex = 79;

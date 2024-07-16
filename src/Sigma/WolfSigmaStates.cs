@@ -637,7 +637,7 @@ public class WolfSigmaBeam : Projectile {
 	float newFrameTime;
 	int newFrameIndex;
 	public WolfSigmaBeam(Weapon weapon, Point pos, int xDir, int yDir, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 800, 8, player, type == 0 ? "ws_proj_beam" : "wsponge_thunder_point", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 800, 6, player, type == 0 ? "ws_proj_beam" : "wsponge_thunder_point", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		this.yDir = yDir;
 		this.type = type;
 		origin = pos;
@@ -650,7 +650,7 @@ public class WolfSigmaBeam : Projectile {
 			fadeSprite = "wsponge_thunder_fade";
 			startSound = "wspongeThunder";
 			fadeOnAutoDestroy = true;
-			damager.damage = 8;
+			damager.damage = 6;
 			damager.hitCooldown = 0.15f;
 		}
 

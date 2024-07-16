@@ -308,8 +308,8 @@ public class BCrabClawJumpState : MaverickState {
 }
 
 public class BCrabShieldProj : Projectile, IDamagable {
-	public float health = 8;
-	public float maxHealth = 8;
+	public float health = 6;
+	public float maxHealth = 6;
 
 	public bool once;
 	public BCrabShieldProj(

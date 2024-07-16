@@ -5,7 +5,7 @@ namespace MMXOnline;
 public class FlameBurner : AxlWeapon {
 	public FlameBurner(int altFire) : base(altFire) {
 		shootSounds = new string[] { "flameBurner", "flameBurner", "flameBurner", "circleBlaze" };
-		rateOfFire = 0.075f;
+		rateOfFire = 0.15f;
 		altFireCooldown = 1.5f;
 		index = (int)WeaponIds.FlameBurner;
 		weaponBarBaseIndex = 38;

@@ -14,7 +14,7 @@ public class CmdSigma : BaseSigma {
 		player, x, y, xDir, isVisible,
 		netId, ownedByLocalPlayer, isWarpIn
 	) {
-		sigmaSaberMaxCooldown = 1;
+		sigmaSaberMaxCooldown = 0;
 	}
 
 	public override void update() {
@@ -114,11 +114,11 @@ public class CmdSigma : BaseSigma {
 		Projectile? proj = sprite.name switch {
 			"sigma_ladder_attack" => new GenericMeleeProj(
 				player.sigmaSlashWeapon, centerPoint, ProjIds.SigmaSlash, player,
-				3, 0, 0.25f
+				3, Global.halfFlinch, 0.25f
 			),
 			"sigma_wall_slide_attack" => new GenericMeleeProj(
 				player.sigmaSlashWeapon, centerPoint, ProjIds.SigmaSlash, player,
-				3, 0, 0.25f
+				3, Global.halfFlinch, 0.25f
 			),
 			_ => null
 		};
