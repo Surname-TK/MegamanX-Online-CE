@@ -20,7 +20,7 @@ public class TunnelFang : Weapon {
 			if (timeSinceLastShoot != null && timeSinceLastShoot < rateOfFire) return 1;
 			else return 2;
 		}
-		return 7;
+		return 4;
 	}
 
 	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {

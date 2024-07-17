@@ -119,7 +119,7 @@ public class NeoSigma : BaseSigma {
 		Projectile? proj = sprite.name switch {
 			"sigma2_attack" => new GenericMeleeProj(
 				player.sigmaClawWeapon, centerPoint, ProjIds.Sigma2Claw, player,
-				2, 0, 0.2f
+				1, 0, 0.2f
 			),
 			"sigma2_attack2" => new GenericMeleeProj(
 				player.sigmaClawWeapon, centerPoint, ProjIds.Sigma2Claw2, player,
@@ -139,11 +139,11 @@ public class NeoSigma : BaseSigma {
 			),
 			"sigma2_ladder_attack" => new GenericMeleeProj(
 				player.sigmaSlashWeapon, centerPoint, ProjIds.Sigma2Claw, player,
-				2, 0, 0.25f
+				2, Global.miniFlinch, 0.25f
 			),
 			"sigma2_wall_slide_attack" => new GenericMeleeProj(
 				player.sigmaSlashWeapon, centerPoint, ProjIds.Sigma2Claw, player,
-				2, 0, 0.25f
+				2, Global.miniFlinch, 0.25f
 			),
 			"sigma2_shoot2" => new GenericMeleeProj(
 				new SigmaElectricBall2Weapon(), centerPoint, ProjIds.Sigma2Ball2, player,

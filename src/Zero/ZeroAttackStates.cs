@@ -249,7 +249,7 @@ public class ZeroDoubleBuster : CharState {
 		zero = character as Zero ?? throw new NullReferenceException();
 
 		if (!isPinkCharge) {
-			//character.stockSaber(true);
+			//character.stockX3Saber(true);
 		} else {
 			//character.stockCharge(!isSecond);
 		}

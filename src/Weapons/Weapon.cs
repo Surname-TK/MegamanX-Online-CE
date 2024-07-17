@@ -269,7 +269,7 @@ public class Weapon {
 
 	// ToDo: Remove default values from this.
 	public virtual float getAmmoUsage(int chargeLevel) {
-		if (chargeLevel >= 3) return 7;
+		if (chargeLevel >= 3) return 4;
 		else return 1;
 	}
 

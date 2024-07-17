@@ -533,8 +533,8 @@ public enum RPCToggleType {
 	StopRaySplasher,
 	StartBarrier,
 	StopBarrier,
-	StockSaber,
-	UnstockSaber,
+	StockX3Saber,
+	UnstockX3Saber,
 	SetWhiteAxl,
 	ReviveVileTo2,
 	ReviveVileTo5,
@@ -597,11 +597,11 @@ public class RPCPlayerToggle : RPC {
 			if (player.character is MegamanX mmx) {
 				mmx.barrierTime = 0;
 			}
-		} else if (toggleId == RPCToggleType.StockSaber) {
+		} else if (toggleId == RPCToggleType.StockX3Saber) {
 			if (player.character is MegamanX mmx) {
 				mmx.stockedX3Saber = true;
 			}
-		} else if (toggleId == RPCToggleType.UnstockSaber) {
+		} else if (toggleId == RPCToggleType.UnstockX3Saber) {
 			if (player.character is MegamanX mmx) {
 				mmx.stockedX3Saber = false;
 			} 

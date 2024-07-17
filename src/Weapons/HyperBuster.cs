@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace MMXOnline;
 
 public class HyperBuster : Weapon {
-	public const float ammoUsage = 7;
-	public const float weaponAmmoUsage = 7;
+	public const float ammoUsage = 4;
+	public const float weaponAmmoUsage = 4;
 	MegamanX mmx = null!;
 
 	public HyperBuster() : base() {

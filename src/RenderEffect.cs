@@ -13,7 +13,7 @@ public enum RenderEffectType {
 	PurpleShadow,
 	YellowShadow,
 	OrangeShadow,
-	//StockedSaber,
+	//StockedX3Saber,
 	BoomerangKTrail,
 	SpeedDevilTrail,
 	StealthModeBlue,

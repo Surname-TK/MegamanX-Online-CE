@@ -27,7 +27,7 @@ public class BubbleSplash : Weapon {
 		if (chargeLevel >= 3) {
 			return base.getAmmoUsage(chargeLevel);
 		} else {
-			return 0.5f;// return Global.spf * 10;
+			return 0.125f;
 		}
 	}
 
@@ -84,7 +84,7 @@ public class BubbleSplashProj : Projectile {
 		vel.y = -20 * Helpers.randomRange(0.5f, 1f);
 		vel.x *= Helpers.randomRange(0.5f, 1f);
 		if (ownedByLocalPlayer) {
-			if (player.character.isDashing && Math.Abs(player.character.vel.x) != 0) {
+			if (player.character.isDashing && player.character.grounded) {
 				vel.x *= 1.5f;
 			}
 		}

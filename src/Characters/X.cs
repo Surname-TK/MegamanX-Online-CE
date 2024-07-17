@@ -657,11 +657,11 @@ public partial class MegamanX : Character {
 		}
 	}
 
-	public void stockSaber(bool stockOrUnstock) {
+	public void stockX3Saber(bool stockOrUnstock) {
 		stockedX3Saber = stockOrUnstock;
 		if (ownedByLocalPlayer) {
 			RPC.playerToggle.sendRpc(
-				player.id, stockOrUnstock ? RPCToggleType.StockSaber : RPCToggleType.UnstockSaber
+				player.id, stockOrUnstock ? RPCToggleType.StockX3Saber : RPCToggleType.UnstockX3Saber
 			);
 		}
 	}
@@ -726,7 +726,7 @@ public partial class MegamanX : Character {
 
 		if (stockedX3Saber) {
 			if (xSaberCooldown == 0) {
-				stockSaber(false);
+				stockX3Saber(false);
 				changeState(new XSaberState(grounded), true);
 			}
 			return;
@@ -772,28 +772,30 @@ public partial class MegamanX : Character {
 		shootRpc(getShootPos(), player.weapon.index, xDir, cl, player.getNextActorNetId(), true);
 
 		if (chargeLevel >= 3 && player.hasGoldenArmor() && player.weapon is Buster) {
-			stockSaber(true);
+			stockX3Saber(true);
 			xSaberCooldown = 0.66f;
 		}
 
 		if (chargeLevel >= 3 && player.hasArmArmor(2)) {
 			stockedX2Charge = true;
 			if (player.weapon is Buster) {
-				shootTime = hasUltimateArmor ? 0.5f : 0.25f;
+				shootTime = hasUltimateArmor ? 0.25f : 0.125f;
 			} else shootTime = 0.5f;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX2Charge);
 		} else if (stockedX2Charge) {
 			stockedX2Charge = false;
+			shootTime = 0.25f;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
 		}
 		if (chargeLevel >= 3 && player.hasArmArmor(3)) {
 			stockedX3Charge = true;
 			if (player.weapon is Buster) {
-				shootTime = hasUltimateArmor? 0.25f : 0.125f;
+				shootTime = 0f;
 			} else shootTime = 0.5f;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Charge);
 		} else if (stockedX3Charge) {
 			stockedX3Charge = false;
+			shootTime = 0.25f;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
 		}
 
@@ -893,13 +895,9 @@ public partial class MegamanX : Character {
 			} else if (weapon is FireWave) {
 				if (chargeLevel < 3) {
 					float chargeTime = player.character.chargeTime;
-					if (chargeTime < 1) {
-						ammoUsage = Global.spf * 10;
-					} else {
-						ammoUsage = Global.spf * 20;
-					}
+					ammoUsage = 0.125f;
 				} else {
-					ammoUsage = 7;
+					ammoUsage = 4;
 				}
 			} else {
 				ammoUsage = weapon.getAmmoUsage(chargeLevel);

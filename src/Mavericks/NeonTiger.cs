@@ -113,7 +113,7 @@ public class NeonTRaySplasherProj : Projectile {
 	public NeonTRaySplasherProj(Weapon weapon, Point pos, int xDir, int shootNum, bool isHanging, Player player, ushort netProjId, bool sendRpc = false) :
 		base(weapon, pos, xDir, 0, 2, player, "neont_projectile_start", 0, 0.01f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.NeonTRaySplasher;
-		maxTime = 0.875f;
+		maxTime = 1.25f;
 		this.shootNum = shootNum;
 		this.isHanging = isHanging;
 

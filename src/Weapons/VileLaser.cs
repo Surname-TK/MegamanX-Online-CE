@@ -141,15 +141,15 @@ public class RisingSpecterProj : Projectile {
 		float ang = poi.directionTo(destPos).angle;
 		var points = new List<Point>();
 		if (xDir == 1) {
-			float sideY = 30 * Helpers.cosd(ang);
-			float sideX = -30 * Helpers.sind(ang);
+			float sideY = 15 * Helpers.cosd(ang);
+			float sideX = -15 * Helpers.sind(ang);
 			points.Add(new Point(poi.x - sideX, poi.y - sideY));
 			points.Add(new Point(destPos.x - sideX, destPos.y - sideY));
 			points.Add(new Point(destPos.x + sideX, destPos.y + sideY));
 			points.Add(new Point(poi.x + sideX, poi.y + sideY));
 		} else {
-			float sideY = 30 * Helpers.cosd(ang);
-			float sideX = 30 * Helpers.sind(ang);
+			float sideY = 15 * Helpers.cosd(ang);
+			float sideX = 15 * Helpers.sind(ang);
 			points.Add(new Point(destPos.x - sideX, destPos.y + sideY));
 			points.Add(new Point(destPos.x + sideX, destPos.y - sideY));
 			points.Add(new Point(poi.x + sideX, poi.y - sideY));

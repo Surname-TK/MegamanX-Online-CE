@@ -1062,7 +1062,7 @@ public partial class Character : Actor, IDamagable {
 				alpha -= Global.spf * 4;
 				if (alpha < 0) alpha = 0;
 				removeRenderEffect(RenderEffectType.StockedsexCharge);
-				removeRenderEffect(RenderEffectType.StockedSaber);
+				removeRenderEffect(RenderEffectType.StockedX3Saber);
 			}
 			else
 			{
