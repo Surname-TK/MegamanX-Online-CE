@@ -209,6 +209,7 @@ public class RisingSpecterProj : Projectile {
 
 public class NecroBurstAttack : CharState {
 	bool shot = false;
+	Vile vile = null!;
 
 	public NecroBurstAttack(bool grounded) : base(grounded ? "idle_shoot" : "cannon_air", "", "", "") {
 	}
@@ -236,6 +237,11 @@ public class NecroBurstAttack : CharState {
 			);
 			vile.playSound("necroburst", sendRpc: true);
 		}
+	}
+
+	public override void onEnter(CharState oldState) {
+		base.onEnter(oldState);
+		vile = character as Vile ?? throw new NullReferenceException();
 	}
 }
 

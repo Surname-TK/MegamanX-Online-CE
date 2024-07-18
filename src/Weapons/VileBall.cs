@@ -187,6 +187,7 @@ public class PeaceOutRollerProj : Projectile {
 public class AirBombAttack : CharState {
 	int bombNum;
 	bool isNapalm;
+	Vile vile = null!;
 
 	public AirBombAttack(bool isNapalm, string transitionSprite = "") : base("air_bomb_attack", "", "", transitionSprite) {
 		this.isNapalm = isNapalm;
@@ -331,6 +332,7 @@ public class AirBombAttack : CharState {
 		base.onEnter(oldState);
 		character.useGravity = false;
 		character.vel = new Point();
+		vile = character as Vile ?? throw new NullReferenceException();
 	}
 
 	public override void onExit(CharState newState) {
