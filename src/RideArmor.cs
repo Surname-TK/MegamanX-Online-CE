@@ -2195,38 +2195,38 @@ public class InRideArmor : CharState {
 		/*
 		else if (player.vileNapalmWeapon.type == (int)NapalmType.NoneBall)
 		{
-			if (player.vileBallWeapon.type == (int)VileBallType.ExplosiveRound)
+			if (vile.grenadeWeapon.type == (int)VileBallType.ExplosiveRound)
 			{
-				if (player.vileBallWeapon.shootTime == 0) character.setVileShootTime(player.vileBallWeapon);
+				if (vile.grenadeWeapon.shootTime == 0) character.setVileShootTime(vile.grenadeWeapon);
 				else return;
-				grenade = new VileBombProj(player.vileBallWeapon, character.pos.addxy(0, -3), character.xDir, player, 0, character.player.getNextActorNetId(), rpc: true);
+				grenade = new VileBombProj(vile.grenadeWeapon, character.pos.addxy(0, -3), character.xDir, player, 0, character.player.getNextActorNetId(), rpc: true);
 				grenade.maxTime = 1f;
 			}
-			else if (player.vileBallWeapon.type == (int)VileBallType.SpreadShot)
+			else if (vile.grenadeWeapon.type == (int)VileBallType.SpreadShot)
 			{
-				if (player.vileBallWeapon.shootTime == 0) character.setVileShootTime(player.vileBallWeapon);
+				if (vile.grenadeWeapon.shootTime == 0) character.setVileShootTime(vile.grenadeWeapon);
 				else return;
 				Point vel = Point.createFromAngle(-45).times(150);
 				if (character.xDir == -1) vel.x *= -1;
-				new StunShotProj(player.vileBallWeapon, character.pos.addxy(0, -3), character.xDir, 1, character.player, character.player.getNextActorNetId(), vel, rpc: true);
+				new StunShotProj(vile.grenadeWeapon, character.pos.addxy(0, -3), character.xDir, 1, character.player, character.player.getNextActorNetId(), vel, rpc: true);
 				Global.level.delayedActions.Add(new DelayedAction(() =>
 				{
 					Point vel = Point.createFromAngle(-22.5f).times(150);
 					if (character.xDir == -1) vel.x *= -1;
-					new StunShotProj(player.vileBallWeapon, character.pos.addxy(0, -3), character.xDir, 1, character.player, character.player.getNextActorNetId(), vel, rpc: true);
+					new StunShotProj(vile.grenadeWeapon, character.pos.addxy(0, -3), character.xDir, 1, character.player, character.player.getNextActorNetId(), vel, rpc: true);
 				}, 0.15f));
 				Global.level.delayedActions.Add(new DelayedAction(() =>
 				{
 					Point vel = Point.createFromAngle(0).times(150);
 					if (character.xDir == -1) vel.x *= -1;
-					new StunShotProj(player.vileBallWeapon, character.pos.addxy(0, -3), character.xDir, 1, character.player, character.player.getNextActorNetId(), vel, rpc: true);
+					new StunShotProj(vile.grenadeWeapon, character.pos.addxy(0, -3), character.xDir, 1, character.player, character.player.getNextActorNetId(), vel, rpc: true);
 				}, 0.3f));
 			}
-			else if (player.vileBallWeapon.type == (int)VileBallType.PeaceOutRoller)
+			else if (vile.grenadeWeapon.type == (int)VileBallType.PeaceOutRoller)
 			{
-				if (player.vileBallWeapon.shootTime == 0) character.setVileShootTime(player.vileBallWeapon);
+				if (vile.grenadeWeapon.shootTime == 0) character.setVileShootTime(vile.grenadeWeapon);
 				else return;
-				grenade = new PeaceOutRollerProj(player.vileBallWeapon, character.pos.addxy(0, -3), character.xDir, player, 0, character.player.getNextActorNetId(), rpc: true);
+				grenade = new PeaceOutRollerProj(vile.grenadeWeapon, character.pos.addxy(0, -3), character.xDir, player, 0, character.player.getNextActorNetId(), rpc: true);
 				grenade.maxTime = 1;
 				grenade.gravityModifier = 1;
 			}

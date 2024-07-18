@@ -149,7 +149,7 @@ public class FlamethrowerState : CharState {
 
 			}
 			new FlamethrowerProj(
-				player.vileFlamethrowerWeapon,
+				vile.flamethrowerWeapon,
 				poiPos,
 				character.xDir, isGrounded, player,
 				player.getNextActorNetId(), sendRpc: true
