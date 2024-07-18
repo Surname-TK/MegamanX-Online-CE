@@ -11,8 +11,8 @@ public enum VileCannonType {
 }
 
 public class VileCannon : Weapon {
-	public string projSprite;
-	public string fadeSprite;
+	public string projSprite = "";
+	public string fadeSprite = "";
 	public float vileAmmoUsage;
 	public static VileCannon netWeaponFR = new VileCannon(VileCannonType.FrontRunner);
 	public static VileCannon netWeaponLG = new VileCannon(VileCannonType.LongshotGizmo);
@@ -185,6 +185,7 @@ public class VileCannonProj : Projectile {
 
 public class CannonAttack : CharState {
 	bool isGizmo;
+	private Vile vile = null!;
 
 	public CannonAttack(bool isGizmo, bool grounded) : base(getSprite(isGizmo, grounded), "", "", "") {
 		this.isGizmo = isGizmo;
@@ -238,7 +239,7 @@ public class CannonAttack : CharState {
 		}
 
 		new VileCannonProj(
-			player.weapons.FirstOrDefault(w => w is VileCannon) as VileCannon,
+			vile.cannonWeapon,
 			shootPos, MathF.Round(shootVel.byteAngle), //vile.longshotGizmoCount,
 			player, player.getNextActorNetId(), rpc: true
 		);
@@ -246,6 +247,7 @@ public class CannonAttack : CharState {
 
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
+		vile = character as Vile ?? throw new NullReferenceException();
 		shootLogic(vile);
 		character.useGravity = false;
 		character.stopMoving();

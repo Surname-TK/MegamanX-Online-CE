@@ -227,7 +227,7 @@ public partial class MegamanX : Character {
 		if (!isHyperX && canShoot() &&
 			charState is not Die &&
 			charState is not Hurt &&
-			charState?.canShoot() == true
+			charState.canShoot() == true
 		) {
 			if (Global.level.is1v1() && player.weapons.Count == 10) {
 				if (player.weaponSlot != 9) {
@@ -1197,7 +1197,7 @@ public partial class MegamanX : Character {
 	} */
 
 	public override void changeState(CharState newState, bool forceChange = false) {
-		if (!forceChange && charState != null && newState != null &&
+		if (!forceChange && charState != null &&
 			charState.GetType() == newState.GetType() ||
 			 !forceChange && changedStateInFrame
 		) {
@@ -1261,7 +1261,7 @@ public partial class MegamanX : Character {
 	}
 
 	public override void destroySelf(
-		string spriteName = null, string fadeSound = null,
+		string spriteName = "", string fadeSound = "",
 		bool disableRpc = false, bool doRpcEvenIfNotOwned = false,
 		bool favorDefenderProjDestroy = false
 	) {
@@ -1330,7 +1330,7 @@ public partial class MegamanX : Character {
 
 		if (canHeadbutt() && getHeadPos() != null) {
 			retProjs[(int)ProjIds.Headbutt] = () => {
-				Point centerPoint = getHeadPos().Value.addxy(0, -6);
+				Point centerPoint = getHeadPos()!.Value.addxy(0, -6);
 				float damage = 2;
 				int flinch = Global.halfFlinch;
 				if (sprite.name.Contains("up_dash")) {
