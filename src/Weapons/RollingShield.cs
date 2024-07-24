@@ -132,10 +132,10 @@ public class RollingShieldProjCharged : Projectile {
 		if (mmx is not null) {
 			base.onHitDamagable(mmx);
 		}
-		decAmmo(1);
+		decAmmo(0.5f);
 	}
 
-	public void decAmmo(float amount = 1) {
+	public void decAmmo(float amount = 0.5f) {
 		if (ammoDecCooldown == 0) {
 			ammoDecCooldown = Global.spf;
 			damager.owner.weapon.addAmmo(-amount, damager.owner);

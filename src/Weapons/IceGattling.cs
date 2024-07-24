@@ -45,7 +45,7 @@ public class IceGattlingProj : Projectile {
 	public float sparkleTime = 0;
 	public IceGattlingProj(Weapon weapon, Point pos, int xDir, Player player, Point bulletDir, ushort netProjId) :
 		base(weapon, pos, xDir, 400, 1, player, "icegattling_proj", 0, 0.1f, netProjId, player.ownedByLocalPlayer) {
-		maxTime = 0.4f;
+		maxTime = 0.6f;
 		reflectable = true;
 		vel.x = bulletDir.x * speed;
 		vel.y = bulletDir.y * speed;

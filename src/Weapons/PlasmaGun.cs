@@ -69,8 +69,8 @@ public class PlasmaGunProj : Projectile {
 		Weapon weapon, Point pos, int xDir, Player player,
 		Point bulletDir, ushort netProjId, bool sendRpc = false
 	) : base(
-		weapon, pos, 1, 600, 3, player, "plasmagun_proj",
-		Global.defFlinch, 0.25f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, 1, 600, 2, player, "plasmagun_proj",
+		Global.halfFlinch, 0.25f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.PlasmaGun;
 		shouldShieldBlock = false;

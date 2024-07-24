@@ -427,13 +427,13 @@ public class Damager {
 					break;
 				//Freeze effects	
 				case (int)ProjIds.IceGattling:
-					character.addIgFreezeProgress(1);
+					character.addIgFreezeProgress(0.5f);
 					break;
 				case (int)ProjIds.IceGattlingHeadshot:
-					character.addIgFreezeProgress(2);
+					character.addIgFreezeProgress(0.5f);
 					break;
 				case (int)ProjIds.IceGattlingHyper:
-					character.addIgFreezeProgress(2);
+					character.addIgFreezeProgress(1);
 					break;
 				case (int)ProjIds.Hyouretsuzan:
 					character.addIgFreezeProgress(3);

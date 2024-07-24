@@ -7,8 +7,8 @@ namespace MMXOnline;
 public class BlackArrow : AxlWeapon {
 	public BlackArrow(int altFire) : base(altFire) {
 		shootSounds = new string[] { "blackArrow", "blackArrow", "blackArrow", "blackArrow" };
-		rateOfFire = 0.4f;
-		altFireCooldown = 0.8f;
+		rateOfFire = 0.3f;
+		altFireCooldown = 0.6f;
 		index = (int)WeaponIds.BlackArrow;
 		weaponBarBaseIndex = 33;
 		weaponSlotIndex = 53;
@@ -20,11 +20,11 @@ public class BlackArrow : AxlWeapon {
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel == 3) {
 			if (altFire == 1) {
-				return 6;
+				return 3;
 			}
-			return 4;
+			return 2;
 		}
-		return 2;
+		return 1;
 	}
 
 	public override float whiteAxlFireRateMod() {
@@ -61,7 +61,7 @@ public class BlackArrowProj : Projectile {
 
 	public BlackArrowProj(Weapon weapon, Point pos, Player player, Point bulletDir, int type, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, 1, 450, 1, player, "blackarrow_proj", 0, 0f, netProjId, player.ownedByLocalPlayer) {
-		maxTime = 0.5f;
+		maxTime = 0.75f;
 		vel.x = bulletDir.x * speed;
 		vel.y = bulletDir.y * speed;
 		this.type = type;

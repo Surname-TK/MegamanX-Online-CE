@@ -126,20 +126,35 @@ public class DrDoppler : Maverick {
 }
 
 public class DrDopplerBallProj : Projectile {
+	public Actor target;
+	public float maxSpeed = 200;
 	public DrDopplerBallProj(
 		Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool sendRpc = false
 	) : base(
 		weapon, pos, xDir, 200, 2, player, type == 0 ? "drdoppler_proj_ball" : "drdoppler_proj_ball2",
-		Global.miniFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.miniFlinch, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		if (type == 0) {
 			projId = (int)ProjIds.DrDopplerBall;
+			if (target == null) {
+				target = Global.level.getClosestTarget(pos, player.alliance, false, 150, includeAllies: false);
+			}
 		} else {
 			projId = (int)ProjIds.DrDopplerBall2;
 			damager.damage = 0;
 			destroyOnHit = false;
+			if (target == null) {
+				target = Global.level.getClosestTarget(pos, player.alliance, false, 150, includeAllies: true);
+			}
 		}
 		maxTime = 1f;
+		shouldShieldBlock = true;
+		if (target == null) {
+			// target = Global.level.getClosestTarget(pos, player.alliance, false, 150);
+		}
+		if (target == null) {
+			// vel = new Point(xDir, 2).normalize().times(150);
+		}
 
 		if (sendRpc) {
 			rpcCreate(pos, player, netProjId, xDir);
@@ -148,6 +163,14 @@ public class DrDopplerBallProj : Projectile {
 
 	public override void update() {
 		base.update();
+		updateProjectileCooldown();
+		if (time < 0.3f) {
+			if (target != null && !target.destroyed) {
+				Point amount = pos.directionToNorm(target.getCenterPos()).times(360);
+				vel = Point.lerp(vel, amount, Global.spf * 2);
+				if (vel.magnitude > maxSpeed) vel = vel.normalize().times(maxSpeed);
+			}
+		}
 	}
 }
 

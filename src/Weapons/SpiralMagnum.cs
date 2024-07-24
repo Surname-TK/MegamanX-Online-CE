@@ -178,7 +178,7 @@ public class SpiralMagnumProj : Projectile {
 			projId = (int)ProjIds.SpiralMagnumScoped;
 			maxDist = player.adjustedZoomRange;
 			dist = jumpDist;
-			damager.damage += MathF.Round(6 * (axl?.zoomCharge ?? 0));
+			damager.damage += MathF.Round(2 * (axl?.zoomCharge ?? 0));
 			if (axl?.hasScopedTarget() != true) {
 				damager.damage = 0;
 			}
@@ -290,7 +290,7 @@ public class SpiralMagnumProj : Projectile {
 			}
 
 			if (hitChar is MegamanX rockmanX && rockmanX.chargedRollingShieldProj != null) {
-				float decAmount = damager.damage * 2;
+				float decAmount = damager.damage;
 				rockmanX.chargedRollingShieldProj.decAmmo(decAmount);
 				var bytes = BitConverter.GetBytes(decAmount);
 				Global.serverClient?.rpc(RPC.decShieldAmmo, (byte)hitChar.player.id, bytes[0], bytes[1], bytes[2], bytes[3]);
@@ -376,7 +376,7 @@ public class SniperMissileProj : Projectile, IDamagable {
 
 		if (axl?.isWhiteAxl() == true) {
 			maxTime = 1000;
-			health = 12;
+			health = 6;
 			speed *= 1.5f;
 			turnSpeed = 2;
 		}
@@ -479,7 +479,7 @@ public class SniperMissileProj : Projectile, IDamagable {
 		}
 		new SniperMissileExplosionProj(
 			weapon, pos, xDir,
-			Helpers.clamp(MathF.Ceiling(1 + time), 2, 1000),
+			Helpers.clamp(MathF.Ceiling(1 + time), 1, 4),
 			owner, owner.getNextActorNetId()
 		);
 	}

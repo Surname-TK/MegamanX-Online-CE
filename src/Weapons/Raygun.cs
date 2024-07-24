@@ -17,7 +17,7 @@ public class RayGun : AxlWeapon {
 		weaponBarIndex = 28;
 		weaponSlotIndex = 34;
 		killFeedIndex = 33;
-		rateOfFire = 0.1f;
+		rateOfFire = 0.15f;
 
 		if (altFire == 1) {
 			shootSounds[3] = "";
@@ -88,13 +88,13 @@ public class RayGunProj : Projectile {
 		base(weapon, pos, xDir, 400, 1, player, "axl_raygun_laser", 0, 0f, netProjId, player.ownedByLocalPlayer) {
 		reflectable = true;
 		if ((player?.character as Axl)?.isWhiteAxl() == true) {
-			speed = 525;
+			speed = 425;
 			damager.hitCooldown = 0;
 			maxTime *= 1.5f;
 		}
 		vel.x = bulletDir.x * speed;
 		vel.y = bulletDir.y * speed;
-		maxTime = 0.35f;
+		maxTime = 0.5f;
 		projId = (int)ProjIds.RayGun;
 		updateAngle();
 		destroyOnHitWall = true;

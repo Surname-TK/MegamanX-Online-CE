@@ -7,7 +7,7 @@ namespace MMXOnline;
 public class BoundBlaster : AxlWeapon {
 	public BoundBlaster(int altFire) : base(altFire) {
 		shootSounds = new string[] { "boundBlaster", "boundBlaster", "boundBlaster", "movingWheel" };
-		rateOfFire = 0.15f;
+		rateOfFire = 0.25f;
 		index = (int)WeaponIds.BoundBlaster;
 		weaponBarBaseIndex = 35;
 		weaponSlotIndex = 55;
@@ -78,7 +78,7 @@ public class BoundBlasterProj : Projectile {
 	public BoundBlasterProj(
 		Weapon weapon, Point pos, float angle, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, 1, 250, 1, player, "boundblaster_proj", 0, 0.1f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, 1, 250, 1, player, "boundblaster_proj", 0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		reflectable = true;
 		Point anglePoint = Point.createFromAngle(angle);
@@ -349,14 +349,15 @@ public class BoundBlasterAltProj : Projectile {
 public class MovingWheelProj : Projectile {
 	int started;
 	float soundTime;
-	float startMaxTime = 2.5f;
+	float startMaxTime = 2f;
 	int hitCount;
 	float hitCooldown;
 	public MovingWheelProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 3, player, "movingwheel_proj", Global.defFlinch, 1, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, "movingwheel_proj", Global.defFlinch, 1, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.MovingWheel;
+		netcodeOverride = NetcodeModel.FavorDefender;
 		if (player.character is Axl axl && axl.isWhiteAxl() == true) {
-			startMaxTime = 5;
+			startMaxTime = 2.5f;
 		}
 		maxTime = startMaxTime;
 		useGravity = true;
@@ -398,9 +399,8 @@ public class MovingWheelProj : Projectile {
 			if (frameIndex > 0) frameIndex = 0;
 			if (grounded) {
 				started = 1;
-				damager.damage = 3;
-				if (isDefenderFavored()) damager.damage = 4;
-				damager.flinch = Global.defFlinch;
+				damager.damage = 2;
+				damager.flinch = Global.halfFlinch;
 				destroyOnHit = false;
 				maxTime = startMaxTime;
 				speed = 250;

@@ -439,7 +439,7 @@ public class Projectile : Actor {
 			if (otherProj != null && (otherRs != null || otherRsc != null) &&
 				damager.owner.alliance != otherProj.damager.owner.alliance
 			) {
-				if (this is ElectricSparkProj || this is ElectricSparkProjCharged || this is PlasmaGunProj || projId == (int)ProjIds.SparkMSpark) {
+				if (this is ElectricSparkProj || this is ElectricSparkProjCharged || projId == (int)ProjIds.SparkMSpark) {
 					otherRs?.destroySelf(doRpcEvenIfNotOwned: true);
 					otherRsc?.destroySelf(doRpcEvenIfNotOwned: true);
 				} else {

@@ -35,12 +35,12 @@ public class Torpedo : Weapon {
 }
 
 public class TorpedoProj : Projectile, IDamagable {
-	public Actor? target;
+	public Actor target;
 	public float smokeTime = 0;
-	public float maxSpeed = 2.5f;
+	public float maxSpeed = 200;
 	int type;
 	public TorpedoProj(Weapon weapon, Point pos, int xDir, Player player, int type, ushort netProjId, float? angle = null, bool rpc = false) :
-		base(weapon, pos, xDir, 50, 2, player, (type == 0 ? "torpedo" : type == 1 ? "torpedo_charge" : "frog_torpedo"), 0, 0f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 100, 2, player, (type == 0 ? "torpedo" : type == 1 ? "torpedo_charge" : "frog_torpedo"), 0, 0f, netProjId, player.ownedByLocalPlayer) {
 		if (type == 0) projId = (int)ProjIds.Torpedo;
 		else if (type == 1) projId = (int)ProjIds.TorpedoCharged;
 		else if (type == 2) projId = (int)ProjIds.MechTorpedo;
@@ -49,7 +49,7 @@ public class TorpedoProj : Projectile, IDamagable {
 			changeSprite("launcho_proj_ht", true);
 		}
 
-		maxTime = 5f;
+		maxDistance = 250f;
 		fadeOnAutoDestroy = true;
 		reflectableFBurner = true;
 		customAngleRendering = true;
@@ -98,7 +98,6 @@ public class TorpedoProj : Projectile, IDamagable {
 
 	public override void update() {
 		base.update();
-
 		updateProjectileCooldown();
 		checkLandFrogTorpedo();
 
@@ -108,18 +107,12 @@ public class TorpedoProj : Projectile, IDamagable {
 					target = null;
 				}
 			}
-
-
 			if (target != null) {
-				if (time < 30f) {
-					var dTo = pos.directionTo(target.getCenterPos()).normalize();
-					var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
-					destAngle = Helpers.to360(destAngle);
-					if (angle != null) {
-						angle = Helpers.lerpAngle((float)angle, destAngle, 1f);
-					}
-				} else {
-
+				var dTo = pos.directionTo(target.getCenterPos()).normalize();
+				var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
+				destAngle = Helpers.to360(destAngle);
+				if (angle != null) {
+					angle = Helpers.lerpAngle((float)angle, destAngle, Global.spf * 5);
 				}
 			}
 			if (time >= 0.15) {
@@ -128,19 +121,18 @@ public class TorpedoProj : Projectile, IDamagable {
 				// what
 			}
 			
-			if (angle != null) {
-				//var dTo = pos.directionTo(target.getCenterPos()).normalize();
-				//var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
-				//destAngle = Helpers.to360(destAngle);
-				if (vel.x != 1) {
-					vel.x += Helpers.cosd((float)angle) * maxSpeed;
-					vel.y += Helpers.sind((float)angle) * maxSpeed;
+			if (target != null && !target.destroyed) {
+				Point amount = pos.directionToNorm(target.getCenterPos()).times(270);
+				vel = Point.lerp(vel, amount, Global.spf);
+				if (vel.magnitude > maxSpeed) vel = vel.normalize().times(maxSpeed);
 				} else {
-					vel.x += Helpers.cosd((float)angle) * maxSpeed;
-					vel.y += Helpers.sind((float)angle) * maxSpeed;
+					if (vel.magnitude > maxSpeed) {
+						vel = vel.normalize().times(maxSpeed);
+					} else {
+						vel += vel * Global.spf;
+					}
 				}
-			}
-		}
+			} 
 
 		smokeTime += Global.spf;
 		if (smokeTime > 0.1) {
