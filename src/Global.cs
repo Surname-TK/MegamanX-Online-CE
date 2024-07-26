@@ -15,7 +15,7 @@ using static SFML.Window.Keyboard;
 namespace MMXOnline;
 
 public partial class Global {
-	public static decimal version = 29m;
+	public static decimal version = 02m;
 	public static string versionName = "Build #2";
 	public static string subVersionName = "Version 01";
 	public static string subVersionShortName = "v01";

@@ -242,7 +242,7 @@ public class MainMenu : IMainMenu {
 				FontType.Blue, "Loading...", Global.screenW / 2, top, alignment: Alignment.Center
 			);
 		} else {
-			string versionText = "v" + Global.version + " " + Global.subVersionShortName + " " + Global.shortForkName;
+			string versionText = "Build #" + Global.version + " " + Global.subVersionShortName + " " + Global.shortForkName;
 			/*
 			if (Helpers.compareVersions(Global.version, Global.serverVersion) == -1 &&
 				Global.serverVersion != decimal.MaxValue

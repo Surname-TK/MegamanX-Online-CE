@@ -151,7 +151,7 @@ class Program {
 		Fonts.loadFontSprites();
 
 		List<string> loadText = new();
-		loadText.Add("NOM BIOS v" + Global.version + ", An Energy Sunstar Ally");
+		loadText.Add("NOM BIOS Build #" + Global.version + ", An Energy Sunstar Ally");
 		loadText.Add("Copyright ©2114, NOM Corporation");
 		loadText.Add("");
 		loadText.Add("MMXOD " + Global.shortForkName + " " + Global.versionName + " " + Global.subVersionName);
