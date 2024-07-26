@@ -41,7 +41,7 @@ public class TornadoProj : Projectile {
 	public float blowModifier = 0.5f;
 
 	public TornadoProj(Weapon weapon, Point pos, int xDir, bool isStormE, Player player, ushort netProjId, bool sendRpc = false) :
-		base(weapon, pos, xDir, 400, 1, player, "tornado_mid", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 400, 0.5f, player, "tornado_mid", 0, 0.25f, netProjId, player.ownedByLocalPlayer) {
 		projId = isStormE ? (int)ProjIds.StormETornado : (int)ProjIds.Tornado;
 		if (isStormE) {
 			blowModifier = 0.25f;
@@ -136,7 +136,8 @@ public class TornadoProjCharged : Projectile {
 	public float growTime = 0;
 	public float maxLengthTime = 0;
 
-	public TornadoProjCharged(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId) : base(weapon, pos, xDir, 0, 2, player, "tornado_charge", Global.defFlinch, 0.4f, netProjId, player.ownedByLocalPlayer) {
+	public TornadoProjCharged(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId) : 
+		base(weapon, pos, xDir, 0, 1, player, "tornado_charge", Global.defFlinch, 0.2f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.TornadoCharged;
 		sprite.visible = false;
 		spriteStart = Global.sprites["tornado_charge"].clone();
