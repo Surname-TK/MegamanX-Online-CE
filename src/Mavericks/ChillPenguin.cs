@@ -207,7 +207,7 @@ public class ChillPIceProj : Projectile {
 		}
 
 		if (rpc) {
-			rpcCreate(pos, player, netProjId, xDir);
+			rpcCreate(pos, player, netProjId, xDir, (byte)type);
 		}
 	}
 	public static Projectile rpcInvoke(ProjParameters args) {

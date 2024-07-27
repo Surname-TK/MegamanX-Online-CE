@@ -1294,7 +1294,7 @@ public partial class Character : Actor, IDamagable {
 		if (charState.normalCtrl) {
 			normalCtrl();
 		}
-		if (charState.attackCtrl) {
+		if (charState.attackCtrl && invulnTime <= 0) {
 			return attackCtrl();
 		}
 		if (charState.altCtrls.Any(b => b)) {
@@ -3467,6 +3467,12 @@ public partial class Character : Actor, IDamagable {
 		}
 		chargeGfx();
 	}
+
+	public virtual void aiUpdate(Actor? target) { }
+
+	public virtual void aiAttack(Actor target) { }
+
+	public virtual void aiDodge(Actor? target) { }
 
 	public override List<byte> getCustomActorNetData() {
 		List<byte> customData = new();
