@@ -2083,6 +2083,7 @@ public class RPCBroadcastLoadout : RPC {
 
 		player.loadout = loadout;
 		player.configureStaticWeapons();
+		player.loadoutSet = true;
 	}
 
 	public void sendRpc(Player player) {

@@ -318,6 +318,7 @@ public partial class Player {
 	public bool readyTextOver = false;
 	public ServerPlayer serverPlayer;
 	public LoadoutData loadout;
+	public bool loadoutSet;
 	public LoadoutData previousLoadout;
 	public LoadoutData oldAxlLoadout;
 	public AxlLoadout axlLoadout { get { return loadout.axlLoadout; } }
@@ -590,8 +591,12 @@ public partial class Player {
 
 		if (ownedByLocalPlayer && !isAI) {
 			loadout = LoadoutData.createFromOptions(id);
+			loadoutSet = true;
 		} else {
 			loadout = LoadoutData.createRandom(id);
+			if (ownedByLocalPlayer) {
+				loadoutSet = true;
+			}
 		}
 
 		configureWeapons();
@@ -600,36 +605,41 @@ public partial class Player {
 	}
 
 	public int getHeartTankModifier() {
-		return Helpers.clamp(Global.level.server?.customMatchSettings?.heartTankHp ?? 2, 2, 1);
+		return Global.level.server?.customMatchSettings?.heartTankHp ?? 2;
 	}
 
 	public float getMaverickMaxHp() {
 		if (!Global.level.is1v1() && isTagTeam()) {
-			//return 16 + (heartTanks * getHeartTankModifier());
-			return MathF.Ceiling(32 * getHealthModifier());
+			return getModifiedHealth(32) + (heartTanks * getHeartTankModifier());
 		}
-
-		return MathF.Ceiling(32 * getHealthModifier());
+		return MathF.Ceiling(getModifiedHealth(32));
 	}
 
 	public bool hasAllItems() {
 		return subtanks.Count >= 4 && heartTanks >= 8;
 	}
 
-	public float getHealthModifier() {
-		var level = Global.level;
-		float modifier = 1;
-		if (level.is1v1()) {
-			if (Global.level.server.playTo == 1) modifier = 2;
-			if (Global.level.server.playTo == 2) modifier = 1.5f;
+	public static float getBaseHealth() {
+		if (Global.level.server.customMatchSettings != null) {
+			return Global.level.server.customMatchSettings.healthModifier;
 		}
-		if (level.server.customMatchSettings != null) {
-			modifier = (float)(level.server.customMatchSettings.healthModifier * 0.1m);
-			//if (level.gameMode.isTeamMode && alliance == GameMode.redAlliance) {
-			//	modifier = level.server.customMatchSettings.redHealthModifier;
-			//}
+		return 16;
+	}
+
+	public static float getModifiedHealth(float health) {
+		if (Global.level.server.customMatchSettings != null) {
+			float retHp = getBaseHealth();
+			float extraHP = health - 16;
+
+			float hpMulitiplier = MathF.Ceiling(getBaseHealth() / 16);
+			retHp += MathF.Ceiling(extraHP * hpMulitiplier);
+
+			if (retHp < 1) {
+				retHp = 1;
+			}
+			return retHp;
 		}
-		return modifier;
+		return health;
 	}
 
 	public float getDamageModifier() {
@@ -645,15 +655,15 @@ public partial class Player {
 	public float getMaxHealth() {
 		// 1v1 is the only mode without possible heart tanks/sub tanks
 		if (Global.level.is1v1()) {
-			return MathF.Ceiling(32 * getHealthModifier());
+			return getModifiedHealth(32);
 		}
 		int bonus = 0;
-		if (isSigma && isPuppeteer()) bonus = 0;
-		float hpModifier = getHealthModifier();
-		if (hpModifier < 1) {
-			return MathF.Ceiling((16 + bonus) * hpModifier) + heartTanks * getHeartTankModifier();
+		if (isSigma && isPuppeteer()) {
+			bonus = 0;
 		}
-		return MathF.Ceiling((16 + bonus + (heartTanks * getHeartTankModifier())) * hpModifier);
+		return MathF.Ceiling(
+			getModifiedHealth(16 + bonus) + (heartTanks * getHeartTankModifier())
+		);
 	}
 
 	public void creditHealing(float healAmount) {
@@ -722,6 +732,9 @@ public partial class Player {
 	}
 
 	public ushort getNextATransNetId() {
+		if (curATransNetId < getStartNetId() + 1) {
+			curATransNetId = (ushort)(getStartNetId() + 1);
+		}
 		var retId = curATransNetId;
 		curATransNetId++;
 		if (curATransNetId >= getStartNetId() + 10) {
@@ -1036,7 +1049,12 @@ public partial class Player {
 					false, charNetId, ownedByLocalPlayer
 				);
 			} else if (charNum == (int)CharIds.Sigma) {
-				if (isSigma3()) {
+				if (!ownedByLocalPlayer && !loadoutSet) {
+					character = new BaseSigma(
+						this, pos.x, pos.y, xDir,
+						false, charNetId, ownedByLocalPlayer
+					);
+				} else if (isSigma3()) {
 					character = new Doppma(
 						this, pos.x, pos.y, xDir,
 						false, charNetId, ownedByLocalPlayer
@@ -1365,12 +1383,7 @@ public partial class Player {
 			);
 			Global.serverClient?.rpc(RPC.axlDisguise, json);
 		}
-		float hpModifier = getHealthModifier();
-		if (hpModifier < 1) {
-			maxHealth = dnaCore.maxHealth + heartTanks * getHeartTankModifier();
-		} else {
-			maxHealth = dnaCore.maxHealth + MathF.Ceiling(heartTanks * getHeartTankModifier() * getHealthModifier());
-		}
+		maxHealth = dnaCore.maxHealth + MathF.Ceiling(heartTanks * getHeartTankModifier());
 
 		oldAxlLoadout = loadout;
 		loadout = dnaCore.loadout;
@@ -1951,7 +1964,7 @@ public partial class Player {
 			character.destroySelf();
 		}
 		clearSigmaWeapons();
-		maxHealth = MathF.Ceiling(32 * getHealthModifier());
+		maxHealth = getModifiedHealth(32);
 		ushort newNetId = getNextATransNetId();
 		if (form == 0) {
 			if (Global.level.is1v1()) {
@@ -1964,7 +1977,7 @@ public partial class Player {
 		} else {
 			KaiserSigma kaiserSigma = new KaiserSigma(
 				this, spawnPoint.x, spawnPoint.y, character.xDir, true,
-				newNetId, character.ownedByLocalPlayer
+				newNetId, true
 			);
 			character = kaiserSigma;
 			character.changeSprite("kaisersigma_enter", true);
@@ -1982,16 +1995,17 @@ public partial class Player {
 
 	public void reviveSigmaNonOwner(int form, Point spawnPoint, ushort sigmaNetId) {
 		clearSigmaWeapons();
-		maxHealth = MathF.Ceiling(32 * getHealthModifier());
-		//if (form >= 2) {
+		maxHealth = getModifiedHealth(32);
+		if (form >= 2) {
 			character.destroySelf();
 			KaiserSigma kaiserSigma = new KaiserSigma(
 				this, spawnPoint.x, spawnPoint.y, character.xDir, true,
-				character.netId, character.ownedByLocalPlayer
+				sigmaNetId, false
 			);
 			character = kaiserSigma;
-		//}
-		character.changeSprite("kaisersigma_enter", true);
+
+			character.changeSprite("kaisersigma_enter", true);
+		}
 	}
 
 	public void reviveX() {
