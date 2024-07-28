@@ -2,7 +2,7 @@
 
 public class SubTank {
 	public float health;
-	public const float maxHealth = 16;
+	public const float maxHealth = 28;
 	public bool isInUse;
 	public Player player;
 	public SubTank() {

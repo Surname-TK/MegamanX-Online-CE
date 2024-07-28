@@ -17,9 +17,9 @@ public class SparkMandrill : Maverick {
 		sparkWeapon = new SparkMSparkWeapon(player);
 		stompWeapon = new SparkMStompWeapon(player);
 
-		stateCooldowns.Add(typeof(SparkMPunchState), new MaverickStateCooldown(false, true, 0.75f));
+		stateCooldowns.Add(typeof(SparkMPunchState), new MaverickStateCooldown(false, false, 0.75f));
 		stateCooldowns.Add(typeof(SparkMDashPunchState), new MaverickStateCooldown(false, false, 0.75f));
-		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(false, true, 1f));
+		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(false, false, 1f));
 		spriteToCollider.Add("dash_punch", getDashCollider());
 
 		weapon = new Weapon(WeaponIds.SparkMGeneric, 94);

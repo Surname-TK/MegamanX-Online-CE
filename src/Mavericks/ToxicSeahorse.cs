@@ -7,8 +7,8 @@ public class ToxicSeahorse : Maverick {
 	public float teleportCooldown;
 	public ToxicSeahorse(Player player, Point pos, Point destPos, int xDir, ushort? netId, bool ownedByLocalPlayer, bool sendRpc = false) :
 		base(player, pos, destPos, xDir, netId, ownedByLocalPlayer) {
-		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(true, true, 1f));
-		stateCooldowns.Add(typeof(TSeahorseShoot2State), new MaverickStateCooldown(true, true, 2f));
+		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(true, false, 1f));
+		stateCooldowns.Add(typeof(TSeahorseShoot2State), new MaverickStateCooldown(true, false, 2f));
 		stateCooldowns.Add(typeof(TSeahorseTeleportState), new MaverickStateCooldown(false, true, 0.75f));
 
 		weapon = getWeapon();
@@ -104,7 +104,7 @@ public class TSeahorseAcidProj : Projectile, IDamagable {
 	public TSeahorseAcidProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool sendRpc = false) :
 		base(weapon, pos, xDir, 0, 2, player, "tseahorse_proj_acid_start", 0, 0.01f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.TSeahorseAcid1;
-		maxTime = 2;
+		maxTime = 2.5f;
 		useGravity = false;
 
 		if (sendRpc) {
@@ -156,6 +156,7 @@ public class TSeahorseAcidProj : Projectile, IDamagable {
 		if (didHit) {
 			//playSound("gbeetleProjBounce", sendRpc: true);
 			hitWallCooldown = 0.1f;
+			time = 0;
 			if (wasSideHit && ownedByLocalPlayer) {
 				new AcidBurstProjSmall(weapon, other.getHitPointSafe().addxy(-5 * moveDirX, 0), 1, new Point(-moveDirX * 50, 0), ProjIds.TSeahorseAcid1, owner, owner.getNextActorNetId(), rpc: true);
 				new AcidBurstProjSmall(weapon, other.getHitPointSafe().addxy(-5 * moveDirX, 0), 1, new Point(-moveDirX * 100, 0), ProjIds.TSeahorseAcid1, owner, owner.getNextActorNetId(), rpc: true);

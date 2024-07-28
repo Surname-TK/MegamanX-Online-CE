@@ -134,8 +134,7 @@ public class Buster : Weapon {
 						player.weapon, pos, xDir, 0,
 						player, player.getNextActorNetId(), rpc: true);
 						shootTime = 0;
-						}
-					else {
+					} else {
 						mmx.stockedX3Charge = false;
 						Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
 						new Buster3Proj(
@@ -150,15 +149,13 @@ public class Buster : Weapon {
 						}
 					}
 					return;
-				}
-				else {
+				} else {
 					shootTime = 0;
 				}
 				player.character.changeState(new X3ChargeShot(null), true);
 			}
 			return;
-		}
-		else if (mmx.stockedX2Charge) {
+		} else if (mmx.stockedX2Charge) {
 			if (player.ownedByLocalPlayer) {
 				if (player.character.charState is WallSlide) {
 					player.character.playSound("buster4X2", forcePlay: true, sendRpc: true);
@@ -169,18 +166,16 @@ public class Buster : Weapon {
 						player.weapon, pos, xDir, 1,
 						player, player.getNextActorNetId(), rpc: true);
 						shootTime = 0;
-						}
-					else {
+					} else {
 						mmx.stockedX2Charge = false;
 						Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
 						new Buster3Proj(
 						player.weapon, pos, xDir, 2,
 						player, player.getNextActorNetId(), rpc: true);
 						shootTime = 0.4f;
-						}
+					}
 					return;
-				}
-				else {
+				} else {
 					shootTime = 0;
 				}
 			}
@@ -213,18 +208,16 @@ public class Buster : Weapon {
 								player.weapon, pos, xDir, 1,
 								player, player.getNextActorNetId(), rpc: true);
 								shootTime = 0;
-								}
-							else {
+							} else {
 								mmx.stockedX2Charge = false;
 								Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
 								new Buster3Proj(
 								player.weapon, pos, xDir, 2,
 								player, player.getNextActorNetId(), rpc: true);
 								shootTime = 0.4f;
-								}
+							}
 							return;
-						}
-						else {
+						} else {
 							shootTime = 0;
 						}
 						player.character.changeState(new X2ChargeShot(2), true);
@@ -245,8 +238,7 @@ public class Buster : Weapon {
 							player.weapon, pos, xDir, 0,
 							player, player.getNextActorNetId(), rpc: true);
 							shootTime = 0;
-							}
-						else {
+						} else {
 							mmx.stockedX3Charge = false;
 							Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
 							new Buster3Proj(
@@ -261,8 +253,7 @@ public class Buster : Weapon {
 							}
 						}
 						return;
-					}
-					else {
+					} else {
 						shootTime = 0;
 					}
 					player.character.changeState(new X3ChargeShot(null), true);
@@ -293,8 +284,7 @@ public class Buster : Weapon {
 							player.weapon, pos, xDir, 1,
 							player, player.getNextActorNetId(), rpc: true);
 							shootTime = 0;
-							}
-						else {
+						} else {
 							mmx.stockedX2Charge = false;
 							new Buster3Proj(
 							player.weapon, pos, xDir, 2,
@@ -302,8 +292,7 @@ public class Buster : Weapon {
 							shootTime = 0.4f;
 						}
 						return;
-					}
-					else {
+					} else {
 						shootTime = 0;
 					}
 					player.character.changeState(new X2ChargeShot(0), true);

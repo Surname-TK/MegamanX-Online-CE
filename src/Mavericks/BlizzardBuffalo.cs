@@ -18,7 +18,7 @@ public class BlizzardBuffalo : Maverick {
 	) {
 		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(false, true, 0.75f));
 		stateCooldowns.Add(typeof(BBuffaloDashState), new MaverickStateCooldown(false, true, 1.25f));
-		stateCooldowns.Add(typeof(BBuffaloShootBeamState), new MaverickStateCooldown(false, false, 2));
+		stateCooldowns.Add(typeof(BBuffaloShootBeamState), new MaverickStateCooldown(false, false, 1));
 
 		spriteFrameToSounds["bbuffalo_run/2"] = "walkStomp";
 		spriteFrameToSounds["bbuffalo_run/6"] = "walkStomp";

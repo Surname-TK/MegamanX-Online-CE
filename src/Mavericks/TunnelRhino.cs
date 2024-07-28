@@ -14,7 +14,7 @@ public class TunnelRhino : Maverick {
 	) {
 		stateCooldowns.Add(typeof(TunnelRShootState), new MaverickStateCooldown(true, false, 0.75f));
 		stateCooldowns.Add(typeof(TunnelRShoot2State), new MaverickStateCooldown(true, false, 0.75f));
-		stateCooldowns.Add(typeof(TunnelRDashState), new MaverickStateCooldown(false, false, 1f));
+		stateCooldowns.Add(typeof(TunnelRDashState), new MaverickStateCooldown(false, true, 1f));
 
 		weapon = getWeapon();
 		meleeWeapon = getMeleeWeapon(player);
@@ -122,6 +122,7 @@ public class TunnelRTornadoFang : Projectile {
 		maxTime = 1.5f;
 		projId = (int)ProjIds.TunnelRTornadoFang;
 		destroyOnHit = false;
+		isShield = true;
 		this.type = type;
 		if (type != 0) {
 			vel.x = 0;
