@@ -39,6 +39,9 @@ public class Maverick : Actor, IDamagable {
 	public float maxHealth;
 	private float healAmount = 0;
 	public float healTime = 0;
+	//Subtank heal stuff
+	public float subtankHealAmount = 0;
+	public float subtankHealTime = 0;
 	public float weaponHealAmount = 0;
 	public float weaponHealTime = 0;
 	public bool playHealSound;
@@ -198,6 +201,10 @@ public class Maverick : Actor, IDamagable {
 		healAmount += amount;
 	}
 
+	public void addHealthSubtank(float amount) {
+		subtankHealAmount += amount;
+	}
+
 	public virtual void setHealth(float lastHealth) {
 		health = lastHealth;
 	}
@@ -245,13 +252,30 @@ public class Maverick : Actor, IDamagable {
 
 		if (health >= maxHealth) {
 			healAmount = 0;
+			subtankHealAmount = 0;
 			usedSubtank = null;
 		}
+		//HP capsules heal
 		if (healAmount > 0 && health > 0) {
 			healTime += Global.spf;
 			if (healTime > 0.05) {
 				healTime = 0;
 				healAmount--;
+				/*if (usedSubtank != null) {
+					usedSubtank.health--;
+				}*/
+				health = Helpers.clampMax(health + 1, maxHealth);
+				if (player == Global.level.mainPlayer || playHealSound) {
+					playSound("heal", forcePlay: true, sendRpc: true);
+				}
+			}
+		}
+		//Subtanks heal
+		if (subtankHealAmount > 0 && health > 0) {
+			subtankHealTime++;
+			if (subtankHealTime > 3) { //increase this to make the heal slower
+				subtankHealTime = 0;
+				subtankHealAmount--;
 				if (usedSubtank != null) {
 					usedSubtank.health--;
 				}
