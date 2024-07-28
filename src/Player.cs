@@ -2528,6 +2528,7 @@ public partial class Player {
 	public bool canUseSubtank(SubTank subtank) {
 		if (isDead) return false;
 		if (character.healAmount > 0) return false;
+		if (character.subtankHealAmount > 0) return false;
 		if (health <= 0 || health >= maxHealth) return false;
 		if (subtank.health <= 0) return false;
 		if (character.charState is WarpOut) return false;
@@ -2540,6 +2541,7 @@ public partial class Player {
 
 	public void fillSubtank(float amount) {
 		if (character?.healAmount > 0) return;
+		if (character?.subtankHealAmount > 0) return;
 		var subtanks = this.subtanks;
 		for (int i = 0; i < subtanks.Count; i++) {
 			if (subtanks[i].health < SubTank.maxHealth) {
@@ -2573,6 +2575,10 @@ public partial class Player {
 		if (isMainPlayer) {
 			UpgradeMenu.subtankDelay = UpgradeMenu.maxSubtankDelay;
 		}
+	}
+
+	public void stopSubtankHeal() {
+		if (character != null && character.subtankHealAmount > 0) character.subtankHealAmount = 0;
 	}
 }
 

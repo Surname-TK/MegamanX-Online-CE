@@ -43,6 +43,10 @@ public partial class Character : Actor, IDamagable {
 	public float netSubtankHealAmount;
 	public bool playHealSound;
 	public float healTime = 0;
+
+	//Subtank Heal stuff
+	public float subtankHealAmount = 0;
+	public float subtankHealTime = 0;
 	public float weaponHealAmount = 0;
 	public float weaponHealTime = 0;
 	public float healthBarInnerWidth;
@@ -1094,6 +1098,7 @@ public partial class Character : Actor, IDamagable {
 
 		if (player.health >= player.maxHealth) {
 			healAmount = 0;
+			subtankHealAmount = 0;
 			usedSubtank = null;
 		}
 		if (healAmount > 0 && player.health > 0) {
@@ -1101,6 +1106,31 @@ public partial class Character : Actor, IDamagable {
 			if (healTime > 0.05) {
 				healTime = 0;
 				healAmount--;
+				/*if (usedSubtank != null) {
+					usedSubtank.health--;
+				}*/
+				player.health = Helpers.clampMax(player.health + 1, player.maxHealth);
+				if (acidTime > 0) {
+					acidTime--;
+					if (acidTime < 0) removeAcid();
+				}
+				if (player == Global.level.mainPlayer || playHealSound) {
+					if (!player.hasChip(2)) {
+						playSound("heal", forcePlay: true, sendRpc: true);
+					} else {
+						playSound("goldenHelmetHP", forcePlay: true, sendRpc: true);
+					}
+				}
+			}
+		} else {
+			playHealSound = false;
+		}
+
+		if (subtankHealAmount > 0 && player.health > 0) {
+			subtankHealTime++;
+			if (subtankHealTime > 3) {
+				subtankHealTime = 0;
+				subtankHealAmount--;
 				if (usedSubtank != null) {
 					usedSubtank.health--;
 				}
@@ -2790,6 +2820,10 @@ public partial class Character : Actor, IDamagable {
 			player.fillSubtank(amount);
 		}
 		healAmount += amount;
+	}
+
+	public void addHealthSubtank(float amount) {
+		subtankHealAmount += amount;
 	}
 
 	public void fillHealthToMax() {
