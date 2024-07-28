@@ -166,7 +166,7 @@ public class NeoSigma : BaseSigma {
 	}
 
 	public override bool canAddAmmo() {
-		return (player.sigmaAmmo < 32);
+		return (player.sigmaAmmo < 28);
 	}
 
 	public override List<byte> getCustomActorNetData() {

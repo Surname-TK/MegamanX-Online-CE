@@ -50,7 +50,7 @@ public class SparkMandrill : Maverick {
 		base.update();
 		rechargeAmmo(4);
 		if (aiBehavior == MaverickAIBehavior.Control) {
-			if (state is MIdle || state is MRun) {
+			if (state is MIdle or MRun or MLand) {
 				if (specialPressed()) {
 					if (ammo >= 14)
 					{
