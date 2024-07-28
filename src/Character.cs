@@ -1136,6 +1136,7 @@ public partial class Character : Actor, IDamagable {
 			subtankHealAmount = 0;
 			usedSubtank = null;
 		}
+		//HP Capsules heal
 		if (healAmount > 0 && player.health > 0) {
 			healTime += Global.spf;
 			if (healTime > 0.05) {
@@ -1161,9 +1162,11 @@ public partial class Character : Actor, IDamagable {
 			playHealSound = false;
 		}
 
+
+		//Subtanks heal
 		if (subtankHealAmount > 0 && player.health > 0) {
 			subtankHealTime++;
-			if (subtankHealTime > 3) {
+			if (subtankHealTime > 3) { //Increase this to make the heal slower
 				subtankHealTime = 0;
 				subtankHealAmount--;
 				if (usedSubtank != null) {
