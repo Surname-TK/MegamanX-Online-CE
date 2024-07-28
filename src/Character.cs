@@ -1113,6 +1113,7 @@ public partial class Character : Actor, IDamagable {
 			}
 			if (stingChargeTime <= 0) {
 				player.delaySubtank();
+				player.stopSubtankHeal();
 				stingChargeTime = 0;
 			}
 		}
@@ -1307,7 +1308,7 @@ public partial class Character : Actor, IDamagable {
 		if (charState.airMove && !grounded) {
 			airMove();
 		}
-		if (charState.canJump && (grounded || canAirJump() && character.flag == null)) {
+		if (charState.canJump && (grounded || canAirJump() && player.character.flag == null)) {
 			if (player.input.isPressed(Control.Jump, player)) {
 				if (!grounded) {
 					dashedInAir++;
@@ -2816,6 +2817,7 @@ public partial class Character : Actor, IDamagable {
 		if (damage > 0 && attacker != null) {
 			if (projId != (int)ProjIds.Burn && projId != (int)ProjIds.AcidBurstPoison) {
 				player.delaySubtank();
+				player.stopSubtankHeal();
 			}
 		}
 		if (originalHP > 0 && (originalDamage > 0 || damage > 0)) {

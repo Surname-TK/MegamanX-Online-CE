@@ -113,6 +113,7 @@ public class CharState {
 		}
 		if (invincible) {
 			player.delaySubtank();
+			player.stopSubtankHeal();
 		}
 		character.onExitState(this, newState);
 	}

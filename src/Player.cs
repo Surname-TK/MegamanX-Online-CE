@@ -1013,7 +1013,7 @@ public partial class Player {
 		maxHealth = getMaxHealth();
 		if (isSigma) {
 			if (isSigma1()) {
-				sigmaMaxAmmo = 20;
+				sigmaMaxAmmo = 28;
 				sigmaAmmo = sigmaMaxAmmo;
 			} else if (isSigma2()) {
 				sigmaMaxAmmo = 28;

@@ -1581,8 +1581,8 @@ public class AI {
 							neoSigma.player.changeWeaponSlot(0);
 							break;
 						case 6:
-							if (neoSigma.player.sigmaAmmo < 32) {
-								neoSigma.player.sigmaAmmo -= 16;
+							if (neoSigma.player.sigmaAmmo < 28) {
+								neoSigma.player.sigmaAmmo -= 14;
 								neoSigma.changeState(new SigmaElectricBallState(), true);
 								} else {
 								neoSigma.player.sigmaAmmo = 0;
@@ -1667,8 +1667,8 @@ public class AI {
 							}
 							//Neo Sigma
 							if (character is NeoSigma neoSigma) {
-								// If Neo Sigma giga attack ammo is the same and higher than 16 but less than 24
-								if (player.sigmaAmmo >= 16 && player.sigmaAmmo <= 24) {
+								// If Neo Sigma giga attack ammo is the same and higher than 14 but less than 21
+								if (player.sigmaAmmo >= 14 && player.sigmaAmmo <= 21) {
 									if (Global.time > 0.3f) {
 										//Do "Better C-Flasher" 
 										//Original name: 5 Bullet Shot (弾5発射 Dan 5 Hassha)
