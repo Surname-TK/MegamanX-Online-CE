@@ -167,7 +167,7 @@ public class VoltCTriadThunderProj : Projectile {
 		shouldShieldBlock = false;
 		vel = velDir.normalize().times(150);
 		collider.wallOnly = true;
-		maxTime = 2f;
+		maxTime = 3f;
 		this.vc = vc;
 
 		if (rpc) {
@@ -392,12 +392,12 @@ public class VoltCUpBeamState : MaverickState {
 		if (!once && shootPos != null) {
 			once = true;
 			maverick.playSound("voltcWeakBolt", sendRpc: true);
-			if (isAI || maverick.ammo >= 7) {
-				if (!isAI) maverick.deductAmmo(7);
+			if (isAI || maverick.ammo >= 4) {
+				if (!isAI) maverick.deductAmmo(4);
 				new VoltCUpBeamProj(maverick.weapon, shootPos.Value, maverick.xDir, 0, player, player.getNextActorNetId(), rpc: true);
 			}
-			if (isAI || maverick.ammo >= 7) {
-				if (!isAI) maverick.deductAmmo(7);
+			if (isAI || maverick.ammo >= 4) {
+				if (!isAI) maverick.deductAmmo(4);
 				new VoltCUpBeamProj(maverick.weapon, shootPos2.Value, maverick.xDir, 0, player, player.getNextActorNetId(), rpc: true);
 			}
 		}
@@ -431,12 +431,12 @@ public class VoltCBarrierProj : Projectile {
 
 public class VoltCSparkleProj : Projectile {
 	public VoltCSparkleProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 2, player, "voltc_proj_sparkle", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, "voltc_proj_sparkle", Global.miniFlinch, 0, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.VoltCSparkle;
 		vel = new Point(Helpers.randomRange(-200, 200), Helpers.randomRange(-400, -200));
 		useGravity = true;
 		destroyOnHit = true;
-		maxTime = 0.75f;
+		maxTime = 1.25f;
 
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);

@@ -141,8 +141,14 @@ public class Buster : Weapon {
 						new Buster3Proj(
 						player.weapon, pos, xDir, 0,
 						player, player.getNextActorNetId(), rpc: true);
-						shootTime = 0.4f;
+						shootTime = 0.2f;
+						if (player.hasGoldenArmor() && player.weapon is Buster) {
+							mmx.stockedX3Saber = true;
+							mmx.stockX3Saber(true);
+							mmx.xSaberCooldown = 0;
+							Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Saber);
 						}
+					}
 					return;
 				}
 				else {
@@ -246,8 +252,14 @@ public class Buster : Weapon {
 							new Buster3Proj(
 							player.weapon, pos, xDir, 0,
 							player, player.getNextActorNetId(), rpc: true);
-							shootTime = 0.4f;
+							shootTime = 0.2f;
+							if (player.hasGoldenArmor() && player.weapon is Buster) {
+								mmx.stockedX3Saber = true;
+								mmx.stockX3Saber(true);
+								mmx.xSaberCooldown = 0;
+								Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Saber);
 							}
+						}
 						return;
 					}
 					else {
@@ -737,15 +749,14 @@ public class X3ChargeShot : CharState {
 			if (state == 0) {
 				new BusterX3Proj1(
 					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
-					player, player.getNextActorNetId(), rpc: true);
+					player, player.getNextActorNetId(), rpc: true
+					);
 				character.playSound("buster3X3", sendRpc: true);
 				
 			} else {
 				if (hyperBusterWeapon != null) {
 					hyperBusterWeapon.ammo -= hyperBusterWeapon.getChipFactoredAmmoUsage(player);
 				}
-				// float xDir = character.getShootXDir();
-
 				new Buster3Proj(
 					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
 					player, player.getNextActorNetId(), rpc: true
@@ -764,6 +775,12 @@ public class X3ChargeShot : CharState {
 				} else {
 					mmx.stockedX3Charge = false;
 					Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
+					if (player.hasGoldenArmor() && player.weapon is Buster) {
+						mmx.stockedX3Saber = true;
+						mmx.stockX3Saber(true);
+						mmx.xSaberCooldown = 0;
+						Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Saber);
+					}
 				}
 				sprite = "x3_shot2";
 				landSprite = "x3_shot2";
@@ -815,6 +832,12 @@ public class X3ChargeShot : CharState {
 		} else {
 			mmx.stockedX3Charge = false;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
+			if (player.hasGoldenArmor() && player.weapon is Buster) {
+				mmx.stockedX3Saber = true;
+				mmx.stockX3Saber(true);
+				mmx.xSaberCooldown = 0;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Saber);
+			}
 			state = 1;
 			sprite = "x3_shot2";
 			defaultSprite = sprite;
@@ -833,6 +856,12 @@ public class X3ChargeShot : CharState {
 		} else {
 			mmx.stockedX3Charge = false;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
+			if (player.hasGoldenArmor() && player.weapon is Buster) {
+				mmx.stockedX3Saber = true;
+				mmx.stockX3Saber(true);
+				mmx.xSaberCooldown = 0;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Saber);
+			}
 		}
 		character.shootAnimTime = 0;
 		base.onExit(newState);

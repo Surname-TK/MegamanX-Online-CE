@@ -727,6 +727,7 @@ public partial class MegamanX : Character {
 		if (stockedX3Saber) {
 			if (xSaberCooldown == 0) {
 				stockX3Saber(false);
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Saber);
 				changeState(new XSaberState(grounded), true);
 			}
 			return;
@@ -771,10 +772,10 @@ public partial class MegamanX : Character {
 
 		shootRpc(getShootPos(), player.weapon.index, xDir, cl, player.getNextActorNetId(), true);
 
-		if (chargeLevel >= 3 && player.hasGoldenArmor() && player.weapon is Buster) {
+		/*if (chargeLevel >= 3 && player.hasGoldenArmor() && player.weapon is Buster) {
 			stockX3Saber(true);
 			xSaberCooldown = 0.66f;
-		}
+		}*/
 
 		if (chargeLevel >= 3 && player.hasArmArmor(2)) {
 			stockedX2Charge = true;

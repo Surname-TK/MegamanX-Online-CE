@@ -58,7 +58,7 @@ public class Damager {
 		{ (int)ProjIds.CopyShot, 1f },
 		{ (int)ProjIds.NeonTClawAir, 1f },
 		{ (int)ProjIds.NeonTClawDash, 1f },
-		{ (int)ProjIds.VoltCTriadThunder, 1f },
+		{ (int)ProjIds.VoltCTriadThunder, 0f },
 		{ (int)ProjIds.Rekkoha, 0.75f },
 		{ (int)ProjIds.HexaInvolute, 1f },
 		{ (int)ProjIds.ZSaber3, 1f }
