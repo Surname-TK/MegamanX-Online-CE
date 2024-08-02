@@ -5,7 +5,7 @@ namespace MMXOnline;
 public class FlameBurner : AxlWeapon {
 	public FlameBurner(int altFire) : base(altFire) {
 		shootSounds = new string[] { "flameBurner", "flameBurner", "flameBurner", "circleBlaze" };
-		rateOfFire = 0.15f;
+		rateOfFire = 0.1f;
 		altFireCooldown = 1.5f;
 		index = (int)WeaponIds.FlameBurner;
 		weaponBarBaseIndex = 38;
@@ -36,8 +36,8 @@ public class FlameBurner : AxlWeapon {
 		if (chargeLevel < 3) {
 			if (player.character?.isUnderwater() == false) {
 				new FlameBurnerProj(weapon, bulletPos, xDir, player, bulletDir, netId, sendRpc: true);
-				new FlameBurnerProj(weapon, bulletPos.add(bulletDir.times(5)), xDir, player, Point.createFromAngle(angle + Helpers.randomRange(-10, 10)), player.getNextActorNetId(), sendRpc: true);
-				new FlameBurnerProj(weapon, bulletPos.add(bulletDir.times(10)), xDir, player, Point.createFromAngle(angle + Helpers.randomRange(-10, 10)), player.getNextActorNetId(), sendRpc: true);
+				// new FlameBurnerProj(weapon, bulletPos.add(bulletDir.times(5)), xDir, player, Point.createFromAngle(angle + Helpers.randomRange(-10, 10)), player.getNextActorNetId(), sendRpc: true);
+				// new FlameBurnerProj(weapon, bulletPos.add(bulletDir.times(10)), xDir, player, Point.createFromAngle(angle + Helpers.randomRange(-10, 10)), player.getNextActorNetId(), sendRpc: true);
 			}
 			RPC.playSound.sendRpc(shootSounds[0], player.character?.netId);
 		} else {

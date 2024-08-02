@@ -84,12 +84,12 @@ public class BubbleSplashProj : Projectile {
 		vel.y = -20 * Helpers.randomRange(0.5f, 1f);
 		vel.x *= Helpers.randomRange(0.5f, 1f);
 		if (ownedByLocalPlayer) {
-			if (player.character.isDashing && player.character.grounded) {
-				vel.x *= 1.5f;
+			if (player.character.charState is Dash || player.character.charState is AirDash) {
+				vel.x *= 2;
 			}
 		}
 		if (!isUnderwater()) {
-			vel.y *= 0.5f;
+			vel.y *= 0.75f;
 			vel.x *= 1.75f;
 		} else {
 			vel.y *= 3;
@@ -121,7 +121,7 @@ public class BubbleSplashProj : Projectile {
 }
 
 public class BubbleSplashProjCharged : Projectile {
-	public MegamanX? character;
+	public MegamanX character;
 	public float yPos;
 	public float initTime;
 	public BubbleSplashProjCharged(Weapon weapon, Point pos, int xDir, Player player, float time, ushort netProjId, bool rpc = false) :

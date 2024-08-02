@@ -173,7 +173,7 @@ public class SpinWheelProjCharged : Projectile {
 	public SpinWheelProjCharged(Weapon weapon, Point pos, int xDir, int yDir, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 200, 0.5f, player, "spinwheel_charged", Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.SpinWheelCharged;
-		maxTime = 0.75f;
+		maxTime = 1;
 
 		this.xDir = xDir == 0 ? 1 : xDir;
 		this.yDir = yDir == 0 ? 1 : yDir;

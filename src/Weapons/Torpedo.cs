@@ -25,11 +25,11 @@ public class Torpedo : Weapon {
 			new TorpedoProj(this, pos, xDir, player, 0, netProjId);
 		} else {
 			player.setNextActorNetId(netProjId);
-			new TorpedoProj(this, pos.addxy(0, 2), xDir, player, 1, player.getNextActorNetId(true), 30);
-			new TorpedoProj(this, pos.addxy(0, 1), xDir, player, 1, player.getNextActorNetId(true), 15);
+			new TorpedoProj(this, pos.addxy(0, 2), xDir, player, 1, player.getNextActorNetId(true), 60);
+			new TorpedoProj(this, pos.addxy(0, 1), xDir, player, 1, player.getNextActorNetId(true), 30);
 			new TorpedoProj(this, pos.addxy(0, 0), xDir, player, 1, player.getNextActorNetId(true), 0);
-			new TorpedoProj(this, pos.addxy(0, -1), xDir, player, 1, player.getNextActorNetId(true), -15);
-			new TorpedoProj(this, pos.addxy(0, -2), xDir, player, 1, player.getNextActorNetId(true), -30);
+			new TorpedoProj(this, pos.addxy(0, -1), xDir, player, 1, player.getNextActorNetId(true), -30);
+			new TorpedoProj(this, pos.addxy(0, -2), xDir, player, 1, player.getNextActorNetId(true), -60);
 		}
 	}
 }
@@ -37,7 +37,7 @@ public class Torpedo : Weapon {
 public class TorpedoProj : Projectile, IDamagable {
 	public Actor target;
 	public float smokeTime = 0;
-	public float maxSpeed = 200;
+	public float maxSpeed = 300;
 	int type;
 	public TorpedoProj(Weapon weapon, Point pos, int xDir, Player player, int type, ushort netProjId, float? angle = null, bool rpc = false) :
 		base(weapon, pos, xDir, 100, 2, player, (type == 0 ? "torpedo" : type == 1 ? "torpedo_charge" : "frog_torpedo"), 0, 0f, netProjId, player.ownedByLocalPlayer) {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace MMXOnline;
 
@@ -53,25 +54,22 @@ public class SonicSlicerStart : Projectile {
 
 public class SonicSlicerProj : Projectile {
 	public Sprite twin;
+	public float Curve = 1;
 	int type;
 	public SonicSlicerProj(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 0, 2, player, "sonicslicer_proj", 0, 0, netProjId, player.ownedByLocalPlayer) {
-		maxTime = 1.25f;
+		maxDistance = 200f;
 		this.type = type;
 		collider.wallOnly = true;
 		projId = (int)ProjIds.SonicSlicer;
-
 		twin = Global.sprites["sonicslicer_twin"].clone();
 
 		if (time > 0.25f) {
 			vel.x = 200;
-			vel.y = 50;
+			vel.y = 800;
 			if (type == 1) {
 				vel.x *= 1.25f;
 				frameIndex = 1;
-			}
-			if (type == 1) {
-				vel.y = 0;
 			}
 		}
 
@@ -83,9 +81,14 @@ public class SonicSlicerProj : Projectile {
 	public override void update() {
 		base.update();
 		if (time > 0.25f) {
-			vel.x = 200 * xDir;
-			if (type == 0) vel.y -= Global.spf * 100;
-			else vel.y -= Global.spf * 50;
+			Curve -= 0.05f;
+			if (type == 0) {
+				vel.x = 150 * xDir;
+				vel.y = (Curve * 30) + 10;
+			} else {
+				vel.x = 200 * xDir;
+				vel.y = (Curve * 30);
+			}
 		}
 
 		var collideData = Global.level.checkCollisionActor(this, xDir, 0, vel);
@@ -103,6 +106,7 @@ public class SonicSlicerProj : Projectile {
 			if (collideData != null && collideData.hitData != null) {
 				playSound("dingX2");
 				vel.y *= -1;
+				Curve *= -1;
 				new Anim(pos, "sonicslicer_sparks", xDir, null, true);
 				//RPC.actorToggle.sendRpc(netId, RPCActorToggleType.SonicSlicerBounce);
 			}
@@ -120,18 +124,18 @@ public class SonicSlicerProj : Projectile {
 public class SonicSlicerProjCharged : Projectile {
 	public Point dest;
 	public bool fall;
-	public SonicSlicerProjCharged(Weapon weapon, Point pos, int num, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, 1, 300, 2, player, "sonicslicer_charged", Global.defFlinch, 0.125f, netProjId, player.ownedByLocalPlayer) {
+	public SonicSlicerProjCharged(Weapon weapon, Point pos, int type, Player player, ushort netProjId, bool rpc = false) :
+		base(weapon, pos, 1, 0, 2, player, "sonicslicer_charged", Global.defFlinch, 0.025f, netProjId, player.ownedByLocalPlayer) {
 		fadeSprite = "sonicslicer_charged_fade";
 		maxTime = 1;
 		projId = (int)ProjIds.SonicSlicerCharged;
 		destroyOnHit = true;
 
-		if (num == 0) dest = pos.addxy(-60, -100);
-		if (num == 1) dest = pos.addxy(-30, -100);
-		if (num == 2) dest = pos.addxy(-0, -100);
-		if (num == 3) dest = pos.addxy(30, -100);
-		if (num == 4) dest = pos.addxy(60, -100);
+		if (type == 0) dest = pos.addxy(-100, -40);
+		if (type == 1) dest = pos.addxy(-50, -50);
+		if (type == 2) dest = pos.addxy(-0, -50);
+		if (type == 3) dest = pos.addxy(50, -50);
+		if (type == 4) dest = pos.addxy(100, -40);
 
 		vel.x = 0;
 		useGravity = false;
