@@ -433,7 +433,7 @@ public class VoltCSparkleProj : Projectile {
 	public VoltCSparkleProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 0, 2, player, "voltc_proj_sparkle", Global.miniFlinch, 0, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.VoltCSparkle;
-		vel = new Point(Helpers.randomRange(-200, 200), Helpers.randomRange(-400, -200));
+		vel = new Point(Helpers.randomRange(-200, 200), Helpers.randomRange(-600, -200));
 		useGravity = true;
 		destroyOnHit = true;
 		maxTime = 1.25f;

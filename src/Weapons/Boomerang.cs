@@ -150,13 +150,13 @@ public class BoomerangProjCharged : Projectile {
 	public float maxSpeed = 400;
 	public int type = 0;
 	public Point blurPosOffset;
-	public BoomerangProjCharged? twin;
+	public BoomerangProjCharged twin;
 
 	public Point lerpOffset;
 	public float lerpTime;
 
 	public BoomerangProjCharged(Weapon weapon, Point pos, Point? lerpToPos, int xDir, Player player, float angle, int type, ushort netProjId, BoomerangProjCharged? twin) :
-		base(weapon, pos, xDir, 0, 2, player, type == 0 ? "boomerang_charge" : "boomerang_charge2", Global.defFlinch, 0.1f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, type == 0 ? "boomerang_charge" : "boomerang_charge2", Global.defFlinch, 0.02f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.BoomerangCharged;
 		maxTime = 1.25f;
 		customAngleRendering = true;

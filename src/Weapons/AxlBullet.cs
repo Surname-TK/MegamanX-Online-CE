@@ -107,11 +107,11 @@ public class AxlBullet : AxlWeapon {
 		if (type == (int)AxlBulletWeaponType.BeastKiller) return 3;
 		switch (chargeLevel) {
 			case 1:
-				return 4;
+				return 2;
 			case 2:
-				return 6;
+				return 4;
 			case >= 3:
-				return 8;
+				return 7;
 			default:
 				return 1;
 		}
@@ -181,11 +181,11 @@ public class DoubleBullet : AxlWeapon {
 	public override float getAmmoUsage(int chargeLevel) {
 		switch (chargeLevel) {
 			case 1:
-				return 4;
+				return 2;
 			case 2:
-				return 6;
+				return 4;
 			case >= 3:
-				return 8;
+				return 7;
 			default:
 				return 1;
 		}

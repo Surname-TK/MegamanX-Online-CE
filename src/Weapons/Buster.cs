@@ -1049,7 +1049,7 @@ public class BusterPlasmaProj : Projectile {
 public class BusterPlasmaHitProj : Projectile {
 	public BusterPlasmaHitProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 0, 1, player, "buster_plasma_hit", 0, 0.25f, netProjId, player.ownedByLocalPlayer) {
-		maxTime = 2f;
+		maxTime = 1f;
 		projId = (int)ProjIds.BusterX3PlasmaHit;
 		destroyOnHit = false;
 		netcodeOverride = NetcodeModel.FavorDefender;

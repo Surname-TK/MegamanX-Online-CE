@@ -6,7 +6,7 @@ namespace MMXOnline;
 public class SpeedBurner : Weapon {
 	public SpeedBurner(Player? player) : base() {
 		if (player != null) {
-			damager = new Damager(player, 3, Global.halfFlinch, 0.5f);
+			damager = new Damager(player, 3, Global.halfFlinch, 0.25f);
 		}
 		shootSounds = new string[] { "speedBurner", "speedBurner", "speedBurner", "speedBurnerCharged" };
 		rateOfFire = 1f;

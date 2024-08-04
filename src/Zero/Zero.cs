@@ -781,11 +781,11 @@ public class Zero : Character {
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.Dairettsui => new GenericMeleeProj(
-				TBreakerWeapon.staticWeapon, projPos, ProjIds.TBreaker, player, 6, Global.defFlinch, 0.5f,
+				TBreakerWeapon.staticWeapon, projPos, ProjIds.TBreaker, player, 4, Global.defFlinch, 0.5f,
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.Suiretsusen => new GenericMeleeProj(
-				SuiretsusenWeapon.staticWeapon, projPos, ProjIds.SuiretsusanProj, player, 6, Global.defFlinch, 0.75f,
+				SuiretsusenWeapon.staticWeapon, projPos, ProjIds.SuiretsusanProj, player, 4, Global.defFlinch, 0.75f,
 				addToLevel: addToLevel
 			),
 			// Up Specials

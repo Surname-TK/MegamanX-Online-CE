@@ -124,19 +124,26 @@ public class SonicSlicerProj : Projectile {
 public class SonicSlicerProjCharged : Projectile {
 	public Point dest;
 	public bool fall;
+	public int Type;
 	public SonicSlicerProjCharged(Weapon weapon, Point pos, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, 1, 0, 2, player, "sonicslicer_charged", Global.defFlinch, 0.025f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, 1, 0, 2, player, "sonicslicer_charged", Global.defFlinch, 0.02f, netProjId, player.ownedByLocalPlayer) {
 		fadeSprite = "sonicslicer_charged_fade";
-		maxTime = 1;
+		Type = type;
+		maxTime = 1.5f;
 		projId = (int)ProjIds.SonicSlicerCharged;
 		destroyOnHit = true;
+		vel.y = -500;
+		if (type == 0) {dest = pos.addxy(-95, -92.5f);}
+		if (type == 1) {dest = pos.addxy(-55, -100);}
+		if (type == 2) {dest = pos.addxy(-0, -100);}
+		if (type == 3) {dest = pos.addxy(55, -100);}
+		if (type == 4) {dest = pos.addxy(95, -92.5f);}
 
-		if (type == 0) dest = pos.addxy(-100, -40);
-		if (type == 1) dest = pos.addxy(-50, -50);
-		if (type == 2) dest = pos.addxy(-0, -50);
-		if (type == 3) dest = pos.addxy(50, -50);
-		if (type == 4) dest = pos.addxy(100, -40);
+		if (type == 0 || type == 4) {
+			
+		} else {
 
+		}
 		vel.x = 0;
 		useGravity = false;
 
@@ -144,17 +151,45 @@ public class SonicSlicerProjCharged : Projectile {
 			rpcCreate(pos, player, netProjId, 1);
 		}
 	}
-
-	public override void update() {
+		public override void update() {
 		base.update();
 		if (!fall) {
-			float x = Helpers.lerp(pos.x, dest.x, Global.spf * 10);
+			if (Type == 0) {vel.y *= 0.932f;}
+			if (Type == 1) {vel.y *= 0.95f;}
+			if (Type == 2) {vel.y *= 0.95f;}
+			if (Type == 3) {vel.y *= 0.95f;}
+			if (Type == 4) {vel.y *= 0.934f;}
+			float x = Helpers.lerp(pos.x, dest.x, -Global.spf * 2f);
 			changePos(new Point(x, pos.y));
-			vel.y += -40;
+			// vel.y += 20;
 		}
-		if (vel.y <= -375) fall = true;
-		if (vel.y > 100) yDir = -1;
-		if (fall) vel.y += 30;
+		if (pos.y <= dest.y) {
+			fall = true;
+			// vel.y = 0;
+		}
+		if (vel.y > 0) yDir = -1;
+		if (fall) {
+			if (vel.y < 300) {vel.y += 30;}
+			else {vel.y = 300;}
+		}
 		
 	}
+	/* public override void update() {
+		base.update();
+		if (!fall) {
+			if (pos.x != dest.x) {
+				pos.x = (dest.x + pos.x) * Global.spf;
+			} else {
+				vel.x = 0;
+			}
+			changePos(new Point(pos.x, pos.y));
+			vel.y += -20;
+			if (pos.y <= dest.y) fall = true;
+		}
+		if (fall) {
+			yDir = -1;
+			vel.y += 20;
+		}
+		
+	}*/
 }

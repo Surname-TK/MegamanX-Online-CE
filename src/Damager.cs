@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace MMXOnline;
@@ -22,7 +22,7 @@ public class Damager {
 		{ (int)ProjIds.TriadThunderBeam, 0.25f },
 		{ (int)ProjIds.PlasmaGun2, 1 },
 		{ (int)ProjIds.VoltTornado, 1 },
-		{ (int)ProjIds.TornadoCharged, 1 },
+		{ (int)ProjIds.TornadoCharged, 1.2f },
 		//{ (int)ProjIds.KKnuckle, 1 },
 		{ (int)ProjIds.PZeroPunch2, 1 },
 		{ (int)ProjIds.PZeroSenpuukyaku, 1 },
@@ -58,6 +58,7 @@ public class Damager {
 		{ (int)ProjIds.CopyShot, 1f },
 		{ (int)ProjIds.NeonTClawAir, 1f },
 		{ (int)ProjIds.NeonTClawDash, 1f },
+		{ (int)ProjIds.NeonTClawWall, 0.5f },
 		{ (int)ProjIds.VoltCTriadThunder, 0f },
 		{ (int)ProjIds.Rekkoha, 0.75f },
 		{ (int)ProjIds.HexaInvolute, 1f },
@@ -140,11 +141,11 @@ public class Damager {
 			key += "_" + damagingActor?.netId?.ToString();
 		}
 
-		IDamagable? damagable = victim as IDamagable;
-		Character? character = victim as Character;
-		CharState? charState = character?.charState;
-		RideArmor? rideArmor = victim as RideArmor;
-		Maverick? maverick = victim as Maverick;
+		IDamagable damagable = victim as IDamagable;
+		Character character = victim as Character;
+		CharState charState = character?.charState;
+		RideArmor rideArmor = victim as RideArmor;
+		Maverick maverick = victim as Maverick;
 
 		if (damagable == null) return false;
 		if (!damagable.projectileCooldown.ContainsKey(key)) {

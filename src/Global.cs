@@ -17,8 +17,8 @@ namespace MMXOnline;
 public partial class Global {
 	public static decimal version = 02m;
 	public static string versionName = "Build #2";
-	public static string subVersionName = "Version 01";
-	public static string subVersionShortName = "v01";
+	public static string subVersionName = "Version 02";
+	public static string subVersionShortName = "v02";
 
 	// THIS VALUE MUST ALWAYS MANUALLY BE SET AFTER UPDATING ASSETS BEFORE BUILDING A RELEASE BUILD.
 	// Obtain it by pressing F1 in main menu.
@@ -30,7 +30,7 @@ public partial class Global {
 	public const string checksumPrefix = "[Hawkeye Revision]";
 	// Use this to make sure the checksum varies.
 	// Better to use together with "checksumPrefix" and be diferent from it.
-	public const string checksumPrefix2 = "HawkEye-b02-v01";
+	public const string checksumPrefix2 = "HawkEye-b02-v02";
 	// Final checksum key.
 	public const string checksumKey = checksumPrefix + " " + checksumPrefix2;
 	// For displaying the name of the mod in the version string.

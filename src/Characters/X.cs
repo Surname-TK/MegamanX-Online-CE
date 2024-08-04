@@ -780,7 +780,7 @@ public partial class MegamanX : Character {
 		if (chargeLevel >= 3 && player.hasArmArmor(2)) {
 			stockedX2Charge = true;
 			if (player.weapon is Buster) {
-				shootTime = hasUltimateArmor ? 0.25f : 0.125f;
+				shootTime = hasUltimateArmor ? 0.25f : 0;
 			} else shootTime = 0.5f;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX2Charge);
 		} else if (stockedX2Charge) {
