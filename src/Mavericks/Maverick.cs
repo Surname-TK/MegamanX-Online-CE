@@ -934,7 +934,8 @@ public class Maverick : Actor, IDamagable {
 	}
 
 	public bool isInvincible(Player attacker, int? projId) {
-		return sprite.name == "armoreda_charge" || sprite.name.Contains("_shell") || sprite.name.EndsWith("eat_loop");
+		return sprite.name == "drdoppler_dash" || sprite.name == "armoreda_charge" ||
+		sprite.name.Contains("_shell") || sprite.name.EndsWith("eat_loop");
 	}
 
 	public bool canBeHealed(int healerAlliance) {

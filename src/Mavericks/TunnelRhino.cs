@@ -152,7 +152,7 @@ public class TunnelRTornadoFang : Projectile {
 				else vel.x = 0;
 			}
 			stateTime += Global.spf;
-			if (stateTime >= 0.75f) {
+			if (stateTime >= 1f) {
 				state = 1;
 			}
 		} else if (state == 1) {

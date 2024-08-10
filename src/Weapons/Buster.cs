@@ -415,7 +415,7 @@ public class Buster3Proj : Projectile {
 		weapon, pos, xDir, 350, 3, player, "buster3", Global.defFlinch, 0f, netProjId, player.ownedByLocalPlayer
 	) {
 		this.type = type;
-		maxTime = 0.5f;
+		maxDistance = 175f;
 		fadeSprite = "buster3_fade";
 		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.Buster3;
@@ -869,7 +869,7 @@ public class BusterX3Proj1 : Projectile {
 		public BusterX3Proj1(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 350, 1, player, "buster4_max_orb2", Global.halfFlinch, 0f, netProjId, player.ownedByLocalPlayer) {
 		this.type = type;
-		maxTime = 1.05f;
+		maxDistance = 175;
 		vel.x = 0;
 		fadeSprite = "buster3_fade";
 		fadeOnAutoDestroy = true;
@@ -883,8 +883,8 @@ public class BusterX3Proj1 : Projectile {
 	}
 	public override void update() {
 		base.update();
-		vel.x += Global.spf * xDir * 325;
-		if (MathF.Abs(vel.x) > 400) { vel.x = 400 * xDir; }
+		vel.x += Global.spf * xDir * 300;
+		if (MathF.Abs(vel.x) > 300) { vel.x = 300 * xDir; }
 		frameIndex = type;
 		float currentOffsetTime = offsetTime;
 		if (time < 5f / 60f) {

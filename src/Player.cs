@@ -2606,13 +2606,13 @@ public partial class Player {
 	}
 
 	public void stopSubtankHeal() {
-		if (character != null && character.subtankHealAmount > 0) character.subtankHealAmount = 0;
+		if (character != null && character.subtankHealAmount > 0) character.subtankHealAmount = 0; character.usedSubtank = null;
 	}
 
 	public void stopSubtankHealMav() {
 		if (currentMaverick != null && currentMaverick.subtankHealAmount > 0) currentMaverick.subtankHealAmount = 0;
 		if (maverickWeapon?.maverick != null && maverickWeapon?.maverick.subtankHealAmount > 0) {
-			maverickWeapon.maverick.subtankHealAmount = 0;
+			maverickWeapon.maverick.subtankHealAmount = 0; maverickWeapon.maverick.usedSubtank = null;
 		}
 	}
 }
