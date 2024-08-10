@@ -17,20 +17,20 @@ namespace MMXOnline;
 public partial class Global {
 	public static decimal version = 02m;
 	public static string versionName = "Build #2";
-	public static string subVersionName = "Version 02";
-	public static string subVersionShortName = "v02";
+	public static string subVersionName = "Version 03";
+	public static string subVersionShortName = "v03";
 
 	// THIS VALUE MUST ALWAYS MANUALLY BE SET AFTER UPDATING ASSETS BEFORE BUILDING A RELEASE BUILD.
 	// Obtain it by pressing F1 in main menu.
 	// This step could be automated as future improvement in build scripts.
-	private const string assetChecksum = "0353EF4880719A28E686649FCFEB5F1C";
+	private const string assetChecksum = "86B00C17076AD59E94D34BEF561B5710";
 
 	// For forks/mods of the game, add a prefix here so that different forks
 	// don't conflict with each other or the base game
 	public const string checksumPrefix = "[Hawkeye Revision]";
 	// Use this to make sure the checksum varies.
 	// Better to use together with "checksumPrefix" and be diferent from it.
-	public const string checksumPrefix2 = "HawkEye-b02-v02";
+	public const string checksumPrefix2 = "HawkEye-b02-v03";
 	// Final checksum key.
 	public const string checksumKey = checksumPrefix + " " + checksumPrefix2;
 	// For displaying the name of the mod in the version string.
@@ -289,7 +289,7 @@ public partial class Global {
 	public static Dictionary<string, Texture> textures = new Dictionary<string, Texture>();
 	public static Dictionary<string, Texture> fontTextures = new Dictionary<string, Texture>();
 	public static Dictionary<string, Texture[,]> mapTextures = new Dictionary<string, Texture[,]>();
-	public static Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+	public static Dictionary<string, AnimData> sprites = new();
 	public static Dictionary<string, SoundBufferWrapper> soundBuffers = new();
 	public static Dictionary<string, SoundBufferWrapper> voiceBuffers = new();
 	public static Dictionary<string, SoundBufferWrapper> charSoundBuffers = new();

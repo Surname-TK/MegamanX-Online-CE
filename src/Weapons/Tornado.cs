@@ -49,13 +49,13 @@ public class TornadoProj : Projectile {
 		}
 		maxTime = 1.75f;
 		sprite.visible = false;
-		spriteStart = Global.sprites["tornado_start"].clone();
+		spriteStart = new Sprite("tornado_start");
 		for (var i = 0; i < 6; i++) {
-			var midSprite = Global.sprites["tornado_mid"].clone();
+			var midSprite = new Sprite("tornado_mid");
 			midSprite.visible = false;
 			spriteMids.Add(midSprite);
 		}
-		spriteEnd = Global.sprites["tornado_end"].clone();
+		spriteEnd = new Sprite("tornado_end");
 		vel.x = 0;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
@@ -140,9 +140,9 @@ public class TornadoProjCharged : Projectile {
 		base(weapon, pos, xDir, 0, 1, player, "tornado_charge", Global.defFlinch, 0.2f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.TornadoCharged;
 		sprite.visible = false;
-		spriteStart = Global.sprites["tornado_charge"].clone();
+		spriteStart = new Sprite("tornado_charge");
 		for (var i = 0; i < maxLength; i++) {
-			var midSprite = Global.sprites["tornado_charge"].clone();
+			var midSprite = new Sprite("tornado_charge");
 			midSprite.visible = false;
 			bodySprites.Add(midSprite);
 		}

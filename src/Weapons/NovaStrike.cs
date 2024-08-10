@@ -6,6 +6,7 @@ public class NovaStrike : Weapon {
 		if (player != null) {
 			damager = new Damager(player, 2, Global.halfFlinch, 0.5f);
 		}
+		shootSounds = new string[] { "", "", "", "" };
 		rateOfFire = 1f;
 		index = (int)WeaponIds.NovaStrike;
 		weaponBarBaseIndex = 42;

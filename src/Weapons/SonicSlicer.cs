@@ -62,7 +62,8 @@ public class SonicSlicerProj : Projectile {
 		this.type = type;
 		collider.wallOnly = true;
 		projId = (int)ProjIds.SonicSlicer;
-		twin = Global.sprites["sonicslicer_twin"].clone();
+
+		twin = new Sprite("sonicslicer_twin");
 
 		if (time > 0.25f) {
 			vel.x = 200;

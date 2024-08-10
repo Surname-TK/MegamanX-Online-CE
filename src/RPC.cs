@@ -2159,7 +2159,7 @@ public class RPCCreditPlayerKillVehicle : RPC {
 		}
 	}
 
-	public void sendRpc(Player killer, Player assister, Actor victim, int? weaponIndex) {
+	public void sendRpc(Player? killer, Player? assister, Actor victim, int? weaponIndex) {
 		if (killer == null) return;
 		if (victim?.netId == null) return;
 
