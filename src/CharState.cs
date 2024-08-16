@@ -672,6 +672,7 @@ public class SwordBlock : CharState {
 		exitOnAirborne = true;
 		attackCtrl = true;
 		normalCtrl = true;
+		stunResistant = true;
 	}
 
 	public override void update() {
@@ -1653,6 +1654,9 @@ public class GenericGrabbedState : CharState {
 	public override void onExit(CharState newState) {
 		base.onExit(newState);
 		character.grabInvulnTime = 2;
+		if (this is VileMK2Grabbed) {
+			character.stunInvulnTime = 1;
+		}
 		character.useGravity = true;
 		character.setzIndex(savedZIndex);
 	}

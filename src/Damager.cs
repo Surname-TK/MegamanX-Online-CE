@@ -442,14 +442,14 @@ public class Damager {
 					character.addIgFreezeProgress(3);
 					break;
 				case (int)ProjIds.Hyouretsuzan2:
-					character.freeze();
+					character.addIgFreezeProgress(4);
 					flinch = 0;
 					break;
 				case (int)ProjIds.VelGIce:
 					character.addIgFreezeProgress(2, 2 * 60);
 					break;
 				case (int)ProjIds.BBuffaloBeam:
-					character.freeze();
+					character.addIgFreezeProgress(4);
 					break;
 				case (int)ProjIds.ShotgunIceCharged:
 					character.addIgFreezeProgress(4, 5 * 60);
@@ -541,7 +541,6 @@ public class Damager {
 			if (projectileFlinchCooldowns.ContainsKey(projId)) {
 				flinchCooldown = projectileFlinchCooldowns[projId];
 			}
-
 			if (mmx != null) {
 				if (mmx.checkMaverickWeakness((ProjIds)projId)) {
 					weakness = true;
@@ -570,6 +569,19 @@ public class Damager {
 					flinch = Global.defFlinch;
 				}
 				damage = MathF.Ceiling(damage * 1.5f);
+			}
+			// Disallow flinch stack for non-BZ.
+			else if (!Global.canFlinchCombo) {
+				if (character != null && character.charState is Hurt hurtState &&
+					hurtState.stateFrames < hurtState.flinchTime - 4
+				) {
+					flinchCooldown = 0;
+				}
+				if (maverick != null && maverick.state is MHurt mHurtState &&
+					mHurtState.stateFrame < mHurtState.flinchTime - 4
+				) {
+					flinchCooldown = 0;
+				}
 			}
 
 			if (flinchCooldown > 0) {
@@ -734,24 +746,30 @@ public class Damager {
 			if (!weakness) {
 				// Flinch reduction.
 				if (flinch > 0) {
-					// Large mavericks
-					if (maverick.armorClass == Maverick.ArmorClass.Heavy) {
-						if (flinch <= Global.miniFlinch) {
+					if (!maverick.player.isTagTeam()) {
+						flinch = 0;
+					} 
+					if (maverick.player.isTagTeam()) {
+						// Large mavericks
+						if (maverick.armorClass == Maverick.ArmorClass.Heavy) {
+							/*if (flinch <= Global.miniFlinch) {
+								flinch = 0;
+							} else {
+								flinch = Global.miniFlinch;
+							} */
 							flinch = 0;
-						} else {
-							flinch = Global.miniFlinch;
 						}
-					}
-					// Medium mavericks
-					else if (maverick.armorClass == Maverick.ArmorClass.Medium) {
-						if (flinch <= Global.miniFlinch) {
-							flinch = 0;
-						} else if (flinch <= Global.halfFlinch) {
-							flinch = Global.miniFlinch;
-						} else {
-							flinch = Global.halfFlinch;
-						}
-					}
+						// Medium mavericks
+						else if (maverick.armorClass == Maverick.ArmorClass.Medium) {
+							if (flinch <= Global.miniFlinch) {
+								flinch = 0;
+							} else if (flinch <= Global.halfFlinch) {
+								flinch = Global.miniFlinch;
+							} else {
+								flinch = Global.halfFlinch;
+							}
+						}	
+					}	
 				}
 				if (maverick is ArmoredArmadillo aa) {
 					if ((hitFromBehind(maverick, damagingActor, owner, projId) ||
