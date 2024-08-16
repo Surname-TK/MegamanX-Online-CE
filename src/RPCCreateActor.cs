@@ -18,6 +18,8 @@ public enum NetActorCreateId {
 	Velguarder,
 	WolfSigmaHead,
 	WolfSigmaHand,
+	HeartTank,
+	SubTank,
 	LargeHealth,
 	SmallHealth,
 	LargeAmmo,
@@ -96,6 +98,10 @@ public class RPCCreateActor : RPC {
 			new WolfSigmaHead(pos, player, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.WolfSigmaHand) {
 			new WolfSigmaHand(pos, player, false, netProjByte, false);
+		} else if (createId == (int)NetActorCreateId.HeartTank) {
+			new HeartTankPickup(player, pos, netProjByte, false);
+		} else if (createId == (int)NetActorCreateId.SubTank) {
+			new SubTankPickup(player, pos, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.LargeHealth) {
 			new LargeHealthPickup(player, pos, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.SmallHealth) {

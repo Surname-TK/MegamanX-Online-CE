@@ -1,11 +1,15 @@
 ﻿namespace MMXOnline;
 
 public enum PickupType {
+	HeartTank,
+	SubTank,
 	Health,
 	Ammo
 }
 
 public enum PickupTypeRpc {
+	HeartTank,
+	SubTank,
 	LargeHealth,
 	SmallHealth,
 	LargeAmmo,
@@ -15,6 +19,12 @@ public enum PickupTypeRpc {
 public class Pickup : Actor {
 	public float healAmount = 0;
 	public PickupType pickupType;
+	public int getMaxHeartTanks() {
+		return Global.level.server?.customMatchSettings?.maxHeartTanks ?? 8;
+	}
+	public int getMaxSubTanks() {
+		return Global.level.server?.customMatchSettings?.maxSubTanks ?? 4;
+	}
 	public Pickup(Player owner, Point pos, string sprite, ushort? netId, bool ownedByLocalPlayer, NetActorCreateId netActorCreateId, bool sendRpc = false) :
 		base(sprite, pos, netId, ownedByLocalPlayer, false) {
 		netOwner = owner;
@@ -37,15 +47,29 @@ public class Pickup : Actor {
 
 	public override void onCollision(CollideData other) {
 		base.onCollision(other);
+		var player = Global.level.mainPlayer;
 		if (other.otherCollider.flag == (int)HitboxFlag.Hitbox) return;
 
 		if (other.gameObject is Character chr) {
 			if (!chr.ownedByLocalPlayer) return;
 
-			if (pickupType == PickupType.Health) {
+			if (pickupType == PickupType.HeartTank) {
+				if (player.heartTanks >= getMaxHeartTanks()) return;
+					player.heartTanks++;
+					Global.playSound("upgradeX1");
+					float currentMaxHp = player.maxHealth;
+					player.maxHealth = player.getMaxHealth();
+					player.character?.addHealth(player.maxHealth - currentMaxHp);
+					destroySelf(doRpcEvenIfNotOwned: true);
+			} else if (pickupType == PickupType.SubTank) {
+				if (player.subtanks.Count >= getMaxSubTanks()) return;
+					player.subtanks.Add(new SubTank());
+					Global.playSound("upgradeX1");
+					destroySelf(doRpcEvenIfNotOwned: true);
+			} else if (pickupType == PickupType.Health) {
 				if (chr.player.health >= chr.player.maxHealth && !chr.player.hasSubtankCapacity()) return;
-				chr.addHealth(healAmount);
-				destroySelf(doRpcEvenIfNotOwned: true);
+					chr.addHealth(healAmount);
+					destroySelf(doRpcEvenIfNotOwned: true);
 			} else if (pickupType == PickupType.Ammo) {
 				if (chr.canAddAmmo()) {
 					chr.addPercentAmmo(healAmount);
@@ -104,6 +128,32 @@ public class Pickup : Actor {
 				destroySelf(doRpcEvenIfNotOwned: true);
 			}
 		}
+	}
+}
+
+public class HeartTankPickup : Pickup {
+	public HeartTankPickup(
+		Player owner, Point pos, ushort? netId,
+		bool ownedByLocalPlayer, bool sendRpc = false
+	) : base(
+		owner, pos, "pickup_hearttank", netId, ownedByLocalPlayer,
+		NetActorCreateId.HeartTank, sendRpc: sendRpc
+	) {
+		healAmount = 0;
+		pickupType = PickupType.HeartTank;
+	}
+}
+
+public class SubTankPickup : Pickup {
+	public SubTankPickup(
+		Player owner, Point pos, ushort? netId,
+		bool ownedByLocalPlayer, bool sendRpc = false
+	) : base(
+		owner, pos, "pickup_subtank", netId, ownedByLocalPlayer,
+		NetActorCreateId.SubTank, sendRpc: sendRpc
+	) {
+		healAmount = 0;
+		pickupType = PickupType.SubTank;
 	}
 }
 

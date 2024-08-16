@@ -533,6 +533,14 @@ public partial class Level {
 			} else if (objectName == "Node") {
 				var node = new NavMeshNode(instanceName, pos, instance.properties);
 				navMeshNodes.Add(node);
+			} else if (objectName == "Heart Tank") {
+				if (!pickupRestricted(instance)) {
+					itemSpawners.Add(new ItemSpawner(pos, typeof(HeartTankPickup), 0, 15, xDir));
+				}
+			} else if (objectName == "Sub Tank") {
+				if (!pickupRestricted(instance)) {
+					itemSpawners.Add(new ItemSpawner(pos, typeof(SubTankPickup), 0, 15, xDir));
+				}
 			} else if (objectName == "Large Health") {
 				if (!pickupRestricted(instance)) {
 					itemSpawners.Add(new ItemSpawner(pos, typeof(LargeHealthPickup), 0, 15, xDir));

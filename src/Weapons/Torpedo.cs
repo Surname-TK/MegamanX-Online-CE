@@ -53,9 +53,6 @@ public class TorpedoProj : Projectile, IDamagable {
 		fadeOnAutoDestroy = true;
 		reflectableFBurner = true;
 		customAngleRendering = true;
-		if (type == 1) {
-			speed = 100;
-		}
 		if (type == 1 || type == 3) {
 			damager.damage = (type == 1 ? 1 : 2);
 			damager.flinch = Global.halfFlinch;

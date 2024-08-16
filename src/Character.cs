@@ -814,7 +814,7 @@ public partial class Character : Actor, IDamagable {
 			character.player.alliance != player.alliance
 		) {
 			Damager.applyDamage(
-				player, 3, 1f, Global.defFlinch, character, false,
+				player, 2, 0.75f, Global.halfFlinch, character, false,
 				(int)WeaponIds.CrystalHunter, 20, this,
 				(int)ProjIds.CrystalHunterDash
 			);

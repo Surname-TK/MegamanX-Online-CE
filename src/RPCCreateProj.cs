@@ -751,6 +751,18 @@ public partial class RPCCreateProj : RPC {
 			case (int)ProjIds.HexaInvolute:
 				proj = new HexaInvoluteProj(new HexaInvoluteWeapon(), pos, xDir, player, netProjByte);
 				break;
+
+			// NEUTRAL ENEMIES
+
+			case (int)ProjIds.GunVoltSpark:
+				proj = new GunVoltSparkProj(GunVolt.getWeapon(), pos, xDir, player, netProjByte);
+				break;
+			case (int)ProjIds.GunVoltTorpedo:
+				proj = new GunVoltTorpedoProj(GunVolt.getWeapon(), pos, xDir, extraData[1], player, netProjByte);
+				break;
+
+			// NOT NEUTRAL ENEMIES
+
 			default:
 				proj = null;
 				break;

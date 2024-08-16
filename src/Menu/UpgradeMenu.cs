@@ -121,7 +121,7 @@ public class UpgradeMenu : IMainMenu {
 				if (mainPlayer.heartTanks < getMaxHeartTanks() && mainPlayer.currency >= getHeartTankCost()) {
 					mainPlayer.currency -= getHeartTankCost();
 					mainPlayer.heartTanks++;
-					Global.playSound("hearthX1");
+					Global.playSound("upgradeX1");
 					float currentMaxHp = mainPlayer.maxHealth;
 					mainPlayer.maxHealth = mainPlayer.getMaxHealth();
 					mainPlayer.character?.addHealth(mainPlayer.maxHealth - currentMaxHp);
@@ -141,7 +141,7 @@ public class UpgradeMenu : IMainMenu {
 				if (mainPlayer.subtanks.Count < selectArrowPosY && mainPlayer.currency >= subtankCost) {
 					mainPlayer.currency -= subtankCost;
 					mainPlayer.subtanks.Add(new SubTank());
-					Global.playSound("upgrade");
+					Global.playSound("upgradeX1");
 				} else if (mainPlayer.subtanks.InRange(selectArrowPosY - 1)) {
 					bool maverickUsed = false;
 					if (subtankTargets.Count > 0) {
@@ -249,7 +249,7 @@ public class UpgradeMenu : IMainMenu {
 							optionPos.x + 6, optionPos.y + 4, subtankDelay / maxSubtankDelay
 						);
 						if (subtankTargets.Count == 0) {
-							buyOrUseStr = "Cannot Use Sub Tank In Battle";
+							buyOrUseStr = "Cannot Use In Battle";
 						}
 					} else {
 						Global.sprites["menu_subtank"].drawToHUD(2, optionPos.x - 2, optionPos.y - 4, 0.5f);
@@ -276,7 +276,7 @@ public class UpgradeMenu : IMainMenu {
 				Global.sprites["menu_subtank"].drawToHUD(0, optionPos.x - 2, optionPos.y - 4);
 			}
 			if (!buyOrUse) {
-				if (!canUseSubtank && subtankTargets.Count == 0) buyOrUseStr = "Cannot use Sub Tank Now";
+				if (!canUseSubtank && subtankTargets.Count == 0) buyOrUseStr = "Cannot use Now";
 				Fonts.drawText(
 					FontType.Blue, buyOrUseStr, textX,
 					optionPos.y, selected: selectArrowPosY == i + 1

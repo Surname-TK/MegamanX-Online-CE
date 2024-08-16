@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace MMXOnline;
 
+public enum EnemyIds {
+	Spiky,
+	Crusher,
+	GunVolt
+	}
 public class NeutralEnemy : Actor, IDamagable {
 	public int alliance;
 	public decimal health = 8;

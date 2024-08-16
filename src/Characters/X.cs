@@ -930,7 +930,7 @@ public partial class MegamanX : Character {
 			hyperProgress = 0;
 			return;
 		}
-		if (!(charState is WarpIn) && (player.canUpgradeGoldenX() || player.canUpgradeUltimateX())) {
+		if (!(charState is WarpIn) && (player.canUpgradeGoldenX() || !boughtGoldenArmorOnce && player.canUpgradeUltimateX())) {
 			hyperProgress += Global.spf;
 		}
 		if (hyperProgress < 1) {
@@ -946,7 +946,7 @@ public partial class MegamanX : Character {
 			Global.playSound("ching");
 			return;
 		}
-		if (player.canUpgradeUltimateX()) {
+		if (player.canUpgradeUltimateX() && !boughtGoldenArmorOnce) {
 			if (!boughtUltimateArmorOnce) {
 				player.currency -= Player.ultimateArmorCost;
 				boughtUltimateArmorOnce = true;

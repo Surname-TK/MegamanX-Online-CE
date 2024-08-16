@@ -56,7 +56,7 @@ public class RollingShieldProj : Projectile {
 
 		base.update();
 
-		if (time > 1.5) {
+		if (time > 1) {
 			destroySelf(fadeSprite, fadeSound);
 		}
 	}
@@ -69,8 +69,8 @@ public class RollingShieldProj : Projectile {
 }
 
 public class RollingShieldProjCharged : Projectile {
-	public MegamanX? mmx;
-	public LoopingSound? rollingShieldSound;
+	public MegamanX mmx;
+	public LoopingSound rollingShieldSound;
 	public float ammoDecCooldown = 0;
 	public RollingShieldProjCharged(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId

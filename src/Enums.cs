@@ -279,7 +279,13 @@ public enum WeaponIds {
 	Sigma3KaiserStomp,
 	RideChaserGun,
 	RideChaserHit,
-	DNACore = 250
+	DNACore = 250,
+
+	// NEUTRAL ENEMIES
+
+	GunVolt,
+	GunVoltGeneric,
+	
 }
 
 public enum ProjIds {
@@ -700,6 +706,10 @@ public enum ProjIds {
 	DZBuster4,
 	DZMelee,
 	DZHadangeki,
+	// NEUTRAL ENEMIES
+
+	GunVoltSpark,
+	GunVoltTorpedo,
 
 	// Special damage types.
 	SelfDmg = 30000,
