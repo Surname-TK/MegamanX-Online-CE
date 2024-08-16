@@ -612,6 +612,7 @@ public class PunchyZeroHadangeki : CharState {
 		airSprite = "projswing_air";
 		useDashJumpSpeed = true;
 		airMove = true;
+		useDashJumpSpeed = true;
 		superArmor = true;
 	}
 

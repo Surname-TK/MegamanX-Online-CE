@@ -280,8 +280,8 @@ public class AwakenedZeroHadangeki : CharState {
 	public AwakenedZeroHadangeki() : base("projswing") {
 		landSprite = "projswing";
 		airSprite = "projswing_air";
-		useDashJumpSpeed = true;
 		airMove = true;
+		useDashJumpSpeed = true;
 		superArmor = true;
 	}
 

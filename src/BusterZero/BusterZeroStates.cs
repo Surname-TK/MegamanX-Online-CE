@@ -12,6 +12,7 @@ public class BusterZeroMelee : CharState {
 		landSprite = "projswing";
 		airSprite = "projswing_air";
 		airMove = true;
+		useDashJumpSpeed = true;
 		superArmor = true;
 		canJump = true;
 		canStopJump = true;
@@ -39,7 +40,7 @@ public class BusterZeroMelee : CharState {
 
 	public override void onExit(CharState oldState) {
 		base.onExit(oldState);
-		zero.zSaberCooldown = 36f / 60f;
+		zero.zSaberCooldown = 30f / 60f;
 	}
 }
 
@@ -156,6 +157,7 @@ public class BusterZeroHadangeki : CharState {
 		landSprite = "projswing";
 		airSprite = "projswing_air";
 		airMove = true;
+		useDashJumpSpeed = true;
 		superArmor = true;
 	}
 

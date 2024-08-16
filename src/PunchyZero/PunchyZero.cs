@@ -569,11 +569,11 @@ public class PunchyZero : Character {
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.Uppercut => new GenericMeleeProj(
-				ZeroShoryukenWeapon.staticWeapon, projPos, ProjIds.PZeroShoryuken, player, 4, Global.defFlinch, 0.5f,
+				ZeroShoryukenWeapon.staticWeapon, projPos, ProjIds.PZeroShoryuken, player, 3, Global.defFlinch, 0.5f,
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.StrongPunch => new GenericMeleeProj(
-				MegaPunchWeapon.staticWeapon, projPos, ProjIds.PZeroYoudantotsu, player, 6, Global.defFlinch, 0.5f,
+				MegaPunchWeapon.staticWeapon, projPos, ProjIds.PZeroYoudantotsu, player, 4, Global.defFlinch, 0.5f,
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.DropKick => new GenericMeleeProj(
@@ -585,7 +585,7 @@ public class PunchyZero : Character {
 				addToLevel: addToLevel
 			),
 			(int)MeleeIds.ParryAttack => (new GenericMeleeProj(
-				parryWeapon, projPos, ProjIds.PZeroParryAttack, player, 4, Global.defFlinch, 0.5f,
+				parryWeapon, projPos, ProjIds.PZeroParryAttack, player, 2, Global.halfFlinch, 0.5f,
 				addToLevel: addToLevel
 			) {
 				netcodeOverride = NetcodeModel.FavorDefender
