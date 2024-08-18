@@ -2991,12 +2991,12 @@ public partial class Character : Actor, IDamagable {
 
 			if (killer?.ownedByLocalPlayer == true)
 				if (killer.character is Axl axl && killer.copyShotDamageEvents.Any(c => c.character == this)) {
-					axl.addDNACore(this);
+					//axl.addDNACore(this);
 				}
 
 			if (assister?.ownedByLocalPlayer == true) {
 				if (assister.character is Axl axl && assister.copyShotDamageEvents.Any(c => c.character == this)) {
-					axl.addDNACore(this);
+					//axl.addDNACore(this);
 				}
 			}
 

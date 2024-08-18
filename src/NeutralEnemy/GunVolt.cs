@@ -4,33 +4,26 @@ using System.Collections.Generic;
 namespace MMXOnline;
 public class GunVolt: NeutralEnemy {
 	public static Weapon getWeapon() { return new Weapon(WeaponIds.GunVolt, 159); }
-    public GunVolt(Player owner, Point pos, int xDir, ushort? netId, bool isLocal, bool addToLevel = true) : base(pos, netId, isLocal, addToLevel){
-        enemyId = (int)EnemyIds.GunVolt;
-        changeSprite(getSprite("_idle"), true);
-		useGravity = true;
+    public GunVolt(
+        Point pos, ushort? netId, bool isLocal, bool addToLevel = true
+    ) : base(
+        pos, netId, isLocal, addToLevel
+    ){
         wSize = 42;
         hSize = 58;
         health = 16;
         maxHealth = 16;
+        changeSprite(getSprite("idle"), true);
     }
-	// Sprite change override.
-	/*public virtual string getSprite(string spriteName) {
-		if (spriteName is null or "") {
-			return "";
-		}
-		return "gunvolt" + spriteName;
-	}*/
 
-	// For terrain collision.
-	public override Collider? getTerrainCollider() {
-		return new Collider(
-	        new Rect(0f, 0f, 14, 18).getPoints(),
-    	   	false, this, false, false,
-        	HitboxFlag.Hurtbox, Point.zero
-    	);
-	}
+    // Sprite change override.
+    public override string getSprite(string spriteName) {
+        if (spriteName is null or "") {
+            return "";
+        }
+        return "gunvolt_" + spriteName;
+    }
 }
-
 public class GunVoltSparkProj : Projectile {
     public GunVoltSparkProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
     base(weapon, pos, xDir, 0, 4, player, "gunvolt_spark", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer){

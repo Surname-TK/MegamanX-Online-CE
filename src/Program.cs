@@ -1285,7 +1285,7 @@ class Program {
 				if (frameStepEnabled && Global.serverClient == null) {
 					if (Keyboard.IsKeyPressed(Key.F2)) {
 						if (f2Released) {
-							new GunVolt(Global.level.mainPlayer, Global.level.mainPlayer.character.pos, Global.level.mainPlayer.character.xDir, Global.level.mainPlayer.character.netId, false);
+							new GunVolt(Global.level.mainPlayer.character.pos, Global.level.mainPlayer.character.netId, true);
 							f2Released = false;
 						}
 					} else {
