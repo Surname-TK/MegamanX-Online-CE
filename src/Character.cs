@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using SFML.Graphics;
+using static SFML.Window.Keyboard;
 
 namespace MMXOnline;
 
@@ -103,8 +104,8 @@ public partial class Character : Actor, IDamagable {
 	// Some things previously in other char files used by multiple characters.
 	public int lastShootPressed;
 	public int lastShootReleased;
-	public int lastAttackFrame = -100;
-	public int framesSinceLastAttack = 1000;
+	public long lastAttackFrame = -100;
+	public long framesSinceLastAttack = 1000;
 	public float grabCooldown;
 
 	public RideArmor? startRideArmor;
