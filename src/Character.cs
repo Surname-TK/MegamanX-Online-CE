@@ -3231,7 +3231,7 @@ public partial class Character : Actor, IDamagable {
 		} else {
 			new Anim(getCenterPos(), "explosion", 1, player.getNextActorNetId(), true, sendRpc: true, ownedByLocalPlayer);
 			playSound("explosion", sendRpc: true);
-			if (!carried) parasiteDamager.applyDamage(this, player.weapon is FrostShield, new ParasiticBomb(), this, (int)ProjIds.ParasiticBombExplode, overrideDamage: 4, overrideFlinch: Global.defFlinch);
+			if (!carried) parasiteDamager.applyDamage(this, player.weapon is FrostShield, new ParasiticBomb(), this, (int)ProjIds.ParasiticBombExplode, overrideDamage: 3, overrideFlinch: Global.defFlinch);
 		}
 
 		parasiteTime = 0;

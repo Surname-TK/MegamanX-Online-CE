@@ -36,6 +36,7 @@ public class FireWaveProj : Projectile {
 	public FireWaveProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId) : base(weapon, pos, xDir, 400, 1, player, "fire_wave", 0, 0.2f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.FireWave;
 		fadeSprite = "fire_wave_fade";
+		fadeOnAutoDestroy = true;
 		maxTime = 0.1f;
 	}
 	public override void onHitDamagable(IDamagable damagable) {

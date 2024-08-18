@@ -4,15 +4,24 @@ using System.Collections.Generic;
 namespace MMXOnline;
 public class GunVolt: NeutralEnemy {
 	public static Weapon getWeapon() { return new Weapon(WeaponIds.GunVolt, 159); }
-    public GunVolt(Player owner, Point pos, int xDir, bool sendRpc = false) : base(pos, 32, true, true){
+    public GunVolt(Player owner, Point pos, int xDir, ushort? netId, bool sendRpc = false) : base(pos, netId, true, true){
         enemyId = (int)EnemyIds.GunVolt;
         sprite = new Sprite("gunvolt_idle");
-        wSize = 42;
-        hSize = 58;
+        //wSize = 42;
+        //hSize = 58;
         health = 16;
         maxHealth = 16;
     }
+	// For terrain collision.
+	public override Collider? getTerrainCollider() {
+		return new Collider(
+	        new Rect(0f, 0f, 14, 18).getPoints(),
+    	   	false, this, false, false,
+        	HitboxFlag.Hurtbox, Point.zero
+    	);
+	}
 }
+
 public class GunVoltSparkProj : Projectile {
     public GunVoltSparkProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
     base(weapon, pos, xDir, 0, 4, player, "gunvolt_spark", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer){

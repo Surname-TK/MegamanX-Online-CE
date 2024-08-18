@@ -1260,6 +1260,7 @@ class Program {
 		// Debug stuff.
 		bool isFrameStep = false;
 		bool continueNextFrameStep = false;
+		bool f2Released = true;
 		bool f5Released = true;
 		bool f6Released = true;
 		// WARNING DISABLE THIS FOR NON-DEBUG BUILDS
@@ -1282,6 +1283,14 @@ class Program {
 				lastAltUpdateTime = timeNow;
 				// Framestep works always, but offline only.
 				if (frameStepEnabled && Global.serverClient == null) {
+					if (Keyboard.IsKeyPressed(Key.F2)) {
+						if (f2Released) {
+							new GunVolt(Global.level.mainPlayer, Global.level.mainPlayer.character.pos, Global.level.mainPlayer.character.xDir, Global.level.mainPlayer.character.netId, false);
+							f2Released = false;
+						}
+					} else {
+						f2Released = true;
+					}
 					if (Keyboard.IsKeyPressed(Key.F5)) {
 						if (f5Released) {
 							isFrameStep = !isFrameStep;

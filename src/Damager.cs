@@ -746,18 +746,14 @@ public class Damager {
 			if (!weakness) {
 				// Flinch reduction.
 				if (flinch > 0) {
-					if (!maverick.player.isTagTeam()) {
-						flinch = 0;
-					} 
-					if (maverick.player.isTagTeam()) {
+					if (!maverick.player.isPuppeteer()) {
 						// Large mavericks
 						if (maverick.armorClass == Maverick.ArmorClass.Heavy) {
-							/*if (flinch <= Global.miniFlinch) {
+							if (flinch <= Global.halfFlinch) {
 								flinch = 0;
 							} else {
 								flinch = Global.miniFlinch;
-							} */
-							flinch = 0;
+							} 
 						}
 						// Medium mavericks
 						else if (maverick.armorClass == Maverick.ArmorClass.Medium) {
@@ -769,8 +765,10 @@ public class Damager {
 								flinch = Global.halfFlinch;
 							}
 						}	
-					}	
-				}
+					} else {
+						flinch = 0;	
+					} 
+				} 
 				if (maverick is ArmoredArmadillo aa) {
 					if ((hitFromBehind(maverick, damagingActor, owner, projId) ||
 						maverick.sprite.name == "armoreda_roll"
@@ -892,6 +890,8 @@ public class Damager {
 			projId == (int)ProjIds.Raijingeki ||
 			projId == (int)ProjIds.Raijingeki2 ||
 			projId == (int)ProjIds.CFlasher ||
+			projId == (int)ProjIds.BubbleSplash ||
+			projId == (int)ProjIds.BubbleSplashCharged ||
 			projId == (int)ProjIds.AcidBurstPoison ||
 			projId == (int)ProjIds.MetteurCrash;
 	}

@@ -21,7 +21,7 @@ public class NeutralEnemy : Actor, IDamagable {
 	public NeutralEnemyState state;
 
 	public NeutralEnemy(
-		Point pos, ushort netId, bool isLocal, bool addToLevel = true
+		Point pos, ushort? netId, bool isLocal, bool addToLevel = true
 	) : base(
 		null!, pos, netId, isLocal, !addToLevel
 	) {
@@ -75,6 +75,11 @@ public class NeutralEnemy : Actor, IDamagable {
 	}
 
 	// For terrain collision.
+	public override Collider getGlobalCollider() {
+		var rect = new Rect(0, 0, wSize, hSize);
+		return new Collider(rect.getPoints(), false, this, false, false, HitboxFlag.Hurtbox, new Point(0, 0));
+	}
+
 	public override Collider? getTerrainCollider() {
 		if (physicsCollider == null) {
 			return null;

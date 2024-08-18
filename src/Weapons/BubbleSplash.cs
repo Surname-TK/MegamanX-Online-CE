@@ -78,7 +78,7 @@ public class BubbleSplash : Weapon {
 
 public class BubbleSplashProj : Projectile {
 	public BubbleSplashProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 75, 5.5f, player, "bubblesplash_proj_start", 0, 0f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 75, 0.5f, player, "bubblesplash_proj_start", 0, 0f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = Helpers.randomRange(0.5f, 1f);
 		useGravity = false;
 		vel.y = -20 * Helpers.randomRange(0.5f, 1f);

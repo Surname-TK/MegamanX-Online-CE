@@ -39,7 +39,7 @@ public class SilkShotProj : Projectile {
 	public SilkShotProj(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 200, 2, player, "silkshot_proj", 0, 0, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 200, 1, player, "silkshot_proj", 0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 6f;
 		fadeSprite = "explosion";
@@ -47,7 +47,7 @@ public class SilkShotProj : Projectile {
 		useGravity = true;
 		vel.y = -100;
 		projId = (int)ProjIds.SilkShot;
-		healAmount = 2;
+		healAmount = 1;
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
@@ -110,7 +110,7 @@ public class SilkShotProjCharged : Projectile {
 		Weapon weapon, Point pos, int xDir, Player player,
 		ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 200, 4, player, "silkshot_proj_charged",
+		weapon, pos, xDir, 200, 3, player, "silkshot_proj_charged",
 		Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 6f;
@@ -119,7 +119,7 @@ public class SilkShotProjCharged : Projectile {
 		useGravity = true;
 		vel.y = -100;
 		projId = (int)ProjIds.SilkShotCharged;
-		healAmount = 6;
+		healAmount = 4;
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
@@ -155,8 +155,8 @@ public class SilkShotProjLv2 : Projectile {
 	public SilkShotProjLv2(
 		Point pos, int xDir, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		SilkShot.netWeapon, pos, xDir, 200, 3, player, "silkshot_proj",
-		Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer
+		SilkShot.netWeapon, pos, xDir, 200, 2, player, "silkshot_proj",
+		Global.halfFlinch, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 6f;
 		fadeSprite = "explosion";
@@ -164,7 +164,7 @@ public class SilkShotProjLv2 : Projectile {
 		useGravity = true;
 		vel.y = -100;
 		projId = (int)ProjIds.SilkShotChargedLv2;
-		healAmount = 6;
+		healAmount = 2;
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
