@@ -4,14 +4,22 @@ using System.Collections.Generic;
 namespace MMXOnline;
 public class GunVolt: NeutralEnemy {
 	public static Weapon getWeapon() { return new Weapon(WeaponIds.GunVolt, 159); }
-    public GunVolt(Player owner, Point pos, int xDir, ushort? netId, bool sendRpc = false) : base(pos, netId, true, true){
+    public GunVolt(Player owner, Point pos, int xDir, ushort? netId, bool isLocal, bool addToLevel = true) : base(pos, netId, isLocal, addToLevel){
         enemyId = (int)EnemyIds.GunVolt;
-        sprite = new Sprite("gunvolt_idle");
-        //wSize = 42;
-        //hSize = 58;
+        changeSprite(getSprite("_idle"), true);
+        wSize = 42;
+        hSize = 58;
         health = 16;
         maxHealth = 16;
     }
+	// Sprite change override.
+	/*public virtual string getSprite(string spriteName) {
+		if (spriteName is null or "") {
+			return "";
+		}
+		return "gunvolt" + spriteName;
+	}*/
+
 	// For terrain collision.
 	public override Collider? getTerrainCollider() {
 		return new Collider(

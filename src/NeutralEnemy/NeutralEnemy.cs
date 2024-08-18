@@ -55,7 +55,7 @@ public class NeutralEnemy : Actor, IDamagable {
 		if (spriteName is null or "") {
 			return "";
 		}
-		return spriteName;
+		return "gunvolt" + spriteName;
 	}
 
 	public virtual void changeState(NeutralEnemyState newState) {
@@ -83,10 +83,10 @@ public class NeutralEnemy : Actor, IDamagable {
 		);
 	}
 	// For terrain collision.
-	public override Collider getGlobalCollider() {
+	/*public override Collider getGlobalCollider() {
 		var rect = new Rect(0, 0, wSize, hSize);
 		return new Collider(rect.getPoints(), false, this, false, false, HitboxFlag.Hurtbox, new Point(0, 0));
-	}
+	}*/
 
 	public override Collider? getTerrainCollider() {
 		if (physicsCollider == null) {
