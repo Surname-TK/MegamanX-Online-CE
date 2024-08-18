@@ -853,6 +853,10 @@ public partial class Character : Actor, IDamagable {
 			player.possesseeUpdate();
 		}
 
+		if (Global.input.isPressed(Key.F2)) {
+    		new GunVolt(pos.addxy(0, 0), 42, true);
+		}
+
 		if (flag != null) {
 			if (MathF.Abs(xPushVel) > 75) xPushVel = 75 * MathF.Sign(xPushVel);
 			if (MathF.Abs(xSwingVel) > 75) xSwingVel = 75 * MathF.Sign(xSwingVel);
@@ -3479,11 +3483,8 @@ public partial class Character : Actor, IDamagable {
 	public bool disguiseCoverBlown;
 
 	public void addTransformAnim() {
-		transformAnim = new Anim(pos, "axl_transform", xDir, null, true);
-		playSound("transform");
-		if (ownedByLocalPlayer) {
-			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (byte)RPCToggleType.AddTransformEffect);
-		}
+		transformAnim = new Anim(pos, "axl_transform", xDir, player.getNextActorNetId(), true);
+		playSound("transform", sendRpc: true);
 	}
 
 	public virtual void onFlinchOrStun(CharState state) {
