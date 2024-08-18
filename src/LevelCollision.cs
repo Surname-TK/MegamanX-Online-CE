@@ -85,23 +85,19 @@ public partial class Level {
 		return cells;
 	}
 
-	//Called a lot
+	// Called a lot
 	public List<GameObject> getGameObjectsInSameCell(Shape shape) {
 		List<Cell> cells = getGridCells(shape);
-		var retGameobjects = new HashSet<GameObject>();
-		foreach (var cell in cells) {
+		HashSet<GameObject> retGameobjects = new();
+		foreach (Cell cell in cells) {
 			if (cell.gameobjects == null) continue;
-			foreach (var cell2 in cell.gameobjects) {
-				if (gameObjects.Contains(cell2)) {
-					retGameobjects.Add(cell2);
-				} else {
-					gameObjects.Remove(cell2);
-					//console.log(cell2);
-					//throw "A gameobject was found in a cell but no longer exists in the map";
+			foreach (GameObject go in cell.gameobjects) {
+				if (!retGameobjects.Contains(go)) {
+					retGameobjects.Add(go);
 				}
 			}
 		}
-		var arr = new List<GameObject>();
+		List<GameObject> arr = new();
 		foreach (var go in retGameobjects) {
 			arr.Add(go);
 		}
