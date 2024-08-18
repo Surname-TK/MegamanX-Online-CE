@@ -7,6 +7,7 @@ public class GunVolt: NeutralEnemy {
     public GunVolt(Player owner, Point pos, int xDir, ushort? netId, bool isLocal, bool addToLevel = true) : base(pos, netId, isLocal, addToLevel){
         enemyId = (int)EnemyIds.GunVolt;
         changeSprite(getSprite("_idle"), true);
+		useGravity = true;
         wSize = 42;
         hSize = 58;
         health = 16;
