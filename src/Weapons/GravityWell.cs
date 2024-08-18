@@ -4,14 +4,18 @@ namespace MMXOnline;
 
 public class GravityWell : Weapon {
 	public GravityWell() : base() {
-		shootSounds = new string[] { "buster", "buster", "buster", "warpIn" };
-		rateOfFire = 1f;
+		shootSounds = new string[] { "busterX3", "busterX3", "busterX3", "warpIn" };
+		rateOfFire = 1.5f;
 		index = (int)WeaponIds.GravityWell;
 		weaponBarBaseIndex = 22;
 		weaponBarIndex = weaponBarBaseIndex;
 		weaponSlotIndex = 22;
 		killFeedIndex = 45;
 		weaknessIndex = (int)WeaponIds.RaySplasher;
+		damage = "2/4";
+		effect = "Disables Gravity to the enemy. C: Super Armor.";
+		hitcooldown = "0.5";
+		Flinch = "0/26";
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {

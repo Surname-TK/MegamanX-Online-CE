@@ -74,6 +74,14 @@ public class NeutralEnemy : Actor, IDamagable {
 		newState.onEnter(oldState);
 	}
 
+	// For normal collision.
+	public override Collider? getGlobalCollider() {
+		return new Collider(
+			new Rect(12f, 12f, wSize, hSize).getPoints(),
+			false, this, false, false,
+			HitboxFlag.Hurtbox, Point.zero
+		);
+	}
 	// For terrain collision.
 	public override Collider getGlobalCollider() {
 		var rect = new Rect(0, 0, wSize, hSize);
@@ -85,7 +93,7 @@ public class NeutralEnemy : Actor, IDamagable {
 			return null;
 		}
 		return new Collider(
-			new Rect(0f, 0f, wSize, hSize).getPoints(),
+			new Rect(12f, 12f, wSize, hSize).getPoints(),
 			false, this, false, false,
 			HitboxFlag.Hurtbox, Point.zero
 		);
