@@ -3,17 +3,20 @@ using System.Collections.Generic;
 
 namespace MMXOnline;
 public class GunVolt: NeutralEnemy {
+	public int legStance;
 	public static Weapon getWeapon() { return new Weapon(WeaponIds.GunVolt, 159); }
     public GunVolt(
         Point pos, ushort? netId, bool isLocal, bool addToLevel = true
     ) : base(
-        pos, netId, isLocal, addToLevel
+        pos, netId, isLocal
     ){
         wSize = 42;
         hSize = 58;
+		enemyName = "gunvolt";
         health = 16;
         maxHealth = 16;
-        changeSprite(getSprite("idle"), true);
+		legStance = 0;
+        changeSprite(getSprite("legs"), true);
     }
 
     // Sprite change override.
@@ -21,7 +24,7 @@ public class GunVolt: NeutralEnemy {
         if (spriteName is null or "") {
             return "";
         }
-        return "gunvolt_" + spriteName;
+        return enemyName + "_" + spriteName;
     }
 }
 public class GunVoltSparkProj : Projectile {

@@ -9,6 +9,7 @@ public enum EnemyIds {
 	GunVolt
 	}
 public class NeutralEnemy : Actor, IDamagable {
+	public string enemyName;
 	public int alliance;
 	public decimal health = 8;
 	public decimal maxHealth = 8;
@@ -57,7 +58,7 @@ public class NeutralEnemy : Actor, IDamagable {
 		if (spriteName is null or "") {
 			return "";
 		}
-		return "gunvolt" + spriteName;
+		return enemyName + spriteName;
 	}
 
 	public virtual void changeState(NeutralEnemyState newState) {

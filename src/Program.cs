@@ -1283,14 +1283,7 @@ class Program {
 				lastAltUpdateTime = timeNow;
 				// Framestep works always, but offline only.
 				if (frameStepEnabled && Global.serverClient == null) {
-					if (Keyboard.IsKeyPressed(Key.F2)) {
-						if (f2Released) {
-							new GunVolt(Global.level.mainPlayer.character.pos, Global.level.mainPlayer.character.netId, true);
-							f2Released = false;
-						}
-					} else {
-						f2Released = true;
-					}
+					
 					if (Keyboard.IsKeyPressed(Key.F5)) {
 						if (f5Released) {
 							isFrameStep = !isFrameStep;
