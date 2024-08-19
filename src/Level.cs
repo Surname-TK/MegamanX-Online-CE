@@ -14,8 +14,13 @@ public partial class Level {
 	public Dictionary<ushort, Actor> actorsById = new();
 	public Dictionary<ushort, Actor> destroyedActorsById = new();
 	public List<Actor> mapSprites = new List<Actor>();
-	public List<List<HashSet<GameObject>>> grid = new List<List<HashSet<GameObject>>>();
+
 	public HashSet<HashSet<GameObject>> occupiedGridSets = new HashSet<HashSet<GameObject>>();
+	public HashSet<GameObject>[,] grid;
+	public HashSet<GameObject>[,] terrainGrid;
+
+
+	// List of terrain objects. Used for fast collision.
 
 	// These are returned by getListCounts()
 	public HashSet<Effect> effects = new HashSet<Effect>();
@@ -361,7 +366,7 @@ public partial class Level {
 			Point pos = new Point((float)(instance.pos?.x ?? 0), (float)(instance.pos?.y ?? 0));
 
 			if (objectName == "Collision Shape") {
-				var wall = new Wall(instanceName, points);
+				Wall wall = new Wall(instanceName, points);
 
 				float moveX = instance?.properties?.moveX ?? 0;
 				wall.moveX = moveX;
@@ -377,13 +382,18 @@ public partial class Level {
 				bool isPitWall = false;
 				if (instance?.properties?.pitWall != null && instance.properties.pitWall == true) {
 					isPitWall = true;
-					wall.collider._shape.points[2] = new Point(wall.collider._shape.points[2].x, Global.level.height + 45);
-					wall.collider._shape.points[3] = new Point(wall.collider._shape.points[3].x, Global.level.height + 45);
+					wall.collider._shape.points[2] = (
+						new Point(wall.collider._shape.points[2].x, Global.level.height + 45)
+					);
+					wall.collider._shape.points[3] = (
+						new Point(wall.collider._shape.points[3].x, Global.level.height + 45)
+					);
 					var rect = wall.collider.shape.getRect();
 					var newRect = new Rect(rect.x1, rect.y2, rect.x2, rect.y2 + 1000);
 					var pitWall = new Wall(wall.name + "Pit", newRect.getPoints());
 					pitWall.collider.isClimbable = false;
-					addGameObject(pitWall);
+					addGameObject(pitWall); 
+					addTerrain(pitWall);
 				}
 
 				if (instance?.properties?.unclimbable != null && instance.properties.unclimbable == true) {
@@ -399,22 +409,22 @@ public partial class Level {
 					var unclimbableWall = new Wall(wall.name + "Unclimbable", newRect.getPoints());
 					unclimbableWall.collider.isClimbable = false;
 					addGameObject(unclimbableWall);
+					addTerrain(unclimbableWall);
 				}
 
 				addGameObject(wall);
+				addTerrain(wall);
 			} else if (objectName == "Water Zone") {
-				if (!Global.level.isTraining() || Global.underwaterTraining) {
-					var waterRect = new Rect(points[0], points[2]);
-					waterRects.Add(waterRect);
-				}
+				var waterRect = new Rect(points[0], points[2]);
+				waterRects.Add(waterRect);
 			} else if (objectName == "Ladder") {
-				if (!Global.level.isTraining() || Global.debug) {
-					addGameObject(new Ladder(instanceName, points));
-				}
+				Ladder ladder = new Ladder(instanceName, points);
+				addGameObject(ladder);
+				addTerrain(ladder);
 			} else if (objectName == "Backwall Zone") {
-				if (!Global.disableBackwalls) {
-					addGameObject(new BackwallZone(instanceName, points, (bool?)instance.properties.isExclusion ?? false));
-				}
+				addGameObject(
+					new BackwallZone(instanceName, points, (bool?)instance.properties.isExclusion ?? false)
+				);
 			} else if (objectName == "Gate") {
 				if (isRace()) {
 					var gate = new Gate(instanceName, points);
@@ -424,7 +434,7 @@ public partial class Level {
 					} else {
 						gate.collider.isClimbable = true;
 					}
-
+					addTerrain(gate);
 					addGameObject(gate);
 					gates.Add(gate);
 				}
@@ -450,14 +460,23 @@ public partial class Level {
 
 				var killZone = new KillZone(instanceName, points, killInvuln, damage, flinch, hitCooldown);
 				addGameObject(killZone);
+				addTerrain(killZone);
 			} else if (objectName == "Move Zone") {
 				if (levelData.name != "giantdam" || enableGiantDamPropellers()) {
-					var moveZone = new MoveZone(instanceName, points, (float)instance.properties.moveX, (float)instance.properties.moveY);
+					var moveZone = new MoveZone(
+						instanceName, points,
+						(float)instance.properties.moveX, (float)instance.properties.moveY
+					);
 					addGameObject(moveZone);
+					addTerrain(moveZone);
 				}
 			} else if (objectName == "Jump Zone") {
 				float jumpTime = instance.properties.jumpTime ?? 1;
-				var jumpZone = new JumpZone(instanceName, points, (string)instance.properties.targetNode, Helpers.convertDynamicToDir(instance.properties.forceDir), jumpTime);
+				var jumpZone = new JumpZone(
+					instanceName, points,
+					(string)instance.properties.targetNode,
+					Helpers.convertDynamicToDir(instance.properties.forceDir), jumpTime
+				);
 				addGameObject(jumpZone);
 			} else if (objectName == "Turn Zone") {
 				bool jumpAfterTurn = instance.properties.jumpAfterTurn ?? false;
@@ -492,7 +511,9 @@ public partial class Level {
 					redSpawnXDir = nullableFlipX.Value == true ? -1 : 1;
 				}
 
-				spawnPoints.Add(new SpawnPoint(instanceName, pos.addxy(xOff, 0), redSpawnXDir, GameMode.redAlliance));
+				spawnPoints.Add(new SpawnPoint(
+					instanceName, pos.addxy(xOff, 0), redSpawnXDir, GameMode.redAlliance)
+				);
 			} else if (objectName == "Blue Spawn") {
 				var properties = instance.properties;
 				spawnPoints.Add(new SpawnPoint(instanceName, pos, xDir, GameMode.blueAlliance));
@@ -687,19 +708,27 @@ public partial class Level {
 				var platform = new MovingPlatform(spriteName, idleSpriteName, pos, moveData, moveSpeed, timeOffset, nodeName, killZoneName, crackedWallName, zIndex, flipXOnMoveLeft, flipYOnMoveUp);
 				movingPlatforms.Add(platform);
 				addGameObject(platform);
+				addTerrain(platform);
 			} else if (objectName.StartsWith("Music Source")) {
 				string musicName = instance.properties.musicName ?? "";
-				if (!Global.musics.ContainsKey(musicName)) {
-					//throw new Exception("Music Source with music name " + musicName + " not found.\nIf music is in custom map folder, format as CUSTOM_MAP_NAME:MUSIC_NAME");
-				} else {
-					var actor = new Actor("empty", pos, null, true, false);
-					actor.useGravity = false;
-					actor.name = instanceName;
-					actor.addMusicSource(musicName, pos, true);
-					addGameObject(actor);
+				if (musicName != "") {
+					if (!Global.musics.ContainsKey(musicName)) {
+						throw new Exception(
+							"Music Source with music name " + musicName + " not found.\n" +
+							"If music is in custom map folder, format as CUSTOM_MAP_NAME:MUSIC_NAME"
+						);
+					} else {
+						var actor = new Actor("empty", pos, null, true, false);
+						actor.useGravity = false;
+						actor.name = instanceName;
+						actor.addMusicSource(musicName, pos, true);
+						addGameObject(actor);
+					}
 				}
 			} else {
-				var actor = new Actor(instance.spriteName, pos, Global.level.mainPlayer.getNextActorNetId(), isHost, false);
+				var actor = new Actor(
+					instance.spriteName, pos, Global.level.mainPlayer.getNextActorNetId(), isHost, false
+				);
 				actor.name = instanceName;
 				addGameObject(actor);
 			}
@@ -1735,29 +1764,29 @@ public partial class Level {
 				firstRowSize = 20;
 			}
 		
-			startGridX = MathInt.Clamp(startGridX, 0, grid[0].Count);
-			endGridX = MathInt.Clamp(endGridX, 0, grid[0].Count);
-			startGridY = MathInt.Clamp(startGridY, 0, grid.Count);
-			endGridY = MathInt.Clamp(endGridY, 0, grid.Count);
+			startGridX = MathInt.Clamp(startGridX, 0, grid.GetLength(0));
+			endGridX = MathInt.Clamp(endGridX, 0, grid.GetLength(0));
+			startGridY = MathInt.Clamp(startGridY, 0, grid.GetLength(1));
+			endGridY = MathInt.Clamp(endGridY, 0, grid.GetLength(1));
 
-			for (int i = startGridY; i < endGridY; i++) {
-				for (int j = startGridX; j < endGridX; j++) {
-					if (grid[i][j].Count > 0) {
-						gridItemCount += grid[i][j].Count;
+			for (int y = startGridY; y < endGridY; y++) {
+				for (int x = startGridX; x < endGridX; x++) {
+					if (grid[x, y].Count > 0) {
+						gridItemCount += grid[x, y].Count;
 						DrawWrappers.DrawRect(
-							j * cellWidth,
-							i * cellWidth,
-							cellWidth + (j * cellWidth) - 1,
-							cellWidth + (i * cellWidth) - 1,
+							x * cellWidth,
+							y * cellWidth,
+							cellWidth + (x * cellWidth) - 1,
+							cellWidth + (y * cellWidth) - 1,
 							true, new Color(200, 255, 200, 64), 1,
 							ZIndex.HUD - 15, true, new Color(128, 255, 128, 128)
 						);
 						if (cellWidth >= 32) {
 							Fonts.drawText(
 								FontType.Purple,
-								i.ToString() + separator + j.ToString(),
-								(j * cellWidth) + 1,
-								(i * cellWidth) + 1,
+								x.ToString() + separator + y.ToString(),
+								(x * cellWidth) + 1,
+								(y * cellWidth) + 1,
 								isWorldPos: true,
 								depth: ZIndex.HUD - 10,
 								alpha: 192
@@ -1766,9 +1795,9 @@ public partial class Level {
 						}
 						Fonts.drawText(
 							FontType.DarkPurple,
-							grid[i][j].Count.ToString(),
-							(j * cellWidth),
-							offset + (i * cellWidth) + 1,
+							grid[x, y].Count.ToString(),
+							(x * cellWidth),
+							offset + (y * cellWidth) + 1,
 							isWorldPos: true,
 							depth: ZIndex.HUD - 10,
 							alpha: 192
