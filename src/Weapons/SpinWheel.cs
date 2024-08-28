@@ -148,7 +148,7 @@ public class SpinWheelProj : Projectile {
 
 public class SpinWheelProjChargedStart : Projectile {
 	public SpinWheelProjChargedStart(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 0, player, "spinwheel_charged_start", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 4, 0, player, "spinwheel_charged_start", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.SpinWheelChargedStart;
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
@@ -175,7 +175,7 @@ public class SpinWheelProjChargedStart : Projectile {
 
 public class SpinWheelProjCharged : Projectile {
 	public SpinWheelProjCharged(Weapon weapon, Point pos, int xDir, int yDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 200, 0.75f, player, "spinwheel_charged", Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 200, 1, player, "spinwheel_charged", Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.SpinWheelCharged;
 		maxTime = 1;
 

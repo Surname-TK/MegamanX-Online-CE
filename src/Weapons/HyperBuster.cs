@@ -55,7 +55,7 @@ public class HyperBuster : Weapon {
 		return ammo >= getChipFactoredAmmoUsage(player) && player.weapons.InRange(player.hyperChargeSlot) && player.weapons[player.hyperChargeSlot].ammo > 0;
 	}
 
-	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
+	/*public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
 		mmx = player.character as MegamanX ?? throw new NullReferenceException();
 		if (player.character.charState is WallSlide) {
 			shootTime = 0;
@@ -80,5 +80,5 @@ public class HyperBuster : Weapon {
 			}
 		player.character.changeState(new X3ChargeShot(null), true);
 		return;
-	}
+	}*/
 }

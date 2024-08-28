@@ -5,6 +5,7 @@ using System.Linq;
 namespace MMXOnline;
 
 public class FrostShield : Weapon {
+	public Player player;
 	public const int maxShieldsPerPlayer = 2;
 	public FrostShield() : base() {
 		shootSounds = new string[] { "frostShield", "frostShield", "frostShield", "frostShieldCharged" };
@@ -51,7 +52,7 @@ public class FrostShield : Weapon {
 }
 
 public class FrostShieldProj : Projectile, IDamagable {
-	float health = 4;
+	float health = 2;
 	public Player player;
 	int state = 0;
 	float stateTime;
@@ -208,7 +209,7 @@ public class FrostShieldProjAir : Projectile, IDamagable {
 }
 
 public class FrostShieldProjGround : Projectile, IDamagable {
-	float health = 4;
+	float health = 2;
 	public FrostShieldProjGround(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false
 	) : base(

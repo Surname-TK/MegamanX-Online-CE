@@ -57,7 +57,7 @@ public class AcidBurstProj : Projectile {
 			if (!owner.isDead) {
 				if (owner.input.isHeld(Control.Up, owner)) {
 					vel.x = 0;
-					vel.y = -500;
+					vel.y = -300;
 				}
 				if (owner.input.isHeld(Control.Down, owner)) {
 					vel.x = 0;

@@ -91,14 +91,13 @@ public class BusterZero : Character {
 		bool shootPressed = player.input.isPressed(Control.Shoot, player);
 		bool specialPressed = player.input.isPressed(Control.Special1, player);
 		if (specialPressed) {
-			if (zSaberCooldown == 0) {
-				if (stockedSaber) {
-					changeState(new BusterZeroHadangeki(), true);
-					return true;
-				}
-				changeState(new BusterZeroMelee(), true);
+			if (stockedSaber) {
+				changeState(new BusterZeroHadangeki(), true);
 				return true;
 			}
+			changeState(new BusterZeroMelee(), true);
+			return true;
+			
 		}
 		if (!isCharging()) {
 			if (shootPressed) {

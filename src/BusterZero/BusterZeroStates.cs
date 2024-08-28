@@ -13,7 +13,7 @@ public class BusterZeroMelee : CharState {
 		airSprite = "projswing_air";
 		airMove = true;
 		useDashJumpSpeed = true;
-		superArmor = true;
+		superArmor = false;
 		canJump = true;
 		canStopJump = true;
 	}
@@ -57,7 +57,7 @@ public class BusterZeroDoubleBuster : CharState {
 		this.isPinkCharge = isPinkCharge;
 		airMove = true;
 		useDashJumpSpeed = true;
-		superArmor = true;
+		superArmor = false;
 		landSprite = "doublebuster";
 		airSprite = "doublebuster_air";
 	}
@@ -158,12 +158,12 @@ public class BusterZeroHadangeki : CharState {
 		airSprite = "projswing_air";
 		airMove = true;
 		useDashJumpSpeed = true;
-		superArmor = true;
+		superArmor = false;
 	}
 
 	public override void update() {
 		base.update();
-		if (character.frameIndex >= 7 && !fired) {
+		if (character.frameIndex >= 6 && !fired) {
 			character.playSound("zerosaberx3", sendRpc: true);
 			zero.stockedSaber = false;
 			fired = true;
@@ -213,8 +213,8 @@ public class BusterZeroHadangekiWall : CharState {
 	public BusterZeroHadangekiWall(int wallDir, Collider wallCollider) : base("wall_slide_attack") {
 		this.wallDir = wallDir;
 		this.wallCollider = wallCollider;
-		superArmor = true;
 		useGravity = false;
+		superArmor = false;
 	}
 
 	public override void update() {
@@ -266,7 +266,7 @@ public class HyperBusterZeroStart : CharState {
 				radius = 0;
 				zero.isBlackZero = true;
 				character.playSound("ching");
-				character.fillHealthToMax();
+				// character.fillHealthToMax();
 			}
 		} else {
 			time += Global.spf;

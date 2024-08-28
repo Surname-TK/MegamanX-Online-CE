@@ -890,8 +890,10 @@ public class Damager {
 			projId == (int)ProjIds.Raijingeki ||
 			projId == (int)ProjIds.Raijingeki2 ||
 			projId == (int)ProjIds.CFlasher ||
-			projId == (int)ProjIds.BubbleSplash ||
-			projId == (int)ProjIds.BubbleSplashCharged ||
+			/*projId == (int)ProjIds.BubbleSplash ||
+			projId == (int)ProjIds.BubbleSplashCharged ||*/
+			projId == (int)ProjIds.SpinWheelChargedStart ||
+			projId == (int)ProjIds.SpinWheelCharged ||
 			projId == (int)ProjIds.AcidBurstPoison ||
 			projId == (int)ProjIds.MetteurCrash;
 	}

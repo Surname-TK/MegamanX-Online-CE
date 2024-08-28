@@ -125,7 +125,7 @@ public partial class Player {
 	public const int reviveSigmaCost = 10;
 	public const int reviveXCost = 10;
 	public const int goldenArmorCost = 5;
-	public const int ultimateArmorCost = 10;
+	public const int ultimateArmorCost = 5;
 	public bool lastDeathCanRevive;
 	public int vileFormToRespawnAs;
 	public bool hyperSigmaRespawn;
@@ -1663,7 +1663,7 @@ public partial class Player {
 		return character != null &&
 			isX && !isDisguisedAxl &&
 			character.charState is not Die && !Global.level.is1v1() &&
-			!hasUltimateArmor() && !canUpgradeGoldenX() && hasAllArmor() && currency >= ultimateArmorCost;
+			!hasUltimateArmor() && !canUpgradeGoldenX() && currency >= ultimateArmorCost;
 	}
 
 	public void destroy() {
@@ -1685,7 +1685,8 @@ public partial class Player {
 			magnetMines[i].destroySelf();
 		}
 	}
-	public List<FrostShieldProj> frostShields = new List<FrostShieldProj>();
+	
+	public List<Projectile> frostShields = new List<Projectile>();
 	public void removeOwnedShields() {
 		for (int i = frostShields.Count - 1; i >= 0; i--) {
 			frostShields[i].destroySelf();
@@ -1812,7 +1813,7 @@ public partial class Player {
 		// Check for stuff that cannot gain scraps.
 		if (character?.isCCImmuneHyperMode() == true) return;
 		if (character?.rideArmor?.raNum == 4 && character.charState is InRideArmor) return;
-		if (isX && hasUltimateArmor()) return;
+		// if (isX && hasUltimateArmor()) return;
 
 		currency++;
 	}

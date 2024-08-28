@@ -10,7 +10,7 @@ public class BubbleSplash : Weapon {
 
 	public BubbleSplash() : base() {
 		shootSounds = new string[] { "bubbleSplash", "bubbleSplash", "bubbleSplash", "bubbleSplashCharged" };
-		rateOfFire = 0.075f;
+		rateOfFire = 0.0125f;
 		isStream = true;
 		index = (int)WeaponIds.BubbleSplash;
 		weaponBarBaseIndex = 10;
@@ -19,7 +19,7 @@ public class BubbleSplash : Weapon {
 		killFeedIndex = 21;
 		weaknessIndex = 12;
 		maxStreams = 7;
-		streamCooldown = 1;
+		streamCooldown = 20;
 		switchCooldown = 0.25f;
 		damage = "1/1";
 		ammousage = 0.5;
@@ -39,7 +39,11 @@ public class BubbleSplash : Weapon {
 		if (!base.canShoot(chargeLevel, player)) return false;
 		if (hyperChargeDelay > 0) return false;
 
-		return bubblesOnField.Count + bubbleAfterlifeTimes.Count < 7;
+		if (bubblesOnField.Count < 7) {
+			return bubblesOnField.Count + bubbleAfterlifeTimes.Count < 7;
+		} else {
+			return bubblesOnField.Count + bubbleAfterlifeTimes.Count < 7;
+		}
 	}
 
 	public override void update() {
@@ -81,11 +85,12 @@ public class BubbleSplash : Weapon {
 }
 
 public class BubbleSplashProj : Projectile {
+	public int randBubble;
 	public BubbleSplashProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 75, 0.5f, player, "bubblesplash_proj_start", 0, 0f, netProjId, player.ownedByLocalPlayer) {
-		maxTime = Helpers.randomRange(0.5f, 1f);
+		projId = (int)ProjIds.BubbleSplash;
+		maxTime = Helpers.randomRange(0.75f, 1.25f);
 		useGravity = false;
-		vel.y = -20 * Helpers.randomRange(0.5f, 1f);
 		vel.x *= Helpers.randomRange(0.5f, 1f);
 		if (ownedByLocalPlayer) {
 			if (player.character.charState is Dash || player.character.charState is AirDash) {
@@ -99,10 +104,18 @@ public class BubbleSplashProj : Projectile {
 			vel.y *= 3;
 		}
 
-		fadeSprite = "bubblesplash_pop";
+		randBubble = Helpers.randomRange(0, 8);
+		if (randBubble == 0 || randBubble == 1 || randBubble == 2) {
+			fadeSprite = "bubblesplash_pop_small";
+		} else if (randBubble == 3 || randBubble == 4 || randBubble == 5) { 
+			fadeSprite = "bubblesplash_pop_medium";
+		} else {
+			fadeSprite = "bubblesplash_pop_large";
+		}
+
 		fadeSound = "bubbleSplashPop";
 		fadeOnAutoDestroy = true;
-		projId = (int)ProjIds.BubbleSplash;
+
 
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
@@ -112,16 +125,22 @@ public class BubbleSplashProj : Projectile {
 	public override void update() {
 		base.update();
 		if (sprite.name == "bubblesplash_proj_start" && isAnimOver()) {
-			int randColor = Helpers.randomRange(0, 5);
-			if (randColor == 0) changeSprite("bubblesplash_proj1_small", true);
-			if (randColor == 1) changeSprite("bubblesplash_proj1_medium", true);
-			if (randColor == 2) changeSprite("bubblesplash_proj2_small", true);
-			if (randColor == 3) changeSprite("bubblesplash_proj2_medium", true);
-			if (randColor == 4) changeSprite("bubblesplash_proj3_small", true);
-			if (randColor == 5) changeSprite("bubblesplash_proj3_medium", true);
+			vel.y = -20 * Helpers.randomRange(0.5f, 1f);
+			if (randBubble == 0) changeSprite("bubblesplash_proj_small1", true);
+			if (randBubble == 1) changeSprite("bubblesplash_proj_small2", true);
+			if (randBubble == 2) changeSprite("bubblesplash_proj_small3", true);
+			if (randBubble == 3) changeSprite("bubblesplash_proj_medium1", true);
+			if (randBubble == 4) changeSprite("bubblesplash_proj_medium2", true);
+			if (randBubble == 5) changeSprite("bubblesplash_proj_medium3", true);
+			if (randBubble == 6) changeSprite("bubblesplash_proj_large1", true);
+			if (randBubble == 7) changeSprite("bubblesplash_proj_large2", true);
+			if (randBubble == 8) changeSprite("bubblesplash_proj_large3", true);
 		}
-		vel.y -= Global.spf * 100;
+		if (sprite.name != "bubblesplash_proj_start") { vel.y -= Global.spf * 100; }
 	}
+	public static string[] spriteVariants = {
+
+	};
 }
 
 public class BubbleSplashProjCharged : Projectile {
@@ -131,15 +150,25 @@ public class BubbleSplashProjCharged : Projectile {
 	public BubbleSplashProjCharged(Weapon weapon, Point pos, int xDir, Player player, float time, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 75, 0.5f, player, "bubblesplash_proj_start", 0, 0, netProjId, player.ownedByLocalPlayer) {
 		useGravity = false;
-		fadeSprite = "bubblesplash_pop";
+		int randBubble = Helpers.randomRange(0, 8);
+			if (randBubble == 0) changeSprite("bubblesplash_proj_small1", true);
+			if (randBubble == 1) changeSprite("bubblesplash_proj_small2", true);
+			if (randBubble == 2) changeSprite("bubblesplash_proj_small3", true);
+			if (randBubble == 3) changeSprite("bubblesplash_proj_medium1", true);
+			if (randBubble == 4) changeSprite("bubblesplash_proj_medium2", true);
+			if (randBubble == 5) changeSprite("bubblesplash_proj_medium3", true);
+			if (randBubble == 6) changeSprite("bubblesplash_proj_large1", true);
+			if (randBubble == 7) changeSprite("bubblesplash_proj_large2", true);
+			if (randBubble == 8) changeSprite("bubblesplash_proj_large3", true);
 
-		int randColor = Helpers.randomRange(0, 5);
-			if (randColor == 0) changeSprite("bubblesplash_proj1_small", true);
-			if (randColor == 1) changeSprite("bubblesplash_proj1_medium", true);
-			if (randColor == 2) changeSprite("bubblesplash_proj2_small", true);
-			if (randColor == 3) changeSprite("bubblesplash_proj2_medium", true);
-			if (randColor == 4) changeSprite("bubblesplash_proj3_small", true);
-			if (randColor == 5) changeSprite("bubblesplash_proj3_medium", true);
+		if (randBubble == 0 || randBubble == 1 || randBubble == 2) {
+			fadeSprite = "bubblesplash_pop_small";
+		} else if (randBubble == 3 || randBubble == 4 || randBubble == 5) { 
+			fadeSprite = "bubblesplash_pop_medium";
+		} else {
+			fadeSprite = "bubblesplash_pop_large";
+		}
+
 		character = (player.character as MegamanX);
 		initTime = time;
 		this.time = time;

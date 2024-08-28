@@ -61,8 +61,8 @@ public class SonicSlicerProj : Projectile {
 	public float Curve = 1;
 	int type;
 	public SonicSlicerProj(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 2, player, "sonicslicer_proj", 0, 0, netProjId, player.ownedByLocalPlayer) {
-		maxDistance = 200f;
+		base(weapon, pos, xDir, 0, 1, player, "sonicslicer_proj", 0, 0, netProjId, player.ownedByLocalPlayer) {
+		maxTime = 2;
 		this.type = type;
 		collider.wallOnly = true;
 		projId = (int)ProjIds.SonicSlicer;
@@ -100,6 +100,7 @@ public class SonicSlicerProj : Projectile {
 		if (collideData != null && collideData.hitData != null) {
 			playSound("dingX2");
 			xDir *= -1;
+			time -= 0.5f;
 			vel.x *= -1;
 			new Anim(pos, "sonicslicer_sparks", xDir, null, true);
 			//RPC.actorToggle.sendRpc(netId, RPCActorToggleType.SonicSlicerBounce);
