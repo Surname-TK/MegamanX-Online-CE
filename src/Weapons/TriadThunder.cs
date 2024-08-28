@@ -353,7 +353,7 @@ public class TriadThunderChargedState : CharState {
 		}
 
 		if (stateTime > 0.75f) {
-			character.changeState(new Idle());
+			character.changeToIdleOrFall();
 		}
 	}
 

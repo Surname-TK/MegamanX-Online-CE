@@ -165,12 +165,12 @@ public class SpeedBurnerCharState : CharState {
 			return;
 		} if (character.grounded){
 			if (stateTime > 0.45f) {
-				character.changeState(new Idle(), true);
+				character.changeToIdleOrFall();
 				return;
 			}
 		} else {
 			if (stateTime > 0.4f) {
-				character.changeState(new Idle(), true);
+				character.changeToIdleOrFall();
 				return;
 			}
 		}

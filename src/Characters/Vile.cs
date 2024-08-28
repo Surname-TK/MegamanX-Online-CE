@@ -608,12 +608,19 @@ public class Vile : Character {
 		return "vile_" + spriteName;
 	}
 
-	public override void changeToIdleOrFall() {
+	public override void changeToIdleOrFall(string transitionSprite = "") {
 		if (!grounded && charState.wasVileHovering && canVileHover()) {
 			changeState(new VileHover(), true);
 			return;
 		}
-		base.changeToIdleOrFall();
+		base.changeToIdleOrFall(transitionSprite);
+	}
+
+	public override float getLabelOffY() {
+		if (sprite.name.Contains("_ra_")) {
+			return 25;
+		}
+		return 50;
 	}
 
 	public override void render(float x, float y) {

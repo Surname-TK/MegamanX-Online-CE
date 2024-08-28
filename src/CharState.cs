@@ -284,13 +284,14 @@ public class CharState {
 	}
 
 	public void changeToIdle(string ts = "") {
-		if (string.IsNullOrEmpty(ts) && (
+		if (character.grounded &&
+			string.IsNullOrEmpty(ts) && (
 			player.input.isHeld(Control.Left, player) ||
 			player.input.isHeld(Control.Right, player))
 		) {
 			character.changeState(new Run());
 		} else {
-			character.changeState(new Idle(ts));
+			character.changeToIdleOrFall(ts);
 		}
 	}
 
@@ -398,7 +399,7 @@ public class WarpIn : CharState {
 			}
 
 			if (character.isAnimOver()) {
-				character.changeState(new Idle());
+				character.changeToIdleOrFall();
 			}
 			return;
 		}
@@ -619,7 +620,7 @@ public class Run : CharState {
 		if (move.magnitude > 0) {
 			character.move(move);
 		} else {
-			character.changeState(new Idle());
+			character.changeToIdleOrFall();
 		}
 	}
 }
@@ -647,8 +648,8 @@ public class Crouch : CharState {
 			character.xDir = dpadXDir;
 		}
 
-		if (!player.isCrouchHeld() && !(player.isZero && character.isAttacking())) {
-			character.changeState(new Idle(transitionSprite: "crouch_start"));
+		if (!character.grounded || !player.isCrouchHeld()) {
+			character.changeToIdleOrFall("crouch_start");
 			return;
 		}
 		if (Global.level.gameMode.isOver) {
@@ -683,7 +684,7 @@ public class SwordBlock : CharState {
 			player.input.isHeld(Control.WeaponRight, player)
 		);
 		if (!isHoldingGuard) {
-			character.changeState(new Idle());
+			character.changeToIdleOrFall();
 			return;
 		}
 		if (Global.level.gameMode.isOver) {
@@ -716,13 +717,12 @@ public class ZeroClang : CharState {
 			character.move(new Point(hurtSpeed, 0));
 		}
 		/*
-		if (this.character.isAnimOver())
-		{
-			this.character.changeState(new Idle());
+		if (this.character.isAnimOver()) {
+			this.character.changeToIdleOrFall();
 		}
 		*/
 		if (hurtSpeed == 0) {
-			character.changeState(new Idle());
+			character.changeToIdleOrFall();
 		}
 	}
 }
@@ -880,14 +880,10 @@ public class Dash : CharState {
 				character.sprite.frameSpeed = 0.1f;
 				stop = true;
 			} else {
-				if (character.grounded) {
-					if (inputXDir != 0) {
-						character.changeState(new Idle(), true);
-					} else {
-						character.changeState(new Run(), true);
-					}
+				if (inputXDir != 0 && character.grounded) {
+					character.changeState(new Run(), true);
 				} else {
-					character.changeState(new Fall(), true);
+					character.changeToIdleOrFall();
 				}
 				return;
 			}
@@ -1080,7 +1076,7 @@ public class WallSlide : CharState {
 	public override void update() {
 		base.update();
 		if (character.grounded) {
-			character.changeState(new Idle());
+			character.changeToIdleOrFall();
 			return;
 		}
 		/*
@@ -1248,7 +1244,7 @@ public class LadderClimb : CharState {
 		}
 
 		if (character.grounded) {
-			character.changeState(new Idle());
+			character.changeToIdleOrFall();
 		}
 	}
 
@@ -1287,7 +1283,7 @@ public class LadderEnd : CharState {
 			//this.character.pos.y = this.targetY;
 			character.incPos(new Point(0, targetY - character.pos.y));
 			character.stopCamUpdate = true;
-			character.changeState(new Idle());
+			character.changeToIdleOrFall();
 		}
 	}
 }
@@ -1315,16 +1311,16 @@ public class Taunt : CharState {
 
 		if (player.charNum == 2) {
 			if (character.isAnimOver()) {
-				character.changeState(new Idle());
+				character.changeToIdleOrFall();
 			}
 		} else if (stateTime >= tauntTime) {
-			character.changeState(new Idle());
+			character.changeToIdleOrFall();
 		}
 
 		if (player.charNum == (int)CharIds.Zero && player.input.isHeld(Control.Up, player)) {
 			character.changeSprite("zero_win2", true);
 			if (character.isAnimOver()) {
-				character.changeState(new Idle());
+				character.changeToIdleOrFall();
 			}
 		}
 		if (character.sprite.name == "zero_win2" && character.frameIndex == 1 && !once) {
@@ -1396,13 +1392,13 @@ public class Die : CharState {
 			player.destroyCharacter();
 			Global.serverClient?.rpc(RPC.destroyCharacter, (byte)player.id);
 			var anim = new Anim(
-				character.pos, viralSigma.lastHyperSigmaSprite, 1, player.getNextActorNetId(), false, sendRpc: true
+				character.pos, viralSigma.lastViralSprite, 1, player.getNextActorNetId(), false, sendRpc: true
 			);
 			anim.ttl = 3;
 			anim.blink = true;
-			anim.frameIndex = viralSigma.lastHyperSigmaFrameIndex;
+			anim.frameIndex = viralSigma.lastViralFrameIndex;
 			anim.frameSpeed = 0;
-			anim.angle = viralSigma.lastViralSigmaAngle;
+			anim.angle = viralSigma.lastViralAngle;
 			var ede = new ExplodeDieEffect(
 				player, character.pos, character.pos, "empty", 1, character.zIndex, false, 20, 3, false
 			);
