@@ -87,6 +87,7 @@ public class VileBombProj : Projectile {
 	public VileBombProj(Weapon weapon, Point pos, int xDir, Player player, int type, ushort netProjId, Point? vel = null, bool rpc = false) :
 		base(weapon, pos, xDir, 100, 2, player, type == 0 ? "vile_bomb_air" : "vile_bomb_ground", 0, 0.2f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.VileBomb;
+		fadeOnAutoDestroy = true;
 		if (type == 0) maxTime = 0.45f;
 		if (type == 1) maxTime = 0.3f;
 		destroyOnHit = true;
@@ -191,6 +192,7 @@ public class AirBombAttack : CharState {
 
 	public AirBombAttack(bool isNapalm, string transitionSprite = "") : base("air_bomb_attack", "", "", transitionSprite) {
 		this.isNapalm = isNapalm;
+		useDashJumpSpeed = true;
 	}
 
 	public override void update() {

@@ -11,12 +11,12 @@ public class SigmaSlashWeapon : Weapon {
 
 public class SigmaSlashState : CharState {
 	CharState prevCharState;
-	int attackFrame = 2;
+	int attackFrame = 3;
 	bool fired;
 	public SigmaSlashState(CharState prevCharState) : base(prevCharState.attackSprite, "", "", "") {
 		this.prevCharState = prevCharState;
 		if (prevCharState is Dash || prevCharState is AirDash) {
-			attackFrame = 1;
+			attackFrame = 2;
 		}
 		useDashJumpSpeed = true;
 		airMove = true;

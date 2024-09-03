@@ -84,11 +84,12 @@ public class FlameMammoth : Maverick {
 	public override Projectile? getProjFromHitbox(Collider hitbox, Point centerPoint) {
 		if (sprite.name.Contains("fall")) {
 			float damage = 0;
+			int flinch = 0;
 			if (deltaPos.y > 100 * Global.spf) damage = 2f;
-			if (deltaPos.y > 200 * Global.spf) damage = 4f;
-			if (deltaPos.y > 300 * Global.spf) damage = 6f;
+			if (deltaPos.y > 200 * Global.spf) { damage = 3f; flinch = Global.halfFlinch; }
+			if (deltaPos.y > 300 * Global.spf) { damage = 4f; flinch = Global.defFlinch; }
 			if (damage > 0) {
-				return new GenericMeleeProj(stompWeapon, centerPoint, ProjIds.FlameMStomp, player, damage: damage);
+				return new GenericMeleeProj(stompWeapon, centerPoint, ProjIds.FlameMStomp, player, damage: damage, flinch: flinch);
 			}
 		}
 		return null;
@@ -107,7 +108,7 @@ public class FlameMStompWeapon : Weapon {
 	public FlameMStompWeapon(Player player) {
 		index = (int)WeaponIds.FlameMStomp;
 		killFeedIndex = 100;
-		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 2, 0, 0.5f);
 	}
 }
 

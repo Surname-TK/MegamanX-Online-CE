@@ -175,8 +175,9 @@ public class VileMK2StunShot : Weapon {
 
 public class StunShotProj : Projectile {
 	public StunShotProj(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, Point? vel = null, bool rpc = false) :
-		base(weapon, pos, xDir, 150, 0, player, type == 0 ? "vile_stun_shot" : "vile_ebomb_start", 0, 0.15f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 100, 0, player, type == 0 ? "vile_stun_shot" : "vile_ebomb_start", type == 0 ? Global.defFlinch : 0, 0.15f, netProjId, player.ownedByLocalPlayer) {
 		fadeSprite = "vile_stun_shot_fade";
+		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.ElectricShock;
 		maxTime = 0.75f;
 		destroyOnHit = true;

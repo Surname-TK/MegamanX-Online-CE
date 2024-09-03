@@ -17,6 +17,7 @@ public class Hurt : CharState {
 		hurtSpeed = dir * 1.6f;
 		flinchTime = flinchFrames;
 		this.spiked = spiked;
+		useDashJumpSpeed = true;
 		if (oldComboPos != null) {
 			isCombo = true;
 			flinchYPos = oldComboPos.Value;

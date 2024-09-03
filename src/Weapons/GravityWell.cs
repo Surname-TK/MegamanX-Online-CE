@@ -354,6 +354,7 @@ public class GravityWellChargedState : CharState {
 
 	public GravityWellChargedState() : base("point_up", "", "", "") {
 		superArmor = true;
+		useDashJumpSpeed = true;
 	}
 
 	public override void update() {

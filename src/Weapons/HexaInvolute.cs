@@ -18,6 +18,7 @@ public class HexaInvoluteState : CharState {
 	Vile vile = null!;
 
 	public HexaInvoluteState() : base("super", "", "", "") {
+		stateTime = 0;
 		superArmor = true;
 		immuneToWind = true;
 		invincible = true;
@@ -25,7 +26,6 @@ public class HexaInvoluteState : CharState {
 
 	public override void update() {
 		base.update();
-
 		if (startGrounded && !once) {
 			//character.move(new Point(0, -100));
 		}
@@ -39,12 +39,14 @@ public class HexaInvoluteState : CharState {
 			vile.usedAmmoLastFrame = true;
 			Helpers.decrementTime(ref ammoTime);
 			if (ammoTime == 0) {
-				ammoTime = 0.125f;
+				ammoTime = 0.25f;
 				player.vileAmmo--;
+				vile.vileHoverTime += 0.125f;
 			}
 		}
 
 		if (player.vileAmmo <= 0 || (player.input.isPressed(Control.Special1, player) && stateTime > 1)) {
+			player.vileAmmo -= 14;
 			character.changeToIdleOrFall();
 		}
 	}
@@ -104,14 +106,16 @@ public class HexaInvoluteProj : Projectile {
 	public Point destPos;
 	public float sinDampTime = 1;
 	public Anim muzzle;
-	float radius = 120;
+	float radius = 0;
+	float maxRadius = 180;
 	public float ang;
 	SoundWrapper sound;
 	float soundCooldown;
 	public List<HexaInvolutePart> parts = new List<HexaInvolutePart>();
 	public HexaInvoluteProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 1, player, "empty", Global.defFlinch, 0.15f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 2, player, "empty", Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer) {
 		projId = (int)ProjIds.HexaInvolute;
+		netcodeOverride = NetcodeModel.FavorDefender;
 		setIndestructableProperties();
 		sprite.hitboxes = new Collider[6];
 
@@ -142,8 +146,16 @@ public class HexaInvoluteProj : Projectile {
 		}
 
 		if (ownedByLocalPlayer) {
-			ang += Global.spf * 45;
-			ang = Helpers.to360(ang);
+			if (radius >= maxRadius) {
+				radius = maxRadius;
+			} else {
+				radius += Global.spf * (maxRadius * 2);
+				owner.character.charState.stateTime = 0;
+			}
+			if (radius == maxRadius && owner.character.charState.stateTime > 0.5f) {
+				ang += Global.spf * 45;
+				ang = Helpers.to360(ang);
+			}
 		}
 	}
 

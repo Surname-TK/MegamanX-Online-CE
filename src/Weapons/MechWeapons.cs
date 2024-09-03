@@ -317,7 +317,7 @@ public class MechBusterProj2 : Projectile {
 	int type = 0;
 	float startY;
 	public MechBusterProj2(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 200, 2, player, "goliath_proj2", Global.halfFlinch, 0f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 200, 1, player, "goliath_proj2", Global.halfFlinch, 0f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 0.75f;
 		projId = (int)ProjIds.MechBuster;
 		startY = pos.y;

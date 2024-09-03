@@ -139,7 +139,7 @@ public class DodgeRoll : CharState {
 		axl = character as Axl;
 		character.isDashing = true;
 		character.burnTime -= 2;
-		character.acidTime -= 1;
+		character.acidTime -= 2;
 		character.igFreezeProgress -= 2;
 		if (character.burnTime < 0) {
 			character.burnTime = 0;

@@ -69,13 +69,15 @@ public class DZBuster2Proj : Projectile {
 }
 
 public class DZBuster3Proj : Projectile {
+	
+	public BusterZero zero = null!;
 	float partTime;
 
 	public DZBuster3Proj(
-		Point pos, int xDir, Player player, ushort? netId, bool rpc = false
+		Point pos, int xDir, bool isBZ, Player player, ushort? netId, bool rpc = false
 	) : base(
 		ZeroBuster.netWeapon, pos, xDir,
-		350, 3, player, "zbuster4", Global.halfFlinch, 0,
+		350, 3, player, "zbuster4",isBZ ? Global.defFlinch : Global.halfFlinch, 0,
 		netId, player.ownedByLocalPlayer
 	) {
 		fadeOnAutoDestroy = true;
@@ -83,8 +85,11 @@ public class DZBuster3Proj : Projectile {
 		reflectable = true;
 		maxTime = 0.5f;
 		projId = (int)ProjIds.DZBuster3;
+		if (isBZ) { 
+			damager.flinch = Global.defFlinch;
+		}
 		if (rpc) {
-			rpcCreate(pos, player, netId, xDir);
+			rpcCreate(pos, player, netId, xDir, (isBZ ? (byte)0 : (byte)1));
 		}
 	}
 
@@ -105,7 +110,7 @@ public class DZBuster3Proj : Projectile {
 
 	public static Projectile rpcInvoke(ProjParameters args) {
 		return new DZBuster3Proj(
-			args.pos, args.xDir, args.player, args.netId
+			args.pos, args.xDir, args.extraData[0] == 1, args.player, args.netId
 		);
 	}
 }
@@ -124,7 +129,8 @@ public class DZHadangekiProj : Projectile {
 		projId = (int)ProjIds.ZSaberProj;
 		maxTime = 0.5f;
 		if (isBZ) {
-			damager.damage = 4;
+			damager.damage = 3;
+			damager.flinch = Global.defFlinch;
 			genericShader = player.zeroPaletteShader;
 		}
 		if (rpc) {

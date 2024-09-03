@@ -610,7 +610,7 @@ public partial class Player {
 
 	public float getMaverickMaxHp() {
 		if (!Global.level.is1v1() && isTagTeam()) {
-			return getModifiedHealth(32) + (heartTanks * getHeartTankModifier());
+			return getModifiedHealth(32)/* + (heartTanks * getHeartTankModifier())*/;
 		}
 		return MathF.Ceiling(getModifiedHealth(32));
 	}

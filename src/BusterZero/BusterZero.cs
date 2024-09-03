@@ -188,7 +188,7 @@ public class BusterZero : Character {
 		} else if (chargeLevel == 2) {
 			playSound("buster3X3", sendRpc: true);
 			new DZBuster3Proj(
-				shootPos, xDir, player, player.getNextActorNetId(), rpc: true
+				shootPos, xDir, isBlackZero, player, player.getNextActorNetId(), rpc: true
 			);
 			lemonCooldown = 22f / 60f;
 		} else if (chargeLevel == 3) {
@@ -229,7 +229,7 @@ public class BusterZero : Character {
 		Projectile? proj = id switch {
 			(int)MeleeIds.SaberSwing => new GenericMeleeProj(
 				meleeWeapon, projPos, ProjIds.DZMelee, player,
-				isBlackZero ? 4 : 3, Global.defFlinch, 0.5f, isReflectShield: true, addToLevel: addToLevel
+				3, isBlackZero ? Global.defFlinch : Global.halfFlinch, 0.5f, isReflectShield: true, addToLevel: addToLevel
 			),
 			_ => null
 		};

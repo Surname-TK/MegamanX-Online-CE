@@ -72,7 +72,7 @@ public class BusterZeroDoubleBuster : CharState {
 			character.playSound("buster3X3", sendRpc: true);
 			new DZBuster3Proj(
 				character.getShootPos(), character.getShootXDir(),
-				player, player.getNextActorNetId(), rpc: true
+				zero.isBlackZero, player, player.getNextActorNetId(), rpc: true
 			);
 		}
 		if (!fired2 && character.frameIndex == 7) {
@@ -82,7 +82,7 @@ public class BusterZeroDoubleBuster : CharState {
 				character.playSound("buster3X3", sendRpc: true);
 				new DZBuster3Proj(
 					character.getShootPos(), character.getShootXDir(),
-					player, player.getNextActorNetId(), rpc: true
+					zero.isBlackZero, player, player.getNextActorNetId(), rpc: true
 				);
 			} else {
 				zero.stockedBusterLv = 0;
@@ -213,8 +213,8 @@ public class BusterZeroHadangekiWall : CharState {
 	public BusterZeroHadangekiWall(int wallDir, Collider wallCollider) : base("wall_slide_attack") {
 		this.wallDir = wallDir;
 		this.wallCollider = wallCollider;
-		useGravity = false;
 		superArmor = false;
+		useGravity = true;
 	}
 
 	public override void update() {

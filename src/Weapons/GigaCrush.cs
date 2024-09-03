@@ -26,7 +26,7 @@ public class GigaCrush : Weapon {
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
-		return 32;
+		return 28;
 	}
 
 	public override bool canShoot(int chargeLevel, Player player) {
@@ -146,6 +146,7 @@ public class GigaCrushCharState : CharState {
 
 	public GigaCrushCharState() : base("gigacrush", "", "", "") {
 		invincible = true;
+		useDashJumpSpeed = true;
 	}
 
 	public override void update() {

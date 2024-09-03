@@ -129,7 +129,7 @@ public class SparkMSparkWeapon : Weapon {
 	public SparkMSparkWeapon(Player player) {
 		index = (int)WeaponIds.SparkMSpark;
 		killFeedIndex = 94;
-		damager = new Damager(player, 4, Global.defFlinch, 0.5f);
+		damager = new Damager(player, 2, Global.defFlinch, 0.5f);
 	}
 }
 
@@ -145,7 +145,7 @@ public class SparkMPunchWeapon : Weapon {
 	public SparkMPunchWeapon(Player player) {
 		index = (int)WeaponIds.SparkMPunch;
 		killFeedIndex = 94;
-		damager = new Damager(player, 3, Global.halfFlinch, 0.75f);
+		damager = new Damager(player, 2, Global.halfFlinch, 0.5f);
 	}
 }
 #endregion

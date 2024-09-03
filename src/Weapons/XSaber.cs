@@ -12,7 +12,7 @@ public class XSaber : Weapon {
 
 public class XSaberProj : Projectile {
 	public XSaberProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 300, 4, player, "zsaber_shot", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 300, 4, player, "zsaber_shot", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		//this.fadeSprite = "zsaber_shot_fade";
 		reflectable = true;
 		projId = (int)ProjIds.XSaberProj;

@@ -64,7 +64,7 @@ public class DanchienWeapon : Weapon {
 
 public class ZeroDownthrust : CharState {
 	public ZeroDownthrustType type;
-	public int quakeBlazerBounces;
+	// public int quakeBlazerBounces;
 
 	public ZeroDownthrust(
 		ZeroDownthrustType type
@@ -126,15 +126,17 @@ public class ZeroDownthrust : CharState {
 		if (isUnderwaterQuakeBlazer()) return;
 
 		character.playSound("circleBlazeExplosion", sendRpc: true);
+		character.vel.y = 0;
+		character.dashedInAir = 0;
 		new DanchienExplosionProj(
 			character.pos.addxy(10 * character.xDir, -10),
 			character.xDir, player, player.getNextActorNetId(), sendRpc: true
 		);
 
 		if (!hitGround) {
-			if (player.input.isHeld(Control.Jump, player) && quakeBlazerBounces < 1) {
+			if (player.input.isHeld(Control.Jump, player)) {
 				character.vel.y = Physics.JumpSpeed;
-				quakeBlazerBounces++;
+				// quakeBlazerBounces++;
 			}
 			character.changeState(new Fall(), true);
 		}

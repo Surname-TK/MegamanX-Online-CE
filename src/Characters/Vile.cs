@@ -138,8 +138,8 @@ public class Vile : Character {
 			return;
 		}
 
-		if ((grounded || charState is LadderClimb || charState is LadderEnd || charState is WallSlide) && vileHoverTime > 0) {
-			vileHoverTime -= Global.spf * 6;
+		if (((grounded && charState is not HexaInvoluteState)|| charState is LadderClimb || charState is LadderEnd || charState is WallSlide) && vileHoverTime > 0) {
+			vileHoverTime -= Global.spf * 2;
 			if (vileHoverTime < 0) vileHoverTime = 0;
 		}
 

@@ -43,6 +43,7 @@ public class NovaStrikeState : CharState {
 		superArmor = true;
 		immuneToWind = true;
 		invincible = true;
+		useDashJumpSpeed = true;
 	}
 
 	public override void update() {
@@ -53,6 +54,7 @@ public class NovaStrikeState : CharState {
 				if (player.input.isHeld(Control.Up, player)) {
 					upOrDown = -1;
 					sprite = "nova_strike_up";
+					player.character.dashedInAir++;
 				} else if (player.input.isHeld(Control.Down, player)) {
 					upOrDown = 1;
 					sprite = "nova_strike_down";

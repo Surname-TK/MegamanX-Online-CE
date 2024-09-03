@@ -46,7 +46,7 @@ public class FSplasherWeapon : Weapon {
 	}
 
 	public override void attack(Character character) {
-		if (character.dashedInAir > 0) return;
+		if (character.dashedInAir > 0 && !character.isUnderwater()) return;
 		if (shootTime > 0) return;
 		shootTime = 1;
 		character.changeState(new FSplasherState(), true);
@@ -69,7 +69,11 @@ public class FSplasherState : CharState {
 		character.isDashing = true;
 		character.useGravity = false;
 		character.vel = new Point(0, 0);
-		character.dashedInAir++;
+		if (character.isUnderwater()) {
+			character.dashedInAir = 0;
+		} else {
+			character.dashedInAir++;
+		}
 		fSplasherProj = new FSplasherProj(
 			character.pos, character.xDir,
 			player, player.getNextActorNetId(), sendRpc: true
@@ -82,7 +86,11 @@ public class FSplasherState : CharState {
 			fSplasherProj.destroySelf();
 			fSplasherProj = null;
 		}
-		zero.airSpecial.shootTime = 1;
+		if (character.isUnderwater()) {
+			zero.airSpecial.shootTime = 0.125f;
+		} else {
+			zero.airSpecial.shootTime = 1;
+		}
 		base.onExit(newState);
 	}
 

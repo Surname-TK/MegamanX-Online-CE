@@ -395,7 +395,7 @@ public class RekkohaProj : Projectile {
 		Weapon weapon, Point pos, Player player, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, 1, 0, 2, player, "rekkoha_proj",
-		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.defFlinch, 0.25f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Rekkoha;
 		// netcodeOverride = NetcodeModel.FavorDefender;

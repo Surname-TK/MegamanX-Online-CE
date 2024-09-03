@@ -223,9 +223,9 @@ public partial class MegamanX : Character {
 			if ((player.health < player.maxHealth || player.hasSubtankCapacity()) && noDamageTime > 4) {
 				rechargeHealthTime -= Global.spf;
 				if (rechargeHealthTime <= 0) {
-					rechargeHealthTime = 1;
+					rechargeHealthTime = 4;
 					addHealth(1);
-					totalChipHealAmount++;
+					// totalChipHealAmount++;
 				}
 			}
 		}

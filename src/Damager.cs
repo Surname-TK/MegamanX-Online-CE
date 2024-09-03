@@ -60,8 +60,8 @@ public class Damager {
 		{ (int)ProjIds.NeonTClawDash, 1f },
 		{ (int)ProjIds.NeonTClawWall, 0.5f },
 		{ (int)ProjIds.VoltCTriadThunder, 0f },
-		{ (int)ProjIds.Rekkoha, 0.75f },
-		{ (int)ProjIds.HexaInvolute, 1f },
+		{ (int)ProjIds.Rekkoha, 0.25f },
+		/*{ (int)ProjIds.HexaInvolute, 1f },*/
 		{ (int)ProjIds.ZSaber3, 1f }
 	};
 
@@ -651,12 +651,12 @@ public class Damager {
 			float tempPush = 0;
 			if (rideArmor.ownedByLocalPlayer && owner != null) {
 				if (rideArmor.raNum == 1 || rideArmor.raNum == 4){
-					tempPush = damage * 16;
+					tempPush = damage * 32;
 				} else {
-					tempPush = damage * 32;}
+					tempPush = damage * 64;}
 			}
 			// Apply push only if the new push is stronger than the current one.
-			if (tempPush > System.Math.Abs(rideArmor.xFlinchPushVel)) {
+			if (tempPush >= System.Math.Abs(rideArmor.xFlinchPushVel)) {
 				float pushDirection = -victim.xDir;
 				if (owner != null && owner.character != null) {
 					if (victim.pos.x > owner.character.pos.x) pushDirection = 1;

@@ -120,16 +120,18 @@ public class ZeroUppercut : CharState {
 
 		if (!player.input.isHeld(Control.Special1, player) && !player.input.isHeld(Control.Shoot, player)) {
 			isHeld = false;
-		}
+		}/* else {
+			isHeld = true;
+			holdTime += Global.spf;
+		}*/
 
-		if (character.sprite.frameIndex == 6 && type == RisingType.RisingFang) {
-			if (isHeld && holdTime < 0.2f) {
-				holdTime += Global.spf;
-				character.frameSpeed = 0;
-				character.frameIndex = 6;
-			} else {
+		if (character.sprite.frameIndex > 4 && character.sprite.frameIndex < 13/* && type == RisingType.RisingFang*/) {
+			if (isHeld) {
 				character.frameSpeed = 1;
-				character.frameIndex = 6;
+				//character.frameIndex = 4;
+			} else {
+				character.frameSpeed = 4;
+				//character.frameIndex = 4;
 			}
 		}
 
@@ -165,6 +167,9 @@ public class ZeroUppercut : CharState {
 		}
 
 		if (character.isAnimOver()) {
+			if (character.vel.y < 0 && type != RisingType.RisingFang) {
+				character.vel.y = 0;
+			}
 			character.changeState(new Fall());
 		}
 	}

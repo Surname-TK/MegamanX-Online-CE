@@ -189,6 +189,7 @@ public class CannonAttack : CharState {
 
 	public CannonAttack(bool isGizmo, bool grounded) : base(getSprite(isGizmo, grounded), "", "", "") {
 		this.isGizmo = isGizmo;
+		useDashJumpSpeed = true;
 	}
 
 	public static string getSprite(bool isGizmo, bool grounded) {
