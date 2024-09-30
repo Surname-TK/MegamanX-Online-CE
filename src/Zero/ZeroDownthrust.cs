@@ -63,6 +63,7 @@ public class DanchienWeapon : Weapon {
 }
 
 public class ZeroDownthrust : CharState {
+	public int xDirLock;
 	public ZeroDownthrustType type;
 	// public int quakeBlazerBounces;
 
@@ -103,13 +104,15 @@ public class ZeroDownthrust : CharState {
 			}
 		}
 		if (type == ZeroDownthrustType.QuakeBlazer) {
-			int xDir = player.input.getXDir(player);
-			if (xDir != 0) {
-				character.xDir = xDir;
-				character.move(new Point(100 * xDir, 0));
+			airMove = true;
+			if (xDirLock == 0) {
+				xDirLock = character.xDir;
+			} else if (xDirLock != 0) {
+				character.xDir = xDirLock;
 			}
 		}
 		if (character.grounded) {
+			xDirLock = 0;
 			character.changeState(new ZeroDownthrustLand(type), true);
 			if (type == ZeroDownthrustType.QuakeBlazer) {
 				quakeBlazerExplode(true);

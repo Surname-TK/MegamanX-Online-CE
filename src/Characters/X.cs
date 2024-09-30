@@ -811,7 +811,7 @@ public partial class MegamanX : Character {
 		if (!player.weapon.isStream) {
 			chargeTime = 0;
 		} else {
-			streamCooldown = 0.25f;
+			streamCooldown = 0;
 		}
 
 		/*if (isHyperX) {

@@ -21,12 +21,11 @@ public class BubbleSplash : Weapon {
 		killFeedIndex = 21;
 		weaknessIndex = 12;
 		maxStreams = 7;
-		streamCooldown = 20;
+		streamCooldown = 0;
 		switchCooldown = 0.25f;
 		damage = "1/1";
 		ammousage = 0.5;
-		//effect = "Shoot a Stream up to 7 bubbles. C:Jump Boost.";
-		effect = "Charged: Grants Jump Boost.";
+		effect = "Shoot a Stream up to 7 bubbles. C:Jump Boost.";
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
@@ -95,6 +94,7 @@ public class BubbleSplash : Weapon {
 public class BubbleSplashProj : Projectile {
 	int size;
 	float randY;
+	float randT;
 	int randBubble;
 
 	public BubbleSplashProj(
@@ -106,6 +106,7 @@ public class BubbleSplashProj : Projectile {
 		75, 0.5f, player, "bubblesplash_proj_start", 0, 0f,
 		netProjId, player.ownedByLocalPlayer
 	) {
+		destroyOnHit = false;
 		// RNG shenanigans.
 		if (randX == null) {
 			randX = Helpers.randomRange(100, 150);
@@ -121,8 +122,8 @@ public class BubbleSplashProj : Projectile {
 		}
 		// Create variables.
 		this.size = size.Value;
-		maxTime = randT.Value;
 		useGravity = false;
+		this.randT = (float)randT;
 
 		vel.x *= randX.Value / 100f;
 		vel.y = 0;
@@ -140,9 +141,8 @@ public class BubbleSplashProj : Projectile {
 		} else {
 			fadeSprite = "bubblesplash_pop_large";
 		}
-
 		fadeSound = "bubbleSplashPop";
-		fadeOnAutoDestroy = true;
+		fadeOnAutoDestroy = false;
 
 
 		if (rpc) {
@@ -152,21 +152,34 @@ public class BubbleSplashProj : Projectile {
 			);
 		}
 	}
-
+	public override void onHitDamagable(IDamagable damagable){
+		if (sprite.name != fadeSprite || time > randT){
+			fadeOnAutoDestroy = false;
+			playSound(fadeSound, true, true);
+			changeSprite(fadeSprite, true);
+		}
+	}
 	public override void update() {
 		base.update();
 		if (sprite.name != "bubblesplash_proj_start"){
 			if (vel.y == 0) { 
 				vel.y = -20 * (randY / 100f);
 			}
-			if (!isUnderwater()) {
-				vel.y -= 1.5f;
+			if (isUnderwater()) {
+				vel.y -= 6f;
 			} else {
-				vel.y -= 3;
+				vel.y -= 1.5f;
 			}
 		}
 		if (sprite.name == "bubblesplash_proj_start" && isAnimOver()) {
 			changeSprite(spriteVariants[size], true);
+		}
+		if (sprite.name == fadeSprite){
+			vel = new Point(0, 0);
+			if (isAnimOver()){
+				destroySelf();
+				fadeOnAutoDestroy = false;
+			}
 		}
 	}
 

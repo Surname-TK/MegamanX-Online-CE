@@ -503,7 +503,7 @@ public partial class Character : Actor, IDamagable {
 			return false;
 		}
 		if (this is Vile vile && vile.isShootingLongshotGizmo) {
-			return false;
+			return true;
 		}
 		return true;
 	}
@@ -1146,10 +1146,11 @@ public partial class Character : Actor, IDamagable {
 					if (acidTime < 0) removeAcid();
 				}
 				if (player == Global.level.mainPlayer || playHealSound) {
-					if (!player.hasChip(2)) {
-						playSound("heal", forcePlay: true, sendRpc: true);
-					} else {
+					var mmx = this as MegamanX;
+					if (player.hasChip(2) && mmx.rechargeHealthTime == 0) {
 						playSound("goldenHelmetHP", forcePlay: true, sendRpc: true);
+					} else {
+						playSound("heal", forcePlay: true, sendRpc: true);
 					}
 				}
 			}

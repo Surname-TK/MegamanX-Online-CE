@@ -35,7 +35,7 @@ public class RocketPunch : Weapon {
 		} else if (rocketPunchType == RocketPunchType.SpoiledBrat) {
 			rateOfFire = 0.2f;
 			displayName = "Spoiled Brat";
-			vileAmmoUsage = 7;
+			vileAmmoUsage = 4;
 			projSprite = "rocket_punch_sb_proj";
 			description = new string[] { "Though lacking in power, this", "rocket punch offers intense speed." };
 			killFeedIndex = 77;
@@ -81,7 +81,7 @@ public class RocketPunchProj : Projectile {
 		RocketPunch weapon, Point pos, int xDir, Player player,
 		ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, getSpeed(weapon.type), 3,
+		weapon, pos, xDir, getSpeed(weapon.type), 2,
 		player, weapon.projSprite, Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.RocketPunch;
@@ -103,7 +103,7 @@ public class RocketPunchProj : Projectile {
 			projId = (int)ProjIds.InfinityGig;
 			type = 2;
 		} else {
-			maxReverseTime = 0.3f;
+			maxReverseTime = 0.4f;
 			type = 0;
 		}
 		if (rpc) {
