@@ -8,6 +8,8 @@ namespace MMXOnline;
 
 public partial class Actor : GameObject {
 	public Sprite sprite; //Current sprite
+	public bool useTerrainGrid { get; set; } = false;
+	public bool useActorGrid { get; set; } = true;
 
 	public int frameIndex {
 		get => sprite.frameIndex;
@@ -41,6 +43,7 @@ public partial class Actor : GameObject {
 		}
 	}
 
+	public float localSpeedMul { get; set; } = 1;
 	public bool useFrameProjs;
 	public Dictionary<string, List<Projectile>> spriteFrameToProjs = new Dictionary<string, List<Projectile>>();
 	public List<Projectile> globalProjs = new List<Projectile>();
@@ -161,7 +164,7 @@ public partial class Actor : GameObject {
 	) {
 		// Intialize sprites as soon as posible to prevent crashes.
 		if (spriteName is not null and not "") {
-			changeSprite(spriteName, true);
+			initalizeSprite(spriteName);
 			// Crash if spriteName was provided but does not exist.
 			if (sprite == null) {
 				string typeName = GetType().ToString().Replace("MMXOnline.", "");
@@ -227,7 +230,7 @@ public partial class Actor : GameObject {
 			colliderHeight = 50;
 		}
 
-		foreach (var waterRect in Global.level.waterRects) {
+		foreach (Rect waterRect in Global.level.waterRects) {
 			if (pos.x > waterRect.x1 && pos.x < waterRect.x2 &&
 				pos.y - colliderHeight > waterRect.y1 && pos.y < waterRect.y2
 			) {
@@ -272,17 +275,20 @@ public partial class Actor : GameObject {
 	}
 
 	public void changeSpriteIfDifferent(string spriteName, bool resetFrame) {
-		if (sprite?.name == spriteName) return;
+		if (sprite.name == spriteName) return;
 		changeSprite(spriteName, resetFrame);
 	}
 
 	public virtual void changeSprite(string spriteName, bool resetFrame) {
-		string oldSpriteName = sprite?.name ?? "";
-		if (spriteName == null) return;
-		if (sprite != null && (this is Character || !resetFrame)) {
-			if (sprite.name == spriteName) {
-				return;
+		string oldSpriteName = sprite.name;
+		if (spriteName == null) {
+			return;
+		}
+		if (sprite.name == spriteName) {
+			if (this is not Character && resetFrame) {
+				sprite.restart();
 			}
+			return;
 		}
 
 		if (!Global.sprites.ContainsKey(spriteName)) return;
@@ -321,7 +327,7 @@ public partial class Actor : GameObject {
 			animTime = 0;
 		}
 
-		Global.level.addGameObjectToGrid(this);
+		Global.level.addToGrid(this);
 
 		if ((this is Character || this is Maverick) && spriteName != oldSpriteName) {
 			if (spriteName.EndsWith("_warp_in") && !Global.level.mainPlayer.readyTextOver) {
@@ -332,6 +338,22 @@ public partial class Actor : GameObject {
 				playOverrideVoice(spriteName);
 			}
 		}
+	}
+
+	private void initalizeSprite(string spriteName) {
+		if (!Global.sprites.ContainsKey(spriteName)) return;
+		sprite = new Sprite(spriteName);
+		changeGlobalColliderOnSpriteChange(spriteName);
+
+		foreach (var hitbox in sprite.hitboxes) {
+			hitbox.actor = this;
+		}
+		foreach (var frame in sprite.frameHitboxes) {
+			foreach (var hitbox in frame) {
+				hitbox.actor = this;
+			}
+		}
+		Global.level.addToGrid(this);
 	}
 
 	public void playOverrideVoice(string spriteName) {
@@ -630,28 +652,6 @@ public partial class Actor : GameObject {
 			}
 		}
 
-		if (this is not CrackedWall) {
-			// Process trigger events. Must loop thru all collisions in this case.
-			List<CollideData> triggerList = Global.level.getTriggerList(this, 0, 0);
-
-			// Prioritize certain colliders over others, running them first
-			triggerList = triggerList.OrderBy(trigger => {
-				if (trigger.gameObject is GenericMeleeProj && trigger.otherCollider.flag == (int)HitboxFlag.None &&
-					(trigger.otherCollider.originalSprite == "sigma_block" || trigger.otherCollider.originalSprite == "zero_block")) {
-					return 0;
-				} else if (trigger.otherCollider.originalSprite?.StartsWith("kaisersigma") == true && trigger.otherCollider.name == "head") {
-					return 0;
-				} else if (trigger.gameObject is GenericMeleeProj && trigger.otherCollider.flag == (int)HitboxFlag.None && trigger.otherCollider.originalSprite == "drdoppler_absorb") {
-					return 0;
-				}
-				return 1;
-			}).ToList();
-
-			foreach (var trigger in triggerList) {
-				registerCollision(trigger);
-			}
-		}
-
 		for (int i = 0; i < damageHistory.Count - 1; i++) {
 			if (Global.time - damageHistory[i].time > 15f && (damageHistory.Count > 1 || Global.level.isTraining())) {
 				damageHistory.RemoveAt(i);
@@ -699,7 +699,7 @@ public partial class Actor : GameObject {
 		if (Math.Abs(xPushVel) > 5) {
 			xPushVel = Helpers.lerp(xPushVel, 0, Global.spf * 5);
 
-			var wall = Global.level.checkCollisionActor(this, xPushVel * Global.spf, 0);
+			var wall = Global.level.checkTerrainCollisionOnce(this, xPushVel * Global.spf, 0);
 			if (wall != null && wall.gameObject is Wall) {
 				xPushVel = 0;
 			}
@@ -738,7 +738,7 @@ public partial class Actor : GameObject {
 				}
 			}
 
-			var wall = Global.level.checkCollisionActor(this, xSwingVel * Global.spf, 0);
+			var wall = Global.level.checkTerrainCollisionOnce(this, xSwingVel * Global.spf, 0);
 			if (wall != null && wall.gameObject is Wall) xSwingVel = 0;
 			if (grounded) xSwingVel = 0;
 			if (Math.Abs(xSwingVel) < 5) xSwingVel = 0;
@@ -801,7 +801,7 @@ public partial class Actor : GameObject {
 			}
 			yDist *= yMod;
 
-			CollideData? collideData = Global.level.checkCollisionActor(this, 0, yDist, checkPlatforms: true);
+			CollideData? collideData = Global.level.checkTerrainCollisionOnce(this, 0, yDist, checkPlatforms: true);
 
 			var hitActor = collideData?.gameObject as Actor;
 			bool isPlatform = false;
@@ -829,7 +829,7 @@ public partial class Actor : GameObject {
 
 			if (tooLowOnPlatform) {
 				tooLowOnPlatform = false;
-				collideData = Global.level.checkCollisionActor(this, 0, yDist);
+				collideData = Global.level.checkTerrainCollisionOnce(this, 0, yDist);
 			}
 
 			if (collideData != null && vel.y * yMod >= 0) {
@@ -857,7 +857,7 @@ public partial class Actor : GameObject {
 				}
 
 				//If already grounded, snap to ground further
-				CollideData collideDataCloseCheck = Global.level.checkCollisionActor(this, 0, 0.05f * yMod);
+				CollideData collideDataCloseCheck = Global.level.checkTerrainCollisionOnce(this, 0, 0.05f * yMod);
 				if (collideDataCloseCheck == null) {
 					var yVel = new Point(0, yDist);
 					var mtv = Global.level.getMtvDir(
@@ -1160,8 +1160,8 @@ public partial class Actor : GameObject {
 
 		//console.log(this.pos.x + "," + this.pos.y);
 
-		var drawX = MathF.Round(pos.x);
-		var drawY = MathF.Round(pos.y);
+		float drawX = MathF.Round(pos.x);
+		float drawY = MathF.Round(pos.y);
 
 		if (customAngleRendering) {
 			renderFromAngle(x, y);
@@ -1333,7 +1333,8 @@ public partial class Actor : GameObject {
 		if (!destroyed) {
 			destroyed = true;
 			destroyedOnFrame = Global.frameCount;
-			if (netId is not null &&
+			if (Global.serverClient != null &&
+				netId is not null &&
 				Global.level.actorsById.ContainsKey(netId.Value)
 			) {
 				if (Global.level.actorsById[netId.Value] == this) {
@@ -1600,7 +1601,7 @@ public partial class Actor : GameObject {
 	}
 
 	public bool stopCeiling() {
-		if (vel.y < 0 && Global.level.checkCollisionActor(this, 0, -1) != null) {
+		if (vel.y < 0 && Global.level.checkTerrainCollisionOnce(this, 0, -1) != null) {
 			vel.y = 0;
 			return true;
 		}
@@ -1701,7 +1702,9 @@ public partial class Actor : GameObject {
 
 	public void moveWithMovingPlatform() {
 		if (!Global.level.hasMovingPlatforms) isStatic = true;
-		var collideDatas = Global.level.getTriggerList(this, 0, 1, null, typeof(Wall), typeof(MovingPlatform));
+		var collideDatas = Global.level.getTerrainTriggerList(
+			this, new Point(0, 1), typeof(Wall), typeof(MovingPlatform)
+		);
 		foreach (var collideData in collideDatas) {
 			var hitWall = collideData?.gameObject as Wall;
 			if (hitWall != null && hitWall.isMoving) {
@@ -1740,10 +1743,7 @@ public partial class Actor : GameObject {
 	}
 
 	public CollideData? getHitWall(float x, float y) {
-		var hits = Global.level.checkCollisionsActor(this, x, y, checkPlatforms: true);
-		var bestWall = hits.FirstOrDefault(h => h.gameObject is Wall wall && !wall.collider.isClimbable);
-		if (bestWall != null) return bestWall;
-		return hits.FirstOrDefault();
+		return Global.level.checkTerrainCollisionOnce(this, x, y, checkPlatforms: true);
 	}
 
 	public void setRaColorShader() {

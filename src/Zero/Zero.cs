@@ -606,6 +606,16 @@ public class Zero : Character {
 		return runSpeed * getRunDebuffs();
 	}
 
+	public override float getDashSpeed() {
+		if (flag != null || !isDashing) {
+			return getRunSpeed();
+		}
+		float dashSpeed = 210;
+		if (isBlack) {
+			dashSpeed *= 1.15f;
+		}
+		return dashSpeed * getRunDebuffs();
+	}
 	public override string getSprite(string spriteName) {
 		return "zero_" + spriteName;
 	}
@@ -795,7 +805,6 @@ public class Zero : Character {
 				RyuenjinWeapon.staticWeapon, projPos, ProjIds.Ryuenjin, player, 3, 0, 0.2f,
 				addToLevel: addToLevel
 			),
-			// Deals +2 burn damage to total is 5.
 			(int)MeleeIds.Denjin => new GenericMeleeProj(
 				DenjinWeapon.staticWeapon, projPos, ProjIds.Denjin, player, 3, Global.defFlinch, 0.1f,
 				addToLevel: addToLevel

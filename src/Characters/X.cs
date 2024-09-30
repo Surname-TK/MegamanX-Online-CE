@@ -86,6 +86,7 @@ public partial class MegamanX : Character {
 
 	public Buster staticBusterWeapon = new();
 	public Buster specialBuster => (player.weapons.OfType<Buster>().FirstOrDefault() ?? staticBusterWeapon);
+	public float WeaknessT;
 
 	public MegamanX(
 		Player player, float x, float y, int xDir,
@@ -188,6 +189,7 @@ public partial class MegamanX : Character {
 		Helpers.decrementTime(ref hadoukenCooldownTime);
 		Helpers.decrementTime(ref shoryukenCooldownTime);
 		Helpers.decrementTime(ref streamCooldown);
+		Helpers.decrementTime(ref WeaknessT);
 
 		if (player.weapon.ammo >= player.weapon.maxAmmo) {
 			weaponHealAmount = 0;
@@ -285,7 +287,7 @@ public partial class MegamanX : Character {
 
 		if (charState is not Die &&
 			player.input.isPressed(Control.Special1, player) &&
-			player.hasAllX3Armor() && !player.hasGoldenArmor()) {
+			player.hasAllX3Armor() && !player.hasGoldenArmor() && !player.hasUltimateArmor()) {
 			if (player.input.isHeld(Control.Down, player)) {
 				player.setChipNum(0, false);
 				Global.level.gameMode.setHUDErrorMessage(
@@ -558,6 +560,34 @@ public partial class MegamanX : Character {
 					}
 				}
 			}
+		}
+	}
+	public override void chargeGfx() {
+		if (ownedByLocalPlayer) {
+			chargeEffect.stop();
+		}
+		if (isCharging()) {
+			chargeSound.play();
+			int chargeType = 2;
+			if (player.hasArmArmor(3) && !player.hasGoldenArmor()) {
+				chargeType = 1;
+			}
+			if (player.hasGoldenArmor()) {
+				chargeType = 3;
+			}
+			
+			int level = getChargeLevel();
+			var renderGfx = RenderEffectType.ChargeBlue;
+			renderGfx = level switch {
+				1 => RenderEffectType.ChargeBlue,
+				2 => RenderEffectType.ChargeYellow,
+				3 when (chargeType == 1) => RenderEffectType.ChargeOrange,
+				3 when (chargeType == 3) => RenderEffectType.ChargeGreen,
+				3 => RenderEffectType.ChargePink,
+				_ => RenderEffectType.ChargeOrange
+			};
+			addRenderEffect(renderGfx, 0.033333f, 0.1f);			
+			chargeEffect.update(getChargeLevel(), chargeType);
 		}
 	}
 

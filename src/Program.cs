@@ -20,14 +20,14 @@ using static SFML.Window.Keyboard;
 namespace MMXOnline;
 
 class Program {
-#if WINDOWS
+	#if WINDOWS
 	[STAThread]
-#endif
+	#endif
 	static void Main(string[] args) {
 		if (args.Length > 0 && args[0] == "-relay") {
-#if WINDOWS
+		#if WINDOWS
 			AllocConsole();
-#endif
+		#endif
 			RelayServer.ServerMain(args);
 		} else {
 			int mode = 0;
@@ -313,7 +313,6 @@ class Program {
 				Menu.change(new ErrorMenu(error, new MainMenu()));
 			}
 		}
-
 		while (window.IsOpen) {
 			mainLoop(window);
 		}
@@ -349,8 +348,8 @@ class Program {
 	private static void update() {
 		if (Global.levelStarted()) {
 			Global.level.update();
-			if (!Global.isSkippingFrames) {
-				Global.level.clearOldActors();
+			if (Global.serverClient != null && Global.level.nonSkippedframeCount % 300 == 0) {
+				new Task(Global.level.clearOldActors).Start();
 			}
 		}
 		Menu.update();
@@ -447,30 +446,9 @@ class Program {
 
 	private static void render() {
 		if (Global.levelStarted()) {
-			Helpers.tryWrap(Global.level.render, false);
-		}
-
-		if (Global.levelStarted()) {
-			Helpers.tryWrap(Menu.render, false);
+			Global.level.render();
 		} else {
 			Menu.render();
-		}
-
-		if (Options.main.showFPS && Global.level != null && Global.level.started) {
-			int vfps = MathInt.Round(Global.currentFPS);
-			int fps = MathInt.Round(Global.logicFPS);
-			float yPos = 200;
-			if (Global.level.gameMode.shouldDrawRadar()) {
-				yPos = 219;
-			}
-			Fonts.drawText(
-				FontType.BlueMenu, "VFPS:" + vfps.ToString(), Global.screenW - 5, yPos - 10,
-				Alignment.Right
-			);
-			Fonts.drawText(
-				FontType.BlueMenu, "FPS:" + fps.ToString(), Global.screenW - 5, yPos,
-				Alignment.Right
-			);
 		}
 		// TODO: Make this work for errors.
 		//if (Global.debug) {
@@ -485,8 +463,6 @@ class Program {
 			Fonts.drawText(FontType.Red, Global.debugString3, 20, 40);
 			*/
 		//}
-
-		DevConsole.drawConsole();
 	}
 
 	/// <summary>
@@ -954,20 +930,20 @@ class Program {
 
 		// Set up special sprites.
 		// Mods that does not use this should remove this thing.
-		Sprite.xArmorBootsBitmap = Global.textures["XBoots"];
-		Sprite.xArmorBodyBitmap = Global.textures["XBody"];
-		Sprite.xArmorHelmetBitmap = Global.textures["XHelmet"];
-		Sprite.xArmorArmBitmap = Global.textures["XArm"];
+		Sprite.xArmorBootsBitmap[0] = Global.textures["XBoots"];
+		Sprite.xArmorBodyBitmap[0] = Global.textures["XBody"];
+		Sprite.xArmorHelmetBitmap[0] = Global.textures["XHelmet"];
+		Sprite.xArmorArmBitmap[0] = Global.textures["XArm"];
 
-		Sprite.xArmorBootsBitmap2 = Global.textures["XBoots2"];
-		Sprite.xArmorBodyBitmap2 = Global.textures["XBody2"];
-		Sprite.xArmorHelmetBitmap2 = Global.textures["XHelmet2"];
-		Sprite.xArmorArmBitmap2 = Global.textures["XArm2"];
+		Sprite.xArmorBootsBitmap[1] = Global.textures["XBoots2"];
+		Sprite.xArmorBodyBitmap[1] = Global.textures["XBody2"];
+		Sprite.xArmorHelmetBitmap[1] = Global.textures["XHelmet2"];
+		Sprite.xArmorArmBitmap[1] = Global.textures["XArm2"];
 
-		Sprite.xArmorBootsBitmap3 = Global.textures["XBoots3"];
-		Sprite.xArmorBodyBitmap3 = Global.textures["XBody3"];
-		Sprite.xArmorHelmetBitmap3 = Global.textures["XHelmet3"];
-		Sprite.xArmorArmBitmap3 = Global.textures["XArm3"];
+		Sprite.xArmorBootsBitmap[2] = Global.textures["XBoots3"];
+		Sprite.xArmorBodyBitmap[2] = Global.textures["XBody3"];
+		Sprite.xArmorHelmetBitmap[2] = Global.textures["XHelmet3"];
+		Sprite.xArmorArmBitmap[2] = Global.textures["XArm3"];
 
 		Sprite.axlArmBitmap = Global.textures["axlArm"];
 	}
@@ -1320,7 +1296,7 @@ class Program {
 			}
 			// Disable frameskip in the menu.
 			if (Global.level != null) {
-				useFrameSkip = true;
+				useFrameSkip = false;
 			} else {
 				useFrameSkip = false;
 			}
@@ -1356,10 +1332,10 @@ class Program {
 				deltaTime = 0;
 			}
 			deltaTimeSavings = deltaTime;
-			videoUpdatesThisSecond++;
 			Global.isSkippingFrames = false;
 			Global.input.clearInput();
 			lastUpdateTime = timeNow;
+			videoUpdatesThisSecond++;
 			window.Clear(clearColor);
 			render();
 			window.Display();
@@ -1454,6 +1430,7 @@ class Program {
 				continue;
 			}
 			window.Clear(clearColor);
+
 			for (int i = 0; i < loadText.Count; i++) {
 				Fonts.drawText(FontType.Grey, loadText[i], 8, 8 + (10 * i), isLoading: true);
 			}

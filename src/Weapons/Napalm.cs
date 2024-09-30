@@ -118,9 +118,9 @@ public class NapalmGrenadeProj : Projectile {
 		if (exploded) return;
 		exploded = true;
 		if (ownedByLocalPlayer) {
-			for (int i = -3; i <= 3; i++) {
-				new NapalmPartProj(weapon, pos.addxy(0, 0), 1, owner, owner.getNextActorNetId(), false, i * 10, rpc: true);
-				new NapalmPartProj(weapon, pos.addxy(0, 0), 1, owner, owner.getNextActorNetId(), true, i * 10, rpc: true);
+			int[] distances = [-30, 30, -10, 10];
+			foreach (int distance in distances) {
+				new NapalmPartProj(weapon, pos, xDir, owner, owner.getNextActorNetId(), distance * xDir, rpc: true);
 			}
 		}
 		destroySelf();
@@ -128,62 +128,106 @@ public class NapalmGrenadeProj : Projectile {
 }
 
 public class NapalmPartProj : Projectile {
-	int times;
 	float xDist;
 	float maxXDist;
-	float napalmTime;
 	float timeOffset;
+	float timeOffset2;
+	int secondOffset;
 	float napalmPeriod = 0.5f;
-	public NapalmPartProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool isTimeOffset, float xDist, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 1, player, "napalm_part", 0, 0.5f, netProjId, player.ownedByLocalPlayer) {
+	float napalmPeriod2 = 0.2f;
+	int firstDir = 1;
+	int secondDir = 1;
+
+	public NapalmPartProj(
+		Weapon weapon, Point pos, int xDir,
+		Player player, ushort netProjId, int xDist, bool rpc = false
+	) : base(
+		weapon, pos, xDir, 0, 1, player, "napalm_part", 0, 0.5f, netProjId, player.ownedByLocalPlayer
+	) {
 		projId = (int)ProjIds.Napalm;
 		if (rpc) {
-			rpcCreate(pos, player, netProjId, xDir, isTimeOffset ? (byte)1 : (byte)0);
+			rpcCreate(pos, player, netProjId, xDir, (byte)xDist);
 		}
+		vel.y = -40;
 		useGravity = true;
 		collider.wallOnly = true;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 		gravityModifier = 0.25f;
 		frameIndex = Helpers.randomRange(0, sprite.totalFrameNum - 1);
-		if (isTimeOffset) {
-			timeOffset = napalmPeriod * 0.5f;
+		secondOffset = Helpers.randomRange(0, sprite.totalFrameNum - 1);
+		timeOffset = Helpers.randomRange(0, 50) / 2;
+		timeOffset2 = Helpers.randomRange(0, 50) / 2;
+		if (Helpers.randomRange(0, 1) == 1) {
+			firstDir = -1;
+		}
+		if (Helpers.randomRange(0, 1) == 1) {
+			secondDir = -1;
 		}
 		maxXDist = xDist;
-		visible = false;
+		maxTime = 4;
 	}
 
 	public override void update() {
 		base.update();
 
-		if (isUnderwater()) {
+		if (useGravity && isUnderwater()) {
 			destroySelf(disableRpc: true);
 			return;
 		}
-
-		if (time < timeOffset) return;
-		else visible = true;
-
-		napalmTime += Global.spf;
-
-		if (!Options.main.lowQualityParticles()) {
-			alpha = 2 * (napalmPeriod - napalmTime);
-			xScale = 1 + (napalmTime * 2);
-			yScale = 1 + (napalmTime * 2);
-		}
-
 		if (xDist < MathF.Abs(maxXDist)) {
-			xDist += MathF.Abs(maxXDist * 0.25f);
-			move(new Point(maxXDist * 0.25f, 0), useDeltaTime: false);
-		}
-
-		if (napalmTime > napalmPeriod) {
-			napalmTime = 0;
-			times++;
-			if (times >= 8) {
-				destroySelf(disableRpc: false);
+			float dist = maxXDist / 20 * Global.speedMul;
+			xDist += MathF.Abs(dist);
+			move(new Point(dist, 0), useDeltaTime: false);
+			if (xDist > MathF.Abs(maxXDist)) {
+				xDist = MathF.Abs(maxXDist);
 			}
 		}
+		else if (grounded && useGravity) {
+			useGravity = false;
+			isStatic = true;
+		}
+	}
+
+	public override void render(float x, float y) {
+		if (!shouldRender(x, y)) {
+			return;
+		}
+		float drawX = MathF.Round(pos.x + x);
+		float drawY = MathF.Round(pos.y + y) + 1;
+		float napalmTime = (time + timeOffset) % napalmPeriod;
+		float napalmTime2 = (time + timeOffset2) % napalmPeriod2;
+		float separation = 6 * (xDist / MathF.Abs(maxXDist));
+
+		float alpha = MathF.Abs(1 - 2 * (napalmTime / napalmPeriod));
+		float alpha2 = MathF.Abs(1 - 2 * (napalmTime2 / napalmPeriod2));
+		for (int i = -1; i <= 1; i += 2) {
+			int frameToDraw = frameIndex;
+			if (i == -1) {
+				frameToDraw = (frameIndex + secondOffset) % sprite.totalFrameNum;
+			}
+			sprite.draw(
+				frameToDraw, drawX + i * separation * xDir, drawY, firstDir, yDir,
+				getRenderEffectSet(),
+				alpha,
+				2 - alpha,
+				2 - alpha,
+				zIndex - 100,
+				getShaders(), 0,
+				actor: this, useFrameOffsets: true
+			);
+			sprite.draw(
+				frameToDraw, drawX + i * separation * xDir, drawY, secondDir, yDir,
+				getRenderEffectSet(),
+				1 - alpha,
+				1 + alpha2 / 2,
+				1 + alpha2 / 2,
+				zIndex - 100,
+				getShaders(), 0,
+				actor: this, useFrameOffsets: true
+			);
+		}
+		renderHitboxes();
 	}
 }
 
@@ -203,6 +247,7 @@ public class NapalmAttack : CharState {
 	public NapalmAttack(NapalmAttackType napalmAttackType, string transitionSprite = "") :
 		base(getSprite(napalmAttackType), "", "", transitionSprite) {
 		this.napalmAttackType = napalmAttackType;
+		useDashJumpSpeed = true;
 	}
 
 	public static string getSprite(NapalmAttackType napalmAttackType) {
@@ -370,7 +415,7 @@ public class MK2NapalmProj : Projectile {
 			}
 		}
 
-		var hit = Global.level.checkCollisionActor(this, vel.x * Global.spf, 0, null);
+		var hit = Global.level.checkTerrainCollisionOnce(this, vel.x * Global.spf, 0, null);
 		if (hit?.gameObject is Wall && hit?.hitData?.normal != null && !(hit.hitData.normal.Value.isAngled())) {
 			if (ownedByLocalPlayer) {
 				new MK2NapalmWallProj(weapon, pos, xDir, owner, owner.getNextActorNetId(), rpc: true);

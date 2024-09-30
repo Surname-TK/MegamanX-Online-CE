@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO.Hashing;
 using System.Linq;
@@ -140,6 +140,7 @@ public partial class Global {
 
 	public static bool showHitboxes = false;
 	public static bool showGridHitboxes = false;
+	public static bool showTerrainGridHitboxes = false;
 	public static bool showAIDebug = false;
 	public static bool debugDrop = false;
 	public static bool debugCharMovement = false;
@@ -531,7 +532,7 @@ public partial class Global {
 	public static List<SoundWrapper> sounds = new List<SoundWrapper>();
 	public static MusicWrapper music = null;
 
-	public static int defaultThresholdPing = 200;
+	public static int defaultThresholdPing = 300;
 	public static Level level;
 	public static ServerClient? serverClient;
 	public static Server? localServer;

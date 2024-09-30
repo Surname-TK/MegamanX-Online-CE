@@ -12,169 +12,176 @@ public class RPC {
 	public bool isString;
 	public bool toHostOnly;
 	public bool isServerMessage;
+	public int index;
 
 	// Need templates? Use these:
 	// -Sending a value to an actor: RPCChangeDamage
-
-	public static RPCSendString sendString;
-	public static RPCStartLevel startLevel;
-	public static RPCSpawnCharacter spawnCharacter;
-	public static RPCUpdateActor updateActor;
-	public static RPCApplyDamage applyDamage;
-	public static RPCDecShieldAmmo decShieldAmmo;
-	public static RPCShoot shoot;
-	public static RPCShoot shootFast;
-	public static RPCDestroyActor destroyActor;
-	public static RPCPlayerToggle playerToggle;
-	public static RPCDestroyPlayer destroyCharacter;
-	public static RPCKillPlayer killPlayer;
-	public static RPCCreateAnim createAnim;
-	public static RPCCreateProj createProj;
-	public static RPCCreateActor createActor;
-	public static RPCSwitchCharacter switchCharacter;
-	public static RPCReflectProj reflectProj;
-	public static RPCJoinLateRequest joinLateRequest;
-	public static RPCJoinLateResponse joinLateResponse;
-	public static RPCUpdateStarted updateStarted;
-	public static RPCHostPromotion hostPromotion;
-	public static RPCMatchOver matchOver;
-	public static RPCSwitchTeam switchTeam;
-	public static RPCSyncTeamScores syncTeamScores;
-	public static RPCSyncGameTime syncGameTime;
-	public static RPCSyncSetupTime syncSetupTime;
-	public static RPCSendKillFeedEntry sendKillFeedEntry;
-	public static RPCSendChatMessage sendChatMessage;
-	public static RPCSyncControlPoints syncControlPoints;
-	public static RPCSetHyperAxlTime setHyperAxlTime;
-	public static RPCAxlShoot axlShoot;
-	public static RPCAxlDisguise axlDisguise;
-	public static RPCReportPlayerRequest reportPlayerRequest;
-	public static RPCReportPlayerResponse reportPlayerResponse;
-	public static RPCKickPlayerRequest kickPlayerRequest;
-	public static RPCKickPlayerResponse kickPlayerResponse;
-	public static RPCVoteKickStart voteKickStart;
-	public static RPCVoteKickEnd voteKickEnd;
-	public static RPCVoteKick voteKick;
-	public static RPCEndMatchRequest endMatchRequest;
-	public static RPCPeriodicServerSync periodicServerSync;
-	public static RPCPeriodicServerPing periodicServerPing;
-	public static RPCPeriodicHostSync periodicHostSync;
-	public static RPCUpdatePlayer updatePlayer;
-	public static RPCAddBot addBot;
-	public static RPCRemoveBot removeBot;
-	public static RPCMakeSpectator makeSpectator;
-	public static RPCSyncValue syncValue;
-	public static RPCHeal heal;
-	public static RPCCommandGrabPlayer commandGrabPlayer;
-	public static RPCClearOwnership clearOwnership;
-	public static RPCActorToggle actorToggle;
-	public static RPCPlaySound playSound;
-	public static RPCStopSound stopSound;
-	public static RPCAddDamageText addDamageText;
-	public static RPCSyncAxlBulletPos syncAxlBulletPos;
-	public static RPCSyncAxlScopePos syncAxlScopePos;
-	public static RPCBoundBlasterStick boundBlasterStick;
-	public static RPCBroadcastLoadout broadcastLoadout;
-	public static RPCCreditPlayerKillMaverick creditPlayerKillMaverick;
-	public static RPCCreditPlayerKillVehicle creditPlayerKillVehicle;
-	public static RPCChangeDamage changeDamage;
-	public static RPCLogWeaponKills logWeaponKills;
-	public static RPCCheckRAEnter checkRAEnter;
-	public static RPCRAEnter raEnter;
-	public static RPCCheckRCEnter checkRCEnter;
-	public static RPCRCEnter rcEnter;
-	public static RPCUseSubTank useSubtank;
-	public static RPCPossess possess;
-	public static RPCSyncPossessInput syncPossessInput;
-	public static RPCFeedWheelGator feedWheelGator;
-	public static RPCHealDoppler healDoppler;
-	public static RPCResetFlag resetFlags;
+	public static RPCSendString sendString = new();
+	public static RPCStartLevel startLevel = new();
+	public static RPCSpawnCharacter spawnCharacter = new();
+	public static RPCUpdateActor updateActor = new();
+	public static RPCApplyDamage applyDamage = new();
+	public static RPCDecShieldAmmo decShieldAmmo = new();
+	public static RPCShoot shoot =  new RPCShoot(NetDeliveryMethod.ReliableOrdered);
+	public static RPCShoot shootFast = new RPCShoot(NetDeliveryMethod.Unreliable);
+	public static RPCDestroyActor destroyActor = new();
+	public static RPCPlayerToggle playerToggle = new();
+	public static RPCDestroyPlayer destroyCharacter = new();
+	public static RPCKillPlayer killPlayer = new();
+	public static RPCCreateAnim createAnim = new();
+	public static RPCCreateProj createProj = new();
+	public static RPCCreateActor createActor = new();
+	public static RPCSwitchCharacter switchCharacter = new();
+	public static RPCReflectProj reflectProj = new();
+	public static RPCJoinLateRequest joinLateRequest = new();
+	public static RPCJoinLateResponse joinLateResponse = new();
+	public static RPCUpdateStarted updateStarted = new();
+	public static RPCHostPromotion hostPromotion = new();
+	public static RPCMatchOver matchOver = new();
+	public static RPCSwitchTeam switchTeam = new();
+	public static RPCSyncTeamScores syncTeamScores = new();
+	public static RPCSyncGameTime syncGameTime = new();
+	public static RPCSyncSetupTime syncSetupTime = new();
+	public static RPCSendKillFeedEntry sendKillFeedEntry = new();
+	public static RPCSendChatMessage sendChatMessage = new();
+	public static RPCSyncControlPoints syncControlPoints = new();
+	public static RPCSetHyperAxlTime setHyperAxlTime = new();
+	public static RPCAxlShoot axlShoot = new();
+	public static RPCAxlDisguise axlDisguise = new();
+	public static RPCReportPlayerRequest reportPlayerRequest = new();
+	public static RPCReportPlayerResponse reportPlayerResponse = new();
+	public static RPCKickPlayerRequest kickPlayerRequest = new();
+	public static RPCKickPlayerResponse kickPlayerResponse = new();
+	public static RPCVoteKickStart voteKickStart = new();
+	public static RPCVoteKickEnd voteKickEnd = new();
+	public static RPCVoteKick voteKick = new();
+	public static RPCEndMatchRequest endMatchRequest = new();
+	public static RPCPeriodicServerSync periodicServerSync = new();
+	public static RPCPeriodicServerPing periodicServerPing = new();
+	public static RPCPeriodicHostSync periodicHostSync = new();
+	public static RPCUpdatePlayer updatePlayer = new();
+	public static RPCAddBot addBot = new();
+	public static RPCRemoveBot removeBot = new();
+	public static RPCMakeSpectator makeSpectator = new();
+	public static RPCSyncValue syncValue = new();
+	public static RPCHeal heal = new();
+	public static RPCCommandGrabPlayer commandGrabPlayer = new();
+	public static RPCClearOwnership clearOwnership = new();
+	public static RPCActorToggle actorToggle = new();
+	public static RPCPlaySound playSound = new();
+	public static RPCStopSound stopSound = new();
+	public static RPCAddDamageText addDamageText = new();
+	public static RPCSyncAxlBulletPos syncAxlBulletPos = new();
+	public static RPCSyncAxlScopePos syncAxlScopePos = new();
+	public static RPCBoundBlasterStick boundBlasterStick = new();
+	public static RPCBroadcastLoadout broadcastLoadout = new();
+	public static RPCCreditPlayerKillMaverick creditPlayerKillMaverick = new();
+	public static RPCCreditPlayerKillVehicle creditPlayerKillVehicle = new();
+	public static RPCChangeDamage changeDamage = new();
+	public static RPCLogWeaponKills logWeaponKills = new();
+	public static RPCCheckRAEnter checkRAEnter = new();
+	public static RPCRAEnter raEnter = new();
+	public static RPCCheckRCEnter checkRCEnter = new();
+	public static RPCRCEnter rcEnter = new();
+	public static RPCUseSubTank useSubtank = new();
+	public static RPCPossess possess = new();
+	public static RPCSyncPossessInput syncPossessInput = new();
+	public static RPCFeedWheelGator feedWheelGator = new();
+	public static RPCHealDoppler healDoppler = new();
+	public static RPCResetFlag resetFlags = new();
 	// For mods and stuff.
 	// It allow to not override stuff when developing mods.
-	public static RPCCustom custom;
-	public static RPCUnknown unknown = new();
+	public static RPCCustom custom = new();
 	public static RpcChangeOwnership changeOwnership = new();
 	public static RpcReflect reflect = new();
 	public static RpcDeflect deflect = new();
 	public static RpcUpdateMaxTime updateMaxTime = new();
 	public static RpcReviveSigma reviveSigma = new();
 
-	public static RPC[] templates = new RPC[] {
-			(sendString = new RPCSendString()),
-			(startLevel = new RPCStartLevel()),
-			(spawnCharacter = new RPCSpawnCharacter()),
-			(updateActor = new RPCUpdateActor()),
-			(applyDamage = new RPCApplyDamage()),
-			(decShieldAmmo = new RPCDecShieldAmmo()),
-			(shoot = new RPCShoot(NetDeliveryMethod.ReliableOrdered)),
-			(shootFast = new RPCShoot(NetDeliveryMethod.Unreliable)),
-			(destroyActor = new RPCDestroyActor()),
-			(destroyCharacter = new RPCDestroyPlayer()),
-			(playerToggle = new RPCPlayerToggle()),
-			(killPlayer = new RPCKillPlayer()),
-			(createAnim = new RPCCreateAnim()),
-			(createProj = new RPCCreateProj()),
-			(createActor = new RPCCreateActor()),
-			(switchCharacter = new RPCSwitchCharacter()),
-			(reflectProj = new RPCReflectProj()),
-			(joinLateRequest = new RPCJoinLateRequest()),
-			(joinLateResponse = new RPCJoinLateResponse()),
-			(updateStarted = new RPCUpdateStarted()),
-			(hostPromotion = new RPCHostPromotion()),
-			(matchOver = new RPCMatchOver()),
-			(switchTeam = new RPCSwitchTeam()),
-			(syncTeamScores = new RPCSyncTeamScores()),
-			(syncGameTime = new RPCSyncGameTime()),
-			(syncSetupTime = new RPCSyncSetupTime()),
-			(sendKillFeedEntry = new RPCSendKillFeedEntry()),
-			(sendChatMessage = new RPCSendChatMessage()),
-			(syncControlPoints = new RPCSyncControlPoints()),
-			(setHyperAxlTime = new RPCSetHyperAxlTime()),
-			(axlShoot = new RPCAxlShoot()),
-			(axlDisguise = new RPCAxlDisguise()),
-			(reportPlayerRequest = new RPCReportPlayerRequest()),
-			(reportPlayerResponse = new RPCReportPlayerResponse()),
-			(kickPlayerRequest = new RPCKickPlayerRequest()),
-			(kickPlayerResponse = new RPCKickPlayerResponse()),
-			(voteKickStart = new RPCVoteKickStart()),
-			(voteKickEnd = new RPCVoteKickEnd()),
-			(voteKick = new RPCVoteKick()),
-			(endMatchRequest = new RPCEndMatchRequest()),
-			(periodicServerSync = new RPCPeriodicServerSync()),
-			(periodicServerPing = new RPCPeriodicServerPing()),
-			(periodicHostSync = new RPCPeriodicHostSync()),
-			(updatePlayer = new RPCUpdatePlayer()),
-			(addBot = new RPCAddBot()),
-			(removeBot = new RPCRemoveBot()),
-			(makeSpectator = new RPCMakeSpectator()),
-			(syncValue = new RPCSyncValue()),
-			(heal = new RPCHeal()),
-			(commandGrabPlayer = new RPCCommandGrabPlayer()),
-			(clearOwnership = new RPCClearOwnership()),
-			(actorToggle = new RPCActorToggle()),
-			(playSound = new RPCPlaySound()),
-			(stopSound = new RPCStopSound()),
-			(addDamageText = new RPCAddDamageText()),
-			(syncAxlBulletPos = new RPCSyncAxlBulletPos()),
-			(syncAxlScopePos = new RPCSyncAxlScopePos()),
-			(boundBlasterStick = new RPCBoundBlasterStick()),
-			(broadcastLoadout = new RPCBroadcastLoadout()),
-			(creditPlayerKillMaverick = new RPCCreditPlayerKillMaverick()),
-			(creditPlayerKillVehicle = new RPCCreditPlayerKillVehicle()),
-			(changeDamage = new RPCChangeDamage()),
-			(logWeaponKills = new RPCLogWeaponKills()),
-			(checkRAEnter = new RPCCheckRAEnter()),
-			(raEnter = new RPCRAEnter()),
-			(checkRCEnter = new RPCCheckRCEnter()),
-			(rcEnter = new RPCRCEnter()),
-			(useSubtank = new RPCUseSubTank()),
-			(possess = new RPCPossess()),
-			(syncPossessInput = new RPCSyncPossessInput()),
-			(feedWheelGator = new RPCFeedWheelGator()),
-			(healDoppler = new RPCHealDoppler()),
-			(resetFlags = new RPCResetFlag()),
-			(custom = new RPCCustom()),
-		};
+	public static RPC[] templates = {
+		// Strings.
+		sendString,
+		// Server messages.
+		updateStarted,
+		reportPlayerRequest,
+		reportPlayerResponse,
+		kickPlayerRequest,
+		kickPlayerResponse,
+		updatePlayer, 
+		addBot,
+		removeBot,
+		makeSpectator,
+		logWeaponKills,
+		periodicServerSync,
+		periodicServerPing,
+		periodicHostSync,
+		voteKickStart,
+		voteKickEnd,
+		voteKick,
+		// Match stuff.
+		startLevel,
+		hostPromotion,
+		joinLateRequest,
+		joinLateResponse,
+		matchOver,
+		endMatchRequest,
+		// General stuff.
+		applyDamage,
+		heal,
+		updateActor,
+		destroyActor,
+		actorToggle,
+		spawnCharacter,
+		destroyCharacter,
+		playerToggle,
+		killPlayer,
+		createAnim,
+		createProj,
+		createActor,
+		clearOwnership,
+		sendChatMessage,
+		playSound,
+		stopSound,
+		syncValue,
+		// Gameplay stuff.
+		broadcastLoadout,
+		switchCharacter,
+		reflectProj,
+		commandGrabPlayer,
+		addDamageText,
+		changeDamage,
+		// Gamemode specific.
+		switchTeam,
+		syncTeamScores,
+		syncGameTime,
+		syncSetupTime,
+		resetFlags,
+		sendKillFeedEntry,
+		syncControlPoints,
+		// XOD Only stuff.
+		decShieldAmmo,
+		shoot,
+		shootFast,
+		axlShoot,
+		axlDisguise,
+		setHyperAxlTime,
+		syncAxlBulletPos,
+		syncAxlScopePos,
+		boundBlasterStick,
+		creditPlayerKillMaverick,
+		creditPlayerKillVehicle,
+		checkRAEnter,
+		raEnter,
+		checkRCEnter,
+		rcEnter,
+		useSubtank,
+		possess,
+		syncPossessInput,
+		feedWheelGator,
+		healDoppler,
+		// Custom generic RCP.
+		custom,
+	};
 
 	public virtual void invoke(params byte[] arguments) {
 	}
@@ -241,8 +248,16 @@ public class BackloggedSpawns {
 	public Point spawnPoint;
 	public int xDir;
 	public ushort charNetId;
+	public int charNum;
 	public float time;
-	public BackloggedSpawns(int playerId, Point spawnPoint, int xDir, ushort charNetId) {
+	public byte[] extraData;
+
+	public BackloggedSpawns(
+		int charNum, byte[] extraData, int playerId, 
+		Point spawnPoint, int xDir, ushort charNetId
+	) {
+		this.charNum = charNum;
+		this.extraData = extraData;
 		this.playerId = playerId;
 		this.spawnPoint = spawnPoint;
 		this.xDir = xDir;
@@ -253,7 +268,10 @@ public class BackloggedSpawns {
 		var player = Global.level.getPlayerById(playerId);
 		// Player could not exist yet if late joiner.
 		if (player != null) {
-			player.spawnCharAtPoint(spawnPoint, xDir, charNetId, false);
+			player.spawnCharAtPoint(
+				charNum, extraData,
+				spawnPoint, xDir, charNetId, false
+			);
 			return true;
 		}
 		return false;
@@ -271,24 +289,43 @@ public class RPCSpawnCharacter : RPC {
 		int xDir = arguments[8] - 128;
 		int playerId = arguments[9];
 		ushort charNetId = BitConverter.ToUInt16(new byte[] { arguments[10], arguments[11] }, 0);
-
+		int charNum = arguments[12];
+		byte[] extraData;
+		if (arguments.Length > 13) {
+			extraData = arguments[13..];
+		} else {
+			extraData = [];
+		}
 		var player = Global.level.getPlayerById(playerId);
 		// Player could not exist yet if late joiner.
 		if (player != null) {
-			player.spawnCharAtPoint(new Point(x, y), xDir, charNetId, false);
+			player.spawnCharAtPoint(
+				charNum, extraData,
+				new Point(x, y), xDir, charNetId, false
+			);
 		} else {
-			Global.level.backloggedSpawns.Add(new BackloggedSpawns(playerId, new Point(x, y), xDir, charNetId));
+			Global.level.backloggedSpawns.Add(
+				new BackloggedSpawns(
+					charNum, extraData,
+					playerId, new Point(x, y), xDir, charNetId
+				)
+			);
 		}
 	}
 
-	public void sendRpc(Point spawnPos, int xDir, int playerId, ushort charNetId) {
+	public void sendRpc(int charNum, byte[] extraData, Point spawnPos, int xDir, int playerId, ushort charNetId) {
 		if (Global.serverClient == null) return;
+		List<byte> sendBytes = new();
 
-		byte[] xBytes = BitConverter.GetBytes(spawnPos.x);
-		byte[] yBytes = BitConverter.GetBytes(spawnPos.y);
-		byte[] netIdBytes = BitConverter.GetBytes(charNetId);
+		sendBytes.AddRange(BitConverter.GetBytes(spawnPos.x));
+		sendBytes.AddRange(BitConverter.GetBytes(spawnPos.y));
+		sendBytes.Add((byte)(xDir + 128));
+		sendBytes.Add((byte)playerId);
+		sendBytes.AddRange(BitConverter.GetBytes(charNetId));
+		sendBytes.Add((byte)charNum);
+		sendBytes.AddRange(extraData);
 
-		Global.serverClient.rpc(this, xBytes[0], xBytes[1], xBytes[2], xBytes[3], yBytes[0], yBytes[1], yBytes[2], yBytes[3], (byte)(xDir + 128), (byte)playerId, netIdBytes[0], netIdBytes[1]);
+		Global.serverClient.rpc(this, sendBytes.ToArray());
 	}
 }
 

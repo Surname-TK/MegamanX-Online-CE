@@ -15,7 +15,7 @@ public class SpeedBurner : Weapon {
 		weaponBarIndex = weaponBarBaseIndex;
 		weaponSlotIndex = 16;
 		killFeedIndex = 27;
-		weaknessIndex = 10;
+		weaknessIndex = (int)WeaponIds.BubbleSplash;
 		damage = "2/4";
 		effect = "Fire DOT: 1. Charged Grants Super Armor.";
 		hitcooldown = "0-0.25/0";
@@ -156,7 +156,7 @@ public class SpeedBurnerCharState : CharState {
 
 		character.move(new Point(character.xDir * 325, 0));
 
-		CollideData collideData = Global.level.checkCollisionActor(character, character.xDir, 0);
+		CollideData collideData = Global.level.checkTerrainCollisionOnce(character, character.xDir, 0);
 		if (collideData != null && collideData.isSideWallHit() && character.ownedByLocalPlayer) {
 			character.applyDamage(2, player, character, (int)WeaponIds.SpeedBurner, (int)ProjIds.SpeedBurnerRecoil);
 			character.changeState(new Hurt(-character.xDir, Global.halfFlinch), true);

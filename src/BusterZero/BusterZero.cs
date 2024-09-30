@@ -25,7 +25,7 @@ public class BusterZero : Character {
 		base.update();
 		if (stockedBusterLv > 0 || stockedSaber) {
 			var renderGfx = stockedBusterLv switch {
-				_ when stockedSaber => RenderEffectType.ChargeGreen,
+				_ when stockedSaber || stockedBusterLv == 2 => RenderEffectType.ChargeGreen,
 				1 => RenderEffectType.ChargePink,
 				2 => RenderEffectType.ChargeOrange,
 				_ => RenderEffectType.ChargeBlue
@@ -62,6 +62,25 @@ public class BusterZero : Character {
 		}
 		// Charge and release charge logic.
 		chargeLogic(shoot);
+	}
+	public override void chargeGfx() {
+		if (ownedByLocalPlayer) {
+			chargeEffect.stop();
+		}
+		if (isCharging()) {
+			chargeSound.play();
+			int chargeType = 1;
+			int level = getChargeLevel();
+			var renderGfx = RenderEffectType.ChargeBlue;
+			renderGfx = level switch {
+				1 => RenderEffectType.ChargeBlue,
+				2 => RenderEffectType.ChargeYellow,
+				3 => RenderEffectType.ChargePink,
+				_ => RenderEffectType.ChargeGreen,
+			};
+			addRenderEffect(renderGfx, 0.033333f, 0.1f);
+			chargeEffect.update(getChargeLevel(), chargeType);
+		}
 	}
 
 	public override bool canCharge() {
@@ -307,5 +326,19 @@ public class BusterZero : Character {
 		}
 		shaders.AddRange(baseShaders);
 		return shaders;
+	}
+	public override List<byte> getCustomActorNetData() {
+		List<byte> customData = base.getCustomActorNetData();
+		customData.Add(Helpers.boolArrayToByte([
+			isBlackZero,
+		]));
+		return customData;
+	}
+	public override void updateCustomActorNetData(byte[] data) {
+		// Update base arguments.
+		base.updateCustomActorNetData(data);
+		data = data[data[0]..];
+		bool[] flags = Helpers.byteToBoolArray(data[0]);
+		isBlackZero = flags[0];
 	}
 }

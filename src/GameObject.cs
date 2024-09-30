@@ -4,6 +4,9 @@ namespace MMXOnline;
 
 public interface GameObject {
 	string name { get; set; }
+	float localSpeedMul { get; set; }
+	bool useTerrainGrid { get; set; }
+	bool useActorGrid { get; set; }
 	void onStart();
 	void preUpdate();
 	void update();
@@ -17,5 +20,6 @@ public interface GameObject {
 	void statePreUpdate();
 	void stateUpdate();
 	void statePostUpdate();
+	void registerCollision(CollideData collideData);
 }
 

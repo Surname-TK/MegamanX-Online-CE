@@ -127,7 +127,7 @@ public class PlayerPB {
 		armorFlag = player.armorFlag;
 		loadoutData = player.loadout;
 		disguise = player.disguise;
-		charNetId = player.charNetId;
+		charNetId = player.character?.netId;
 		charRollingShieldNetId = player.charRollingShieldNetId;
 		charXPos = player.charXPos;
 		charYPos = player.charYPos;

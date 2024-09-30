@@ -19,7 +19,7 @@ public partial class Actor {
 		set {
 			Global.level.removeFromGrid(this);
 			_globalCollider = value;
-			Global.level.addGameObjectToGrid(this);
+			Global.level.addToGrid(this);
 		}
 	}
 
@@ -30,7 +30,7 @@ public partial class Actor {
 	public void changeGlobalCollider(List<Point> newPoints) {
 		Global.level.removeFromGrid(this);
 		_globalCollider._shape.points = newPoints;
-		Global.level.addGameObjectToGrid(this);
+		Global.level.addToGrid(this);
 	}
 
 	// Gets the bounding box of all the hitboxes this actor has. Used for properly updating the grid.
@@ -69,10 +69,6 @@ public partial class Actor {
 			Collider? stdColl = getAllColliders().FirstOrDefault();
 			if (stdColl == null) {
 				return null;
-			}
-			Collider? lvColl = getTerrainCollider();
-			if (lvColl != null) {
-				return lvColl;
 			}
 			return stdColl;
 		}
@@ -161,6 +157,7 @@ public partial class Actor {
 	public HashSet<Tuple<Collider, Collider>> collidedInFrame = new HashSet<Tuple<Collider, Collider>>();
 	public void registerCollision(CollideData collideData) {
 		var tuple = new Tuple<Collider, Collider>(collideData.myCollider, collideData.otherCollider);
+		
 		if (!collidedInFrame.Contains(tuple)) {
 			collidedInFrame.Add(tuple);
 			onCollision(collideData);
@@ -267,20 +264,26 @@ public partial class Actor {
 	}
 
 	public void incPos(Point amount) {
+		if (amount == Point.zero) {
+			return;
+		}
 		Global.level.removeFromGrid(this);
 		pos.inc(amount);
-		Global.level.addGameObjectToGrid(this);
+		Global.level.addToGrid(this);
 	}
 
 	public void changePos(Point newPos) {
+		if (newPos == pos) {
+			return;
+		}
 		Global.level.removeFromGrid(this);
 		pos = newPos;
-		Global.level.addGameObjectToGrid(this);
+		Global.level.addToGrid(this);
 	}
 
 	public CollideData? sweepTest(Point offset) {
 		Point inc = offset.clone();
-		var collideData = Global.level.checkCollisionActor(this, inc.x, inc.y);
+		var collideData = Global.level.checkTerrainCollisionOnce(this, inc.x, inc.y);
 		if (collideData != null) {
 			return collideData;
 		}
@@ -298,7 +301,7 @@ public partial class Actor {
 	}
 
 	public bool tryMoveExact(Point amount, out CollideData hit) {
-		hit = Global.level.checkCollisionActor(this, amount.x, amount.y);
+		hit = Global.level.checkTerrainCollisionOnce(this, amount.x, amount.y);
 		if (hit != null) {
 			return false;
 		}
@@ -307,7 +310,7 @@ public partial class Actor {
 	}
 
 	public bool tryMove(Point amount, out CollideData hit) {
-		hit = Global.level.checkCollisionActor(this, amount.x * Global.spf * 2, amount.y * Global.spf * 2);
+		hit = Global.level.checkTerrainCollisionOnce(this, amount.x * Global.spf * 2, amount.y * Global.spf * 2);
 		if (hit != null) {
 			return false;
 		}
@@ -332,6 +335,9 @@ public partial class Actor {
 		Point amount, bool useDeltaTime = true, bool pushIncline = true,
 		bool useIce = true, MoveClampMode clampMode = MoveClampMode.None
 	) {
+		if (amount == Point.zero) {
+			return;
+		}
 		var times = useDeltaTime ? Global.spf : 1;
 
 		if (grounded && groundedIce && useIce && (
@@ -394,17 +400,14 @@ public partial class Actor {
 				otherChara.insideCharacter = true;
 				continue;
 			}
-
 			Point? freeVec = null;
 			if (this is RideChaser rc && physicsCollider != null) {
 				// Hack to make ride chasers not get stuck on inclines
 				freeVec = physicsCollider.shape.getMinTransVectorDir(collideData.otherCollider.shape, new Point(0, -1));
 			}
-
 			if ((freeVec == null || freeVec.Value.magnitude > 20) && physicsCollider != null) {
 				freeVec = physicsCollider.shape.getMinTransVector(collideData.otherCollider.shape);
 			}
-
 			if (freeVec == null) {
 				return;
 			}
@@ -427,12 +430,12 @@ public partial class Actor {
 	}
 
 	public void stopOnCeilingHit() {
-		if (vel.y < 0 && Global.level.checkCollisionActor(this, 0, -1) != null) {
+		if (vel.y < 0 && Global.level.checkTerrainCollisionOnce(this, 0, -1) != null) {
 			vel.y = 0;
 		}
 	}
 
 	public CollideData checkCollision(float incX, float incY) {
-		return Global.level.checkCollisionActor(this, incX, incY, autoVel: true);
+		return Global.level.checkTerrainCollisionOnce(this, incX, incY, autoVel: true);
 	}
 }
