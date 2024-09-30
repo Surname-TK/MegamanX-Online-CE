@@ -16,7 +16,7 @@ public class Boomerang : Weapon {
 		shootSounds = new string[] { "boomerang", "boomerang", "boomerang", "buster3" };
 		rateOfFire = 0.5f;
 		damage = "2/2";
-		effect = "Charged: Doesn't destroy on hit.";
+		effect = "Charged: DOES destroy on hit kkkk.";
 		hitcooldown = "0/0.5";
 		Flinch = "0/26";
 	}
@@ -25,7 +25,7 @@ public class Boomerang : Weapon {
 		if (chargeLevel < 3) {
 			if (player.character?.ownedByLocalPlayer == true) {
 				new BoomerangProj(
-					this, pos, xDir, player, netProjId, player.character?.grounded != false ? 1 : -1, sendRpc: true
+					this, pos, xDir, player, netProjId, (player.character.vel.y <= 0) ? 1 : -1, sendRpc: true
 				);
 			}
 		} else {
@@ -53,11 +53,11 @@ public class BoomerangProj : Projectile {
 	public float angleDist = 0;
 	public float turnDir = 1;
 	public Pickup? pickup;
-	public float maxSpeed = 250;
+	public float maxSpeed = 300;
 	public BoomerangProj(
 		Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, int turnDir, bool sendRpc = false
 	) : base(
-		weapon, pos, xDir, 250, 2, player, "boomerang", 0, 0, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 300, 2, player, "boomerang", 0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Boomerang;
 		customAngleRendering = true;
@@ -87,7 +87,7 @@ public class BoomerangProj : Projectile {
 		}
 
 		var character = other.gameObject as Character;
-		if (time > 0.22 && character != null && character.player == damager.owner) {
+		if (moveDistance > 50 && character != null && character.player == damager.owner) {
 			if (pickup != null) {
 				pickup.changePos(character.getCenterPos());
 			}
@@ -120,7 +120,7 @@ public class BoomerangProj : Projectile {
 			pickup.changePos(pos);
 		}
 
-		if (time > 0.22) {
+		if (moveDistance > 50) {
 			if (angleDist < 180) {
 				var angInc = (-xDir * turnDir) * Global.spf * 300;
 				angle += angInc;
@@ -131,9 +131,10 @@ public class BoomerangProj : Projectile {
 				var dTo = pos.directionTo(damager.owner.character.getCenterPos()).normalize();
 				var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
 				destAngle = Helpers.to360(destAngle);
-				angle = Helpers.lerpAngle((float)angle!, destAngle, Global.spf * 10);
-				vel.x = Helpers.cosd((float)angle) * maxSpeed;
-				vel.y = Helpers.sind((float)angle) * maxSpeed;
+				angle = Helpers.lerpAngle((float)angle!, destAngle, 0.025f);
+				
+				Point amount = pos.directionToNorm(damager.owner.character.getCenterPos()).times(270);
+				vel = Point.lerp(vel, amount, Global.spf);
 			} else {
 				destroySelf();
 			}
