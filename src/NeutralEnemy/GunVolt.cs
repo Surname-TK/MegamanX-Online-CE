@@ -37,7 +37,7 @@ public class GunVoltSparkProj : Projectile {
     }
 	public override void update() {
 		base.update();
-		var collideData = Global.level.checkCollisionActor(this, xDir, 0, vel);
+		/* <--- var collideData = Global.level.checkCollisionActor(this, xDir, 0, vel);
 		if (collideData != null && collideData.hitData != null) {
 			playSound("dingX2");
 			vel.y = -200;
