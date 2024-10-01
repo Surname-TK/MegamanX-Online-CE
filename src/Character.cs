@@ -1936,10 +1936,12 @@ public partial class Character : Actor, IDamagable {
 	}
 
 	public int getChargeLevel() {
+		bool clampTo2 = false;
 		bool clampTo3 = true;
 		switch (this) {
 			case MegamanX mmx:
-				clampTo3 = !mmx.isHyperX;
+				clampTo2 = player.hasArmArmor(0);
+				clampTo3 = player.hasArmArmor(1);
 				break;
 			case Zero zero:
 				clampTo3 = true;
@@ -1958,9 +1960,9 @@ public partial class Character : Actor, IDamagable {
 		} else if (chargeTime >= charge2Time && chargeTime < charge3Time) {
 			return 2;
 		} else if (chargeTime >= charge3Time && chargeTime < charge4Time) {
-			return 3;
+			return clampTo2 ? 2 : 3;
 		} else if (chargeTime >= charge4Time) {
-			return clampTo3 ? 3 : 4;
+			return clampTo2 ? 2 : (clampTo3 ? 3 : 4);
 		}
 		return -1;
 	}

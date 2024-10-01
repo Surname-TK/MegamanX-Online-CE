@@ -122,13 +122,12 @@ public class BubbleSplashProj : Projectile {
 		}
 		// Create variables.
 		this.size = size.Value;
-		useGravity = false;
 		this.randT = (float)randT;
+		useGravity = false;
+		maxTime = this.randT;
 
 		vel.x *= randX.Value / 100f;
 		vel.y = 0;
-		// vel.y = -20 * (randY.Value / 100f);
-
 		if (player.character.charState is Dash or AirDash) {
 			vel.x *= 2;
 		}
@@ -142,7 +141,7 @@ public class BubbleSplashProj : Projectile {
 			fadeSprite = "bubblesplash_pop_large";
 		}
 		fadeSound = "bubbleSplashPop";
-		fadeOnAutoDestroy = false;
+		fadeOnAutoDestroy = true;
 
 
 		if (rpc) {
@@ -153,8 +152,9 @@ public class BubbleSplashProj : Projectile {
 		}
 	}
 	public override void onHitDamagable(IDamagable damagable){
+		//fadeOnAutoDestroy = false;
 		if (sprite.name != fadeSprite || time > randT){
-			fadeOnAutoDestroy = false;
+			time = 0;
 			playSound(fadeSound, true, true);
 			changeSprite(fadeSprite, true);
 		}
@@ -174,11 +174,17 @@ public class BubbleSplashProj : Projectile {
 		if (sprite.name == "bubblesplash_proj_start" && isAnimOver()) {
 			changeSprite(spriteVariants[size], true);
 		}
+		/*if (time > randT){
+			time = 0;
+			fadeOnAutoDestroy = false;
+			playSound(fadeSound, true, true);
+			changeSprite(fadeSprite, true);
+		}*/
 		if (sprite.name == fadeSprite){
+			//fadeOnAutoDestroy = false;
 			vel = new Point(0, 0);
 			if (isAnimOver()){
-				destroySelf();
-				fadeOnAutoDestroy = false;
+				destroySelfNoEffect();
 			}
 		}
 	}

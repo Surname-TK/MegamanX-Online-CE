@@ -462,7 +462,7 @@ public partial class MegamanX : Character {
 				shootPressed ||
 				(framesSinceLastShootPressed < Global.normalizeFrames(6) &&
 				framesSinceLastShootReleased > Global.normalizeFrames(30)) ||
-				(shootHeld && player.weapon.isStream && chargeTime < charge3Time)
+				(shootHeld && player.weapon.isStream && getChargeLevel() < 3)
 			);
 			if (!fgMotion && offCooldown && shootCondition) {
 				shoot(false);
@@ -581,9 +581,9 @@ public partial class MegamanX : Character {
 			renderGfx = level switch {
 				1 => RenderEffectType.ChargeBlue,
 				2 => RenderEffectType.ChargeYellow,
-				3 when (chargeType == 1) => RenderEffectType.ChargeOrange,
-				3 when (chargeType == 3) => RenderEffectType.ChargeGreen,
 				3 => RenderEffectType.ChargePink,
+				4 when (chargeType == 1) => RenderEffectType.ChargeOrange,
+				4 when (chargeType == 3) => RenderEffectType.ChargeGreen,
 				_ => RenderEffectType.ChargeOrange
 			};
 			addRenderEffect(renderGfx, 0.033333f, 0.1f);			
@@ -658,7 +658,7 @@ public partial class MegamanX : Character {
 		if (chargeButtonHeld() && canCharge()) {
 			increaseCharge();
 
-			if (player.weapon is ParasiticBomb && getChargeLevel() == 3) {
+			if (player.weapon is ParasiticBomb && getChargeLevel() >= 3) {
 				shoot(true);
 			}
 		} else {
@@ -728,7 +728,7 @@ public partial class MegamanX : Character {
 
 	public void shoot(bool doCharge) {
 		int chargeLevel = getChargeLevel();
-		if (!doCharge && chargeLevel >= 3) return;
+		if (!doCharge && chargeLevel >= 4) return;
 
 		if (isHyperX && unpoShotCount <= 0) return;
 
@@ -743,7 +743,7 @@ public partial class MegamanX : Character {
 			shootTime = hb.getRateOfFire(player);
 			if (hyperChargeWeapon is Sting || hyperChargeWeapon is RollingShield || hyperChargeWeapon is BubbleSplash || hyperChargeWeapon is ParasiticBomb) {
 				doCharge = true;
-				chargeLevel = 3;
+				chargeLevel = 4;
 				hb.shootTime = hb.getRateOfFire(player);
 				hb.addAmmo(-hb.getAmmoUsage(3), player);
 				player.changeWeaponSlot(player.hyperChargeSlot);
@@ -755,7 +755,7 @@ public partial class MegamanX : Character {
 			shootTime = player.weapon.rateOfFire;
 		}
 
-		if (chargeLevel == 2 || chargeLevel >= 3) {
+		if (chargeLevel >= -1) {
 			var hbWep = player.weapons.FirstOrDefault(w => w is HyperBuster) as HyperBuster;
 			if (hbWep != null) {
 				hbWep.shootTime = hbWep.getRateOfFire(player);
@@ -917,9 +917,9 @@ public partial class MegamanX : Character {
 				if (shootSoundIndex >= weapon.shootSounds.Length) {
 					shootSoundIndex = weapon.shootSounds.Length - 1;
 				}
-				if (weapon.shootSounds[chargeLevel] != "") {
-					player.character.playSound(weapon.shootSounds[chargeLevel]);
-				}
+				/*if (weapon.shootSounds[chargeLevel] != "") {
+					//player.character.playSound(weapon.shootSounds[chargeLevel]);
+				}*/
 			}
 			if (weapon is FireWave) {
 				weapon.soundTime = 0.25f;

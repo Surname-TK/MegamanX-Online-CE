@@ -98,6 +98,7 @@ public class Buster : Weapon {
 				1 => "buster2",
 				2 => "buster3",
 				3 => "buster4",
+				4 => "",
 				_ => ""
 			};
 		if (player.hasArmArmor(ArmorId.Giga)) {
@@ -109,6 +110,7 @@ public class Buster : Weapon {
 				1 => "buster2X2",
 				2 => "buster3X2",
 				3 => "",
+				4 => "",
 				_ => shootSound
 			};
 		} else if (player.hasArmArmor(ArmorId.Max)) {
@@ -123,6 +125,7 @@ public class Buster : Weapon {
 				1 => "buster2X3",
 				2 => "buster3X3",
 				3 => "",
+				4 => "",
 				_ => shootSound
 			};
 		}
@@ -157,7 +160,7 @@ public class Buster : Weapon {
 				} else {
 					shootTime = 0;
 				}
-				player.character.changeState(new X3ChargeShot(null), true);
+				player.character.changeState(new X3ChargeShot(null, false), true);
 			}
 			return;
 		} else if (mmx.stockedX2Charge) {
@@ -192,7 +195,7 @@ public class Buster : Weapon {
 			shootSound = "buster2";
 		} else if (mmx.stockedX2Charge) {
 			if (player.ownedByLocalPlayer) {
-				player.character.changeState(new X2ChargeShot(1), true);
+				player.character.changeState(new X2ChargeShot(1, false), true);
 			}
 		} else if (chargeLevel == 0) {
 			lemonsOnField.Add(new BusterProj(this, pos, xDir, 0, player, netProjId));
@@ -200,7 +203,7 @@ public class Buster : Weapon {
 			new Buster2Proj(this, pos, xDir, player, netProjId);
 		} else if (chargeLevel == 2) {
 			new Buster3Proj(this, pos, xDir, 0, player, netProjId);
-		} else if (chargeLevel >= 3) {
+		} else if (chargeLevel == 3) {
 			if (hasUltArmor && !player.hasArmArmor(3)) {
 				if (player.hasArmArmor(2)) {
 					if (player.ownedByLocalPlayer) {
@@ -225,7 +228,7 @@ public class Buster : Weapon {
 						} else {
 							shootTime = 0;
 						}
-						player.character.changeState(new X2ChargeShot(2), true);
+						player.character.changeState(new X2ChargeShot(2, false), true);
 					}
 				} else {
 					new Anim(pos.clone(), "buster4_muzzle_flash", xDir, null, true);
@@ -246,9 +249,9 @@ public class Buster : Weapon {
 						} else {
 							mmx.stockedX3Charge = false;
 							Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
-							new Buster3Proj(
-							player.weapon, pos, xDir, 0,
-							player, player.getNextActorNetId(), rpc: true);
+							new Buster2Proj(
+							player.weapon, pos, xDir,
+							player, player.getNextActorNetId());
 							shootTime = 0.2f;
 							if (player.hasGoldenArmor() && player.weapon is Buster) {
 								mmx.stockedX3Saber = true;
@@ -261,7 +264,7 @@ public class Buster : Weapon {
 					} else {
 						shootTime = 0;
 					}
-					player.character.changeState(new X3ChargeShot(null), true);
+					player.character.changeState(new X3ChargeShot(null, false), true);
 				// nothing else needs to be here, right?
 				}
 			} else if (player.hasArmArmor(0) || player.hasArmArmor(1)) {
@@ -300,7 +303,110 @@ public class Buster : Weapon {
 					} else {
 						shootTime = 0;
 					}
-					player.character.changeState(new X2ChargeShot(0), true);
+					player.character.changeState(new X2ChargeShot(0, false), true);
+				}
+			}
+		} else if (chargeLevel == 4){
+			if (hasUltArmor && !player.hasArmArmor(3)) {
+				if (player.hasArmArmor(2)) {
+					if (player.ownedByLocalPlayer) {
+						if (player.character.charState is WallSlide) {
+							player.character.playSound("buster4X2", forcePlay: true, sendRpc: true);
+							if (!mmx.stockedX2Charge) {
+								mmx.stockedX2Charge = true;
+								Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX2Charge);
+								new Buster3Proj(
+								player.weapon, pos, xDir, 1,
+								player, player.getNextActorNetId(), rpc: true);
+								shootTime = 0;
+							} else {
+								mmx.stockedX2Charge = false;
+								Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
+								new Buster3Proj(
+								player.weapon, pos, xDir, 2,
+								player, player.getNextActorNetId(), rpc: true);
+								shootTime = 0.4f;
+							}
+							return;
+						} else {
+							shootTime = 0;
+						}
+						player.character.changeState(new X2ChargeShot(2, true), true);
+					}
+				} else {
+					new Anim(pos.clone(), "buster4_muzzle_flash", xDir, null, true);
+					new BusterPlasmaProj(this, pos, xDir, player, netProjId);
+					shootSound = "plasmaShot";
+				}
+			} else if (player.hasArmArmor(3)) {
+				if (player.ownedByLocalPlayer) {
+					if (player.character.charState is WallSlide) {
+						player.character.playSound("buster3X3", forcePlay: true, sendRpc: true);
+						if (!mmx.stockedX3Charge) {
+							mmx.stockedX3Charge = true;
+							Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Charge);
+							new BusterX3Proj1(
+							player.weapon, pos, xDir, 0,
+							player, player.getNextActorNetId(), rpc: true);
+							shootTime = 0;
+						} else {
+							mmx.stockedX3Charge = false;
+							Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
+							new Buster2Proj(
+							player.weapon, pos, xDir,
+							player, player.getNextActorNetId());
+							shootTime = 0.2f;
+							if (player.hasGoldenArmor() && player.weapon is Buster) {
+								mmx.stockedX3Saber = true;
+								mmx.stockX3Saber(true);
+								mmx.xSaberCooldown = 0;
+								Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Saber);
+							}
+						}
+						return;
+					} else {
+						shootTime = 0;
+					}
+					player.character.changeState(new X3ChargeShot(null, true), true);
+				// nothing else needs to be here, right?
+				}
+			} else if (player.hasArmArmor(0) || player.hasArmArmor(1)) {
+				new Anim(pos.clone(), "buster4_muzzle_flash", xDir, null, true);
+				//Create the buster effect
+				int xOff = xDir * -5;
+				player.setNextActorNetId(netProjId);
+				// Create first line instantly.
+				createBuster4Line(pos.x + xOff, pos.y, xDir, player, 0f);
+				// Create 2nd with a delay.
+				Global.level.delayedActions.Add(new DelayedAction(delegate {
+					createBuster4Line(pos.x + xOff, pos.y, xDir, player, 10f / 60f);
+				}, 2.8f / 60f));
+				// Use smooth spawn on the 3rd.
+				Global.level.delayedActions.Add(new DelayedAction(delegate {
+					createBuster4Line(pos.x + xOff, pos.y, xDir, player, 5f / 60f, true);
+				}, 5.8f / 60f));
+			} else if (player.hasArmArmor(2)) {
+				if (player.ownedByLocalPlayer) {
+					if (player.character.charState is WallSlide) {
+						player.character.playSound("buster4X2", forcePlay: true, sendRpc: true);
+						if (!mmx.stockedX2Charge) {
+							mmx.stockedX2Charge = true;
+							new Buster3Proj(
+							player.weapon, pos, xDir, 1,
+							player, player.getNextActorNetId(), rpc: true);
+							shootTime = 0;
+						} else {
+							mmx.stockedX2Charge = false;
+							new Buster3Proj(
+							player.weapon, pos, xDir, 2,
+							player, player.getNextActorNetId(), rpc: true);
+							shootTime = 0.4f;
+						}
+						return;
+					} else {
+						shootTime = 0;
+					}
+					player.character.changeState(new X2ChargeShot(0, true), true);
 				}
 			}
 		}
@@ -621,12 +727,14 @@ public class Buster4Proj : Projectile {
 
 public class X2ChargeShot : CharState {
 	bool fired;
+	bool isLevel4;
 	int type;
 	bool pressFire;
 	MegamanX mmx = null!;
 
-	public X2ChargeShot(int type) : base(type == 0 ? "x2_shot" : "x2_shot2") {
+	public X2ChargeShot(int type, bool isLevel4) : base(type == 0 ? "x2_shot" : "x2_shot2") {
 		this.type = type;
+		this.isLevel4 = isLevel4;
 		useDashJumpSpeed = true;
 		airMove = true;
 		landSprite = "x2_shot";
@@ -640,14 +748,26 @@ public class X2ChargeShot : CharState {
 
 	public override void update() {
 		base.update();
+		int chargeLevel = character.getChargeLevel();
+		if (character.grounded) {
+			character.turnToInput(player.input, player);
+		}
 		if (!fired && character.currentFrame.getBusterOffset() != null) {
 			fired = true;
 			if (type == 0) {
-				new Buster3Proj(
+				if (isLevel4){
+					new Buster3Proj(
 					player.weapon, character.getShootPos(), character.getShootXDir(), 1,
 					player, player.getNextActorNetId(), rpc: true
-				);
-				character.playSound("buster4X2", sendRpc: true);
+					);
+					character.playSound("buster4X2", sendRpc: true);
+				} else {
+					new Buster2Proj(
+					player.weapon, character.getShootPos(), character.getShootXDir(),
+					player, player.getNextActorNetId()
+					);
+					character.playSound("buster2X2", sendRpc: true);
+				}
 			} else if (type == 1) {
 				new Buster3Proj(
 					player.weapon, character.getShootPos(), character.getShootXDir(), 2,
@@ -723,18 +843,21 @@ public class X2ChargeShot : CharState {
 public class X3ChargeShot : CharState {
 	bool fired;
 	int state = 0;
+	bool isLevel4;
 	bool pressFire;
 	MegamanX mmx = null!;
 	public HyperBuster? hyperBusterWeapon;
 
-	public X3ChargeShot(HyperBuster? hyperBusterWeapon) : base("x3_shot", "", "", "") {
+	public X3ChargeShot(HyperBuster? hyperBusterWeapon, bool isLevel4) : base("x3_shot", "", "", "") {
 		this.hyperBusterWeapon = hyperBusterWeapon;
+		this.isLevel4 = isLevel4;
 		airMove = true;
 		useDashJumpSpeed = true;
 	}
 
 	public override void update() {
 		base.update();
+		int chargeLevel = character.getChargeLevel();
 		if (character.grounded) {
 			character.turnToInput(player.input, player);
 		}
@@ -751,11 +874,20 @@ public class X3ChargeShot : CharState {
 				if (hyperBusterWeapon != null) {
 					hyperBusterWeapon.ammo -= hyperBusterWeapon.getChipFactoredAmmoUsage(player);
 				}
-				new Buster3Proj(
-					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
+				
+				if (isLevel4){
+					new Buster3Proj(
+					player.weapon, character.getShootPos(), character.getShootXDir(), 1,
 					player, player.getNextActorNetId(), rpc: true
-				);
-				character.playSound("buster3X3", sendRpc: true);
+					);
+					character.playSound("buster3X3", sendRpc: true);
+				} else {
+					new Buster2Proj(
+					player.weapon, character.getShootPos(), character.getShootXDir(),
+					player, player.getNextActorNetId()
+					);
+					character.playSound("buster2", sendRpc: true);
+				}
 			}
 		}
 		if (character.isAnimOver()) {
