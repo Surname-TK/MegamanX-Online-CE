@@ -1707,8 +1707,8 @@ public partial class Level {
 		foreach (var effect in effects) {
 			effect.render(0, 0);
 		}
-		Dictionary<long, DrawLayer> drawObjCopy = DrawWrappers.walDrawObjects;
-		DrawWrappers.walDrawObjects = new();
+		Dictionary<long, DrawLayer> drawObjCopy = new(DrawWrappers.walDrawObjects);
+		DrawWrappers.walDrawObjects.Clear();
 
 		renderResult(this, srt, drawObjCopy);
 	}
@@ -1829,6 +1829,8 @@ public partial class Level {
 			} else {
 				Global.window.Draw(screenSprite);
 			}
+
+			screenSprite.Dispose();
 		}
 
 		foreach (var deferredAction in DrawWrappers.deferredTextDraws) {

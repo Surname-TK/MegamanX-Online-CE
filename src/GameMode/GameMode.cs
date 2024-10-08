@@ -1018,6 +1018,7 @@ public class GameMode {
 		sprite.Scale = new Vector2f(0.25f, 0.25f);
 		Global.window.SetView(DrawWrappers.hudView);
 		Global.window.Draw(sprite);
+		sprite.Dispose();
 
 		if (level.mainPlayer.isSigma) {
 			foreach (Maverick maverick in level.mainPlayer.mavericks) {
@@ -1263,7 +1264,10 @@ public class GameMode {
 			twoLayerHealth = player.character.rideArmor.goliathHealth;
 			frameIndex = player.character.rideArmor.raNum;
 			baseX = getHUDHealthPosition(position, false).x;
-			mechBarExists = true;
+			mechBarExists = false;
+			if (player.weapon.drawAmmo) {
+				baseX += 15;
+			}
 			damageSavings = 0;
 		}
 		if (isMech && player.character?.rideArmorPlatform != null) {
