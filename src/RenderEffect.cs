@@ -3,7 +3,7 @@
 public enum RenderEffectType {
 	Hit,
 	Flash,
-	//StockedCharge,
+	//stockedX2Charge,
 	Invisible,
 	InvisibleFlash,
 	BlueShadow,

@@ -215,7 +215,7 @@ public class ZeroDoubleBuster : CharState {
 			if (!isPinkCharge) {
 				//zero.doubleBusterDone = true;
 			} else {
-				//character.stockCharge(false);
+				//character.stockX2Charge(false);
 			}
 			character.playSound("buster3X3", sendRpc: true);
 			new ZBuster4Proj(
@@ -250,7 +250,7 @@ public class ZeroDoubleBuster : CharState {
 		if (!isPinkCharge) {
 			//character.stockX3Saber(true);
 		} else {
-			//character.stockCharge(!isSecond);
+			//character.stockX2Charge(!isSecond);
 		}
 		sprite = "doublebuster";
 		defaultSprite = sprite;

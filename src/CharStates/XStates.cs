@@ -132,8 +132,8 @@ public class X2ChargeShot : CharState {
 			if (type == 0 && pressFire) {
 				fired = false;
 				type = 1;
-				mmx.stockedCharge = false;
-				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockCharge);
+				mmx.stockedX2Charge = false;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
 				sprite = "x2_shot2";
 				defaultSprite = sprite;
 				landSprite = "x2_shot2";
@@ -261,7 +261,7 @@ public class X3ChargeShot : CharState {
 						return;
 					}
 				} else {
-					mmx.stockedX3Buster = false;
+					mmx.stockedX3Charge = false;
 				}
 				sprite = "x3_shot2";
 				landSprite = "x3_shot2";
@@ -300,9 +300,9 @@ public class X3ChargeShot : CharState {
 		if (mmx == null) {
 			throw new NullReferenceException();
 		}
-		if (!mmx.stockedX3Buster) {
+		if (!mmx.stockedX3Charge) {
 			if (hyperBusterWeapon == null) {
-				mmx.stockedX3Buster = true;
+				mmx.stockedX3Charge = true;
 			}
 			sprite = "x3_shot";
 			defaultSprite = sprite;
@@ -312,7 +312,7 @@ public class X3ChargeShot : CharState {
 			}
 			character.changeSpriteFromName(sprite, true);
 		} else {
-			mmx.stockedX3Buster = false;
+			mmx.stockedX3Charge = false;
 			state = 1;
 			sprite = "x3_shot2";
 			defaultSprite = sprite;
@@ -326,9 +326,9 @@ public class X3ChargeShot : CharState {
 
 	public override void onExit(CharState newState) {
 		if (state == 0) {
-			mmx.stockedX3Buster = true;
+			mmx.stockedX3Charge = true;
 		} else {
-			mmx.stockedX3Buster = false;
+			mmx.stockedX3Charge = false;
 		}
 		character.shootAnimTime = 0;
 		base.onExit(newState);
