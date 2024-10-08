@@ -562,6 +562,8 @@ public enum RPCToggleType {
 	StartCrystalize,
 	StopCrystalize,
 	StrikeChainReversed,
+	StockLv1Charge,
+	UnstockLv1Charge,
 	StockX2Charge,
 	UnstockX2Charge,
 	StockX3Charge,
@@ -602,6 +604,15 @@ public class RPCPlayerToggle : RPC {
 			player.character?.crystalizeEnd();
 		} else if (toggleId == RPCToggleType.StrikeChainReversed) {
 			(player?.character as MegamanX)?.strikeChainProj?.reverseDir();
+			
+		} else if (toggleId == RPCToggleType.StockLv1Charge) {
+			if (player?.character is MegamanX mmx) {
+				mmx.stockedLv1Charge = true;
+			}
+		} else if (toggleId == RPCToggleType.UnstockLv1Charge) {
+			if (player?.character is MegamanX mmx) {
+				mmx.stockedLv1Charge = false;
+			}
 		} else if (toggleId == RPCToggleType.StockX2Charge) {
 			if (player?.character is MegamanX mmx) {
 				mmx.stockedX2Charge = true;

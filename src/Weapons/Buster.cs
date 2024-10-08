@@ -14,7 +14,7 @@ public class Buster : Weapon {
 		weaponBarBaseIndex = 0;
 		weaponBarIndex = weaponBarBaseIndex;
 		weaponSlotIndex = 0;
-		shootSounds = new string[] { "", "", "", "" };
+		shootSounds = new string[] { "", "", "", "", "" };
 		rateOfFire = 0.15f;
 		canHealAmmo = false;
 		drawAmmo = false;
@@ -47,6 +47,7 @@ public class Buster : Weapon {
 		drawCooldown = true;
 		
 		// Remove charge.
+		mmx.stockedLv1Charge = false;
 		mmx.stockedX2Charge = false;
 		mmx.stockedX3Charge = false;
 		mmx.stockedX3Saber = false;
@@ -131,7 +132,33 @@ public class Buster : Weapon {
 		}
 		
 		bool hasUltArmor = ((player.character as MegamanX)?.hasUltimateArmor == true);
-		if (mmx.stockedX3Charge) {
+		if (mmx.stockedLv1Charge) {
+			if (player.ownedByLocalPlayer) {
+				if (player.character.charState is WallSlide) {
+					player.character.playSound("buster2X3", forcePlay: true, sendRpc: true);
+					if (!mmx.stockedLv1Charge) {
+						mmx.stockedLv1Charge = true;
+						Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockLv1Charge);
+						new Buster2Proj(
+						player.weapon, pos, xDir,
+						player, player.getNextActorNetId());
+						shootTime = 0;
+					} else {
+						mmx.stockedLv1Charge = false;
+						Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockLv1Charge);
+						new Buster2Proj(
+						player.weapon, pos, xDir,
+						player, player.getNextActorNetId());
+						shootTime = 0.2f;
+					}
+					return;
+				} else {
+					shootTime = 0;
+				}
+				player.character.changeState(new X3ChargeShot(null, false), true);
+			}
+			return;
+		} else if (mmx.stockedX3Charge) {
 			if (player.ownedByLocalPlayer) {
 				if (player.character.charState is WallSlide) {
 					player.character.playSound("buster3X3", forcePlay: true, sendRpc: true);
@@ -160,7 +187,7 @@ public class Buster : Weapon {
 				} else {
 					shootTime = 0;
 				}
-				player.character.changeState(new X3ChargeShot(null, false), true);
+				player.character.changeState(new X3ChargeShot(null, true), true);
 			}
 			return;
 		} else if (mmx.stockedX2Charge) {
@@ -944,9 +971,15 @@ public class X3ChargeShot : CharState {
 		if (mmx == null) {
 			throw new NullReferenceException();
 		}
-		if (!mmx.stockedX3Charge) {
-			mmx.stockedX3Charge = true;
-			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Charge);
+		if (!mmx.stockedX3Charge && !mmx.stockedLv1Charge) {
+			if (isLevel4) {
+				mmx.stockedX3Charge = true;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Charge);
+			} else {
+				mmx.stockedLv1Charge = true;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockLv1Charge);
+			}
+			
 			sprite = "x3_shot";
 			defaultSprite = sprite;
 			landSprite = "x3_shot";
@@ -955,13 +988,18 @@ public class X3ChargeShot : CharState {
 			}
 			character.changeSpriteFromName(sprite, true);
 		} else {
-			mmx.stockedX3Charge = false;
-			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
-			if (player.hasGoldenArmor() && player.weapon is Buster) {
-				mmx.stockedX3Saber = true;
-				mmx.stockX3Saber(true);
-				mmx.xSaberCooldown = 0;
-				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Saber);
+			if (mmx.stockedX3Charge){
+				mmx.stockedX3Charge = false;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
+				if (player.hasGoldenArmor() && player.weapon is Buster) {
+					mmx.stockedX3Saber = true;
+					mmx.stockX3Saber(true);
+					mmx.xSaberCooldown = 0;
+					Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Saber);
+				}
+			} else if (mmx.stockedLv1Charge) {
+				mmx.stockedLv1Charge = false;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockLv1Charge);
 			}
 			state = 1;
 			sprite = "x3_shot2";

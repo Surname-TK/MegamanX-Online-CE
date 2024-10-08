@@ -63,6 +63,7 @@ public partial class MegamanX : Character {
 
 	public bool boughtUltimateArmorOnce;
 	public bool boughtGoldenArmorOnce;
+	public bool stockedLv1Charge;
 
 	public bool stockedX2Charge;
 	public bool stockedX3Charge;
@@ -121,6 +122,9 @@ public partial class MegamanX : Character {
 		fgMotion = false;
 		base.update();
 
+		if (stockedLv1Charge) {
+			addRenderEffect(RenderEffectType.ChargeBlue, 0.033333f, 0.1f);
+		}
 		if (stockedX2Charge) {
 			addRenderEffect(RenderEffectType.ChargePink, 0.033333f, 0.1f);
 		}
@@ -677,7 +681,14 @@ public partial class MegamanX : Character {
 			}
 		}
 	}
-
+	public void stockLv1Charge(bool stockOrUnstock) {
+		stockedLv1Charge = stockOrUnstock;
+		if (ownedByLocalPlayer) {
+			RPC.playerToggle.sendRpc(
+				player.id, stockOrUnstock ? RPCToggleType.StockLv1Charge : RPCToggleType.UnstockLv1Charge
+			);
+		}
+	}
 	public void stockX2Charge(bool stockOrUnstock) {
 		stockedX2Charge = stockOrUnstock;
 		if (ownedByLocalPlayer) {
@@ -827,16 +838,28 @@ public partial class MegamanX : Character {
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
 		}
 		if (chargeLevel >= 3 && player.hasArmArmor(3)) {
-			stockedX3Charge = true;
-			if (player.weapon is Buster) {
-				shootTime = 0f;
-			} else shootTime = 0.5f;
-			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Charge);
+			if (chargeLevel == 4) {
+				stockedX3Charge = true;
+				if (player.weapon is Buster) {
+					shootTime = 0f;
+				} else shootTime = 0.5f;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockX3Charge);
+			} else {
+				stockedLv1Charge = true;
+				if (player.weapon is Buster) {
+					shootTime = 0f;
+				} else shootTime = 0.5f;
+				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.StockLv1Charge);
+			}
 		} else if (stockedX3Charge) {
 			stockedX3Charge = false;
 			shootTime = 0.25f;
 			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX3Charge);
-		}
+		} else if (stockedLv1Charge) {
+			stockedLv1Charge = false;
+			shootTime = 0.25f;
+			Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockLv1Charge);
+		} 
 
 		if (!player.weapon.isStream) {
 			chargeTime = 0;
@@ -917,9 +940,9 @@ public partial class MegamanX : Character {
 				if (shootSoundIndex >= weapon.shootSounds.Length) {
 					shootSoundIndex = weapon.shootSounds.Length - 1;
 				}
-				/*if (weapon.shootSounds[chargeLevel] != "") {
-					//player.character.playSound(weapon.shootSounds[chargeLevel]);
-				}*/
+				if (weapon.shootSounds[chargeLevel] != "") {
+					player.character.playSound(weapon.shootSounds[chargeLevel]);
+				}
 			}
 			if (weapon is FireWave) {
 				weapon.soundTime = 0.25f;

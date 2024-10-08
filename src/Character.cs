@@ -1941,7 +1941,6 @@ public partial class Character : Actor, IDamagable {
 		switch (this) {
 			case MegamanX mmx:
 				clampTo2 = player.hasArmArmor(0);
-				clampTo3 = player.hasArmArmor(1);
 				break;
 			case Zero zero:
 				clampTo3 = true;
@@ -3073,6 +3072,7 @@ public partial class Character : Actor, IDamagable {
 				mmx.chargedRollingShieldProj.destroySelf();
 			}
 			mmx.popAllBubbles();
+			mmx.stockedLv1Charge = false;
 			mmx.stockedX2Charge = false;
 			mmx.stockedX3Charge = false;
 			if (mmx.beeSwarm != null) {
