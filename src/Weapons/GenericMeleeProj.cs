@@ -135,10 +135,10 @@ public class GenericMeleeProj : Projectile {
 			hitPoint = new Point((hitboxCenter.x + hitCenter.x) * 0.5f, (hitboxCenter.y + hitCenter.y) * 0.5f);
 		}
 		string SaberShotFade = "zsaber_shot_fade";
-		string IrisSaberShotFade = "iris_saber_shot_fade";
-		string IrisSaberSlashFade = "iris_saber_slash_fade";
+		/*string IrisSaberShotFade = "iris_saber_shot_fade";*/
+		/*string IrisSaberSlashFade = "iris_saber_slash_fade";*/
 		string SaberSlashFade = "zsaber_slash_fade";
-		string SparkVerticalFade = "sword_sparks_vertical";
+		/*string SparkVerticalFade = "sword_sparks_vertical";*/
 		//string SparkElectricFade = "tunnelfang_sparks";
 		//string PunchSpark = "sword_sparks_horizontal";
 		if (ownedByLocalPlayer) {
@@ -146,10 +146,10 @@ public class GenericMeleeProj : Projectile {
 				new Anim(hitPoint.Value, SaberShotFade, xDir,
 					Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
 			}
-			if (isSaberIrisEeffect()) {
+			/*if (isSaberIrisEeffect()) {
 				new Anim(hitPoint.Value, IrisSaberShotFade, xDir,
 					Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
-			}
+			}*/
 			switch (projId) {
 				case (int)ProjIds.ZSaber1:
 				case (int)ProjIds.ZSaberRollingSlash:
@@ -162,7 +162,7 @@ public class GenericMeleeProj : Projectile {
 					new Anim(hitPoint.Value, SaberSlashFade, xDir*-1,
 						Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
 					break;
-				case (int)ProjIds.Rakukojin or (int)ProjIds.IrisRakukojin: 
+				/*case (int)ProjIds.Rakukojin or (int)ProjIds.IrisRakukojin: 
 					new Anim(hitPoint.Value, SparkVerticalFade, xDir,
 						Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
 					break;
@@ -176,7 +176,7 @@ public class GenericMeleeProj : Projectile {
 				case (int)ProjIds.IrisSaber2: 
 					new Anim(hitPoint.Value, IrisSaberSlashFade, xDir*-1,
 						Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
-					break;
+					break;*/
 			/*	case (int)ProjIds.Raijingeki: We need better hit effect sprites
 				case (int)ProjIds.Raijingeki2: 
 					new Anim(hitPoint.Value, SparkElectricFade, xDir,
@@ -209,7 +209,7 @@ public class GenericMeleeProj : Projectile {
 			   projId == (int)ProjIds.ZSaberRollingSlash || projId == (int)ProjIds.DZMelee; 
 			   //i wonder if Shippuga could count as Z-Saber or Rising too, but this last wouldn't make sense as is an uppercut
 	}
-	public static bool isSaberIrisClang(int projId) {
+	/*public static bool isSaberIrisClang(int projId) {
 		return projId == (int)ProjIds.IrisSaber1 || projId == (int)ProjIds.IrisSaber2 || projId == (int)ProjIds.IrisSaber3 ||
 		 	   projId == (int)ProjIds.IrisSaberAir || projId == (int)ProjIds.IrisSaberCrouch || projId == (int)ProjIds.IrisSaberDash || 
 			   projId == (int)ProjIds.IrisSaberLadder || projId == (int)ProjIds.IrisSaberslide || projId == (int)ProjIds.IrisSaberRollingSlash;
@@ -218,7 +218,7 @@ public class GenericMeleeProj : Projectile {
 		return 
 		projId == (int)ProjIds.IrisSaber3 || projId == (int)ProjIds.IrisSaberCrouch || projId == (int)ProjIds.IrisSaberDash ||
 		projId == (int)ProjIds.IrisSaberLadder || projId == (int)ProjIds.IrisSaberslide || projId == (int)ProjIds.IrisShippuuga;
-	}
+	}*/
 
 	public override void onDestroy() {
 		base.onDestroy();

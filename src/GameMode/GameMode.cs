@@ -673,7 +673,7 @@ public class GameMode {
 					xStart += 15;
 				}
 			}
-			if (drawPlayer.character is Iris iris) {
+			/*if (drawPlayer.character is Iris iris) {
 				if (iris.RakuhouhaCooldown > 0) {
 					Global.sprites["iris_hud"].drawToHUD(7, 10, 160);
 					Fonts.drawText(
@@ -687,7 +687,7 @@ public class GameMode {
 						iris.hyperModeTimer.ToString("N0"), 20, 177	, Alignment.Left
 					);
 				}
-			}
+			}*/
 			if (drawPlayer.character is PunchyZero punchyZero) {
 				int xStart = 11;
 				int yStart = 159;
@@ -1316,7 +1316,7 @@ public class GameMode {
 		baseY += 25;
 		var healthBaseSprite = spriteName;
 		Global.sprites[healthBaseSprite].drawToHUD(frameIndex, baseX, baseY);
-		if (player.isIris) Global.sprites["iris_hud"].drawToHUD(3, baseX, baseY);
+		/*if (player.isIris) Global.sprites["iris_hud"].drawToHUD(3, baseX, baseY);*/
 		baseY -= 16;
 		int barIndex = 0;
 
@@ -1487,9 +1487,9 @@ public class GameMode {
 			if (player.character is PunchyZero punchyZero) {
 				weapon = punchyZero.gigaAttack;
 			}
-			if (player.character is Iris iris) {
+			/*if (player.character is Iris iris) {
 				weapon = iris.IrisRakuhouhaWeapon;
-			}
+			}*/
 			player.lastHudWeapon = weapon;
 		}
 
