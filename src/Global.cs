@@ -520,7 +520,7 @@ public partial class Global {
 
 	public static bool paused = false;
 
-	public const int maxPlayerNameLength = 10;
+	public const int maxPlayerNameLength = 16;
 
 	public static Point startPos;
 	public static Input input;

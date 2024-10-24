@@ -70,7 +70,7 @@ public partial class MegamanX : Character {
 	public bool stockedX3Saber;
 
 	public float xSaberCooldown;
-	// public float stockedChargeFlashTime;
+	// public float stockedX2ChargeFlashTime;
 
 	public BeeSwarm? beeSwarm;
 

@@ -70,7 +70,7 @@ public class VileCannon : Weapon {
 		Player player = vile.player;
 		if (shootTime > 0 || !vile.missileWeapon.isCooldownPercentDone(0.5f)) return;
 		if (vile.charState is MissileAttack || vile.charState is RocketPunchAttack) return;
-		float overrideAmmoUsage = (isLongshotGizmo && vile.isVileMK2) ? 6 : vileAmmoUsage;
+		float overrideAmmoUsage = vileAmmoUsage;
 
 		if (isLongshotGizmo && vile.longshotGizmoCount > 0) {
 			vile.usedAmmoLastFrame = true;

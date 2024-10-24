@@ -614,7 +614,7 @@ public partial class RPCCreateProj : RPC {
 				proj = new FakeZeroRockProj(FakeZero.getWeapon(), pos, xDir, player, netProjByte);
 				break;
 			case (int)ProjIds.Sigma2Ball:
-				proj = new SigmaElectricBallProj(new SigmaElectricBallWeapon(), pos, 0, player, netProjByte);
+				proj = new SigmaElectricBallProj(new SigmaElectricBallWeapon(), pos, 0, 0, player, netProjByte);
 				break;
 			case (int)ProjIds.Sigma2Ball2:
 				proj = new SigmaElectricBall2Proj(new SigmaElectricBallWeapon(), pos, 0, player, netProjByte);

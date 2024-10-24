@@ -100,21 +100,41 @@ public class SigmaElectricBallWeapon : Weapon {
 }
 
 public class SigmaElectricBallProj : Projectile {
+	public float type;
+	public Actor? target;
 	public SigmaElectricBallProj(
-		Weapon weapon, Point pos, float angle, Player
+		Weapon weapon, Point pos, float angle, float type, Player
 		player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, 1, 0, 3, player, "sigma2_ball", Global.miniFlinch, 0.2f,
+		weapon, pos, 1, 200, 2, player, "sigma2_ball", Global.miniFlinch, 0,
 		netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Sigma2Ball;
-		destroyOnHit = false;
-		maxTime = 0.5f;
-
+		destroyOnHit = true;
+		maxTime = 2f;
+		this.type = type;
 		this.vel = Point.createFromAngle(angle).times(200);
 
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
+		}
+	}
+		public override void update() {
+		base.update();
+		if (!ownedByLocalPlayer) {
+			return;
+		}
+		if (time >= 0.25 && time < 0.75) {
+			vel = new Point();
+		} else if (time >= 0.75 + (type / 5)) {
+			if (target == null) {
+				target = Global.level.getClosestTarget(pos, damager.owner.alliance, true, aMaxDist: 200);
+				if (target != null) {
+					time = 1;
+					vel = pos.directionToNorm(target.getCenterPos()).times(speed);
+				}
+			}
+			forceNetUpdateNextFrame = true;
 		}
 	}
 }
@@ -134,11 +154,11 @@ public class SigmaElectricBallState : CharState {
 			character.playSound("sigma2ball", sendRpc: true);
 			var weapon = new SigmaElectricBallWeapon();
 			Point pos = character.pos.addxy(0, -20);
-			new SigmaElectricBallProj(weapon, pos, 0, player, player.getNextActorNetId(), rpc: true);
-			new SigmaElectricBallProj(weapon, pos, -45, player, player.getNextActorNetId(), rpc: true);
-			new SigmaElectricBallProj(weapon, pos, -90, player, player.getNextActorNetId(), rpc: true);
-			new SigmaElectricBallProj(weapon, pos, -135, player, player.getNextActorNetId(), rpc: true);
-			new SigmaElectricBallProj(weapon, pos, -180, player, player.getNextActorNetId(), rpc: true);
+			for (int i = 0; i < 5; i++){
+				float ang = i * -45;
+				if (character.xDir == -1) ang = -ang + 180;
+				new SigmaElectricBallProj(weapon, pos, ang, i, player, player.getNextActorNetId(), rpc: true);
+			}
 		}
 
 		if (character.isAnimOver()) {

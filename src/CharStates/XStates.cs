@@ -110,13 +110,13 @@ public class X2ChargeShot : CharState {
 			fired = true;
 			if (type == 0) {
 				new Buster3Proj(
-					player.weapon, character.getShootPos(), character.getShootXDir(), 1,
+					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
 					player, player.getNextActorNetId(), rpc: true
 				);
 				character.playSound("buster4X2", sendRpc: true);
 			} else if (type == 1) {
 				new Buster3Proj(
-					player.weapon, character.getShootPos(), character.getShootXDir(), 2,
+					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
 					player, player.getNextActorNetId(), rpc: true
 				);
 				character.playSound("buster4X2", sendRpc: true);
@@ -206,50 +206,24 @@ public class X3ChargeShot : CharState {
 		}
 		if (!fired && character.currentFrame.getBusterOffset() != null && player.ownedByLocalPlayer) {
 			fired = true;
+			Point shootPos = character.getShootPos();
+			int shootDir = character.getShootXDir();
 			if (state == 0) {
-				Point shootPos = character.getShootPos();
-				int shootDir = character.getShootXDir();
-				if (!player.hasUltimateArmor()) {
-					new Anim(
-						shootPos, "buster4_x3_muzzle", shootDir,
-						player.getNextActorNetId(), true, sendRpc: true
-					);
-					new Buster3Proj(
-						player.weapon, shootPos, shootDir,
-						3, player, player.getNextActorNetId(), rpc: true
-					);
-					if (!(player.weapon is HyperBuster)) {
-						character.playSound("buster3X3", sendRpc: true);
-					}
-				} else {
-					new Anim(shootPos, "buster4_muzzle_flash", shootDir, null, true);
-					new BusterPlasmaProj(
-						player.weapon, shootPos, shootDir,
-						player, player.getNextActorNetId(), rpc: true
-					);
-					character.playSound("plasmaShot", sendRpc: true);
+				new BusterX3Proj1(
+					player.weapon, shootPos, shootDir,
+					0, player, player.getNextActorNetId(), rpc: true
+				);
+				if (!(player.weapon is HyperBuster)) {
+					character.playSound("buster3X3", sendRpc: true);
 				}
 			} else {
 				if (hyperBusterWeapon != null) {
 					hyperBusterWeapon.ammo -= hyperBusterWeapon.getChipFactoredAmmoUsage(player);
 				}
 				character.playSound("buster3X3", sendRpc: true);
-				float xDir = character.getShootXDir();
-				new BusterX3Proj2(
-					player.weapon, character.getShootPos().addxy(6 * xDir, -2), character.getShootXDir(), 0,
-					player, player.getNextActorNetId(), rpc: true
-				);
-				new BusterX3Proj2(
-					player.weapon, character.getShootPos().addxy(6 * xDir, -2), character.getShootXDir(), 1,
-					player, player.getNextActorNetId(), rpc: true
-				);
-				new BusterX3Proj2(
-					player.weapon, character.getShootPos().addxy(6 * xDir, -2), character.getShootXDir(), 2,
-					player, player.getNextActorNetId(), rpc: true
-				);
-				new BusterX3Proj2(
-					player.weapon, character.getShootPos().addxy(6 * xDir, -2), character.getShootXDir(), 3,
-					player, player.getNextActorNetId(), rpc: true
+				new Buster3Proj(
+					player.weapon, shootPos, shootDir,
+					0, player, player.getNextActorNetId(), rpc: true
 				);
 			}
 		}

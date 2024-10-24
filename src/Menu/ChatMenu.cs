@@ -49,7 +49,7 @@ public class ChatMenu : IMainMenu {
 			if (typingChat) {
 				chatBlinkTime += Global.spf;
 				if (chatBlinkTime >= 1f) chatBlinkTime = 0;
-				currentTypedChat = Helpers.getTypedString(currentTypedChat, 24);
+				currentTypedChat = Helpers.getTypedString(currentTypedChat, 64);
 				if (Global.input.isPressed(Key.Enter) && !string.IsNullOrWhiteSpace(currentTypedChat)) {
 					currentTypedChat = Helpers.censor(currentTypedChat);
 					typingChat = false;

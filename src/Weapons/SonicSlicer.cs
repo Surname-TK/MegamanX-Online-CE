@@ -112,6 +112,7 @@ public class SonicSlicerProj : Projectile {
 			if (collideData != null && collideData.hitData != null) {
 				playSound("dingX2");
 				vel.y *= -1;
+				time -= 0.5f;
 				Curve *= -1;
 				new Anim(pos, "sonicslicer_sparks", xDir, null, true);
 				//RPC.actorToggle.sendRpc(netId, RPCActorToggleType.SonicSlicerBounce);

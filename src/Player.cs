@@ -1865,16 +1865,16 @@ public partial class Player {
 
 	public void awardCurrency() {
 		// Cannot gain scrap or ST.
-		if (Global.level.is1v1()) return;
+		// if (Global.level.is1v1()) return;
 		if (axlBulletType == (int)AxlBulletWeaponType.AncientGun && isAxl) return;
 
 		// First we fill ST.
-		if (isVile) {
+		if (isVile || isZero) {
 			fillSubtank(2);
-		} else if (isAxl) {
+		} else if (isSigma) {
 			fillSubtank(2);
 		} else {
-			fillSubtank(2);
+			fillSubtank(1);
 		}
 		if (character is Zero zero && zero.isViral) {
 			zero.freeBusterShots++;
@@ -2642,6 +2642,15 @@ public partial class Player {
 		return false;
 	}
 
+	public bool wasSubTankFull(SubTank st){
+			//if (isUsingSubTank()){
+				return st.healthOnUse >= SubTank.maxHealth;
+			/*} else {
+				st.healthOnUse = st.health;
+				return st.health >= SubTank.maxHealth;
+			}*/
+	}
+
 	public bool canUseSubtank(SubTank subtank) {
 		if (isDead) return false;
 		if (character.healAmount > 0) return false;
@@ -2663,7 +2672,11 @@ public partial class Player {
 		var subtanks = this.subtanks;
 		for (int i = 0; i < subtanks.Count; i++) {
 			if (subtanks[i].health < SubTank.maxHealth) {
-				subtanks[i].health += amount;
+				if (amount >= 4){
+					subtanks[i].health += amount / 4;
+				} else {
+					subtanks[i].health += 1;
+				}
 				if (subtanks[i].health >= SubTank.maxHealth) {
 					subtanks[i].health = SubTank.maxHealth;
 					if (isMainPlayer) Global.playSound("subtankFull");

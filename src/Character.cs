@@ -560,6 +560,7 @@ public partial class Character : Actor, IDamagable {
 		if (charState is VileHover) {
 			return !player.input.isHeld(Control.Jump, player);
 		}
+		if (charState is Hurt) {return true;}
 		return true;
 	}
 
@@ -1167,11 +1168,16 @@ public partial class Character : Actor, IDamagable {
 		//Subtanks heal
 		if (subtankHealAmount > 0 && player.health > 0) {
 			subtankHealTime++;
-			if (subtankHealTime > 3) { //Increase this to make the heal slower
+			if (subtankHealTime > 3.2) { //Increase this to make the heal slower
 				subtankHealTime = 0;
-				subtankHealAmount--;
 				if (usedSubtank != null) {
-					usedSubtank.health--;
+					if (player.wasSubTankFull(usedSubtank)) {
+						usedSubtank.health -= 0.5f;
+						subtankHealAmount -= 0.5f;
+					} else {
+						usedSubtank.health -= 1;
+						subtankHealAmount -= 1;
+					}
 				}
 				player.health = Helpers.clampMax(player.health + 1, player.maxHealth);
 				if (acidTime > 0) {
@@ -1179,10 +1185,11 @@ public partial class Character : Actor, IDamagable {
 					if (acidTime < 0) removeAcid();
 				}
 				if (player == Global.level.mainPlayer || playHealSound) {
-					if (!player.hasChip(2)) {
+					var mmx = this as MegamanX;
+					if (!player.hasChip(2) && mmx.rechargeHealthTime != 0) {
 						playSound("heal", forcePlay: true, sendRpc: true);
 					} else {
-						playSound("goldenHelmetHP", forcePlay: true, sendRpc: true);
+						playSound("heal", forcePlay: true, sendRpc: true);
 					}
 				}
 			}
@@ -1210,7 +1217,7 @@ public partial class Character : Actor, IDamagable {
 			if (gravityWellModifier < 0 && vel.y < -300) {
 				Damager.applyDamage(
 					lastGravityWellDamager,
-					4, 0.5f, Global.halfFlinch, this,
+					4, 0.5f, Global.defFlinch, this,
 					false, (int)WeaponIds.GravityWell, 45, this,
 					(int)ProjIds.GravityWellCharged
 				);
@@ -1941,6 +1948,7 @@ public partial class Character : Actor, IDamagable {
 		switch (this) {
 			case MegamanX mmx:
 				clampTo2 = player.hasArmArmor(0);
+				clampTo3 = player.hasArmArmor(1) || player.weapon is not Buster;
 				break;
 			case Zero zero:
 				clampTo3 = true;

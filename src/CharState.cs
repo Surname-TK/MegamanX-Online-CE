@@ -84,7 +84,7 @@ public class CharState {
 	}
 
 	public virtual void onExit(CharState newState) {
-		if (!useGravity) {
+		if (!useGravity || newState is not GenericStun) {
 			character.useGravity = true;
 		}
 		// Stop the dash speed on transition to any frame except jump/fall (dash lingers in air) or dash itself

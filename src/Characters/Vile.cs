@@ -269,7 +269,7 @@ public class Vile : Character {
 		if (charState is Dash || charState is AirDash) {
 			if (isVileMK2) {
 				charState.isGrabbing = true;
-				charState.superArmor = true; //peakbalance
+				charState.superArmor = false; //balansiao
 				changeSpriteFromName("dash_grab", true);
 			}
 			return true;

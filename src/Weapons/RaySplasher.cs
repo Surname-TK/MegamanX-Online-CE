@@ -18,7 +18,7 @@ public class RaySplasher : Weapon {
 		killFeedIndex = 44;
 		weaknessIndex = (int)WeaponIds.SpinningBlade;
 		damage = "1/1";
-		effect = "Charged: Grants Super Armor.";
+		effect = "Charged: Creates a Turret.";
 		hitcooldown = "0.075";
 	}
 
@@ -41,7 +41,7 @@ public class RaySplasherProj : Projectile {
 		bool isTurret, Player player, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 600, 1, player, "raysplasher_proj",
-		0, 0.075f, netProjId, player.ownedByLocalPlayer
+		0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 0.25f;
 		projId = (int)ProjIds.RaySplasher;
@@ -191,7 +191,7 @@ public class RaySplasherTurret : Actor, IDamagable {
 				changeSprite("raysplasher_turret", true);
 			} else {
 				raySplasherShootTime += Global.spf;
-				if (raySplasherShootTime > 0.1f) {
+				if (raySplasherShootTime > 0.2f) {
 					var proj = new RaySplasherProj(new RaySplasher(), pos, (pos.x > target.getCenterPos().x ? -1 : 1), raySplasherMod % 3, 0, true, netOwner, netOwner.getNextActorNetId(), rpc: true);
 
 					float ang = pos.directionToNorm(target.getCenterPos()).angle;

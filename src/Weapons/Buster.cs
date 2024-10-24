@@ -78,14 +78,27 @@ public class Buster : Weapon {
 			shootSound = "stockBuster";
 		} else if (mmx.stockedX3Charge) {
 			if (player.ownedByLocalPlayer) {
-				if (player.character.charState is not WallSlide) shootTime = 0;			
-				player.character.changeState(new X3ChargeShot(null), true);
-				shootSound = "";
+				if (player.character.charState is WallSlide) {
+					shootSound = "buster3X3";
+					new Buster3Proj(this, pos, xDir, 0, player, netProjId);
+				}
+				else {
+					shootTime = 0;			
+					player.character.changeState(new X3ChargeShot(null), true);
+					shootSound = "";
+				}
 			}
 		} else if (mmx.stockedX2Charge) {
 			if (player.ownedByLocalPlayer) {
-				if (player.character.charState is not WallSlide) shootTime = 0;
-				player.character.changeState(new X2ChargeShot(1), true);
+				if (player.character.charState is WallSlide) {
+					shootSound = "buster3X2";
+					new Buster3Proj(this, pos, xDir, 0, player, netProjId);
+				}
+				else {
+					shootTime = 0;			
+					player.character.changeState(new X2ChargeShot(1), true);
+					shootSound = "";
+				}
 			}
 		} else {
 			switch (chargeLevel) {
@@ -132,17 +145,28 @@ public class Buster : Weapon {
 					//Second Arm Armor
 					else if (player.hasArmArmor(2)) {
 						if (player.ownedByLocalPlayer) {
-							if (player.character.charState is not WallSlide) shootTime = 0;			
-							player.character.changeState(new X2ChargeShot(0), true);
-							shootSound = "";
+							if (player.character.charState is WallSlide) {
+								new Buster3Proj(this, pos, xDir, 0, player, netProjId);
+							}
+							else {
+								shootTime = 0;
+								player.character.changeState(new X2ChargeShot(0), true);
+								shootSound = "";
+								}
 						}
 					} 
 					//Max Arm Armor
 					else if (player.hasArmArmor(3)) {
 						if (player.ownedByLocalPlayer) {
-							if (player.character.charState is not WallSlide) shootTime = 0;
-							player.character.changeState(new X3ChargeShot(null), true);
-							shootSound = "";
+							if (player.character.charState is WallSlide) {
+								shootSound = "buster3X3";
+								new BusterX3Proj1(this, pos, xDir, 0, player, netProjId);
+							}
+							else {
+								shootTime = 0;
+								player.character.changeState(new X3ChargeShot(null), true);
+								shootSound = "";
+								}
 						}
 					}
 					break;
