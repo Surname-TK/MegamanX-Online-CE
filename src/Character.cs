@@ -1959,6 +1959,9 @@ public partial class Character : Actor, IDamagable {
 			case BusterZero:
 				clampTo3 = false;
 				break;
+			case Iris iris:
+				clampTo3 = !iris.isHyperIris;
+				break;
 		}
 		if (chargeTime < charge1Time) {
 			return 0;
@@ -2869,6 +2872,16 @@ public partial class Character : Actor, IDamagable {
 					);
 				}
 			}
+			if (this is Iris iris) {
+				float currentAmmo = iris.IrisRakuhouhaWeapon.ammo;
+				iris.IrisRakuhouhaWeapon.addAmmo(gigaAmmoToAdd, player);
+				if (player.isMainPlayer) {
+					Weapon.gigaAttackSoundLogic(
+						this, currentAmmo, iris.IrisRakuhouhaWeapon.ammo,
+						iris.IrisRakuhouhaWeapon.getAmmoUsage(0), iris.IrisRakuhouhaWeapon.maxAmmo
+					);
+				}
+			}
 			if (this is MegamanX) {
 				var gigaCrush = player.weapons.FirstOrDefault(w => w is GigaCrush);
 				if (gigaCrush != null) {
@@ -3545,7 +3558,8 @@ public partial class Character : Actor, IDamagable {
 			player.isDefenderFavored,
 			invulnTime > 0,
 			isDarkHoldState,
-			isStrikeChainState
+			isStrikeChainState,
+			charState.immuneToWind
 		]));
 
 		// Bool mask. Pos 5.
@@ -3617,6 +3631,7 @@ public partial class Character : Actor, IDamagable {
 		invulnTime = (boolData[1] ? 1 : 0);
 		isDarkHoldState = boolData[2];
 		isStrikeChainState = boolData[3];
+		charState.immuneToWind = boolData[4];
 
 		// Optional statuses.
 		bool[] boolMask = Helpers.byteToBoolArray(data[6]);
