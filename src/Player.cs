@@ -651,7 +651,17 @@ public partial class Player {
 	}
 
 	public bool hasAllItems() {
-		return subtanks.Count >= 4 && heartTanks >= 8;
+		if (!Global.level.server.disableHtSt) {
+			int maxHT = Global.level.server.customMatchSettings.maxHeartTanks;
+			int maxST = Global.level.server.customMatchSettings.maxSubTanks;
+			if (maxHT > 0 || maxST > 0) {
+				return subtanks.Count >= maxST && heartTanks >= maxHT;}
+			else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	public static float getBaseHealth() {
