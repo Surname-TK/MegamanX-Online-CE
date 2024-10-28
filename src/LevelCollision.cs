@@ -411,7 +411,7 @@ public partial class Level {
 	}
 
 	public CollideData checkCollisionShape(Shape shape, List<GameObject>? exclusions) {
-		var gameObjects = getGameObjectsInSameCell(shape);
+		var gameObjects = getTerrainInSameCell(shape);
 		foreach (var go in gameObjects) {
 			if (go.collider == null) continue;
 			if (go is not Actor && go.collider.isTrigger) continue;
@@ -953,7 +953,7 @@ public partial class Level {
 	public (CollideData?, CollideData?) getTriggerTerrain(Actor actor, Geometry geometry) {
 		CollideData? triggerActor = null;
 		CollideData? triggerTerrain = null;
-		Collider? actorCollider = actor.getTerrainCollider() ?? actor.physicsCollider;
+		Collider? actorCollider = actor.getTerrainCollider() ?? actor.physicsCollider ?? actor.collider;
 		if (actorCollider == null) {
 			return (triggerActor, triggerTerrain);
 		}

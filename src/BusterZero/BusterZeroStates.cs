@@ -20,7 +20,7 @@ public class BusterZeroMelee : CharState {
 
 	public override void update() {
 		base.update();
-		if (character.frameIndex >= 4 && !fired) {
+		if (character.frameIndex >= 3 && !fired) {
 			fired = true;
 			character.playSound("zerosaberx3", sendRpc: true);
 		}
@@ -55,6 +55,44 @@ public class BusterZeroMelee : CharState {
 	}
 }
 
+
+public class BusterZeroMeleeWall : CharState {
+	bool fired;
+	public BusterZero zero = null!;
+	public int wallDir;
+	public Collider wallCollider;
+
+	public BusterZeroMeleeWall(int wallDir, Collider wallCollider) : base("wall_slide_attack") {
+		this.wallDir = wallDir;
+		this.wallCollider = wallCollider;
+		superArmor = true;
+		useGravity = false;
+	}
+
+	public override void update() {
+		base.update();
+		if (character.frameIndex >= 2 && !fired) {
+			fired = true;
+			character.playSound("zerosaberx3", sendRpc: true);
+		}
+		if (character.isAnimOver()) {
+			character.changeState(new WallSlide(wallDir, wallCollider) { enterSound = "" });
+			character.sprite.frameIndex = character.sprite.totalFrameNum - 1;
+		}
+	}
+
+	public override void onEnter(CharState oldState) {
+		base.onEnter(oldState);
+		zero = character as BusterZero ?? throw new NullReferenceException();
+	}
+
+	public override void onExit(CharState oldState) {
+		base.onExit(oldState);
+		useGravity = true;
+		zero.zSaberCooldown = 36;
+	}
+}
+
 public class BusterZeroDoubleBuster : CharState {
 	public bool fired1;
 	public bool fired2;
@@ -69,6 +107,8 @@ public class BusterZeroDoubleBuster : CharState {
 		airMove = true;
 		useDashJumpSpeed = true;
 		superArmor = false;
+		canStopJump = true;
+		canJump = true;
 		landSprite = "doublebuster";
 		airSprite = "doublebuster_air";
 	}
@@ -108,17 +148,6 @@ public class BusterZeroDoubleBuster : CharState {
 			character.changeToIdleOrFall();
 		} else if (!isSecond && character.frameIndex >= 4 && !shootPressedAgain) {
 			character.changeToIdleOrFall();
-		} else {
-			if ((character.grounded || character.canAirJump() && character.flag == null) &&
-				player.input.isPressed(Control.Jump, player)
-			) {
-				if (!character.grounded) {
-					character.dashedInAir++;
-				}
-				character.vel.y = -character.getJumpPower();
-				sprite = "doublebuster_air";
-				character.changeSpriteFromName(sprite, false);
-			}
 		}
 	}
 
@@ -170,6 +199,8 @@ public class BusterZeroHadangeki : CharState {
 		airMove = true;
 		useDashJumpSpeed = true;
 		superArmor = false;
+		canStopJump = true;
+		canJump = true;
 	}
 
 	public override void update() {
@@ -185,17 +216,6 @@ public class BusterZeroHadangeki : CharState {
 		}
 		if (character.isAnimOver()) {
 			character.changeToIdleOrFall();
-		} else {
-			if ((character.grounded || character.canAirJump() && character.flag == null) &&
-				player.input.isPressed(Control.Jump, player)
-			) {
-				if (!character.grounded) {
-					character.dashedInAir++;
-				}
-				character.vel.y = -character.getJumpPower();
-				sprite = "projswing_air";
-				character.changeSpriteFromName(sprite, false);
-			}
 		}
 	}
 
@@ -240,7 +260,7 @@ public class BusterZeroHadangekiWall : CharState {
 			);
 		}
 		if (character.isAnimOver()) {
-			character.changeState(new WallSlide(wallDir, wallCollider));
+			character.changeState(new WallSlide(wallDir, wallCollider) { enterSound = "" });
 			character.sprite.frameIndex = character.sprite.totalFrameNum - 1;
 		}
 	}

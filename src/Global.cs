@@ -45,6 +45,8 @@ public partial class Global {
 	public static string nameCoin = "Metal";
 	public static string nameCoins = "Metals";
 
+	public static bool isLoading;
+
 	public static void promptDebugSettings() {
 		//testDocumentsInDebug = Helpers.showMessageBoxYesNo("Test documents in debug?", "Debug Settings");
 		//useOptimizedAssetsOverride = Helpers.showMessageBoxYesNo("Test optimized assets?", "Debug Settings");
@@ -111,9 +113,9 @@ public partial class Global {
 	// Network options to simulate lag when developing locally.
 	// Note, both relay server and client use this so if both are built and
 	// run using these settings, values will be doubled
-	public static float simulatedLatency = 0.1f;
-	public static float simulatedPacketLoss = 0f;
-	public static float simulatedDuplicates = 0.00f;
+	public static float simulatedLatency = 0;
+	public static float simulatedPacketLoss = 0;
+	public static float simulatedDuplicates = 0;
 
 	// Rarely used
 	public static bool? overrideFullscreen = null;

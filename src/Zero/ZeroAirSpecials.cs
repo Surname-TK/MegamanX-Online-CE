@@ -293,6 +293,7 @@ public class HyorogaProj : Projectile {
 	) {
 		projId = (int)ProjIds.HyorogaProj;
 		destroyOnHit = true;
+		destroyOnHitWall = true;
 		this.vel.x = velDir * 250 * 0.375f;
 		this.vel.y = 250;
 		maxTime = 0.4f;
@@ -300,11 +301,6 @@ public class HyorogaProj : Projectile {
 		if (sendRpc) {
 			rpcCreate(pos, player, netProjId, xDir, (byte)(velDir + 128));
 		}
-	}
-
-	public override void onHitWall(CollideData other) {
-		base.onHitWall(other);
-		destroySelf();
 	}
 
 	public override void onDestroy() {

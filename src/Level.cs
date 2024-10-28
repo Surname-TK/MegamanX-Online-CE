@@ -1304,8 +1304,10 @@ public partial class Level {
 		foreach ((int x, int y)gridData in arrayGrid) {
 			// Initalize data.
 			List<GameObject> currentGrid = new(grid[gridData.x, gridData.y]);
-			List<GameObject> currentTerrainGrid = new(terrainGrid[gridData.x, gridData.y]);
-			// Awfull GM19 order code.
+			List<GameObject>? currentTerrainGrid = null;
+			if (terrainGrid[gridData.x, gridData.y].Count >= 1) {
+				currentTerrainGrid = new List<GameObject>(terrainGrid[gridData.x, gridData.y]);
+			}
 			// Iterate trough populated grids.
 			for (int i = 0; i < currentGrid.Count; i++) {
 				// Skip terrain.
@@ -1362,7 +1364,7 @@ public partial class Level {
 					}
 				}
 				// Continue if we get destroyed.
-				if (currentGrid[i] is Actor { destroyed: true }) {
+				if (currentTerrainGrid == null || currentGrid[i] is Actor { destroyed: true }) {
 					continue;
 				}
 				foreach (GameObject wallObj in currentTerrainGrid) {
@@ -1372,12 +1374,12 @@ public partial class Level {
 					if (currentGrid[i] is not Actor actor || wallObj is not Geometry geometry) {
 						continue;
 					}
-					// Add to hash as we check.
-					collidedGObjs.Add(hash);
 					// Skip checked objects.
 					if (collidedGObjs.Contains(hash)) {
 						continue;
 					}
+					// Add to hash as we check.
+					collidedGObjs.Add(hash);
 					// Do preliminary collision checks and skip if we do not instersect.
 					if (!checkLossyCollision(currentGrid[i], wallObj)) {
 						continue;
