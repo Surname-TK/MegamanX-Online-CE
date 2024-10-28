@@ -5,10 +5,11 @@ using SFML.Graphics;
 
 namespace MMXOnline;
 
-public class SpinningBlade : Weapon {
+public class SpinningBlade : Weapon { 
 	public SpinningBlade() : base() {
 		shootSounds = new string[] { "", "", "", "spinningBladeCharged" };
 		rateOfFire = 1.25f;
+		switchCooldown = 0.5f;
 		index = (int)WeaponIds.SpinningBlade;
 		weaponBarBaseIndex = 20;
 		weaponBarIndex = weaponBarBaseIndex;

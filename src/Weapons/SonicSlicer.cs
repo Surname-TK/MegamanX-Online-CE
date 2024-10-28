@@ -59,6 +59,7 @@ public class SonicSlicerStart : Projectile {
 public class SonicSlicerProj : Projectile {
 	public Sprite twin;
 	public float Curve = 1;
+	public float BounceTime = 0;
 	int type;
 	public SonicSlicerProj(Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false) :
 		base(weapon, pos, xDir, 0, 1, player, "sonicslicer_proj", 0, 0, netProjId, player.ownedByLocalPlayer) {
@@ -95,27 +96,43 @@ public class SonicSlicerProj : Projectile {
 				vel.y = (Curve * 30);
 			}
 		}
-
 		var collideData = Global.level.checkTerrainCollisionOnce(this, xDir, 0, vel);
-		if (collideData != null && collideData.hitData != null) {
-			playSound("dingX2");
-			xDir *= -1;
-			time -= 0.5f;
-			vel.x *= -1;
-			new Anim(pos, "sonicslicer_sparks", xDir, null, true);
-			//RPC.actorToggle.sendRpc(netId, RPCActorToggleType.SonicSlicerBounce);
-		}
 
-		int velYSign = MathF.Sign(vel.y);
-		if (velYSign != 0) {
-			collideData = Global.level.checkTerrainCollisionOnce(this, 0, velYSign, vel);
 			if (collideData != null && collideData.hitData != null) {
+				if (BounceTime > 1f) {
+					destroySelfNoEffect();
+				}
 				playSound("dingX2");
-				vel.y *= -1;
-				time -= 0.5f;
-				Curve *= -1;
+				BounceTime += 0.2f;
+				xDir *= -1;
+				time -= 0.25f;
+				vel.x *= -1;
 				new Anim(pos, "sonicslicer_sparks", xDir, null, true);
 				//RPC.actorToggle.sendRpc(netId, RPCActorToggleType.SonicSlicerBounce);
+			} else {
+				if (BounceTime >= 0.2f) {
+					BounceTime -= 0.2f;
+				}
+			}
+
+			int velYSign = MathF.Sign(vel.y);
+			if (velYSign != 0) {
+				collideData = Global.level.checkTerrainCollisionOnce(this, 0, velYSign, vel);
+				if (collideData != null && collideData.hitData != null) {
+					if (BounceTime > 1f) {
+						destroySelfNoEffect();
+					}
+					playSound("dingX2");
+					BounceTime += 0.2f;
+					vel.y *= -1;
+					time -= 0.25f;
+					Curve *= -1;
+					new Anim(pos, "sonicslicer_sparks", xDir, null, true);
+					//RPC.actorToggle.sendRpc(netId, RPCActorToggleType.SonicSlicerBounce);
+			} else {
+				if (BounceTime >= 0.2f) {
+					BounceTime -= 0.2f;
+				}
 			}
 		}
 	}

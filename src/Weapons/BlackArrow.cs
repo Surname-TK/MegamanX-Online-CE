@@ -7,8 +7,8 @@ namespace MMXOnline;
 public class BlackArrow : AxlWeapon {
 	public BlackArrow(int altFire) : base(altFire) {
 		shootSounds = new string[] { "blackArrow", "blackArrow", "blackArrow", "blackArrow" };
-		rateOfFire = 0.3f;
-		altFireCooldown = 0.6f;
+		rateOfFire = 0.2f;
+		altFireCooldown = 0.5f;
 		index = (int)WeaponIds.BlackArrow;
 		weaponBarBaseIndex = 33;
 		weaponSlotIndex = 53;

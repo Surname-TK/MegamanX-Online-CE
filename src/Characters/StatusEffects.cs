@@ -78,6 +78,9 @@ public class Hurt : CharState {
 				if (player.charNum == 3) character.frameIndex = 2;
 			}
 		}
+		if (player.character.dashedInAir >= 1) {
+			player.character.dashedInAir--;
+		}
 
 		if (player.character is MegamanX or Zero &&
 			player.character.canCharge() &&

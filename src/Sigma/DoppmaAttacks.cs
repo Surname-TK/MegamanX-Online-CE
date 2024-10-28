@@ -39,13 +39,13 @@ public class SigmaShieldProj : Projectile {
 		Point pos, int xDir,
 		Player player, ushort netProjId, bool sendRpc = false
 	) : base(
-		SigmaShieldWeapon.netWeapon, pos, xDir, 0, 3, player, "sigma3_proj_shield",
+		SigmaShieldWeapon.netWeapon, pos, xDir, 0, 2, player, "sigma3_proj_shield",
 		Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Sigma3Shield;
 		setIndestructableProperties();
 		isDeflectShield = true;
-		isShield = true;
+		isShield = false;
 		canBeLocal = false;
 
 		if (sendRpc) {

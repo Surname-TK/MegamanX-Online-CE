@@ -26,6 +26,17 @@ public class BusterZeroMelee : CharState {
 		}
 		if (character.isAnimOver()) {
 			character.changeToIdleOrFall();
+		} else {
+			if ((character.grounded || character.canAirJump() && character.flag == null) &&
+				player.input.isPressed(Control.Jump, player)
+			) {
+				if (!character.grounded) {
+					character.dashedInAir++;
+				}
+				character.vel.y = -character.getJumpPower();
+				sprite = "projswing_air";
+				character.changeSpriteFromName(sprite, false);
+			}
 		}
 	}
 

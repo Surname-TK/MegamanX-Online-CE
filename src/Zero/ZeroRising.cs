@@ -137,13 +137,18 @@ public class ZeroUppercut : CharState {
 			holdTime += Global.spf;
 		}*/
 
-		if (character.sprite.frameIndex > 4 && character.sprite.frameIndex < 13/* && type == RisingType.RisingFang*/) {
+		if (stateTime <= 0.5f && character.sprite.frameIndex >= 5 && character.sprite.frameIndex <= 12/* && type == RisingType.RisingFang*/) {
 			if (isHeld) {
 				character.frameSpeed = 1;
-				//character.frameIndex = 4;
+				//character.frameIndex = 6;
 			} else {
 				character.frameSpeed = 4;
-				//character.frameIndex = 4;
+				//character.frameIndex = 8;
+			}
+		} else {
+			character.frameSpeed = 1;
+			if (character.sprite.frameIndex >= 12 && character.vel.y <= 0){
+				character.vel.y = 0;
 			}
 		}
 

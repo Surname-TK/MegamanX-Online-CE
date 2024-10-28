@@ -109,21 +109,20 @@ public class Buster3Proj : Projectile {
 	public override void onCollision(CollideData other) {
 		base.onCollision(other);	
 			if (other.gameObject is BusterX3Proj1 X3shot && X3shot.ownedByLocalPlayer && !destroyed) {
-				fadeSprite = null; X3shot.fadeSprite = null;
 				if (!ownedByLocalPlayer) return;
 					Global.level.delayedActions.Add(new DelayedAction(delegate {
 						new Anim(new Point(pos.x, pos.y), "buster4_x3_muzzle", xDir, null, true, true);
-						destroySelf(); X3shot.destroySelf();
+						destroySelfNoEffect(); X3shot.destroySelfNoEffect();
 						Global.level.delayedActions.Add(new DelayedAction(delegate { 
 						if (!owner.hasUltimateArmor()) {
-						new Buster3Proj(
-						weapon, pos, xDir, 5, owner, owner.getNextActorNetId(), rpc: true
-						);
+							new Buster3Proj(
+								weapon, pos, xDir, 5, owner, owner.getNextActorNetId(), rpc: true
+							);
 						} else {
-						new BusterPlasmaProj(
-							weapon, pos, xDir, owner, owner.getNextActorNetId(), rpc: true
-						);
-						playSound("plasmaShot", sendRpc: true);
+							new BusterPlasmaProj(
+								weapon, pos, xDir, owner, owner.getNextActorNetId(), rpc: true
+							);
+							playSound("plasmaShot", sendRpc: true);
 						}
 						new BusterX3Proj3(
 							weapon, pos, xDir, 0, owner, owner.getNextActorNetId(), rpc: true

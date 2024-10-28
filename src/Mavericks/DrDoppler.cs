@@ -169,13 +169,15 @@ public class DrDopplerBallProj : Projectile {
 	public override void update() {
 		base.update();
 		updateProjectileCooldown();
-		if (time < 0.3f) {
-			if (target != null && !target.destroyed) {
-				Point amount = pos.directionToNorm(target.getCenterPos()).times(360);
-				vel = Point.lerp(vel, amount, Global.spf * 2);
-				if (vel.magnitude > maxSpeed) vel = vel.normalize().times(maxSpeed);
+			if (target == null) {
+				target = Global.level.getClosestTarget(pos, damager.owner.alliance, true, aMaxDist: 200);
+				if (target != null) {
+					time = 1;
+					vel = pos.directionToNorm(target.getCenterPos()).times(speed);
+				}
 			}
-		}
+			forceNetUpdateNextFrame = true;
+		
 	}
 }
 

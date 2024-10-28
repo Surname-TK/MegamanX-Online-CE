@@ -68,7 +68,7 @@ public class ZBuster4Proj : Projectile {
 	public ZBuster4Proj(
 		Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		ZeroBuster.netWeapon, pos, xDir, 350, 4, player, "zbuster4",
+		ZeroBuster.netWeapon, pos, xDir, 350, 3, player, "zbuster4",
 		Global.defFlinch, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		fadeOnAutoDestroy = true;
@@ -190,7 +190,7 @@ public class GenmuProj : Projectile {
 		this.type = type;
 		initY = pos.y;
 		maxTime = 0.5f;
-		destroyOnHit = false;
+		setIndestructableProperties();
 		xScale = 0.75f;
 		yScale = 0.75f;
 		projId = (int)ProjIds.Gemnu;
