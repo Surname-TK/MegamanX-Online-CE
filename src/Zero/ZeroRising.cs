@@ -212,8 +212,6 @@ public class ZeroUppercut : CharState {
 
 	public override void onExit(CharState newState) {
 		base.onExit(newState);
-		if (type == RisingType.RisingFang) {
-			zero.airRisingUses++;
-		}
+		zero.airRisingUses++;	
 	}
 }
