@@ -110,21 +110,21 @@ public class BusterZero : Character {
 		bool shootPressed = player.input.isPressed(Control.Shoot, player);
 		bool specialPressed = player.input.isPressed(Control.Special1, player);
 		if (specialPressed) {
-			if (zSaberCooldown == 0) {
-				if (stockedSaber) {
-					changeState(new BusterZeroHadangeki(), true);
-					return true;
-				}
-				if (charState is WallSlide wallSlide) {
-					changeState(new BusterZeroMeleeWall(wallSlide.wallDir, wallSlide.wallCollider), true);
+			 if (charState is WallSlide wallSlide) {
+				if (stockedSaber){
+					changeState(new BusterZeroHadangekiWall(wallSlide.wallDir, wallSlide.wallCollider), true);
 				} else {
-					changeState(new BusterZeroMelee(), true);
+					changeState(new BusterZeroMeleeWall(wallSlide.wallDir, wallSlide.wallCollider), true);
+				}
+				return true;
+			} else {
+				if (stockedSaber){
+					changeState(new BusterZeroHadangeki(), true);
+				} else {
+						changeState(new BusterZeroMelee(), true);
 				}
 				return true;
 			}
-			changeState(new BusterZeroMelee(), true);
-			return true;
-			
 		}
 		if (!isCharging()) {
 			if (shootPressed) {

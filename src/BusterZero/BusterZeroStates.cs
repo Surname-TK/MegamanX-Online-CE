@@ -78,6 +78,8 @@ public class BusterZeroMeleeWall : CharState {
 		if (character.isAnimOver()) {
 			character.changeState(new WallSlide(wallDir, wallCollider) { enterSound = "" });
 			character.sprite.frameIndex = character.sprite.totalFrameNum - 1;
+		} else {
+			character.move(new Point(0, 100));
 		}
 	}
 
@@ -245,7 +247,7 @@ public class BusterZeroHadangekiWall : CharState {
 		this.wallDir = wallDir;
 		this.wallCollider = wallCollider;
 		superArmor = false;
-		useGravity = true;
+		useGravity = false;
 	}
 
 	public override void update() {
@@ -262,6 +264,8 @@ public class BusterZeroHadangekiWall : CharState {
 		if (character.isAnimOver()) {
 			character.changeState(new WallSlide(wallDir, wallCollider) { enterSound = "" });
 			character.sprite.frameIndex = character.sprite.totalFrameNum - 1;
+		} else {
+			character.move(new Point(0, 100));
 		}
 	}
 
