@@ -743,6 +743,58 @@ public partial class MegamanX : Character {
 		}
 	}
 
+	public void secondArmorChargeShots(int type) {
+		if (type == 0) {
+			new Buster3Proj(
+				player.weapon, getShootPos(), getShootXDir(), 0,
+				player, player.getNextActorNetId(), rpc: true
+			);
+			playSound("buster4X2", sendRpc: true);
+			//stockedX2Charge = true;
+		} else if (type == 1) {
+			new Buster3Proj(
+				player.weapon, getShootPos(), getShootXDir(), 0,
+				player, player.getNextActorNetId(), rpc: true
+			);
+			playSound("buster4X2", sendRpc: true);
+			//stockedX2Charge = false;
+		} else if (type == 2) {
+			new BusterPlasmaProj(
+				player.weapon, getShootPos(), getShootXDir(),
+				player, player.getNextActorNetId(), rpc: true
+			);
+			playSound("plasmaShot", sendRpc: true);
+			//stockedX2Charge = true;
+		}
+	}
+
+	public void maxArmorChargeShots(int type, HyperBuster hbWep) {
+		Point shootPos = getShootPos();
+		int shootDir = getShootXDir();
+
+
+		if (type == 0) {
+			new BusterX3Proj1(
+				player.weapon, shootPos, shootDir,
+				0, player, player.getNextActorNetId(), rpc: true
+			);
+			if (!(player.weapon is HyperBuster)) {
+				playSound("buster3X3", sendRpc: true);
+			}
+			stockedX3Charge = true;
+		} else {
+			if (hbWep != null) {
+				hbWep.ammo -= hbWep.getChipFactoredAmmoUsage(player);
+			}
+			playSound("buster3X3", sendRpc: true);
+			new Buster3Proj(
+				player.weapon, shootPos, shootDir,
+				0, player, player.getNextActorNetId(), rpc: true
+			);
+			stockedX3Charge = false;
+		}
+	}
+
 	// Fast upgrading via command key.
 	public void quickArmorUpgrade() {
 		if (!player.input.isHeld(Control.Special2, player)) {

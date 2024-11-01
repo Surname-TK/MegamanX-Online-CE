@@ -108,7 +108,8 @@ public class X2ChargeShot : CharState {
 		base.update();
 		if (!fired && character.currentFrame.getBusterOffset() != null) {
 			fired = true;
-			if (type == 0) {
+			mmx.secondArmorChargeShots(type);
+			/* if (type == 0) {
 				new Buster3Proj(
 					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
 					player, player.getNextActorNetId(), rpc: true
@@ -129,7 +130,7 @@ public class X2ChargeShot : CharState {
 				);
 				character.playSound("plasmaShot", sendRpc: true);
 				mmx.stockedX2Charge = true;
-			}
+			} */
 		}
 		if (character.isAnimOver()) {
 			if (type == 0 && pressFire) {
@@ -210,7 +211,9 @@ public class X3ChargeShot : CharState {
 			fired = true;
 			Point shootPos = character.getShootPos();
 			int shootDir = character.getShootXDir();
-			if (state == 0) {
+
+			mmx.maxArmorChargeShots(state, hyperBusterWeapon);
+			/* if (state == 0) {
 				new BusterX3Proj1(
 					player.weapon, shootPos, shootDir,
 					0, player, player.getNextActorNetId(), rpc: true
@@ -227,7 +230,7 @@ public class X3ChargeShot : CharState {
 					player.weapon, shootPos, shootDir,
 					0, player, player.getNextActorNetId(), rpc: true
 				);
-			}
+			} */
 		}
 		if (character.isAnimOver()) {
 			if (state == 0 && pressFire) {
