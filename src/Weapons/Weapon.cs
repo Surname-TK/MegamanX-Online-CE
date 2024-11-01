@@ -289,7 +289,7 @@ public class Weapon {
 	public virtual void shootLight(Character character, int[] args) {
 		shoot(character, args);
 	}
-	public virtual void shootSecond(Character character, int[] args) {
+	public virtual void shootGiga(Character character, int[] args) {
 		shoot(character, args);
 	}
 	public virtual void shootMax(Character character, int[] args) {

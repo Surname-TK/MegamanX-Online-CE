@@ -127,7 +127,7 @@ public class Buster : Weapon {
 		if (!string.IsNullOrEmpty(sound)) character.playSound(sound, sendRpc: true);	
 	}
 
-	public override void shootSecond(Character character, int[] args) {
+	public override void shootGiga(Character character, int[] args) {
 		int chargeLevel = args[0];
 		Point pos = character.getShootPos();
 		int xDir = character.getShootXDir();
