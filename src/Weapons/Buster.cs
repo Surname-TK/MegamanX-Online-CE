@@ -127,7 +127,7 @@ public class Buster : Weapon {
 		if (!string.IsNullOrEmpty(sound)) character.playSound(sound, sendRpc: true);	
 	}
 
-	public override void shootSecond(Character character, int[] args) {
+	public override void shootGiga(Character character, int[] args) {
 		int chargeLevel = args[0];
 		Point pos = character.getShootPos();
 		int xDir = character.getShootXDir();
@@ -146,13 +146,13 @@ public class Buster : Weapon {
 			sound = "buster3";
 		} else if (chargeLevel >= 3) {	
 			if (player.ownedByLocalPlayer) {
-				if (mmx.hasUltimateArmor && !mmx.stockedCharge) {
+				if (mmx.hasUltimateArmor && !mmx.stockedX2Charge) {
 					character.changeState(new X2ChargeShot(2), true);
 				} else {
 					if (character.charState is not WallSlide) {
 						mmx.shootCooldown = 0;
 					}
-					int type = mmx.stockedCharge ? 1 : 0;
+					int type = mmx.stockedX2Charge ? 1 : 0;
 					character.changeState(new X2ChargeShot(type), true);
 				}
 			}
@@ -169,7 +169,7 @@ public class Buster : Weapon {
 		MegamanX mmx = character as MegamanX ?? throw new NullReferenceException();
 		string sound = "";
 
-		if (mmx.stockedX3Buster || mmx.stockedCharge) {
+		if (mmx.stockedX3Charge || mmx.stockedX2Charge) {
 			mmx.changeState(new X3ChargeShot(null) {state = 1}, true);
 		} else if (chargeLevel == 0) {
 			lemonsOnField.Add(new BusterProj(this, pos, xDir, 0, player, player.getNextActorNetId(), true));

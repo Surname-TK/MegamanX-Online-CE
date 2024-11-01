@@ -734,7 +734,7 @@ public partial class MegamanX : Character {
 				break;
 			
 			case (int)ArmorId.Giga:
-				w.shootSecond(character, args);
+				w.shootGiga(character, args);
 				break;
 
 			case (int)ArmorId.Max:
