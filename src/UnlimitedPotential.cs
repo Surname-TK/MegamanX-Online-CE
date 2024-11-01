@@ -46,7 +46,7 @@ public class XUPParryStartState : CharState {
 		if (damagingActor is GenericMeleeProj gmp) {
 			counterAttackTarget = gmp.owningActor;
 		} else if (damagingActor is Projectile proj) {
-			if (!proj.canBeParried() && proj.shouldVortexSuck) {
+			if (!proj.isMelee && proj.shouldVortexSuck) {
 				absorbedProj = proj;
 				absorbedProj.destroySelfNoEffect(doRpcEvenIfNotOwned: true);
 			}
@@ -702,7 +702,7 @@ public class XRevive : CharState {
 		character.useGravity = true;
 		mmx.isHyperX = true;
 		Global.level.addToGrid(character);
-		mmx.invulnTime = mmx.maxParryCooldown;
+		mmx.invulnTime = 2;
 	}
 }
 

@@ -459,9 +459,9 @@ public class RPCShoot : RPC {
 		int weaponIndex = arguments[9];
 
 		var player = Global.level.getPlayerById(playerId);
-		(player?.character as MegamanX)?.shootRpc(
+		/* (player?.character as MegamanX)?.shootRpc(
 			new Point(xPos, yPos), weaponIndex, xDir, chargeLevel, projNetId, false
-		);
+		); */
 	}
 }
 
@@ -562,6 +562,7 @@ public enum RPCToggleType {
 	StartCrystalize,
 	StopCrystalize,
 	StrikeChainReversed,
+	StrikeChainChargedReversed,
 	StockLv1Charge,
 	UnstockLv1Charge,
 	StockX2Charge,
@@ -604,7 +605,12 @@ public class RPCPlayerToggle : RPC {
 			player.character?.crystalizeEnd();
 		} else if (toggleId == RPCToggleType.StrikeChainReversed) {
 			(player?.character as MegamanX)?.strikeChainProj?.reverseDir();
-			
+		} else if (toggleId == RPCToggleType.StrikeChainChargedReversed) {
+			(player?.character as MegamanX)?.strikeChainChargedProj?.reverseDir();
+		} else if (toggleId == RPCToggleType.StockX2Charge) {
+			if (player?.character is MegamanX mmx) {
+				mmx.stockedLv1Charge = true;
+			}
 		} else if (toggleId == RPCToggleType.StockLv1Charge) {
 			if (player?.character is MegamanX mmx) {
 				mmx.stockedLv1Charge = true;

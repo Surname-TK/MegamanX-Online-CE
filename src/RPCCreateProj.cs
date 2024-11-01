@@ -107,9 +107,7 @@ public partial class RPCCreateProj : RPC {
 				proj = new FireWaveProjCharged(new FireWave(), pos, xDir, player, 0, netProjByte, 0);
 				break;
 			case (int)ProjIds.ElectricSpark:
-				proj = new ElectricSparkProj(
-						new ElectricSpark(), pos, xDir, player, extraData[0], netProjByte
-					);
+				proj = new ElectricSparkProj(new ElectricSpark(), pos, xDir, player, extraData[0], netProjByte);
 				break;
 			case (int)ProjIds.ElectricSparkCharged:
 				proj = new ElectricSparkProjCharged(new ElectricSpark(), pos, xDir, player, netProjByte);
@@ -215,7 +213,7 @@ public partial class RPCCreateProj : RPC {
 				);
 				break;
 			case (int)ProjIds.SpinWheelCharged:
-				proj = new SpinWheelProjCharged(new SpinWheel(), pos, xDir, 0, player, netProjByte);
+				proj = new SpinWheelProjCharged(new SpinWheel(), pos, xDir, player, extraData[0], netProjByte);
 				break;
 			case (int)ProjIds.SonicSlicer:
 				proj = new SonicSlicerProj(new SonicSlicer(), pos, xDir, extraData[0], player, netProjByte);

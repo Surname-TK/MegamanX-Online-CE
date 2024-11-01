@@ -4,9 +4,13 @@ using System.Collections.Generic;
 namespace MMXOnline;
 
 public class TunnelFang : Weapon {
+
+	public static TunnelFang netWeapon = new();
+
 	public TunnelFang() : base() {
 		shootSounds = new string[] { "busterX3", "busterX3", "busterX3", "tunnelFang" };
-		rateOfFire = 1;
+		//rateOfFire = 1;
+		fireRateFrames = 60;
 		index = (int)WeaponIds.TunnelFang;
 		weaponBarBaseIndex = 24;
 		weaponBarIndex = weaponBarBaseIndex;
@@ -22,28 +26,33 @@ public class TunnelFang : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) {
-			if (timeSinceLastShoot != null && timeSinceLastShoot < rateOfFire) return 1;
+			if (timeSinceLastShoot != null && timeSinceLastShoot < fireRateFrames) return 1;
 			else return 2;
 		}
 		return 4;
 	}
 
-	public override void getProjectile(Point pos, int xDir, Player player, float chargeLevel, ushort netProjId) {
+	public override void shoot(Character character, int[] args) {
+		int chargeLevel = args[0];
+		Point pos = character.getShootPos();
+		int xDir = character.getShootXDir();
+		Player player = character.player;
+
 		if (chargeLevel < 3) {
-			if (player.character.ownedByLocalPlayer) {
-				if (timeSinceLastShoot != null && timeSinceLastShoot < rateOfFire) {
-					new TunnelFangProj(this, pos, xDir, 1, player, netProjId, rpc: true);
+			if (character.ownedByLocalPlayer && character is MegamanX mmx) {
+				if (timeSinceLastShoot != null && timeSinceLastShoot < fireRateFrames) {
+					new TunnelFangProj(this, pos, xDir, 1, player, player.getNextActorNetId(), rpc: true);
 					new TunnelFangProj(this, pos, xDir, 2, player, player.getNextActorNetId(), rpc: true);
 					timeSinceLastShoot = null;
 				} else {
-					new TunnelFangProj(this, pos, xDir, 0, player, netProjId, rpc: true);
+					new TunnelFangProj(this, pos, xDir, 0, player, player.getNextActorNetId(), rpc: true);
 					timeSinceLastShoot = 0;
-					shootTime = 0.5f;
+					mmx.shootCooldown = 30;
 				}
 			}
 		} else {
-			var ct = new TunnelFangProjCharged(this, pos, xDir, player, netProjId);
-			if (player.character.ownedByLocalPlayer && player.character is MegamanX mmx) {
+			var ct = new TunnelFangProjCharged(this, pos, xDir, player, player.getNextActorNetId(), true);
+			if (character.ownedByLocalPlayer && character is MegamanX mmx) {
 				mmx.chargedTunnelFang = ct;
 			}
 		}
@@ -60,7 +69,7 @@ public class TunnelFangProj : Projectile {
 	public TunnelFangProj(
 		Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 100, 1, player, "tunnelfang_proj", 0, 0.25f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 100, 1, player, "tunnelfang_proj", 0, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 1.25f;
 		projId = (int)ProjIds.TunnelFang;
@@ -80,25 +89,32 @@ public class TunnelFangProj : Projectile {
 		}
 	}
 
+	public static Projectile rpcInvoke(ProjParameters arg) {
+		return new TunnelFangProj(
+			TunnelFang.netWeapon, arg.pos, arg.xDir, 
+			arg.extraData[0], arg.player, arg.netId
+		);
+	}
+
 	public override void update() {
 		base.update();
-		Helpers.decrementTime(ref sparksCooldown);
+		Helpers.decrementFrames(ref sparksCooldown);
 		exhaust.pos = pos;
 		exhaust.xDir = xDir;
 		if (state == 0) {
 			if (type == 0) {
-				if (stateTime > 0.15f) {
+				if (stateTime > 9) {
 					vel.x = 0;
 				}
 			} else if (type == 1 || type == 2) {
-				if (stateTime > 0.15f) {
+				if (stateTime > 9) {
 					vel.y = 0;
 				}
-				if (stateTime > 0.15f && stateTime < 0.3f) vel.x = 100 * xDir;
+				if (stateTime > 9 && stateTime < 18) vel.x = 100 * xDir;
 				else vel.x = 0;
 			}
-			stateTime += Global.spf;
-			if (stateTime >= 0.75f) {
+			stateTime += Global.speedMul;
+			if (stateTime >= 45) {
 				state = 1;
 			}
 		} else if (state == 1) {
@@ -109,28 +125,34 @@ public class TunnelFangProj : Projectile {
 
 	public override void onHitDamagable(IDamagable damagable) {
 		base.onHitDamagable(damagable);
-		vel.x = 4 * xDir;
-		// To update the reduced speed.
-		if (ownedByLocalPlayer) {
-			forceNetUpdateNextFrame = true;
-		}
+		if (damagable.canBeDamaged(damager.owner.alliance, damager.owner.id, projId)) {
+			if (damagable.projectileCooldown.ContainsKey(projId + "_" + owner.id) &&
+				damagable.projectileCooldown[projId + "_" + owner.id] >= damager.hitCooldown
+			) {
+				vel.x = 4 * xDir;
+				// To update the reduced speed.
+				if (ownedByLocalPlayer) {
+				forceNetUpdateNextFrame = true;
+				}
 
-		if (damagable is not CrackedWall) {
-			time -= Global.spf;
-			if (time < 1) time = 1;
-		}
+				if (damagable is not CrackedWall) {
+					time = 1;
+				}
 
-		if (sparksCooldown == 0) {
-			playSound("tunnelFangDrill");
-			var sparks = new Anim(pos, "tunnelfang_sparks", xDir, null, true);
-			sparks.setzIndex(zIndex + 100);
-			sparksCooldown = 0.25f;
-		}
-		var chr = damagable as Character;
-		if (chr != null && chr.ownedByLocalPlayer && !chr.isImmuneToKnockback()) {
-			chr.vel = Point.lerp(chr.vel, Point.zero, Global.spf * 10);
-			chr.slowdownTime = 0.25f;
-		}
+				if (sparksCooldown == 0) {
+					playSound("tunnelFangDrill");
+					var sparks = new Anim(pos, "tunnelfang_sparks", xDir, null, true);
+					sparks.setzIndex(zIndex + 100);
+					sparksCooldown = 15;
+				}
+
+				var chr = damagable as Character;
+				if (chr != null && chr.ownedByLocalPlayer && !chr.isImmuneToKnockback()) {
+					chr.vel = Point.lerp(chr.vel, Point.zero, Global.speedMul);
+					chr.slowdownTime = 0.25f;
+				}
+			}
+		}	
 	}
 
 	public override void onDestroy() {
@@ -142,8 +164,14 @@ public class TunnelFangProj : Projectile {
 public class TunnelFangProjCharged : Projectile {
 	public MegamanX? character;
 	float sparksCooldown;
-	public TunnelFangProjCharged(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 300, 1, player, "tunnelfang_charged", Global.halfFlinch, 0.15f, netProjId, player.ownedByLocalPlayer) {
+
+	public TunnelFangProjCharged(
+		Weapon weapon, Point pos, int xDir, 
+		Player player, ushort netProjId, bool rpc = false
+	) : base(
+		weapon, pos, xDir, 300, 1, player, "tunnelfang_charged", 
+		Global.defFlinch, 0.125f, netProjId, player.ownedByLocalPlayer
+	) {
 		projId = (int)ProjIds.TunnelFangCharged;
 		destroyOnHit = false;
 		shouldShieldBlock = true;
@@ -153,6 +181,12 @@ public class TunnelFangProjCharged : Projectile {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
 		canBeLocal = false;
+	}
+
+	public static Projectile rpcInvoke(ProjParameters arg) {
+		return new TunnelFangProjCharged(
+			TunnelFang.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
+		);
 	}
 
 	public override void update() {

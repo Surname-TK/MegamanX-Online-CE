@@ -982,7 +982,7 @@ public partial class Level {
 		foreach (var magnetMine in magnetMines) {
 			var player = getPlayerById(magnetMine.playerId);
 			if (player == null) continue;
-			new MagnetMineProj(new MagnetMine(), new Point(magnetMine.x, magnetMine.y), 1, 1, player, magnetMine.netId);
+			new MagnetMineProj(new MagnetMine(), new Point(magnetMine.x, magnetMine.y), 1, player, magnetMine.netId);
 		}
 	}
 	public void joinedLateSyncFrostShields(List<FrostShieldResponseModel> frostShields) {
@@ -1249,6 +1249,9 @@ public partial class Level {
 
 		List<GameObject> gos = gameObjects.ToList();
 		foreach (GameObject go in gos) {
+			if (go.iDestroyed) {
+				continue;
+			}
 			if (isTimeSlowed(go, out float slowAmount)) {
 				Global.speedMul = slowAmount;
 				go.localSpeedMul = slowAmount;
@@ -1263,6 +1266,9 @@ public partial class Level {
 		}
 
 		foreach (var go in gos) {
+			if (go.iDestroyed) {
+				continue;
+			}
 			if (isTimeSlowed(go, out float slowAmount)) {
 				Global.speedMul = slowAmount;
 				go.localSpeedMul = slowAmount;
@@ -1315,12 +1321,12 @@ public partial class Level {
 					continue;
 				}
 				// Skip destroyed stuff.
-				if (currentGrid[i] is Actor { destroyed: true }) {
+				if (currentGrid[i].iDestroyed) {
 					continue;
 				}
 				for (int j = i; j < currentGrid.Count; j++) {
 					// Exit if we get destroyed.
-					if (currentGrid[i] is Actor { destroyed: true }) {
+					if (currentGrid[i].iDestroyed) {
 						break;
 					}
 					// Skip terrain coliding with eachother.
@@ -1336,7 +1342,7 @@ public partial class Level {
 					// Add to hash as we check.
 					collidedGObjs.Add(hash);
 					// Skip destroyed stuff.
-					if (currentGrid[j] is Actor { destroyed: true }) {
+					if (currentGrid[j].iDestroyed) {
 						continue;
 					}
 					// Do preliminary collision checks and skip if we do not instersect.
@@ -1364,7 +1370,7 @@ public partial class Level {
 					}
 				}
 				// Continue if we get destroyed.
-				if (currentTerrainGrid == null || currentGrid[i] is Actor { destroyed: true }) {
+				if (currentTerrainGrid == null || currentGrid[i].iDestroyed) {
 					continue;
 				}
 				foreach (GameObject wallObj in currentTerrainGrid) {
@@ -1403,6 +1409,9 @@ public partial class Level {
 		}
 
 		foreach (GameObject go in gos) {
+			if (go.iDestroyed) {
+				continue;
+			}
 			if (isTimeSlowed(go, out float slowAmount)) {
 				Global.speedMul = slowAmount;
 				go.localSpeedMul = slowAmount;
@@ -1709,6 +1718,9 @@ public partial class Level {
 		}
 
 		foreach (var go in gameObjects) {
+			if (go.iDestroyed) {
+				continue;
+			}
 			go.render(0, 0);
 		}
 		foreach (var ms in mapSprites) {
