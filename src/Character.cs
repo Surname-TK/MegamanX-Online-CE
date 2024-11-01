@@ -1186,8 +1186,10 @@ public partial class Character : Actor, IDamagable {
 				}
 				if (player == Global.level.mainPlayer || playHealSound) {
 					var mmx = this as MegamanX;
-					if (!player.hasChip(2) && mmx.rechargeHealthTime != 0) {
-						playSound("heal", forcePlay: true, sendRpc: true);
+					if (Global.level.mainPlayer.character is MegamanX) {
+						if (!player.hasChip(2) && mmx.rechargeHealthTime != 0) {
+							playSound("heal", forcePlay: true, sendRpc: true);
+							}
 					} else {
 						playSound("heal", forcePlay: true, sendRpc: true);
 					}

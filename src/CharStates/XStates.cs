@@ -114,25 +114,27 @@ public class X2ChargeShot : CharState {
 					player, player.getNextActorNetId(), rpc: true
 				);
 				character.playSound("buster4X2", sendRpc: true);
+				mmx.stockedX2Charge = true;
 			} else if (type == 1) {
 				new Buster3Proj(
 					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
 					player, player.getNextActorNetId(), rpc: true
 				);
 				character.playSound("buster4X2", sendRpc: true);
+				mmx.stockedX2Charge = false;
 			} else if (type == 2) {
 				new BusterPlasmaProj(
 					player.weapon, character.getShootPos(), character.getShootXDir(),
 					player, player.getNextActorNetId(), rpc: true
 				);
 				character.playSound("plasmaShot", sendRpc: true);
+				mmx.stockedX2Charge = true;
 			}
 		}
 		if (character.isAnimOver()) {
 			if (type == 0 && pressFire) {
 				fired = false;
 				type = 1;
-				mmx.stockedX2Charge = false;
 				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
 				sprite = "x2_shot2";
 				defaultSprite = sprite;
@@ -275,9 +277,6 @@ public class X3ChargeShot : CharState {
 			throw new NullReferenceException();
 		}
 		if (!mmx.stockedX3Charge) {
-			if (hyperBusterWeapon == null) {
-				mmx.stockedX3Charge = true;
-			}
 			sprite = "x3_shot";
 			defaultSprite = sprite;
 			landSprite = "x3_shot";

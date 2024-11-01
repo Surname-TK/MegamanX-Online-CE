@@ -1731,12 +1731,16 @@ public partial class Player {
 		return bodyArmorNum == version || bootsArmorNum == version || armArmorNum == version || helmetArmorNum == version;
 	}
 
+	public bool hasArmorParts(int body, int legs, int arms, int head) {
+		return bodyArmorNum == body || bootsArmorNum == legs || armArmorNum == arms || helmetArmorNum == head;
+	}
+
 	public bool hasAllArmor() {
 		return bodyArmorNum > 0 && bootsArmorNum > 0 && armArmorNum > 0 && helmetArmorNum > 0;
 	}
 
 	public bool hasAllX3Armor() {
-		return bodyArmorNum >= 3 && bootsArmorNum >= 3 && armArmorNum >= 3 && helmetArmorNum >= 3;
+		return bodyArmorNum == 3 && bootsArmorNum == 3 && armArmorNum == 3 && helmetArmorNum == 3;
 	}
 
 	public bool canUpgradeGoldenX() {
@@ -1749,7 +1753,7 @@ public partial class Player {
 
 	public bool canUpgradeUltimateX() {
 		return character != null &&
-			isX && !isDisguisedAxl &&
+			isX && !isDisguisedAxl && armorFlag == 0 &&
 			character.charState is not Die && !Global.level.is1v1() &&
 			!hasUltimateArmor() && !canUpgradeGoldenX() && currency >= ultimateArmorCost;
 	}
@@ -2015,7 +2019,7 @@ public partial class Player {
 	}
 
 	public bool canReviveX() {
-		return !Global.level.isElimination() && armorFlag == 0 && character?.charState is Die && lastDeathCanRevive && isX && newCharNum == 0 && currency >= reviveXCost && !lastDeathWasXHyper;
+		return !Global.level.isElimination() /*&& armorFlag == 0*/ && character?.charState is Die && lastDeathCanRevive && isX && newCharNum == 0 && currency >= reviveXCost && !lastDeathWasXHyper;
 	}
 
 	public void reviveVile(bool toMK5) {

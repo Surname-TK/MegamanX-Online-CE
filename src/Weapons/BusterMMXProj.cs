@@ -58,6 +58,7 @@ public class Buster2Proj : Projectile {
 		fadeSprite = "buster2_fade";
 		reflectable = true;
 		maxTime = 0.5f;
+		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.Buster2;
 
 		if (rpc) {

@@ -79,12 +79,9 @@ public class Buster : Weapon {
 		return lemonsOnField.Count < 3;
 	}
 
-	/*public override float getAmmoUsage(int chargeLevel) {
-		if (isUnpoBuster) {
-			return 3;
-		}
+	public override float getAmmoUsage(int chargeLevel) {
 		return 0;
-	}*/
+	}
 
 	public override void shoot(Character character, int[] args) {
 		int chargeLevel = args[0];
@@ -148,8 +145,9 @@ public class Buster : Weapon {
 		if (mmx.stockedX2Charge) {
 			if (player.ownedByLocalPlayer) {
 				if (player.character.charState is WallSlide) {
-					shootSound = "buster3X2";
+					shootSound = "buster4X2";
 					new Buster3Proj(this, pos, xDir, 0, player, player.getNextActorNetId());
+					mmx.stockedX2Charge = false;
 				} else {
 					shootTime = 0;			
 					player.character.changeState(new X2ChargeShot(1), true);
@@ -162,6 +160,7 @@ public class Buster : Weapon {
 				if (player.character.charState is WallSlide) {
 					shootSound = "buster3X3";
 					new Buster3Proj(this, pos, xDir, 0, player, player.getNextActorNetId());
+					mmx.stockedX3Charge = false;
 				} else {
 					shootTime = 0;			
 					player.character.changeState(new X3ChargeShot(null), true);
@@ -194,11 +193,12 @@ public class Buster : Weapon {
 			} else if (player.hasArmArmor(2)) {
 				if (player.ownedByLocalPlayer) {
 					if (player.character.charState is WallSlide) {
-						shootSound = "buster3X3";
+						shootSound = "buster4X2";
 						new Buster3Proj(this, pos, xDir, 0, player, player.getNextActorNetId());
+						mmx.stockedX2Charge = true;
 					} else {
 						shootTime = 0;
-						player.character.changeState(new X3ChargeShot(null), true);
+						player.character.changeState(new X2ChargeShot(0), true);
 						shootSound = "";
 					}
 				}
@@ -207,6 +207,7 @@ public class Buster : Weapon {
 					if (player.character.charState is WallSlide) {
 						shootSound = "buster3X3";
 						new BusterX3Proj1(this, pos, xDir, 0, player, player.getNextActorNetId());
+						mmx.stockedX3Charge = true;
 					} else {
 						shootTime = 0;
 						player.character.changeState(new X3ChargeShot(null), true);

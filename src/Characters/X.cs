@@ -473,7 +473,7 @@ public partial class MegamanX : Character {
 			specialPressed && !stingActive
 		) {
 			if (xSaberCooldown == 0) {
-				xSaberCooldown = 60;
+				xSaberCooldown = 0;
 				changeState(new X6SaberState(grounded), true);
 				return true;
 			}
@@ -549,7 +549,7 @@ public partial class MegamanX : Character {
 
 		bool shootCondition = (
 			shootPressed || specialPressed ||
-			(shootHeld && player.weapon.isStream && chargeTime < charge2Time)
+			(shootHeld && player.weapon.isStream && getChargeLevel() < 3)
 		);
 		
 		if (shootPressed || specialPressed) {
@@ -675,7 +675,7 @@ public partial class MegamanX : Character {
 		shootCooldown = player.weapon is HyperBuster hb ?
 			hb.getRateOfFire(player) : player.weapon.fireRateFrames;
 		//Triggers hypercharge special cooldown if used.
-		if (player.weapon is HyperBuster h) hyperchargeCooldown = h.getRateOfFire(player);
+		if (player.weapon is HyperBuster hyperb) hyperchargeCooldown = hyperb.getRateOfFire(player);
 		//Triggers hypercharge special cooldown when shooting a charged shot.
 		if (chargeLevel >= 2 && player.weapons.Any(w => w is HyperBuster b)) {
 			var hbWep = player.weapons.FirstOrDefault(w => w is HyperBuster) as HyperBuster;
@@ -686,6 +686,7 @@ public partial class MegamanX : Character {
 
 
 		//Spends ammo and spawns the projectile.
+		
 		player.weapon.addAmmo(ammoUsage, player);
 		player.weapon.shoot(this, new int[] {chargeLevel});
 		if (!player.weapon.isStream) stopCharge();
@@ -695,8 +696,8 @@ public partial class MegamanX : Character {
 		//Giga buster.
 		if (chargeLevel >= 3 && player.hasArmArmor(2)) {
 			if (player.weapon is Buster && !stockedX2Charge) {
-				shootCooldown = hasUltimateArmor ? 30 : 15;
-			} else shootCooldown = 30;
+				shootCooldown = hasUltimateArmor ? 0 : 0;
+			} else shootCooldown = 0;
 	
 			stockX2Charge(!stockedX2Charge);
 		}
@@ -704,7 +705,7 @@ public partial class MegamanX : Character {
 		//Max Buster.
 		if (chargeLevel >= 3 && player.hasGoldenArmor() && player.weapon is Buster) {
 			stockX3Saber(true);
-			xSaberCooldown = 40;
+			xSaberCooldown = 0;
 		}
 
 		lastShotWasSpecialBuster = false;
@@ -994,7 +995,7 @@ public partial class MegamanX : Character {
 			),
 			(int)MeleeIds.X6Saber => new GenericMeleeProj(
 				new XSaber(player), projPos, ProjIds.X6Saber, player,
-				damage: grounded ? 3 : 2, flinch: 0
+				damage: 2, flinch: 0
 			),
 			(int)MeleeIds.NovaStrike => new GenericMeleeProj(
 				new NovaStrike(player), projPos, ProjIds.NovaStrike, player

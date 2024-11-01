@@ -11,7 +11,7 @@ public partial class RPCCreateProj : RPC {
 		{ (int)ProjIds.BusterUnpo, BusterUnpoProj.rpcInvoke },
 		{ (int)ProjIds.Buster3, Buster3Proj.rpcInvoke },
 		{ (int)ProjIds.Buster4, Buster4Proj.rpcInvoke },
-		{ (int)ProjIds.BusterX3Proj2, BusterX3Proj2.rpcInvoke },
+		/*{ (int)ProjIds.BusterX3Proj2, BusterX3Proj2.rpcInvoke },*/
 		{ (int)ProjIds.BusterX3Plasma, BusterPlasmaProj.rpcInvoke },
 		{ (int)ProjIds.BusterX3PlasmaHit, BusterPlasmaHitProj.rpcInvoke },
 
@@ -113,6 +113,7 @@ public struct ProjParameters {
 	public int projId;
 	public Point pos;
 	public int xDir;
+	public int yDir;
 	public Player player;
 	public ushort netId;
 	public byte[] extraData;

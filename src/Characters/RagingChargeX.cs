@@ -63,7 +63,7 @@ public class RGX : Character {
 			!isAttacking() && !isInvisible() &&!charState.isGrabbing
 		) {
 			if (xSaberCooldown == 0) {
-				xSaberCooldown = 60;
+				xSaberCooldown = 0;
 				changeState(new X6SaberState(grounded), true);
 				return;
 			}

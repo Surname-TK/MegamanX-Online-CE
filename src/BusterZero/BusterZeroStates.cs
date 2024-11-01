@@ -31,7 +31,7 @@ public class BusterZeroMelee : CharState {
 				player.input.isPressed(Control.Jump, player)
 			) {
 				if (!character.grounded) {
-					character.dashedInAir++;
+					character.dashedInAir = 0;
 				}
 				character.vel.y = -character.getJumpPower();
 				sprite = "projswing_air";

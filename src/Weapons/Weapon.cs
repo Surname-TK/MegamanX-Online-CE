@@ -256,6 +256,9 @@ public class Weapon {
 	// As a lot of X's projectiles have state changes and other thing that this legacy funtion
 	// cannot use at all. Better to NOT use this at all.
 	// ToDo: Eventually remove this.
+	// Korenji:
+	// I have no clue what these two are babbling about, this isn't even
+	// what I was looking for :derp:
 	public virtual void getProjectile(
 		Point pos, int xDir, Player player, float chargeLevel, ushort netProjId
 	) {

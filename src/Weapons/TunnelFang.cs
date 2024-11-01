@@ -71,7 +71,7 @@ public class TunnelFangProj : Projectile {
 	) : base(
 		weapon, pos, xDir, 100, 1, player, "tunnelfang_proj", 0, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
-		maxTime = 1.25f;
+		maxTime = 1.5f;
 		projId = (int)ProjIds.TunnelFang;
 		exhaust = new Anim(pos, "tunnelfang_exhaust", xDir, null, false);
 		exhaust.setzIndex(zIndex - 100);
@@ -126,9 +126,7 @@ public class TunnelFangProj : Projectile {
 	public override void onHitDamagable(IDamagable damagable) {
 		base.onHitDamagable(damagable);
 		if (damagable.canBeDamaged(damager.owner.alliance, damager.owner.id, projId)) {
-			if (damagable.projectileCooldown.ContainsKey(projId + "_" + owner.id) &&
-				damagable.projectileCooldown[projId + "_" + owner.id] >= damager.hitCooldown
-			) {
+			if (1 == 1) {
 				vel.x = 4 * xDir;
 				// To update the reduced speed.
 				if (ownedByLocalPlayer) {
