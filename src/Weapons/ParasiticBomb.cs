@@ -46,6 +46,9 @@ public class ParasiticBombProj : Projectile {
 		base(weapon, pos, xDir, 200, 0, player, "parasitebomb", 0, 0, netProjId, player.ownedByLocalPlayer) {
 		this.weapon = weapon;
 		maxTime = 0.6f;
+		fadeOnAutoDestroy = true;
+		fadeSprite = "explosion";
+		fadeSound = "explosion";
 		projId = (int)ProjIds.ParasiticBomb;
 		destroyOnHit = true;
 		shouldShieldBlock = true;

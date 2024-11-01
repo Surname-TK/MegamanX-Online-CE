@@ -93,14 +93,14 @@ public class Hurt : CharState {
 
 		if (stateFrames >= flinchTime) {
 			character.changeToLandingOrFall(false);
-		} else if (character.canWallClimb() && character.charState is not WallSlide && character.wallKickTimer <= 0) {
+		} else if (player.input.isLeftOrRightHeld(player) && character.canWallClimb() && character.charState is not WallSlide && character.wallKickTimer <= 0) {
 				//bool velYRequirementMet = character.vel.y > 0 || (character.charState is VileHover vh && vh.fallY > 0);
 				// This logic can be abit confusing,
 				// but we are trying to mirror the actual Mega man X wall climb physics.
 				// In the actual game, X will not initiate a climb
 				// if you directly hugging a wall, jump and push in its direction
 				// UNTIL you start falling OR you move away and jump into it
-				int dpadXDir = player.input.getXDir(player);
+				int dpadXDir = hurtDir;
 
 				if (dpadXDir == -1 && /*velYRequirementMet &&*/ character.charState.lastLeftWall != null
 					&& character.charState.lastLeftWallCollider != null

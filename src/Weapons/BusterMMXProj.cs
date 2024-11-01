@@ -12,6 +12,7 @@ public class BusterProj : Projectile {
 		fadeSprite = "buster1_fade";
 		reflectable = true;
 		maxTime = 0.5175f;
+		fadeOnAutoDestroy = true;
 		if (type == 0) projId = (int)ProjIds.Buster;
 		else if (type == 1) projId = (int)ProjIds.ZBuster;
 
@@ -53,6 +54,7 @@ public class BusterUnpoProj : Projectile {
 		fadeSprite = "buster3_fade";
 		reflectable = true;
 		maxTime = 0.5f;
+		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.BusterUnpo;
 	}
 }
@@ -71,6 +73,7 @@ public class Buster3Proj : Projectile {
 		this.type = type;
 		mmx = player.character as MegamanX;
 		maxTime = 0.5f;
+		fadeOnAutoDestroy = true;
 		fadeSprite = "buster3_fade";
 		projId = (int)ProjIds.Buster3;
 		reflectable = true;
@@ -143,7 +146,7 @@ public class Buster3Proj : Projectile {
 
 	public override void update() {
 		base.update();
-		if (sprite.name is "buster4_x2") {
+		/*if (sprite.name is "buster4_x2") {
 			vel.x += Global.spf * xDir * 550;
 			if (MathF.Abs(vel.x) > 300) vel.x = 300 * xDir;
 			partTime += Global.spf;
@@ -151,7 +154,7 @@ public class Buster3Proj : Projectile {
 				partTime = 0;
 				new Anim(pos.addRand(0, 16), "buster4_x3_part", 1, null, true) { acc = new Point(-vel.x * 3f, 0) };
 			}
-		} else if (sprite.name is "buster3_x3") {
+		} else */if (sprite.name is "buster3_x3") {
 			vel.x += Global.spf * xDir * 550;
 			if (MathF.Abs(vel.x) > 350) vel.x = 350 * xDir;
 			partTime += Global.spf;
@@ -172,7 +175,7 @@ public class Buster3Proj : Projectile {
 
 	public override void render(float x, float y) {
 		base.render(x, y);
-		if (type == 2) {
+		if (sprite.name is "buster4_x2") {
 			float piHalf = MathF.PI / 2;
 			float xOffset = 8;
 			float partTime = (time * 0.75f);
@@ -218,7 +221,7 @@ public class Buster4Proj : Projectile {
 		int type, float offsetTime, ushort netProjId,
 		bool smoothStart = false
 	) : base(
-		weapon, pos, xDir, 396, 4, player, "buster4",
+		weapon, pos, xDir, 396, 3, player, "buster4",
 		Global.defFlinch, 1f, netProjId, player.ownedByLocalPlayer
 	) {
 		fadeSprite = "buster4_fade";
@@ -228,6 +231,7 @@ public class Buster4Proj : Projectile {
 		this.offsetTime = offsetTime;
 		this.smoothStart = smoothStart;
 		maxTime = 0.6f;
+		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.Buster4;
 		/*var busterWeapon = weapon as Buster;
 		if (busterWeapon != null) {
@@ -331,6 +335,7 @@ public class BusterX3Proj2 : Projectile {
 		this.type = type;
 		reflectable = true;
 		maxTime = 1f;
+		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.BusterX3Proj2;
 		if (type == 0) { changeSprite("buster4_max_orb3", true); vel = new Point(-250 * xDir, -75);}
 		if (type == 1) { changeSprite("buster4_max_orb1", true); vel = new Point(-250 * xDir, 75);}
@@ -374,6 +379,7 @@ public class BusterX3Proj3 : Projectile {
 		this.type = type;
 		reflectable = true;
 		maxTime = 1f;
+		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.BusterX3Proj3;
 		if (type == 0) vel = new Point(-450 * xDir, -75);
 		if (type == 1) vel = new Point(-400 * xDir, -50);
