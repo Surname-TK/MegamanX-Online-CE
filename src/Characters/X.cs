@@ -743,7 +743,7 @@ public partial class MegamanX : Character {
 		}
 	}
 
-	public void secondArmorChargeShots(int type) {
+	public void gigaArmorChargeShots(int type) {
 		if (type == 0) {
 			new Buster3Proj(
 				player.weapon, getShootPos(), getShootXDir(), 0,

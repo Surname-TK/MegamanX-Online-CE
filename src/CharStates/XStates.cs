@@ -108,7 +108,7 @@ public class X2ChargeShot : CharState {
 		base.update();
 		if (!fired && character.currentFrame.getBusterOffset() != null) {
 			fired = true;
-			mmx.secondArmorChargeShots(type);
+			mmx.gigaArmorChargeShots(type);
 			/* if (type == 0) {
 				new Buster3Proj(
 					player.weapon, character.getShootPos(), character.getShootXDir(), 0,

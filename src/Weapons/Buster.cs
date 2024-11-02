@@ -148,7 +148,7 @@ public class Buster : Weapon {
 			if (player.ownedByLocalPlayer) {
 				if (mmx.hasUltimateArmor && !mmx.stockedX2Charge) {
 					if (mmx.charState is not WallSlide) mmx.changeState(new X2ChargeShot(2), true);
-					else mmx.secondArmorChargeShots(2);
+					else mmx.gigaArmorChargeShots(2);
 				} else {
 					int type = mmx.stockedX2Charge ? 1 : 0;
 
@@ -156,7 +156,7 @@ public class Buster : Weapon {
 						mmx.shootCooldown = 0;
 						character.changeState(new X2ChargeShot(type), true);
 					} else {
-						mmx.secondArmorChargeShots(type);
+						mmx.gigaArmorChargeShots(type);
 					}	
 				}
 			}
