@@ -255,13 +255,13 @@ public class Zero : Character {
 				shootPos, xDir, 0, player, player.getNextActorNetId(), rpc: true
 			);
 		} else if (chargeLevel == 2) {
-			currencyUse = 1;
+			currencyUse = 0;
 			playSound("buster3X3", sendRpc: true);
 			new ZBuster3Proj(
 				shootPos, xDir, 0, player, player.getNextActorNetId(), rpc: true
 			);
 		} else if (chargeLevel == 3 || chargeLevel >= 4) {
-			currencyUse = 1;
+			currencyUse = 0;
 			playSound("buster4X2", sendRpc: true);
 			new ZBuster4Proj(
 				shootPos, xDir, 0, player, player.getNextActorNetId(), rpc: true
