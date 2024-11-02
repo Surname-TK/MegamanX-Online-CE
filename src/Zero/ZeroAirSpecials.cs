@@ -317,7 +317,7 @@ public class HyorogaStateB : CharState {
 					player, player.getNextActorNetId(), rpc: true);
 					break;
 			}
-			player.currency--;
+			// player.currency--;
 			character.stopCharge();		
 		}
 		if (character.isAnimOver()) {

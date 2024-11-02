@@ -176,6 +176,7 @@ public class SpinWheelProjChargedStart : Projectile {
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.SpinWheelChargedStart;
+		destroyOnHit = true;
 
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
