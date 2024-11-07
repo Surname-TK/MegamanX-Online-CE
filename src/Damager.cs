@@ -832,7 +832,6 @@ public class Damager {
 					}
 					flinch = 0;
 					damage = 0;
-					//maverick.vel.x += 10 * damagingActor.xDir;
 					maverick.playSound("m10ding");
 					if (owner.ownedByLocalPlayer &&
 						owner.character is Zero zero &&
