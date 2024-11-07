@@ -522,14 +522,15 @@ public partial class Player {
 	public int getStartHeartTanksForChar() {
 		if (!Global.level.server.disableHtSt && Global.level?.server?.customMatchSettings == null && !Global.level.gameMode.isTeamMode) {
 			int leaderKills = Global.level.getLeaderKills();
-			if (leaderKills >= 32) return 8;
-			if (leaderKills >= 28) return 7;
-			if (leaderKills >= 24) return 6;
-			if (leaderKills >= 20) return 5;
-			if (leaderKills >= 16) return 4;
-			if (leaderKills >= 12) return 3;
-			if (leaderKills >= 8) return 2;
-			if (leaderKills >= 4) return 1;
+			float playingTo = Global.level.gameMode.playingTo;
+			if (leaderKills >= (playingTo * 0.8)) return 8;
+			if (leaderKills >= (playingTo * 0.7)) return 7;
+			if (leaderKills >= (playingTo * 0.6)) return 6;
+			if (leaderKills >= (playingTo * 0.5)) return 5;
+			if (leaderKills >= (playingTo * 0.4)) return 4;
+			if (leaderKills >= (playingTo * 0.3)) return 3;
+			if (leaderKills >= (playingTo * 0.2)) return 2;
+			if (leaderKills >= (playingTo * 0.1)) return 1;
 		}
 		return 0;
 	}
@@ -545,10 +546,11 @@ public partial class Player {
 	public int getStartSubTanksForChar() {
 		if (!Global.level.server.disableHtSt && Global.level?.server?.customMatchSettings == null && !Global.level.gameMode.isTeamMode) {
 			int leaderKills = Global.level.getLeaderKills();
-			if (leaderKills >= 32) return 4;
-			if (leaderKills >= 24) return 3;
-			if (leaderKills >= 16) return 2;
-			if (leaderKills >= 8) return 1;
+			float playingTo = Global.level.gameMode.playingTo;
+			if (leaderKills >= (playingTo * 0.8)) return 4;
+			if (leaderKills >= (playingTo * 0.6)) return 3;
+			if (leaderKills >= (playingTo * 0.4)) return 2;
+			if (leaderKills >= (playingTo * 0.2)) return 1;
 		}
 
 		return 0;

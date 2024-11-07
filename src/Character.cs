@@ -798,6 +798,7 @@ public partial class Character : Actor, IDamagable {
 				wsr.groundStart = true;
 				return;
 			}
+			if (!killZone.killInvuln && isInvulnerable()) return;
 			if (!killZone.killInvuln && player.isKaiserSigma()) return;
 			if (!killZone.killInvuln && this is MegamanX { stingActive: true} ) return;
 			if (!killZone.killInvuln && this is Axl { stealthActive: true} ) return;
@@ -1104,11 +1105,11 @@ public partial class Character : Actor, IDamagable {
 
 		if (stingChargeTime > 0) {
 			if (player.isX) {
-				stingChargeTime -= Global.spf;
+				stingChargeTime -= 0.02f;
 
 				player.weapon.ammo -= (Global.spf * 3 * (player.hasChip(3) ? 0.5f : 1));
 				if (player.weapon.ammo < 0) player.weapon.ammo = 0;
-				stingChargeTime = player.weapon.ammo;
+				// stingChargeTime = player.weapon.ammo;
 			} else {
 				stingChargeTime -= Global.spf;
 			}

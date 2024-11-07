@@ -69,7 +69,7 @@ public class TunnelFangProj : Projectile {
 	public TunnelFangProj(
 		Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 100, 1, player, "tunnelfang_proj", 0, 0.5f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 100, 0.5f, player, "tunnelfang_proj", 0, 0.25f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 1.5f;
 		projId = (int)ProjIds.TunnelFang;

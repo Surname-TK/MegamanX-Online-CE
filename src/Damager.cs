@@ -388,7 +388,7 @@ public class Damager {
 					character.addBurnTime(owner, new Napalm(NapalmType.FireGrenade), 1);;
 					break;
 				case (int)ProjIds.Napalm2Flame:
-					character.addBurnTime(owner, new Napalm(NapalmType.FireGrenade), 0.5f);
+					character.addBurnTime(owner, new Napalm(NapalmType.FireGrenade), 0.25f);
 					break;
 				case (int)ProjIds.Ryuenjin:
 					character.addBurnTime(owner, RyuenjinWeapon.staticWeapon, 0.75f);
@@ -403,16 +403,16 @@ public class Damager {
 					character.addBurnTime(owner, new FlameBurner(0), 1);
 					break;
 				case (int)ProjIds.QuakeBlazer:
-					character.addBurnTime(owner, DanchienWeapon.staticWeapon, 0.5f);
+					character.addBurnTime(owner, DanchienWeapon.staticWeapon, 0.75f);
 					break;
 				case (int)ProjIds.QuakeBlazerFlame:
-					character.addBurnTime(owner, DanchienWeapon.staticWeapon, 0.5f);
+					character.addBurnTime(owner, DanchienWeapon.staticWeapon, 0.75f);
 					break;
 				case (int)ProjIds.FlameMFireball:
 					character.addBurnTime(owner, new FlameMFireballWeapon(), 1);
 					break;
 				case (int)ProjIds.FlameMOilFire:
-					character.addBurnTime(owner, new FlameMOilFireWeapon(), 8);
+					character.addBurnTime(owner, new FlameMOilFireWeapon(), 4);
 					break;
 				case (int)ProjIds.VelGFire:
 					character.addBurnTime(owner, new VelGFireWeapon(), 0.5f);
@@ -479,34 +479,23 @@ public class Damager {
 				case (int)ProjIds.SeaDragonRage:
 					character.addIgFreezeProgress(1);
 					break;
-				//Other effects
-				case (int)ProjIds.PlasmaGun:
-					if (mmx != null && mmx.player.hasBodyArmor(3)) {
-						//The main shot fires an EMP burst that causes a full flinch and 
-						//destroys Rolling Shields as well as temporarily disabling X3 barriers
-						//He literally made an INFINITE DEACTIVATION
-						//I am putting this to 3, as i suppose is what he meant to 
-						//mmx.barrierCooldown = 3;
-						mmx.barrierTime = 3;
-						victim?.playSound("weakness");
-					}
-					break;	
+				//Other effects	
 				case (int)ProjIds.SplashLaser:
 					if (damagingActor != null) {
 						character.splashLaserKnockback(damagingActor.deltaPos);
 					}
 					break;
-				case (int)ProjIds.MechFrogStompShockwave:
-				case (int)ProjIds.FlameMStompShockwave:
 				case (int)ProjIds.TBreakerProj:
 				case (int)ProjIds.TriadThunderQuake:
+				case (int)ProjIds.MechFrogStompShockwave:
+				case (int)ProjIds.FlameMStompShockwave:
 					if (character.grounded && character.ownedByLocalPlayer) {
 						character.changeState(new KnockedDown(character.pos.x < damagingActor?.pos.x ? -1 : 1), true);
 					}
 					break;
 				case (int)ProjIds.BBuffaloQuake:
 				case (int)ProjIds.TunnelRQuake:
-					if (character.grounded && character.ownedByLocalPlayer) {
+					if (character.charState is WallSlide && character.ownedByLocalPlayer) {
 						character.changeState(new KnockedDown(character.pos.x < damagingActor?.pos.x ? -1 : 1), true);
 					}
 					break;
@@ -544,9 +533,13 @@ public class Damager {
 			}
 			switch (weaponIndex) {
 				case (int)WeaponIds.Boomerang:
+				case (int)WeaponIds.Shippuuga:
+				case (int)WeaponIds.VileCutter:
+				case (int)WeaponIds.BlackArrow:
 				case (int)WeaponIds.BoomerangKBoomerang:
-					if (character.player.isX) 
+					if (character.player.isX || character.player.isAxl) {
 						character.stingChargeTime = 0;
+					}
 					break;
 			}
 
@@ -790,9 +783,8 @@ public class Damager {
 							} else {
 								flinch = Global.miniFlinch;
 							} 
-						}
 						// Medium mavericks
-						else if (maverick.armorClass == Maverick.ArmorClass.Medium) {
+						} else if (maverick.armorClass == Maverick.ArmorClass.Medium) {
 							if (flinch <= Global.miniFlinch) {
 								flinch = 0;
 							} else if (flinch <= Global.halfFlinch) {
@@ -824,8 +816,52 @@ public class Damager {
 					}
 				}
 				*/
+				if (maverick.sprite.name.Contains("_shell") && !maverick.state.inTransition() && damage > 0 && !isArmorPiercing(projId)) {
+					float tempPush = 0;
+					if (maverick.ownedByLocalPlayer && owner != null) {
+						tempPush = damage * 64;
+					}
+					// Apply push only if the new push is stronger than the current one.
+					if (tempPush >= Math.Abs(maverick.xFlinchPushVel)) {
+						float pushDirection = -victim.xDir;
+						if (maverick != null) {
+							if (maverick.pos.x > owner.character.pos.x) pushDirection = 1;
+							if (maverick.pos.x < owner.character.pos.x) pushDirection = -1;
+						}
+						maverick.xFlinchPushVel = pushDirection * tempPush;
+					}
+					flinch = 0;
+					damage = 0;
+					//maverick.vel.x += 10 * damagingActor.xDir;
+					maverick.playSound("m10ding");
+					if (owner.ownedByLocalPlayer &&
+						owner.character is Zero zero &&
+						!zero.hypermodeActive()
+					) {		 //What in the..
+						if ( /*projId == (int)ProjIds.ZSaber */ 
+							GenericMeleeProj.isZSaberClang(projId)
+						) {
+							owner.character.changeState(new ZeroClang(-owner.character.xDir));
+						}
+					}
+				}
 				if (maverick.sprite.name == "armoreda_block" && damage > 0 && !isArmorPiercingOrElectric(projId)) {
 					if (hitFromFront(maverick, damagingActor, owner, projId)) {
+						
+						float tempPush = 0;
+						if (maverick.ownedByLocalPlayer && owner != null) {
+							tempPush = damage * 32;
+						}
+						// Apply push only if the new push is stronger than the current one.
+						if (tempPush >= Math.Abs(maverick.xFlinchPushVel)) {
+							float pushDirection = -victim.xDir;
+							if (maverick != null) {
+								if (maverick.pos.x > owner.character.pos.x) pushDirection = 1;
+								if (maverick.pos.x < owner.character.pos.x) pushDirection = -1;
+							}
+						maverick.xFlinchPushVel = pushDirection * tempPush;
+						}
+
 						if (maverick.ownedByLocalPlayer && damage > 2 &&
 							damagingActor is Projectile proj && proj.shouldVortexSuck && proj.destroyOnHit
 						) {

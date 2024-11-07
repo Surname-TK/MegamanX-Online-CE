@@ -400,10 +400,10 @@ public class CSnailShellState : MaverickState {
 
 		if (isAI) {
 			if (stateTime > 2) {
-				maverick.changeToIdleOrFall("shell_end");
+				maverick.changeToIdleOrFall("shell_exit");
 			}
 		} else if (input.isPressed(Control.Dash, player)) {
-			maverick.changeToIdleOrFall("shell_end");
+			maverick.changeToIdleOrFall("shell_exit");
 		}
 	}
 

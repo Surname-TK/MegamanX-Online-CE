@@ -112,7 +112,7 @@ public class BubbleSplashProj : Projectile {
 		bool rpc = false
 	) : base(
 		BubbleSplash.netWeapon, pos, xDir,
-		75, 0.5f, player, "bubblesplash_proj_start", 0, 0f,
+		75, 0.5f, player, "bubblesplash_start", 0, 0f,
 		netProjId, player.ownedByLocalPlayer
 	) {
 		destroyOnHit = false;
@@ -124,7 +124,7 @@ public class BubbleSplashProj : Projectile {
 			randY = Helpers.randomRange(100, 150);
 		}
 		if (size == null) {
-			size = Helpers.randomRange(0, spriteVariants.Length - 1);
+			size = Helpers.randomRange(0, 2);
 		}
 		if (randT == null) {
 			randT = Helpers.randomRange(1f, 1.5f);
@@ -141,10 +141,10 @@ public class BubbleSplashProj : Projectile {
 			vel.x *= 2;
 		}
 
-		randBubble = Helpers.randomRange(0, 8);
-		if (randBubble == 0 || randBubble == 1 || randBubble == 2) {
+		randBubble = Helpers.randomRange(0, spriteVariants.Length - 1);
+		if (size == 0) {
 			fadeSprite = "bubblesplash_pop_small";
-		} else if (randBubble == 3 || randBubble == 4 || randBubble == 5) { 
+		} else if (size == 1) { 
 			fadeSprite = "bubblesplash_pop_medium";
 		} else {
 			fadeSprite = "bubblesplash_pop_large";
@@ -170,7 +170,9 @@ public class BubbleSplashProj : Projectile {
 	}
 	public override void update() {
 		base.update();
-		if (sprite.name != "bubblesplash_proj_start"){
+		if (sprite.name == "bubblesplash_start"){
+			vel.y = 0;
+		} else {
 			if (vel.y == 0) { 
 				vel.y = -20 * (randY / 100f);
 			}
@@ -180,15 +182,19 @@ public class BubbleSplashProj : Projectile {
 				vel.y -= 1.5f;
 			}
 		}
-		if (sprite.name == "bubblesplash_proj_start" && isAnimOver()) {
-			changeSprite(spriteVariants[size], true);
-		}
-		/*if (time > randT){
-			time = 0;
-			fadeOnAutoDestroy = false;
-			playSound(fadeSound, true, true);
-			changeSprite(fadeSprite, true);
-		}*/
+		if (sprite.name.Contains("proj") && !sprite.name.Contains("start")){
+			switch (size) {
+				case 0: if (frameIndex > 0) {frameSpeed = 0;}
+				break;
+				case 1: if (frameIndex > 1) {frameSpeed = 0;}
+				break;
+				case 2: if (frameIndex > 2) {frameSpeed = 0;}
+				break;
+			}
+		} else if (sprite.name.Contains("start") && isAnimOver()) {
+			changeSprite(spriteVariants[randBubble], true);
+		} 
+
 		if (sprite.name == fadeSprite){
 			//fadeOnAutoDestroy = false;
 			vel = new Point(0, 0);
@@ -199,15 +205,9 @@ public class BubbleSplashProj : Projectile {
 	}
 
 	public static string[] spriteVariants = {
-		"bubblesplash_proj_small1",
-		"bubblesplash_proj_small2",
-		"bubblesplash_proj_small3",
-		"bubblesplash_proj_medium1",
-		"bubblesplash_proj_medium2",
-		"bubblesplash_proj_medium3",
-		"bubblesplash_proj_large1",
-		"bubblesplash_proj_large2",
-		"bubblesplash_proj_large3",
+		"bubblesplash_proj1",
+		"bubblesplash_proj2",
+		"bubblesplash_proj3",
 	};
 
 	public static Projectile rpcInvoke(ProjParameters arg) {
@@ -225,20 +225,20 @@ public class BubbleSplashProjCharged : Projectile {
 		Weapon weapon, Point pos, int xDir, Player player, 
 		int type, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 75, 1, player, "bubblesplash_proj_start", 
+		weapon, pos, xDir, 75, 1, player, "bubblesplash_start", 
 		0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		useGravity = false;
 		int randBubble = Helpers.randomRange(0, 8);
-			if (randBubble == 0) changeSprite("bubblesplash_proj_small1", true);
-			if (randBubble == 1) changeSprite("bubblesplash_proj_small2", true);
-			if (randBubble == 2) changeSprite("bubblesplash_proj_small3", true);
-			if (randBubble == 3) changeSprite("bubblesplash_proj_medium1", true);
-			if (randBubble == 4) changeSprite("bubblesplash_proj_medium2", true);
-			if (randBubble == 5) changeSprite("bubblesplash_proj_medium3", true);
-			if (randBubble == 6) changeSprite("bubblesplash_proj_large1", true);
-			if (randBubble == 7) changeSprite("bubblesplash_proj_large2", true);
-			if (randBubble == 8) changeSprite("bubblesplash_proj_large3", true);
+			if (randBubble == 0) changeSprite("bubblesplash_proj1", true);
+			if (randBubble == 1) changeSprite("bubblesplash_proj2", true);
+			if (randBubble == 2) changeSprite("bubblesplash_proj3", true);
+			if (randBubble == 3) changeSprite("bubblesplash_proj1", true);
+			if (randBubble == 4) changeSprite("bubblesplash_proj2", true);
+			if (randBubble == 5) changeSprite("bubblesplash_proj3", true);
+			if (randBubble == 6) changeSprite("bubblesplash_proj1", true);
+			if (randBubble == 7) changeSprite("bubblesplash_proj2", true);
+			if (randBubble == 8) changeSprite("bubblesplash_proj3", true);
 
 		if (randBubble == 0 || randBubble == 1 || randBubble == 2) {
 			fadeSprite = "bubblesplash_pop_small";
@@ -264,6 +264,12 @@ public class BubbleSplashProjCharged : Projectile {
 
 		canBeLocal = false;
 	}
+	
+	public static string[] spriteVariants = {
+		"bubblesplash_proj1",
+		"bubblesplash_proj2",
+		"bubblesplash_proj3",
+	};
 
 	public static Projectile rpcInvoke(ProjParameters arg) {
 		return new BubbleSplashProjCharged(

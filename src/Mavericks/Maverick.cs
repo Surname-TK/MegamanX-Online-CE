@@ -126,7 +126,7 @@ public class Maverick : Actor, IDamagable {
 		if (this is MorphMothCocoon mmc && (mmc.selfDestructTime > 0 || mmc.isBurned)) {
 			return false;
 		}
-		if (this is CrystalSnail cs && cs.sprite.name.EndsWith("shell_end")) {
+		if (this is CrystalSnail cs && cs.sprite.name.EndsWith("shell_exit")) {
 			return false;
 		}
 		return true;
@@ -943,7 +943,7 @@ public class Maverick : Actor, IDamagable {
 
 	public bool isInvincible(Player attacker, int? projId) {
 		return sprite.name == "drdoppler_dash" || sprite.name == "armoreda_charge" ||
-		sprite.name.Contains("_shell") || sprite.name.EndsWith("eat_loop");
+		sprite.name.Contains("shell_spin") || sprite.name.EndsWith("eat_loop");
 	}
 
 	public bool canBeHealed(int healerAlliance) {

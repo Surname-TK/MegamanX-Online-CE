@@ -58,11 +58,11 @@ public class AcidBurstProj : Projectile {
 			if (!owner.isDead) {
 				if (owner.input.isHeld(Control.Up, owner)) {
 					vel.x = 0;
-					vel.y = -300;
+					vel.y = -400;
 				}
 				if (owner.input.isHeld(Control.Down, owner)) {
 					vel.x = 0;
-					vel.y = 250;
+					vel.y = 200;
 				}
 			}
 		}

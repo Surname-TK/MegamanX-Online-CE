@@ -25,8 +25,11 @@ public class Sting : Weapon {
 	public override float getAmmoUsageEX(int chargeLevel, Character character) {
 		MegamanX mmx = character as MegamanX ?? throw new NullReferenceException();
 
-		if (mmx.stingActive) return 8;
-		return getAmmoUsage(chargeLevel);
+		/*if (mmx.stingActive) {
+			return 1;
+		}
+		return getAmmoUsage(chargeLevel);*/
+		return 1;
 	}
 
 	public override void shoot(Character character, int[] args) {
@@ -38,7 +41,7 @@ public class Sting : Weapon {
 		if (chargeLevel < 3) {
 			new StingProj(this, pos, xDir, player, 0, player.getNextActorNetId(), true);
 		} else {
-			character.stingChargeTime = 8;
+			character.stingChargeTime = 3.6f;
 		}
 	}
 }

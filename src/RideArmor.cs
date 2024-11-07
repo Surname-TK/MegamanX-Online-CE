@@ -540,7 +540,7 @@ public class RideArmor : Actor, IDamagable {
 	public bool canAttack() {
 		if (character == null) return false;
 		bool ignoreRideArmorHide = true;
-		if (raNum == 2 || raNum == 3) ignoreRideArmorHide = false;
+		if ((character.charState as InRideArmor)?.isHiding == true) return false;
 		if (missileCooldown > 0) return false;
 		return !string.IsNullOrEmpty(rideArmorState?.attackSprite) && !character.isInvulnerable(ignoreRideArmorHide, true) && !sprite.name.Contains("attack");
 	}
@@ -1346,7 +1346,7 @@ public class RAIdle : RideArmorState {
 
 		Helpers.decrementTime(ref attackCooldown);
 
-		if (player != null && rideArmor.raNum == 1 && player.input.isHeld(Control.Shoot, player) && !rideArmor.isAttacking()) {
+		if (player != null && rideArmor.raNum == 1 && player.input.isHeld(Control.Shoot, player) && !rideArmor.isAttacking() && !(character.charState as InRideArmor).isHiding) {
 			shootHeldTime += Global.spf;
 			if (shootHeldTime > 0.5f) {
 				shootHeldTime = 0;
@@ -1910,7 +1910,7 @@ public class RAChainCharge : RideArmorState {
 				rideArmor.xDir = 1;
 			}
 
-			if (player.dashPressed(out string dashControl)) {
+			if (!(character.charState as InRideArmor).isHiding && player.dashPressed(out string dashControl)) {
 				bool isHiding = (character?.charState as InRideArmor)?.isHiding ?? false;
 				rideArmor.changeState(new RAChainChargeDash(dashControl, isHiding), true);
 				return;
