@@ -535,7 +535,7 @@ public class AI {
 			weaponTime += Global.spf;
 			if (weaponTime > 5) {
 				weaponTime = 0;
-				var wasBuster = (player.weapon is Buster or AxlBullet);
+				var wasBuster = (player.weapon is XBuster or AxlBullet);
 				player.changeWeaponSlot(getRandomWeaponIndex());
 				if (wasBuster && maxChargeTime > 0) {
 					maxChargeTime = 4.25f * 60f;
@@ -543,7 +543,7 @@ public class AI {
 			}
 		}
 
-		if (player.weapon != null && player.weapon.ammo <= 0 && player.weapon is not Buster or AxlBullet) {
+		if (player.weapon != null && player.weapon.ammo <= 0 && player.weapon is not XBuster or AxlBullet) {
 			player.changeWeaponSlot(getRandomWeaponIndex());
 		}
 
@@ -603,7 +603,7 @@ public class AI {
 			int FrostShield = player.weapons.FindIndex(w => w is FrostShield);
 			int TriadThunder = player.weapons.FindIndex(w => w is TriadThunder);
 			int GravityWell = player.weapons.FindIndex(w => w is GravityWell);
-			int TunnelFang = player.weapons.FindIndex(w => w is TunnelFang);
+			int TornadoFang = player.weapons.FindIndex(w => w is TornadoFang);
 			int AcidBurst = player.weapons.FindIndex(w => w is AcidBurst);
 			int ParasiticBomb = player.weapons.FindIndex(w => w is ParasiticBomb);
 			int CrystalHunter = player.weapons.FindIndex(w => w is CrystalHunter);
@@ -611,10 +611,10 @@ public class AI {
 			int SpinWheel = player.weapons.FindIndex(w => w is SpinWheel);
 			int ElectricSpark = player.weapons.FindIndex(w => w is ElectricSpark);
 			int RollingShield = player.weapons.FindIndex(w => w is RollingShield);
-			int Tornado = player.weapons.FindIndex(w => w is Tornado);
-			int Torpedo = player.weapons.FindIndex(w => w is Torpedo);
-			int Sting = player.weapons.FindIndex(w => w is Sting);
-			int Boomerang = player.weapons.FindIndex(w => w is Boomerang);
+			int Tornado = player.weapons.FindIndex(w => w is StormTornado);
+			int Torpedo = player.weapons.FindIndex(w => w is HomingTorpedo);
+			int Sting = player.weapons.FindIndex(w => w is ChameleonSting);
+			int Boomerang = player.weapons.FindIndex(w => w is BoomerangCutter);
 			int ShotgunIce = player.weapons.FindIndex(w => w is ShotgunIce);
 			int SonicSlicer = player.weapons.FindIndex(w => w is SonicSlicer);
 			int StrikeChain = player.weapons.FindIndex(w => w is StrikeChain);
@@ -656,7 +656,7 @@ public class AI {
 								// Tunnel Fang
 								case 4:
 									if (isTargetSuperClose)
-										megamanX.player.changeWeaponSlot(TunnelFang);
+										megamanX.player.changeWeaponSlot(TornadoFang);
 									megamanX.player.press(Control.Shoot);
 									break;
 								// Acid Burst
@@ -898,7 +898,7 @@ public class AI {
 						}
 						break;
 					case 8:
-						int hyperbuster = player.weapons.FindIndex(w => w is HyperBuster);
+						int hyperbuster = player.weapons.FindIndex(w => w is HyperCharge);
 						if (player.hasArmArmor(3)) {
 							player.changeWeaponSlot(hyperbuster);
 							if (megamanX.player.weapon.ammo >= 16) {
@@ -1070,7 +1070,7 @@ public class AI {
 						zero.slideVel = zero.xDir * zero.getDashSpeed() * 2f;
 						break;		
 					case 5 when zero.grounded:
-						if (zero.gigaAttack.shootTime <= 0 && zero.gigaAttack.ammo >= zero.gigaAttack.getAmmoUsage(0)) {
+						if (zero.gigaAttack.shootCooldown <= 0 && zero.gigaAttack.ammo >= zero.gigaAttack.getAmmoUsage(0)) {
 							if (zero.gigaAttack is RekkohaWeapon) {
 								zero.gigaAttack.addAmmo(-zero.gigaAttack.getAmmoUsage(0), player);
 								zero.changeState(new Rekkoha(zero.gigaAttack), true);
@@ -1135,7 +1135,7 @@ public class AI {
 								zero.changeState(new ZeroCrouchSlashState(), true);
 								break;
 							case 3:
-								if (zero.gigaAttack.shootTime <= 0 && zero.gigaAttack.ammo >= zero.gigaAttack.getAmmoUsage(0)) {
+								if (zero.gigaAttack.shootCooldown <= 0 && zero.gigaAttack.ammo >= zero.gigaAttack.getAmmoUsage(0)) {
 									if (zero.gigaAttack is RekkohaWeapon) {
 										zero.gigaAttack.addAmmo(-zero.gigaAttack.getAmmoUsage(0), player);
 										zero.changeState(new Rekkoha(zero.gigaAttack), true);
@@ -1309,7 +1309,7 @@ public class AI {
 					|| proj.projId == (int)ProjIds.MagnetMine || proj.projId == (int)ProjIds.FrostShield || proj.projId == (int)ProjIds.FrostShieldCharged 
 					|| proj.projId == (int)ProjIds.FrostShieldAir || proj.projId == (int)ProjIds.FrostShieldChargedPlatform || proj.projId == (int)ProjIds.FrostShieldPlatform)	
 				){					
-					if (zero.gigaAttack.shootTime <= 0 && zero.grounded) {
+					if (zero.gigaAttack.shootCooldown <= 0 && zero.grounded) {
 						switch (zero.gigaAttack) {
 							case RekkohaWeapon when zero.gigaAttack.ammo >= 28:
 								zero.gigaAttack.addAmmo(-zero.gigaAttack.getAmmoUsage(0), player);
@@ -1398,7 +1398,7 @@ public class AI {
 		foreach (GameObject gameObject in pzero.getCloseActors(64, true, false, false)) {
 			if (gameObject is Projectile proj && player.character is PunchyZero pzero1
 			&& proj.damager.owner.alliance != player.alliance && pzero.charState.attackCtrl) { 									
-				if (pzero1.gigaAttack.shootTime <= 0 && pzero1.grounded) {
+				if (pzero1.gigaAttack.shootCooldown <= 0 && pzero1.grounded) {
 					switch (pzero1.gigaAttack) {
 						case RekkohaWeapon when pzero1.gigaAttack.ammo >= 28:
 							pzero1.gigaAttack.addAmmo(-pzero1.gigaAttack.getAmmoUsage(0), player);

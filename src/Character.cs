@@ -20,8 +20,8 @@ public partial class Character : Actor, IDamagable {
 	public Player player;
 	public bool isDashing;
 	public float shootTime {
-		get { return player.weapon.shootTime; }
-		set { player.weapon.shootTime = value; }
+		get { return player.weapon.shootCooldown; }
+		set { player.weapon.shootCooldown = value; }
 	}
 	public bool changedStateInFrame;
 	public bool pushedByTornadoInFrame;
@@ -946,7 +946,7 @@ public partial class Character : Actor, IDamagable {
 					acidHurtCooldown = 0;
 				}
 				acidDamager?.applyDamage(
-					this, player.weapon is TunnelFang,
+					this, player.weapon is TornadoFang,
 					new AcidBurst(), this, (int)ProjIds.AcidBurstPoison,
 					overrideDamage: 1f
 				);
@@ -1620,13 +1620,6 @@ public partial class Character : Actor, IDamagable {
 		if (isCharging()) {
 			chargeSound.play();
 			int chargeType = 0;
-			/*if (this is BusterZero) {
-				chargeType = 1;
-			} else if (player.isX && player.hasArmArmor(3)) {
-				if (player.hasGoldenArmor()) {
-					chargeType = 2;
-				}
-			} */
 			if (!sprite.name.Contains("ra_hide")) {
 				int level = getChargeLevel();
 				var renderGfx = RenderEffectType.ChargeBlue;
@@ -1953,7 +1946,7 @@ public partial class Character : Actor, IDamagable {
 		switch (this) {
 			case MegamanX mmx:
 				clampTo2 = player.hasArmArmor(0);
-				clampTo3 = player.hasArmArmor(1) || player.weapon is not Buster;
+				clampTo3 = player.hasArmArmor(1) || player.weapon is not XBuster;
 				break;
 			case Zero zero:
 				clampTo3 = true;
@@ -1964,9 +1957,6 @@ public partial class Character : Actor, IDamagable {
 			case BusterZero:
 				clampTo3 = false;
 				break;
-			/*case Iris iris:
-				clampTo3 = !iris.isHyperIris;
-				break;*/
 		}
 		if (chargeTime < charge1Time) {
 			return 0;
@@ -2877,16 +2867,6 @@ public partial class Character : Actor, IDamagable {
 					);
 				}
 			}
-			/*if (this is Iris iris) {
-				float currentAmmo = iris.IrisRakuhouhaWeapon.ammo;
-				iris.IrisRakuhouhaWeapon.addAmmo(gigaAmmoToAdd, player);
-				if (player.isMainPlayer) {
-					Weapon.gigaAttackSoundLogic(
-						this, currentAmmo, iris.IrisRakuhouhaWeapon.ammo,
-						iris.IrisRakuhouhaWeapon.getAmmoUsage(0), iris.IrisRakuhouhaWeapon.maxAmmo
-					);
-				}
-			}*/
 			if (this is MegamanX) {
 				var gigaCrush = player.weapons.FirstOrDefault(w => w is GigaCrush);
 				if (gigaCrush != null) {
@@ -2899,7 +2879,7 @@ public partial class Character : Actor, IDamagable {
 						);
 					}
 				}
-				var hyperBuster = player.weapons.FirstOrDefault(w => w is HyperBuster);
+				var hyperBuster = player.weapons.FirstOrDefault(w => w is HyperCharge);
 				if (hyperBuster != null) {
 					float currentAmmo = hyperBuster.ammo;
 					hyperBuster.addAmmo(gigaAmmoToAdd, player);

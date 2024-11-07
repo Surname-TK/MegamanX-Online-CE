@@ -17,7 +17,7 @@ public class RayGun : AxlWeapon {
 		weaponBarIndex = 28;
 		weaponSlotIndex = 34;
 		killFeedIndex = 33;
-		rateOfFire = 0.15f;
+		fireRate = 10;
 
 		if (altFire == 1) {
 			shootSounds[3] = "";
