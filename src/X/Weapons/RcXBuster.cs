@@ -20,7 +20,7 @@ public class RagingChargeBuster : Weapon {
 		drawCooldown = true;
 		allowSmallBar = false;
 		ammoGainMultiplier = 2;
-		maxAmmo = 12;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 	}
 

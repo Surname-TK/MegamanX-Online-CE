@@ -898,9 +898,9 @@ public class AI {
 						}
 						break;
 					case 8:
-						int hyperbuster = player.weapons.FindIndex(w => w is HyperCharge);
+						int hypercharge = player.weapons.FindIndex(w => w is HyperCharge);
 						if (player.hasArmArmor(3)) {
-							player.changeWeaponSlot(hyperbuster);
+							player.changeWeaponSlot(hypercharge);
 							if (megamanX.player.weapon.ammo >= 16) {
 								megamanX.player.press(Control.Shoot);
 								megamanX.player.release(Control.Shoot);

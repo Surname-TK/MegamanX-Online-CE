@@ -27,9 +27,9 @@ public class VileMissile : Weapon {
 			vileAmmo = 7;
 			killFeedIndex = 126;
 		} else if (vileMissileType == VileMissileType.ElectricShock) {
-			fireRate = 45;
+			fireRate = 30;
 			displayName = "Electric Shock";
-			vileAmmo = 14;
+			vileAmmo = 21;
 			description = new string[] { "Stops enemies in their tracks,", "but deals no damage." };
 			vileWeight = 3;
 		} else if (vileMissileType == VileMissileType.HumerusCrush) {
@@ -41,10 +41,10 @@ public class VileMissile : Weapon {
 			killFeedIndex = 74;
 			vileWeight = 3;
 		} else if (vileMissileType == VileMissileType.PopcornDemon) {
-			fireRate = 45;
+			fireRate = 20;
 			displayName = "Popcorn Demon";
 			projSprite = "missile_pd_proj";
-			vileAmmo = 7;
+			vileAmmo = 14;
 			description = new string[] { "This missile splits into 3", "and can cause great damage." };
 			killFeedIndex = 76;
 			vileWeight = 3;
@@ -119,7 +119,7 @@ public class VileMissileProj : Projectile {
 			this.xDir = 1;
 			this.vel = vel.Value.times(speed);
 			angle = this.vel.angle;
-			damager.damage = 2;
+			damager.damage = 1;
 			damager.hitCooldown = 0;
 		}
 

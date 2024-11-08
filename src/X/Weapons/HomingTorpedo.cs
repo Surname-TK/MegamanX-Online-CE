@@ -19,7 +19,7 @@ public class HomingTorpedo : Weapon {
 		effect = "A Homing Torpedo.. yeah.";
 		hitcooldown = "0";
 		Flinch = "0/13";
-		maxAmmo = 16;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 	}
 

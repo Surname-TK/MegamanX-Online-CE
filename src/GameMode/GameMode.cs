@@ -1992,6 +1992,9 @@ public class GameMode {
 			if (mainPlayer.character != null && !mainPlayer.character.destroyed) {
 				mmx = mainPlayer.character as MegamanX ?? throw new NullReferenceException();
 			}
+			if (weapon is Weapon wp){
+				drawWeaponSlotCooldown(x, y, mmx.shootCooldown / wp.fireRate);
+			}/*
 
 			if (weapon is HyperCharge &&
 				!mainPlayer.isSpectator &&
@@ -2002,7 +2005,7 @@ public class GameMode {
 				drawWeaponSlotCooldown(x, y, mmx.hyperchargeCooldown / hc.getRateOfFire(level.mainPlayer));
 			} else if (weapon is NovaStrike ns) {
 				drawWeaponSlotCooldown(x, y, mmx.novaStrikeCooldown / ns.fireRate);
-			}
+			}*/
 		}
 		 
 		if (weapon is SigmaMenuWeapon) {

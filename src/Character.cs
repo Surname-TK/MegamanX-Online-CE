@@ -1107,7 +1107,7 @@ public partial class Character : Actor, IDamagable {
 			if (player.isX) {
 				stingChargeTime -= 0.02f;
 
-				player.weapon.ammo -= (Global.spf * 3 * (player.hasChip(3) ? 0.5f : 1));
+				player.weapon.ammo -= 0.02f * (player.hasChip(3) ? 0.5f : 1);
 				if (player.weapon.ammo < 0) player.weapon.ammo = 0;
 				// stingChargeTime = player.weapon.ammo;
 			} else {
@@ -1155,7 +1155,7 @@ public partial class Character : Actor, IDamagable {
 				if (player == Global.level.mainPlayer || playHealSound) {
 					var mmx = this as MegamanX;
 					if (player.hasChip(2) && mmx.rechargeHealthTime == 0) {
-						playSound("goldenHelmetHP", forcePlay: true, sendRpc: true);
+						playSound("heal", forcePlay: true, sendRpc: true);
 					} else {
 						playSound("heal", forcePlay: true, sendRpc: true);
 					}

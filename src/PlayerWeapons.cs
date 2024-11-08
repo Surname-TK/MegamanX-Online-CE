@@ -306,7 +306,7 @@ label:
 		}
 
 		var oldGigaCrush = weapons?.Find(w => w is GigaCrush);
-		var oldHyperbuster = weapons?.Find(w => w is HyperCharge);
+		var oldHypercharge = weapons?.Find(w => w is HyperCharge);
 		var oldWeapons = weapons;
 
 		if (preSigmaReviveWeapons != null) {
@@ -395,13 +395,6 @@ label:
 				}
 			} else {
 				weapons = loadout.xLoadout.getWeaponsFromLoadout(this);
-				/*
-				foreach (Weapon weapon in weapons)
-				{
-					if (weapon is GigaCrush && oldGigaCrush != null) weapon.ammo = oldGigaCrush.ammo;
-					if (weapon is HyperBuster && oldHyperbuster != null) weapon.ammo = oldHyperbuster.ammo;
-				}
-				*/
 			}
 		} else if (isAxl) {
 			if (Global.level.isTraining() && !Global.level.server.useLoadout) {

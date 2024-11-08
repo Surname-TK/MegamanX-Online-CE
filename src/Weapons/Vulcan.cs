@@ -25,7 +25,7 @@ public class Vulcan : Weapon {
 			description = new string[] { "Do not equip a Vulcan." };
 			killFeedIndex = 126;
 		} else if (vulcanType == VulcanType.CherryBlast) {
-			fireRate = 15;
+			fireRate = 10;
 			displayName = "Cherry Blast";
 			vileAmmoUsage = 0.15f;
 			muzzleSprite = "vulcan_muzzle";
