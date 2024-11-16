@@ -300,6 +300,7 @@ public class Buster4Proj : Projectile {
 		maxTime = 0.6f;
 		fadeOnAutoDestroy = true;
 		projId = (int)ProjIds.Buster4;
+		canBeLocal = false;
 
 		if (rpc) {
 			byte[] extraArgs = new byte[] { (byte)type, (byte)offsetTime};
