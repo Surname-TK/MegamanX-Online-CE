@@ -80,9 +80,6 @@ public class Hurt : CharState {
 				if (player.charNum == 3) character.frameIndex = 2;
 			}
 		}
-		if (player.character.dashedInAir >= 1) {
-			player.character.dashedInAir--;
-		}
 
 		if (player.character is MegamanX or Zero &&
 			player.character.canCharge() &&
@@ -117,7 +114,6 @@ public class Hurt : CharState {
 				}
 		}
 	}
-
 	public override void onExit(CharState newState) {
 		base.onExit(newState);
 		if (character.dashedInAir > 0) character.dashedInAir--;
@@ -143,7 +139,7 @@ public class GenericStun : CharState {
 
 	public override void update() {
 		Helpers.decrementFrames(ref flinchTime);
-
+		useDashJumpSpeed = true;
 		crystalizeLogic();
 		paralizeAnimLogic();
 		freezeLogic();
@@ -306,6 +302,7 @@ public class GenericStun : CharState {
 		character.paralyzedTime = 0;
 		character.frozenTime = 0;
 		character.crystalizedTime = 0;
+		character.dashedInAir = 0;
 
 		base.onExit(newState);
 	}

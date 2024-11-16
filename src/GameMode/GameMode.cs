@@ -2535,7 +2535,7 @@ public class GameMode {
 				Fonts.drawText(FontType.Blue, player.getDisplayPing(), col5x, topPlayerY + (i) * rowH, Alignment.Left);
 			}
 
-			Global.sprites[getCharIcon(player)].drawToHUD(player.realCharNum, col2x + 4, topPlayerY + i * rowH);
+			Global.sprites[getCharIcon(player)].drawToHUD(player.getCharIcon(), col2x + 4, topPlayerY + i * rowH);
 		}
 		//drawSpectators();
 	}
@@ -2653,7 +2653,7 @@ public class GameMode {
 				Fonts.drawText(FontType.Grey, "B", cols[0] - 8, posY);
 			}
 
-			Global.sprites[getCharIcon(player)].drawToHUD(player.realCharNum, cols[0] + 5, posY - 2);
+			Global.sprites[getCharIcon(player)].drawToHUD(player.getCharIcon(), cols[0] + 5, posY - 2);
 			Fonts.drawText(charColor, player.name, cols[0] + 12, posY);
 			Fonts.drawText(FontType.Blue, player.kills.ToString(), cols[1], posY);
 			Fonts.drawText(FontType.Red, player.getDeathScore().ToString(), cols[2], posY);

@@ -139,7 +139,8 @@ public partial class Player {
 	public MaverickAIBehavior currentMaverickCommand;
 
 	public bool isX { get { return charNum == (int)CharIds.X; } }
-	public bool isZero { get { return charNum == (int)CharIds.Zero; } }
+	public bool isZero { get { return charNum == (int)CharIds.Zero ||
+	charNum == (int)CharIds.BusterZero || charNum == (int)CharIds.PunchyZero; } }
 	public bool isVile { get { return charNum == (int)CharIds.Vile; } }
 	public bool isAxl { get { return charNum == (int)CharIds.Axl; } }
 	public bool isSigma { get { return charNum == (int)CharIds.Sigma; } }
@@ -376,6 +377,22 @@ public partial class Player {
 	public string name;
 	public int id;
 	public int alliance;    // Only set on spawn with data read from ServerPlayer alliance. The ServerPlayer alliance changes earlier on team change/autobalance
+	public int getCharIcon(){
+		switch (charNum){
+			case (int)CharIds.X: { return 0; }
+
+			case (int)CharIds.Zero: { return 1; }
+			case (int)CharIds.BusterZero: { return 1; }
+			case (int)CharIds.PunchyZero: { return 1; }
+
+			case (int)CharIds.Vile: { return 2; }
+
+			case (int)CharIds.Axl: { return 3; }
+
+			case (int)CharIds.Sigma: { return 4; }
+			}
+		return 0;
+	}
 	public int charNum;
 
 	public int newCharNum;
@@ -651,17 +668,21 @@ public partial class Player {
 	}
 
 	public bool hasAllItems() {
+		int? maxHT;
+		int? maxST;
 		if (!Global.level.server.disableHtSt) {
-			int maxHT = Global.level.server.customMatchSettings.maxHeartTanks;
-			int maxST = Global.level.server.customMatchSettings.maxSubTanks;
-			if (maxHT > 0 || maxST > 0) {
-				return subtanks.Count >= maxST && heartTanks >= maxHT;}
-			else {
-				return false;
+			if (Global.level?.server?.customMatchSettings != null) {
+				maxHT = Global.level?.server?.customMatchSettings?.maxHeartTanks;
+				maxST = Global.level?.server?.customMatchSettings?.maxSubTanks;
+			} else {
+				maxHT = 8;
+				maxST = 4;
 			}
-		} else {
-			return false;
-		}
+			if (maxHT > 0 || maxST > 0) {
+				return subtanks.Count >= maxST && heartTanks >= maxHT;
+			}
+		} 
+		return false;
 	}
 
 	public static float getBaseHealth() {

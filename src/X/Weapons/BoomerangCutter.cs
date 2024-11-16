@@ -128,19 +128,19 @@ public class BoomerangProj : Projectile {
 
 		if (moveDistance > 50) {
 			if (angleDist < 180) {
-				var angInc = (-xDir * turnDir) * Global.spf * 300;
+				var angInc = (-xDir * turnDir) * Global.spf * 400;
 				angle += angInc;
 				angleDist += MathF.Abs(angInc);
 				vel.x = Helpers.cosd((float)angle!) * maxSpeed;
 				vel.y = Helpers.sind((float)angle) * maxSpeed;
 			} else if (damager.owner.character != null) {
-				var dTo = pos.directionTo(damager.owner.character.getCenterPos()).normalize();
-				var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
-				destAngle = Helpers.to360(destAngle);
-				angle = Helpers.lerpAngle((float)angle!, destAngle, 0.025f);
+				//var dTo = pos.directionTo(damager.owner.character.getCenterPos());
+				//var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
+				//destAngle = Helpers.to360(destAngle);
+				// angle = Helpers.moveAngle((float)angle, destAngle - (float)angle, 0.002f, false);
 				
-				Point amount = pos.directionToNorm(damager.owner.character.getCenterPos()).times(270);
-				vel = Point.lerp(vel, amount, Global.spf);
+				Point amount = pos.directionToNorm(damager.owner.character.getCenterPos()).times(180f);
+				vel = Point.lerp(vel, amount, 0.2f);
 			} else {
 				destroySelf();
 			}

@@ -174,6 +174,7 @@ public class SpeedBurnerCharState : CharState {
 	public SpeedBurnerCharState() : base("speedburner", "", "", "") {
 		superArmor = true;
 		immuneToWind = true;
+		useDashJumpSpeed = true;
 	}
 
 	public override void update() {
@@ -213,6 +214,7 @@ public class SpeedBurnerCharState : CharState {
 
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
+		character.isDashing = true;
 		character.useGravity = false;
 		character.vel.y = 0;
 		if (!character.isUnderwater()) {
@@ -223,6 +225,9 @@ public class SpeedBurnerCharState : CharState {
 	public override void onExit(CharState newState) {
 		base.onExit(newState);
 		character.useGravity = true;
+		if (character.dashedInAir >= 1) {
+			character.dashedInAir--;
+		}
 		if (proj != null && !proj.destroyed) proj.destroySelf();
 	}
 }

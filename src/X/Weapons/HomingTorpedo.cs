@@ -137,18 +137,18 @@ public class TorpedoProj : Projectile, IDamagable {
 				var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
 				destAngle = Helpers.to360(destAngle);
 				if (angle != null) {
-					angle = Helpers.lerpAngle((float)angle, destAngle, Global.spf * 5);
+					angle = Helpers.lerpAngle((float)angle, destAngle, 0.08f);
 				}
 			}
 			if (time >= 0.15) {
-				target = Global.level.getClosestTarget(pos, damager.owner.alliance, true, aMaxDist: Global.screenW * 0.75f);
+				target = Global.level.getClosestTarget(pos, damager.owner.alliance, false, aMaxDist: Global.screenW * 0.75f);
 			} else if (time < 0.15) {
 				// what
 			}
 			
 			if (target != null && !target.destroyed) {
-				Point amount = pos.directionToNorm(target.getCenterPos()).times(270);
-				vel = Point.lerp(vel, amount, Global.spf);
+				Point amount = pos.directionToNorm(target.getCenterPos()).times(180);
+				vel = Point.lerp(vel, amount, 0.06f);
 				if (vel.magnitude > maxSpeed) vel = vel.normalize().times(maxSpeed);
 				} else {
 					if (vel.magnitude > maxSpeed) {

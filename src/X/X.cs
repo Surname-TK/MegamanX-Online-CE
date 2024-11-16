@@ -34,9 +34,9 @@ public partial class MegamanX : Character {
 	public float hyperchargeCooldown;
 	public float novaStrikeCooldown; // This one is mostly used just to show its cooldown on screen.
 	public float hadoukenCooldownTime;
-	public float maxHadoukenCooldownTime = 60;
+	public float maxHadoukenCooldownTime = 10f;
 	public float shoryukenCooldownTime;
-	public float maxShoryukenCooldownTime = 60;
+	public float maxShoryukenCooldownTime = 10f;
 	//public ShaderWrapper xPaletteShader;
 
 	public float streamCooldown;
