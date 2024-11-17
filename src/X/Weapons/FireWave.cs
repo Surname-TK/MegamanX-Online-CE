@@ -28,7 +28,7 @@ public class FireWave : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel >= 3) {
-			return 7;
+			return 4;
 		}
 		return 0.15f;
 	}

@@ -1106,12 +1106,11 @@ public partial class Character : Actor, IDamagable {
 		if (stingChargeTime > 0) {
 			if (player.isX) {
 				stingChargeTime -= 0.02f;
-
 				player.weapon.ammo -= 0.02f * (player.hasChip(3) ? 0.5f : 1);
 				if (player.weapon.ammo < 0) player.weapon.ammo = 0;
 				// stingChargeTime = player.weapon.ammo;
 			} else {
-				stingChargeTime -= Global.spf;
+				stingChargeTime -= 0.02f;
 			}
 			if (stingChargeTime <= 0) {
 				player.delaySubtank();

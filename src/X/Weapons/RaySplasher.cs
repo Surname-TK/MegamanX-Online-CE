@@ -42,7 +42,7 @@ public class RaySplasherProj : Projectile {
 		Weapon weapon, Point pos, int xDir, int spriteType, int dirType,
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 600, 1, player, "raysplasher_proj",
+		weapon, pos, xDir, 600, 0.5f, player, "raysplasher_proj",
 		0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 0.25f;

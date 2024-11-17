@@ -142,13 +142,35 @@ public class XBuster : Weapon {
 		} else if (chargeLevel == 2) {
 			new Buster3Proj(this, pos, xDir, 0, player, player.getNextActorNetId(), true);
 			sound = "buster3";
-		} else if (chargeLevel >= 3) {	
+		} else if (chargeLevel == 3) {	
 			if (player.ownedByLocalPlayer) {
 				if (mmx.hasUltimateArmor && !mmx.stockedX2Charge) {
-					if (mmx.charState is not WallSlide) mmx.changeState(new X2ChargeShot(2), true);
-					else mmx.gigaArmorChargeShots(2);
+					if (mmx.charState is not WallSlide) {
+						mmx.changeState(new X2ChargeShot(2), true);
+					} else {
+						mmx.gigaArmorChargeShots(2);
+					}
 				} else {
 					int type = mmx.stockedX2Charge ? 1 : 0;
+
+					if (character.charState is not WallSlide) {
+						mmx.shootCooldown = 0;
+						character.changeState(new X2ChargeShot(type), true);
+					} else {
+						mmx.gigaArmorChargeShots(type);
+					}	
+				}
+			}
+		}  else if (chargeLevel >= 4) {	
+			if (player.ownedByLocalPlayer) {
+				if (mmx.hasUltimateArmor && !mmx.stockedX2Charge) {
+					if (mmx.charState is not WallSlide) {
+						mmx.changeState(new X2ChargeShot(3), true);
+					} else {
+						mmx.gigaArmorChargeShots(3);
+					}
+				} else {
+					int type = mmx.stockedX2Charge ? 2 : 1;
 
 					if (character.charState is not WallSlide) {
 						mmx.shootCooldown = 0;

@@ -700,9 +700,12 @@ public partial class MegamanX : Character {
 		if (!updatedStock) stockX2Charge(false);
 
 		//Max Buster.
-		if (chargeLevel >= 3 && player.hasGoldenArmor() && player.weapon is XBuster) {
-			stockX3Saber(true);
-			xSaberCooldown = 0;
+		if (chargeLevel >= 3 && player.weapon is XBuster) {
+			shootCooldown = 0;
+			if (player.hasGoldenArmor()) {
+				stockX3Saber(true);
+				xSaberCooldown = 0;
+			}
 		}
 
 		lastShotWasSpecialBuster = false;

@@ -28,7 +28,7 @@ public class HyperCharge : Weapon {
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
-		return 7;
+		return 4;
 	}
 
 	public float getChipFactoredAmmoUsage(Player player) {

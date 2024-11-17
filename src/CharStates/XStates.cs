@@ -92,7 +92,7 @@ public class X2ChargeShot : CharState {
 	bool pressFire;
 	MegamanX mmx = null!;
 
-	public X2ChargeShot(int type) : base(type == 0 || type == 2 ? "x2_shot" : "x2_shot2") {
+	public X2ChargeShot(int type) : base(type == 0 || type == 1 || type == 3 ? "x2_shot" : "x2_shot2") {
 		this.type = type;
 		useDashJumpSpeed = true;
 		airMove = true;

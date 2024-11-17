@@ -23,7 +23,7 @@ public class ChameleonSting : Weapon {
 	public override float getAmmoUsageEX(int chargeLevel, Character character) {
 		MegamanX mmx = character as MegamanX ?? throw new NullReferenceException();
 
-		//if (mmx.stingActive) return 4;
+		if (chargeLevel >= 3) return 0;
 		return getAmmoUsage(chargeLevel);
 	}
 
@@ -36,7 +36,7 @@ public class ChameleonSting : Weapon {
 		if (chargeLevel < 3) {
 			new StingProj(this, pos, xDir, player, 0, player.getNextActorNetId(), true);
 		} else {
-			character.stingChargeTime = 3.6f;
+			character.stingChargeTime = 4;
 		}
 	}
 }
