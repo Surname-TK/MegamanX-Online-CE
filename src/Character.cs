@@ -551,6 +551,9 @@ public partial class Character : Actor, IDamagable {
 	}
 
 	public virtual bool canAirJump() {
+		if (isWading() && !isUnderwater()) {
+			return true;
+		}
 		return false;
 	}
 
@@ -1325,10 +1328,15 @@ public partial class Character : Actor, IDamagable {
 		}
 		if (charState.canJump && (grounded || canAirJump() && flag == null)) {
 			if (player.input.isPressed(Control.Jump, player)) {
-				if (!grounded) {
-					dashedInAir++;
+				if (!grounded && isWading()) {
+					isDashing = false;
+					dashedInAir = 0;
 				} else {
-					grounded = false;
+					if (!grounded) {
+						dashedInAir++;
+					} else {
+						grounded = false;
+					}
 				}
 				vel.y = -getJumpPower();
 				playSound("jump", sendRpc: true);
@@ -1408,7 +1416,12 @@ public partial class Character : Actor, IDamagable {
 					!sprite.name.Contains("kick_air")
 				) {
 					lastJumpPressedTime = 0;
-					dashedInAir++;
+					if (isWading()){
+						isDashing = false;
+						dashedInAir = 0;
+					} else {
+						dashedInAir++;
+					}
 					vel.y = -getJumpPower();
 					changeState(new Jump(), true);
 					return true;
