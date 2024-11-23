@@ -501,8 +501,8 @@ public class Damager {
 				case (int)WeaponIds.VileCutter:
 				case (int)WeaponIds.BlackArrow:
 				case (int)WeaponIds.BoomerangKBoomerang:
-					if (character.player.isX || character.player.isAxl) {
-						character.stingChargeTime = 0;
+					if (mmx != null) {
+						mmx.stingChargeTime = 0;
 					}
 					break;
 			}
