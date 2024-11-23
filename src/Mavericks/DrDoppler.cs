@@ -197,8 +197,10 @@ public class DrDopplerDashStartState : MaverickState {
 public class DrDopplerDashState : MaverickState {
 	Anim? barrier;
 	float soundTime;
+	float bubbleTime;
 	public DrDopplerDashState() : base("dash", "dash_start") {
 		stopMovingOnEnter = true;
+		useGravity = false;
 	}
 
 	public override void update() {
@@ -225,6 +227,12 @@ public class DrDopplerDashState : MaverickState {
 		}
 
 		if (maverick.isUnderwater()) {
+			if (bubbleTime > 6) {
+				bubbleTime = 0;
+				new BubbleAnim(maverick.pos, "bigbubble1") { vel = new Point(0, -75) };
+			} else {
+				bubbleTime++;
+			}
 			if (!maverick.sprite.name.EndsWith("dash_water")) {
 				maverick.changeSpriteFromName("dash_water", false);
 			}

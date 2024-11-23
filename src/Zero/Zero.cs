@@ -599,6 +599,9 @@ public class Zero : Character {
 	
 	// Double jump.
 	public override bool canAirJump() {
+		if (isWading() && !isUnderwater()) {
+			return true;
+		}
 		return dashedInAir == 0;
 	}
 

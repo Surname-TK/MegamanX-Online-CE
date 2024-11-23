@@ -306,6 +306,9 @@ public class BusterZero : Character {
 	}
 
 	public override bool canAirJump() {
+		if (isWading() && !isUnderwater()) {
+			return true;
+		}
 		return dashedInAir == 0 || (dashedInAir == 1 && isBlackZero);
 	}
 

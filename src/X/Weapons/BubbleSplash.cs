@@ -131,6 +131,7 @@ public class BubbleSplashProj : Projectile {
 		// Create variables.
 		this.size = size.Value;
 		this.randT = (float)randT;
+		this.randY = (float)randY;
 		useGravity = false;
 		maxTime = this.randT;
 
