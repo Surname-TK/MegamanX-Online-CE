@@ -230,7 +230,7 @@ public partial class Player {
 		{ (int)CharIds.Rock, new List<SubTank>() },
 	};
 	// Heart tanks
-	public Dictionary<int, int> charHeartTanks = new Dictionary<int, int>(){
+	private Dictionary<int, int> charHeartTanks = new Dictionary<int, int>(){
 		{ (int)CharIds.X, 0 },
 		{ (int)CharIds.Zero, 0 },
 		{ (int)CharIds.Vile, 0 },
