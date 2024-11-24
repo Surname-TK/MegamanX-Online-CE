@@ -126,14 +126,17 @@ public partial class MegamanX : Character {
 			return;
 		}
 		if (stingChargeTime > 0) {
-			stingChargeTime -= Global.spf;
-
-			player.weapon.ammo -= (Global.spf * 3 * (player.hasChip(3) ? 0.5f : 1));
-			if (player.weapon.ammo < 0) player.weapon.ammo = 0;
-			stingChargeTime = player.weapon.ammo;
-
+			if (player.isX) {
+				stingChargeTime -= 0.02f;
+				player.weapon.ammo -= 0.02f * (player.hasChip(3) ? 0.5f : 1);
+				if (player.weapon.ammo < 0) player.weapon.ammo = 0;
+				// stingChargeTime = player.weapon.ammo;
+			} else {
+				stingChargeTime -= 0.02f;
+			}
 			if (stingChargeTime <= 0) {
 				player.delaySubtank();
+				player.stopSubtankHeal();
 				stingChargeTime = 0;
 			}
 		}
@@ -396,23 +399,29 @@ public partial class MegamanX : Character {
 			chargeEffect.stop();
 		}
 		if (isCharging()) {
+			int chargeType = 0;
 			chargeSound.play();
-			int chargeType = 2;
-			if (player.hasArmArmor(3) && !player.hasGoldenArmor()) {
-				chargeType = 1;
+			if (player.hasArmArmor(2)) {
+				chargeType = 0;
 			}
-			if (player.hasGoldenArmor()) {
-				chargeType = 3;
+
+			if (player.hasArmArmor(3)) {
+				if (!player.hasGoldenArmor()) {
+					chargeType = 1;
+				} else {
+					chargeType = 2;
+				}
 			}
 			
 			int level = isHyperX ? unpoShotCount : getChargeLevel();
 			var renderGfx = RenderEffectType.ChargeBlue;
 			renderGfx = level switch {
 				1 => RenderEffectType.ChargeBlue,
-				2 => RenderEffectType.ChargeYellow,
+				2 => RenderEffectType.ChargeBlue,
 				3 => RenderEffectType.ChargePink,
+				4 when (chargeType == 0) => RenderEffectType.ChargePink,
 				4 when (chargeType == 1) => RenderEffectType.ChargeOrange,
-				4 when (chargeType == 3) => RenderEffectType.ChargeGreen,
+				4 when (chargeType == 2) => RenderEffectType.ChargeGreen,
 				_ => RenderEffectType.ChargeOrange
 			};
 			addRenderEffect(renderGfx, 0.033333f, 0.1f);			
@@ -1677,8 +1686,8 @@ public partial class MegamanX : Character {
 			chargedRollingShieldProj.destroySelf();
 		}
 		popAllBubbles();
-		stockedCharge = false;
-		stockedX3Buster = false;
+		//stockedX2Charge = false;
+		//stockedX3Charge = false;
 		if (beeSwarm != null) {
 			beeSwarm.destroy();
 		}

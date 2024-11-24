@@ -70,7 +70,7 @@ public class BusterZero : Character {
 		}
 		if (isCharging()) {
 			chargeSound.play();
-			int chargeType = 1;
+			int chargeType = 2;
 			int level = getChargeLevel();
 			var renderGfx = RenderEffectType.ChargeBlue;
 			renderGfx = level switch {
