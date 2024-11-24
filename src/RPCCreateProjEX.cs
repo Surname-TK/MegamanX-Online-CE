@@ -83,7 +83,7 @@ public partial class RPCCreateProj : RPC {
 		{ (int)ProjIds.TornadoFang, TornadoFangProj.rpcInvoke },
 		{ (int)ProjIds.TornadoFang2, TornadoFangProj.rpcInvoke },
 		{ (int)ProjIds.TornadoFangCharged, TornadoFangProjCharged.rpcInvoke },
-		{ (int)ProjIds.XSaberProj, XSaberProj.rpcInvoke },
+		{ (int)ProjIds.X3SaberProj, X3SaberProj.rpcInvoke },
 
 		//EXTRA
 		{ (int)ProjIds.UPParryMelee, UPParryMeleeProj.rpcInvoke },

@@ -12,16 +12,16 @@ public class XSaber : Weapon {
 	}
 }
 
-public class XSaberProj : Projectile {
-	public XSaberProj(
+public class X3SaberProj : Projectile {
+	public X3SaberProj(
 		Weapon weapon, Point pos, int xDir,
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 300, 4, player, "zsaber_shot", 
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
-		reflectable = true;
-		projId = (int)ProjIds.XSaberProj;
+		reflectable = false;
+		projId = (int)ProjIds.X3SaberProj;
 		maxTime = 0.5f;
 
 		if (rpc) {
@@ -30,7 +30,7 @@ public class XSaberProj : Projectile {
 	}
 
 	public static Projectile rpcInvoke(ProjParameters arg) {
-		return new XSaberProj(
+		return new X3SaberProj(
 			XSaber.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
 		);
 	}
@@ -51,7 +51,7 @@ public class XSaberState : CharState {
 		if (character.frameIndex >= 6 && !fired) {
 			fired = true;
 			character.playSound("zerosaberx3");
-			new XSaberProj(
+			new X3SaberProj(
 				new XSaber(player), character.pos.addxy(20 * character.xDir, -20), 
 				character.xDir, player, player.getNextActorNetId(), rpc: true
 			);

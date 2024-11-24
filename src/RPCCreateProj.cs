@@ -66,8 +66,8 @@ public partial class RPCCreateProj : RPC {
 			case (int)ProjIds.ZSaberProj:
 				proj = new ZSaberProj(pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.XSaberProj:
-				proj = new XSaberProj(new XSaber(player), pos, xDir, player, netProjByte);
+			case (int)ProjIds.X3SaberProj:
+				proj = new X3SaberProj(new XSaber(player), pos, xDir, player, netProjByte);
 				break;
 			case (int)ProjIds.Buster3:
 				proj = new Buster3Proj(new XBuster(), pos, xDir, extraData[0], player, netProjByte);
