@@ -114,40 +114,40 @@ public class BubbleSplashProj : Projectile {
 		75, 0.5f, player, "bubblesplash_start", 0, 0f,
 		netProjId, player.ownedByLocalPlayer
 	) {
+		projId = (int)ProjIds.BubbleSplash;
 		destroyOnHit = false;
+
 		// RNG shenanigans.
 		if (randX == null) {
-			randX = Helpers.randomRange(100, 150);
+			randX = !(player.character.charState is Dash or AirDash) ? Helpers.randomRange(75, 125) : Helpers.randomRange(150, 250);
 		}
 		if (randY == null) {
-			randY = Helpers.randomRange(100, 150);
+			randY = Helpers.randomRange(75, 125);
 		}
 		if (size == null) {
 			size = Helpers.randomRange(0, 2);
 		}
 		if (randT == null) {
-			randT = Helpers.randomRange(1f, 1.5f);
+			randT = Helpers.randomRange(75, 125);
 		}
+
 		// Create variables.
 		this.size = size.Value;
-		this.randT = (float)randT;
+		this.randT = (float)randT / 100f;
 		this.randY = (float)randY;
 		useGravity = false;
 		maxTime = this.randT;
-
 		vel.x *= randX.Value / 100f;
 		vel.y = 0;
-		if (player.character.charState is Dash or AirDash) {
-			vel.x *= 2;
-		}
 
 		randBubble = Helpers.randomRange(0, spriteVariants.Length - 1);
-		if (size == 0) {
-			fadeSprite = "bubblesplash_pop_small";
-		} else if (size == 1) { 
-			fadeSprite = "bubblesplash_pop_medium";
-		} else {
-			fadeSprite = "bubblesplash_pop_large";
+		switch (size) {
+			case 0: fadeSprite = "bubblesplash_pop_small";
+			break;
+			case 1: fadeSprite = "bubblesplash_pop_medium";
+			break;
+			case 2: fadeSprite = "bubblesplash_pop_large";
+			break;
 		}
 		fadeSound = "bubbleSplashPop";
 		fadeOnAutoDestroy = true;
@@ -161,7 +161,7 @@ public class BubbleSplashProj : Projectile {
 		}
 	}
 	public override void onHitDamagable(IDamagable damagable){
-		//fadeOnAutoDestroy = false;
+		fadeOnAutoDestroy = false;
 		if (sprite.name != fadeSprite || time > randT){
 			time = 0;
 			playSound(fadeSound, true, true);
@@ -196,7 +196,7 @@ public class BubbleSplashProj : Projectile {
 		} 
 
 		if (sprite.name == fadeSprite){
-			//fadeOnAutoDestroy = false;
+			fadeOnAutoDestroy = false;
 			vel = new Point(0, 0);
 			if (isAnimOver()){
 				destroySelfNoEffect();
@@ -221,6 +221,8 @@ public class BubbleSplashProj : Projectile {
 public class BubbleSplashProjCharged : Projectile {
 	public MegamanX character;
 	public float yPos;
+	public int size;
+	public int randBubble;
 	public BubbleSplashProjCharged(
 		Weapon weapon, Point pos, int xDir, Player player, 
 		int type, ushort netProjId, bool rpc = false
@@ -229,23 +231,20 @@ public class BubbleSplashProjCharged : Projectile {
 		0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		useGravity = false;
-		int randBubble = Helpers.randomRange(0, 8);
-			if (randBubble == 0) changeSprite("bubblesplash_proj1", true);
-			if (randBubble == 1) changeSprite("bubblesplash_proj2", true);
-			if (randBubble == 2) changeSprite("bubblesplash_proj3", true);
-			if (randBubble == 3) changeSprite("bubblesplash_proj1", true);
-			if (randBubble == 4) changeSprite("bubblesplash_proj2", true);
-			if (randBubble == 5) changeSprite("bubblesplash_proj3", true);
-			if (randBubble == 6) changeSprite("bubblesplash_proj1", true);
-			if (randBubble == 7) changeSprite("bubblesplash_proj2", true);
-			if (randBubble == 8) changeSprite("bubblesplash_proj3", true);
 
-		if (randBubble == 0 || randBubble == 1 || randBubble == 2) {
-			fadeSprite = "bubblesplash_pop_small";
-		} else if (randBubble == 3 || randBubble == 4 || randBubble == 5) { 
-			fadeSprite = "bubblesplash_pop_medium";
-		} else {
-			fadeSprite = "bubblesplash_pop_large";
+		randBubble = Helpers.randomRange(0, spriteVariants.Length - 1);
+		
+		//if (size == null) {
+			size = Helpers.randomRange(0, 2);
+		//}
+
+		switch (size) {
+			case 0: fadeSprite = "bubblesplash_pop_small";
+			break;
+			case 1: fadeSprite = "bubblesplash_pop_medium";
+			break;
+			case 2: fadeSprite = "bubblesplash_pop_large";
+			break;
 		}
 
 		character = (player.character as MegamanX);
@@ -281,6 +280,19 @@ public class BubbleSplashProjCharged : Projectile {
 	public override void update() {
 		base.update();
 		if (!ownedByLocalPlayer) return;
+		
+		if (sprite.name.Contains("start") && isAnimOver()) {
+			changeSprite(spriteVariants[randBubble], true);
+		} else if (sprite.name.Contains("proj") && !sprite.name.Contains("start")){
+			switch (size) {
+				case 0: if (frameIndex > 0) {frameSpeed = 0;}
+				break;
+				case 1: if (frameIndex > 1) {frameSpeed = 0;}
+				break;
+				case 2: if (frameIndex > 2) {frameSpeed = 0;}
+				break;
+			}
+		}
 
 		if (character == null || !Global.level.gameObjects.Contains(character)  || (character.player.weapon is not BubbleSplash)) {
 			destroySelf();
