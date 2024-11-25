@@ -73,13 +73,13 @@ public partial class Global {
 		var viewPort = new FloatRect(0, 0, 1, 1);
 
 		if (!fullscreen) {
-			window = new RenderWindow(new VideoMode(windowW, windowH), "MMX Online Deathmatch");
+			window = new RenderWindow(new VideoMode(windowW, windowH), "MMXOD Hawkeye Revision");
 			window.SetVerticalSyncEnabled(options.vsync);
 			if (Global.hideMouse) window.SetMouseCursorVisible(false);
 		} else {
 			var desktopWidth = VideoMode.DesktopMode.Width;
 			var desktopHeight = VideoMode.DesktopMode.Height;
-			window = new RenderWindow(new VideoMode(desktopWidth, desktopHeight), "MMX Online Deathmatch", Styles.Fullscreen);
+			window = new RenderWindow(new VideoMode(desktopWidth, desktopHeight), "MMXOD Hawkeye Revision", Styles.Fullscreen);
 			window.SetMouseCursorVisible(false);
 			viewPort = getFullScreenViewPort();
 		}

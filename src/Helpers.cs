@@ -579,7 +579,7 @@ public class Helpers {
 	public static string getMMXODDocumentsPath() {
 		string myDocumentsPath = getBaseDocumentsPath();
 		if (!string.IsNullOrEmpty(myDocumentsPath)) {
-			string fullPath = myDocumentsPath + "/MMXOD/";
+			string fullPath = myDocumentsPath + "/MMXOD HR/";
 			if (Directory.Exists(fullPath)) {
 				return fullPath;
 			}
