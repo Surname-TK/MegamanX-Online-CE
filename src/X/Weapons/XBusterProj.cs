@@ -115,7 +115,7 @@ public class Buster3Proj : Projectile {
 		bool rpc = false
 	) : base(
 		weapon, pos, xDir, 350, 3, 
-		player, "buster3", Global.defFlinch, 0f, 
+		player, "buster3", Global.halfFlinch, 0f, 
 		netProjId, player.ownedByLocalPlayer
 	) {
 		this.type = type;
@@ -160,6 +160,7 @@ public class Buster3Proj : Projectile {
 		// Cross Shot Finale
 		if (type == 1) {
 			damager.damage = 4;
+			damager.flinch = Global.defFlinch;
 			changeSprite("buster4_x3", true);
 			fadeSprite = "buster4_x2_fade";
 			vel.x = 0;

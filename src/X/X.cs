@@ -241,7 +241,7 @@ public partial class MegamanX : Character {
 			}
 		}
 
-		if (player.hasChip(2) && stingChargeTime > 0 && totalChipHealAmount < maxTotalChipHealAmount) {
+		if (player.hasChip(2) && stingChargeTime <= 0 && totalChipHealAmount < maxTotalChipHealAmount) {
 			noDamageTime += Global.speedMul;
 			if ((player.health < player.maxHealth || player.hasSubtankCapacity()) && noDamageTime > 240) {
 				Helpers.decrementFrames(ref rechargeHealthTime);
@@ -819,9 +819,9 @@ public partial class MegamanX : Character {
 			}
 			stockedX3Charge = true;
 		} else if (type == 1) {
-			playSound("buster2X3", sendRpc: true);
-			new Buster2Proj(
-				player.weapon, shootPos, shootDir,
+			playSound("buster3X3", sendRpc: true);
+			new Buster3Proj(
+				player.weapon, shootPos, shootDir, 0,
 				player, player.getNextActorNetId(), rpc: true
 			);
 			stockedLv1Charge = false;

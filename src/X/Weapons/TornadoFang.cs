@@ -166,8 +166,8 @@ public class TornadoFangProjCharged : Projectile {
 		Weapon weapon, Point pos, int xDir, 
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 300, 1, player, "tunnelfang_charged", 
-		Global.defFlinch, 0.125f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 300, 0.5f, player, "tunnelfang_charged", 
+		Global.halfFlinch, 0.125f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.TornadoFangCharged;
 		destroyOnHit = false;

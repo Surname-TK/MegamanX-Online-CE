@@ -106,6 +106,9 @@ public class X2ChargeShot : CharState {
 
 	public override void update() {
 		base.update();
+		if (character.grounded) {
+			character.turnToInput(player.input, player);
+		}
 		if (!fired && character.currentFrame.getBusterOffset() != null) {
 			fired = true;
 			mmx.gigaArmorChargeShots(type);
