@@ -196,7 +196,7 @@ public class Maverick : Actor, IDamagable {
 		if (ammoRechargeTime <= 0) {
 			ammoRechargeTime = ammoRechargeCooldown;
 			ammo++;
-			if (ammo > 28) ammo = 28;
+			if (ammo > maxAmmo) ammo = maxAmmo;
 		}
 	}
 
@@ -228,6 +228,7 @@ public class Maverick : Actor, IDamagable {
 
 	public void addAmmo(float amount) {
 		weaponHealAmount += amount;
+		if (ammo > maxAmmo) ammo = maxAmmo;
 	}
 
 	public void deductAmmo(int v) {
@@ -817,7 +818,7 @@ public class Maverick : Actor, IDamagable {
 		if ((weaponId == WeaponIds.RollingShield || projId == ProjIds.ArmoredARoll) && this is LaunchOctopus lo) {
 			return true;
 		}
-		if ((weaponId == WeaponIds.HomingTorpedo || projId == ProjIds.LaunchOMissle || projId == ProjIds.LaunchOTorpedo) && this is BoomerangKuwanger bk) {
+		if ((weaponId == WeaponIds.HomingTorpedo || projId == ProjIds.LaunchOMissile || projId == ProjIds.LaunchOTorpedo) && this is BoomerangKuwanger bk) {
 			return true;
 		}
 		if ((weaponId == WeaponIds.BoomerangCutter || projId == ProjIds.BoomerangKBoomerang) && this is StingChameleon sc) {

@@ -542,7 +542,7 @@ public enum ProjIds {
 	ArmoredAProj,
 	ArmoredARoll,
 	ArmoredAChargeRelease,
-	LaunchOMissle,
+	LaunchOMissile,
 	LaunchOTorpedo,
 	LaunchOWhirlpool,
 	LaunchODrain,

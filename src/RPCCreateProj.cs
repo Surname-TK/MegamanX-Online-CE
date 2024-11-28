@@ -383,7 +383,7 @@ public partial class RPCCreateProj : RPC {
 					new ArmoredAChargeReleaseWeapon(), pos, xDir, new Point(), 6, player, netProjByte
 				);
 				break;
-			case (int)ProjIds.LaunchOMissle:
+			case (int)ProjIds.LaunchOMissile:
 				proj = new LaunchOMissile(new LaunchOMissileWeapon(), pos, xDir, player, extraData[0], netProjByte);
 				break;
 			case (int)ProjIds.LaunchOWhirlpool:

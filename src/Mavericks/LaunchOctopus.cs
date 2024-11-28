@@ -33,7 +33,7 @@ public class LaunchOctopus : Maverick {
 		canHealAmmo = true;
 		ammo = 28;
 		maxAmmo = 28;
-		grayAmmoLevel = 7;
+		grayAmmoLevel = 0;
 		barIndexes = (71, 60);
 	}
 
@@ -41,10 +41,14 @@ public class LaunchOctopus : Maverick {
 	public override void update() {
 		base.update();
 
-		if (state is not LaunchOShoot) {
+		if (state is not (LaunchOShoot or LaunchOHomingTorpedoState)) {
 			Helpers.decrementTime(ref timeBeforeRecharge);
 			if (timeBeforeRecharge == 0) {
-				rechargeAmmo(4.5f);
+				if (state is LaunchODrainState){
+					rechargeAmmo(8f);
+				} else {
+					rechargeAmmo(4f);
+				}
 			}
 		} else {
 			timeBeforeRecharge = 1;
@@ -154,13 +158,14 @@ public class LaunchOMissile : Projectile, IDamagable {
 		Weapon weapon, Point pos, int xDir, Player player,
 		int unitVel, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 100, 3, player, "launcho_proj_missile",
-		0, 0.15f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 100, 1, player, "launcho_proj_missile",
+		0, 0, netProjId, player.ownedByLocalPlayer
 	) {
-		projId = (int)ProjIds.LaunchOMissle;
+		projId = (int)ProjIds.LaunchOMissile;
 		maxTime = 0.75f;
 		fadeSprite = "explosion";
 		fadeSound = "explosion";
+		fadeOnAutoDestroy = true;
 		vel.y = speed * (unitVel switch {
 			0 => -0.2f,
 			1 => -0.05f,
@@ -349,10 +354,46 @@ public class LaunchOHomingTorpedoState : MaverickState {
 			var pois = maverick.currentFrame.POIs;
 			var lo = (maverick as LaunchOctopus);
 
-			new TorpedoProj(lo.homingTorpedoWeapon, lo.pos.add(pois[0]), 1, player, 3, player.getNextActorNetId(), 0, rpc: true);
-			new TorpedoProj(lo.homingTorpedoWeapon, lo.pos.add(pois[1]), 1, player, 3, player.getNextActorNetId(), 0, rpc: true);
-			new TorpedoProj(lo.homingTorpedoWeapon, lo.pos.add(pois[2]), 1, player, 3, player.getNextActorNetId(), 180, rpc: true);
-			new TorpedoProj(lo.homingTorpedoWeapon, lo.pos.add(pois[3]), 1, player, 3, player.getNextActorNetId(), 180, rpc: true);
+			if (maverick.ammo >= 3) {
+				new TorpedoProj(
+					lo.homingTorpedoWeapon, lo.pos.add(pois[0]), 1, player, 3,
+					player.getNextActorNetId(), 0, rpc: true
+				);
+				//maverick.deductAmmo(3); 
+			} else {
+				new Anim(lo.pos.add(pois[0]), "torpedo_smoke", 1, null, true);
+			}
+
+			if (maverick.ammo >= 6) {
+				new TorpedoProj(
+					lo.homingTorpedoWeapon, lo.pos.add(pois[3]), 1, player,
+					3, player.getNextActorNetId(), 0, rpc: true
+				);
+				//maverick.deductAmmo(3);
+			} else {
+				new Anim(lo.pos.add(pois[3]), "torpedo_smoke", 1, null, true);
+			}
+
+			if (maverick.ammo >= 10){
+				new TorpedoProj(
+					lo.homingTorpedoWeapon, lo.pos.add(pois[1]), 1, player,
+					3, player.getNextActorNetId(), 180, rpc: true
+				);
+				//maverick.deductAmmo(4);
+			} else {
+				new Anim(lo.pos.add(pois[1]), "torpedo_smoke", 1, null, true);
+			}
+
+			if (maverick.ammo >= 14){
+				new TorpedoProj(
+					lo.homingTorpedoWeapon, lo.pos.add(pois[2]), 1, player, 3,
+					player.getNextActorNetId(), 180, rpc: true
+				);
+				//maverick.deductAmmo(4);
+			} else {
+				new Anim(lo.pos.add(pois[2]), "torpedo_smoke", 1, null, true);
+			}
+			maverick.deductAmmo(14);
 		}
 
 		if (maverick.isAnimOver()) {
@@ -454,8 +495,8 @@ public class LaunchODrainState : MaverickState {
 
 		if (leechTime > 0.5f) {
 			leechTime = 0;
-			maverick.addHealth(2, true);
-			var damager = new Damager(player, 2, 0, 0);
+			maverick.addHealth(1, true);
+			var damager = new Damager(player, 1, 0, 0);
 			damager.applyDamage(victim, false, new LaunchODrainWeapon(player), maverick, (int)ProjIds.LaunchODrain);
 		}
 

@@ -325,7 +325,7 @@ public class CrackedWall : Actor, IDamagable {
 		if (projId == (int)ProjIds.VileMissile) return null;
 		if (projId == (int)ProjIds.PopcornDemon) return null;
 		if (projId == (int)ProjIds.PopcornDemonSplit) return null;
-		if (projId == (int)ProjIds.LaunchOMissle) return null;
+		if (projId == (int)ProjIds.LaunchOMissile) return null;
 		if (projId == (int)ProjIds.LaunchOTorpedo) return null;
 		if (projId == (int)ProjIds.NecroBurst) return 12;
 		if (projId == (int)ProjIds.SparkMPunch) return 12;

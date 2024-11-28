@@ -994,7 +994,7 @@ public partial class MegamanX : Character {
 			case ElectricSpark:
 				return projId == ProjIds.ChillPIcePenguin || projId == ProjIds.ChillPIceShot;
 			case BoomerangCutter:
-				return projId == ProjIds.LaunchOMissle || projId == ProjIds.LaunchOTorpedo;
+				return projId == ProjIds.LaunchOMissile || projId == ProjIds.LaunchOTorpedo;
 			case ShotgunIce:
 				return projId == ProjIds.FlameMFireball || projId == ProjIds.FlameMOilFire;
 			case CrystalHunter:
