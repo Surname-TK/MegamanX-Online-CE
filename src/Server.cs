@@ -65,7 +65,7 @@ public class Server {
 
 
 	[JsonIgnore]
-	public bool favorHost = true;
+	public bool favorHost = false;
 
 	[JsonIgnore]
 	public int redScore;

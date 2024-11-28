@@ -231,7 +231,7 @@ public partial class Player {
 		{ (int)CharIds.Rock, new List<SubTank>() },
 	};
 	// Heart tanks
-	private Dictionary<int, int> charHeartTanks = new Dictionary<int, int>(){
+	public Dictionary<int, int> charHeartTanks = new Dictionary<int, int>(){
 		{ (int)CharIds.X, 0 },
 		{ (int)CharIds.Zero, 0 },
 		{ (int)CharIds.Vile, 0 },
@@ -249,22 +249,8 @@ public partial class Player {
 
 	public Dictionary<int, int> charHeartTanksBackup = new Dictionary<int, int>();
 	public int heartTanks {
-		get {
-			if (!ownedByLocalPlayer) {
-				return charHeartTanks[isDisguisedAxl ? 3 : charNum];
-			}
-			if (charHeartTanksBackup.GetValueOrDefault(isDisguisedAxl ? 3 : charNum)
-				!=
-				charHeartTanks[isDisguisedAxl ? 3 : charNum] * curMul
-			) {
-				throw new OverflowException();
-			}
-			return charHeartTanks[isDisguisedAxl ? 3 : charNum];
-		}
-		set {
-			charHeartTanks[isDisguisedAxl ? 3 : charNum] = value;
-			charHeartTanksBackup[isDisguisedAxl ? 3 : charNum] = value * curMul;
-		}
+		get { return charHeartTanks[isDisguisedAxl ? 3 : charNum]; }
+		set { charHeartTanks[isDisguisedAxl ? 3 : charNum] = value; }
 	}
 
 	// Currency
@@ -538,14 +524,14 @@ public partial class Player {
 		if (!Global.level.server.disableHtSt && Global.level?.server?.customMatchSettings == null && !Global.level.gameMode.isTeamMode) {
 			int leaderKills = Global.level.getLeaderKills();
 			float playingTo = Global.level.gameMode.playingTo;
-			if (leaderKills >= (playingTo * 0.8)) return 8;
-			if (leaderKills >= (playingTo * 0.7)) return 7;
-			if (leaderKills >= (playingTo * 0.6)) return 6;
-			if (leaderKills >= (playingTo * 0.5)) return 5;
-			if (leaderKills >= (playingTo * 0.4)) return 4;
-			if (leaderKills >= (playingTo * 0.3)) return 3;
-			if (leaderKills >= (playingTo * 0.2)) return 2;
-			if (leaderKills >= (playingTo * 0.1)) return 1;
+			if (leaderKills >= (playingTo * 0.8f)) return 8;
+			if (leaderKills >= (playingTo * 0.7f)) return 7;
+			if (leaderKills >= (playingTo * 0.6f)) return 6;
+			if (leaderKills >= (playingTo * 0.5f)) return 5;
+			if (leaderKills >= (playingTo * 0.4f)) return 4;
+			if (leaderKills >= (playingTo * 0.3f)) return 3;
+			if (leaderKills >= (playingTo * 0.2f)) return 2;
+			if (leaderKills >= (playingTo * 0.1f)) return 1;
 		}
 		return 0;
 	}
@@ -562,10 +548,10 @@ public partial class Player {
 		if (!Global.level.server.disableHtSt && Global.level?.server?.customMatchSettings == null && !Global.level.gameMode.isTeamMode) {
 			int leaderKills = Global.level.getLeaderKills();
 			float playingTo = Global.level.gameMode.playingTo;
-			if (leaderKills >= (playingTo * 0.8)) return 4;
-			if (leaderKills >= (playingTo * 0.6)) return 3;
-			if (leaderKills >= (playingTo * 0.4)) return 2;
-			if (leaderKills >= (playingTo * 0.2)) return 1;
+			if (leaderKills >= (playingTo * 0.8f)) return 4;
+			if (leaderKills >= (playingTo * 0.6f)) return 3;
+			if (leaderKills >= (playingTo * 0.4f)) return 2;
+			if (leaderKills >= (playingTo * 0.2f)) return 1;
 		}
 
 		return 0;
@@ -723,13 +709,13 @@ public partial class Player {
 		// 1v1 is the only mode without possible heart tanks/sub tanks
 		if (Global.level.is1v1()) {
 			return getModifiedHealth(32);
-		}
+		}/*
 		int bonus = 0;
 		if (isSigma && isPuppeteer()) {
 			bonus = 0;
-		}
+		}*/
 		return MathF.Ceiling(
-			getModifiedHealth(16 + bonus) + (heartTanks * getHeartTankModifier())
+			getModifiedHealth(16) + (heartTanks * getHeartTankModifier())
 		);
 	}
 
