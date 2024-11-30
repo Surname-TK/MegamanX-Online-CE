@@ -25,6 +25,9 @@ public class RaySplasher : Weapon {
 
 	public override void shoot(Character character, int[] args) {
 		int chargeLevel = args[0];
+		Point pos = character.getShootPos();
+		int xDir = character.getShootXDir();
+		Player player = character.player;
 
 		if (chargeLevel < 3) {
 			if (character is MegamanX mmx) {
@@ -33,6 +36,11 @@ public class RaySplasher : Weapon {
 		} else {
 			if (character.ownedByLocalPlayer) {
 				character.changeState(new RaySplasherChargedState(), true);
+				
+				if (player.hasPlasma()) {
+					pos = character.pos.addxy(0, -40);
+					new BusterForcePlasmaHit(4, this, pos, xDir, player, player.getNextActorNetId(), rpc: true);
+				}
 			}
 		}
 	}
@@ -346,5 +354,6 @@ public class RaySplasherChargedState : CharState {
 	public override void onExit(CharState newState) {
 		base.onExit(newState);
 		character.useGravity = true;
+		character.shootAnimTime = 0;
 	}
 }

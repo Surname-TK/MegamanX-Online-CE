@@ -17,6 +17,7 @@ public class GigaCrush : Weapon {
 		weaponBarIndex = weaponBarBaseIndex;
 		weaponSlotIndex = 25;
 		killFeedIndex = 13;
+		hasCustomAnim = true;
 	}
 	
 	public override void shoot(Character character, int[] args) {

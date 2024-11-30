@@ -200,6 +200,7 @@ public class ShotgunIceProjSled : Projectile {
 		isPlatform = true;
 		//this.collider.wallOnly = true;
 		canBeLocal = true;
+		releasePlasma = player.hasPlasma();
 
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}

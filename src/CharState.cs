@@ -1487,9 +1487,6 @@ public class Die : CharState {
 		}*/
 	}
 
-	public override void onExit(CharState newState) {
-	}
-
 	public override void update() {
 		character.xPushVel = 0;
 		character.vel.x = 0;

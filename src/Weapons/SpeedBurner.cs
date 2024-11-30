@@ -44,6 +44,9 @@ public class SpeedBurner : Weapon {
 		} else {
 			if (character.ownedByLocalPlayer) {
 				character.changeState(new SpeedBurnerCharState(), true);
+				if (player.hasPlasma()) {
+					new BusterForcePlasmaHit(0, this, pos, -xDir, player, player.getNextActorNetId(), rpc: true);
+				}
 			}
 		}
 	}
@@ -226,5 +229,13 @@ public class SpeedBurnerCharState : CharState {
 		base.onExit(newState);
 		character.useGravity = true;
 		if (proj != null && !proj.destroyed) proj.destroySelf();
+
+		if (player.hasPlasma() && player.ownedByLocalPlayer) {
+			new BusterForcePlasmaHit(
+				0, player.weapon, character.getCenterPos(), -character.xDir,
+				player, player.getNextActorNetId(), rpc: true
+			);
+		}
+		character.shootAnimTime = 0;
 	}
 }

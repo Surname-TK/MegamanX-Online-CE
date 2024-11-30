@@ -94,7 +94,9 @@ public class BubbleSplash : Weapon {
 					this, pos, xDir, player, i, 
 					player.getNextActorNetId(true), true);
 
-				mmx?.chargedBubbles?.Add(bubble);	
+				mmx?.chargedBubbles?.Add(bubble);
+
+				if (i == 0) bubble.releasePlasma = player.hasPlasma();	
 			}
 		}
 	}
@@ -115,6 +117,7 @@ public class BubbleSplashProj : Projectile {
 		75, 0.5f, player, "bubblesplash_proj_start", 0, 0f,
 		netProjId, player.ownedByLocalPlayer
 	) {
+		projId = (int)ProjIds.BubbleSplash;
 		destroyOnHit = false;
 		// RNG shenanigans.
 		if (randX == null) {

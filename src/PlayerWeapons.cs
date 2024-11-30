@@ -270,7 +270,11 @@ label:
 				if (ws < 0) ws = 0;
 			}
 		}
-		if ((weapons.ElementAtOrDefault(ws) is GigaCrush && Options.main.gigaCrushSpecial) || (weapons.ElementAtOrDefault(ws) is NovaStrike && Options.main.novaStrikeSpecial)) {
+		if (
+			(weapons.ElementAtOrDefault(ws) is GigaCrush && Options.main.gigaCrushSpecial) || 
+			(weapons.ElementAtOrDefault(ws) is NovaStrike && Options.main.novaStrikeSpecial) ||
+			(weapons.ElementAtOrDefault(ws) is ForceNovaStrike && Options.main.novaStrikeSpecial)
+		) {
 			ws--;
 			goto label;
 		}
@@ -287,11 +291,20 @@ label:
 		if (ws >= max) {
 			ws = 0;
 		}
-		if ((weapons.ElementAtOrDefault(ws) is GigaCrush && Options.main.gigaCrushSpecial) || (weapons.ElementAtOrDefault(ws) is NovaStrike && Options.main.novaStrikeSpecial)) {
+		if (
+			(weapons.ElementAtOrDefault(ws) is GigaCrush && Options.main.gigaCrushSpecial) || 
+			(weapons.ElementAtOrDefault(ws) is NovaStrike && Options.main.novaStrikeSpecial) ||
+			(weapons.ElementAtOrDefault(ws) is ForceNovaStrike && Options.main.novaStrikeSpecial)
+		) {
 			ws++;
 			goto label;
 		}
 		changeWeaponSlot(ws);
+	}
+
+	public void clearXWeapons() {
+		preXWeapons = new List<Weapon>(weapons);
+		weapons.Clear();
 	}
 
 	public void clearSigmaWeapons() {
@@ -300,6 +313,7 @@ label:
 	}
 
 	public List<Weapon>? preSigmaReviveWeapons;
+	public List<Weapon>? preXWeapons;
 	public void configureWeapons() {
 		if (!ownedByLocalPlayer) {
 			return;
@@ -514,6 +528,7 @@ label:
 		if (!weapons.Any(w => w is NovaStrike)) {
 			weapons.Add(new NovaStrike(this));
 		}
+		removeForceNovaStrike();
 	}
 
 	public void removeNovaStrike() {
@@ -521,6 +536,18 @@ label:
 			weaponSlot = 0;
 		}
 		weapons.RemoveAll(w => w is NovaStrike);
+	}
+
+	public void addForceNovaStrike() {
+		if (!weapons.Any(w => w is ForceNovaStrike)) {
+			weapons.Add(new ForceNovaStrike(this));
+		}
+	}
+
+	public void removeForceNovaStrike() {
+		if (weapons.Any(w => w is ForceNovaStrike)) {
+			weapons.RemoveAll(w => w is ForceNovaStrike);
+		}
 	}
 
 	public void removeHyperCharge() {
@@ -543,7 +570,8 @@ label:
 			if (character != null && health > 0) {
 				bool alwaysOn = false;
 				if (weapon is GigaCrush && Options.main.gigaCrushSpecial ||
-					weapon is NovaStrike && Options.main.novaStrikeSpecial
+					weapon is NovaStrike && Options.main.novaStrikeSpecial ||
+					weapon is ForceNovaStrike && Options.main.novaStrikeSpecial
 				) {
 					alwaysOn = true;
 				}

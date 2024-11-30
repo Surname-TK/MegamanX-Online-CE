@@ -50,6 +50,12 @@ public class Boomerang : Weapon {
 			twin2.twin = b;
 			twin3.twin = c;
 			twin4.twin = d;
+
+			if (player.hasPlasma()) {
+			
+				if (xDir == 1) twin2.releasePlasma = true;
+				else if (xDir == -1) twin4.releasePlasma = true;
+			}
 		}
 	}
 }
@@ -135,10 +141,10 @@ public class BoomerangProj : Projectile {
 				vel.x = Helpers.cosd((float)angle!) * maxSpeed;
 				vel.y = Helpers.sind((float)angle) * maxSpeed;
 			} else if (damager.owner.character != null) {
-				var dTo = pos.directionTo(damager.owner.character.getCenterPos()).normalize();
-				var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
-				destAngle = Helpers.to360(destAngle);
-				angle = Helpers.lerpAngle((float)angle!, destAngle, 0.025f);
+				//var dTo = pos.directionTo(damager.owner.character.getCenterPos()).normalize();
+				//var destAngle = MathF.Atan2(dTo.y, dTo.x) * 180 / MathF.PI;
+				//destAngle = Helpers.to360(destAngle);
+				//angle = Helpers.lerpAngle((float)angle!, destAngle, 0.025f);
 				
 				Point amount = pos.directionToNorm(damager.owner.character.getCenterPos()).times(270);
 				vel = Point.lerp(vel, amount, Global.spf);

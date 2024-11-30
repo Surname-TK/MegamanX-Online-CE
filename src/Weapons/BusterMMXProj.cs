@@ -152,7 +152,7 @@ public class Buster3Proj : Projectile {
 			} else {
 				damager.flinch = Global.halfFlinch;
 			}
-		} else if (player.hasArmArmor(ArmorId.Max)) {
+		} else if (player.hasArmArmor(ArmorId.Max) || player.hasGoldenArmor()) {
 			damager.flinch = Global.halfFlinch;
 			changeSprite("buster3_x3", true);
 		}

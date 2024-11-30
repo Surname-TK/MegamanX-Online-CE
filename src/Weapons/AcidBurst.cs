@@ -31,8 +31,9 @@ public class AcidBurst : Weapon {
 			new AcidBurstProj(this, pos, xDir, player, player.getNextActorNetId(), true);
 		} else {
 			player.setNextActorNetId(player.getNextActorNetId());
-			new AcidBurstProjCharged(this, pos, xDir, 0, player, player.getNextActorNetId(true), true);
 			new AcidBurstProjCharged(this, pos, xDir, 1, player, player.getNextActorNetId(true), true);
+			new AcidBurstProjCharged(this, pos, xDir, 0, player, player.getNextActorNetId(true), true)
+			{ releasePlasma = player.hasPlasma() };
 		}
 	}
 }

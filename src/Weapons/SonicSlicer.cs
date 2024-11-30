@@ -40,6 +40,10 @@ public class SonicSlicer : Weapon {
 			new SonicSlicerProjCharged(this, pos, 2, player, player.getNextActorNetId(true), true);
 			new SonicSlicerProjCharged(this, pos, 3, player, player.getNextActorNetId(true), true);
 			new SonicSlicerProjCharged(this, pos, 4, player, player.getNextActorNetId(true), true);
+
+			if (player.hasPlasma() && player.ownedByLocalPlayer) {
+				new BusterForcePlasmaHit(3, this, pos, xDir, player, player.getNextActorNetId(), rpc: true);
+			}
 		}
 	}
 }

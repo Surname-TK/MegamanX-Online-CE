@@ -20,6 +20,7 @@ public class TriadThunder : Weapon {
 		hitcooldown = "0.5/0.5-1";
 		Flinch = "6/26";
 		FlinchCD = "2.25/0";
+		hasCustomAnim = true;
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
@@ -353,7 +354,8 @@ public class TriadThunderChargedState : CharState {
 			var weapon = new TriadThunder();
 			new TriadThunderProjCharged(weapon, new Point(x, y), -1, 0, player, player.getNextActorNetId(), rpc: true);
 			new TriadThunderProjCharged(weapon, new Point(x, y), 1, 0, player, player.getNextActorNetId(), rpc: true);
-			new TriadThunderQuake(weapon, new Point(x, y), 1, player, player.getNextActorNetId(), rpc: true);
+			new TriadThunderQuake(weapon, new Point(x, y), 1, player, player.getNextActorNetId(), rpc: true)
+			{ releasePlasma = player.hasPlasma() };
 
 			character.playSound("crashX3", forcePlay: false, sendRpc: true);
 		}

@@ -133,6 +133,7 @@ public class ElectricSparkProjChargedStart : Projectile {
 		projId = (int)ProjIds.ElectricSparkChargedStart;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
+		releasePlasma = player.hasPlasma();
 
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}
@@ -149,14 +150,20 @@ public class ElectricSparkProjChargedStart : Projectile {
 		if (sprite.isAnimOver()) {
 			destroySelf();
 			if (ownedByLocalPlayer) {
-				new ElectricSparkProjCharged(
+				var sparkL = new ElectricSparkProjCharged(
 					weapon, pos.addxy(-1, 0), -1, damager.owner,
 					damager.owner.getNextActorNetId(true), rpc: true
 				);
-				new ElectricSparkProjCharged(
+				var sparkR = new ElectricSparkProjCharged(
 					weapon, pos.addxy(1, 0), 1, damager.owner,
 					damager.owner.getNextActorNetId(true), rpc: true
 				);
+
+				if (releasePlasma && !hasReleasedPlasma) {
+
+					if (xDir == -1) sparkL.releasePlasma = true;
+					else if (xDir == 1) sparkR.releasePlasma = true;
+				}
 			}
 		}
 	}

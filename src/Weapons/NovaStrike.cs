@@ -19,6 +19,7 @@ public class NovaStrike : Weapon {
 		ammo = 28;
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
+		hasCustomAnim = true;
 	}
 
 	public override void shoot(Character character, int[] args) {

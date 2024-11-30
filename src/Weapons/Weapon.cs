@@ -64,6 +64,7 @@ public class Weapon {
 	public string Flinch = "";
 	public string FlinchCD = "";
 	public bool specialAmmoUse;
+	public bool hasCustomAnim;
 
 	public Weapon() {
 		ammo = 28;
@@ -77,6 +78,7 @@ public class Weapon {
 		FlinchCD = "0";
 		ammousage = getAmmoUsage(0);
 		specialAmmoUse = false;
+		hasCustomAnim = false;
 	}
 
 	public Weapon(WeaponIds index, int killFeedIndex, Damager? damager = null) {
@@ -93,6 +95,7 @@ public class Weapon {
 		var weaponList = new List<Weapon>() {
 			new GigaCrush(),
 			new HyperBuster(),
+			new ForceNovaStrike(null!),
 			new NovaStrike(null),
 			new DoubleBullet(),
 			new DNACore(),
@@ -177,6 +180,29 @@ public class Weapon {
 				new GravityWell(),
 				new FrostShield(),
 				new TunnelFang(),
+				new LightningWeb(),
+				new FrostTower(),
+				new SoulBody(),
+				new RisingFire(),
+				new GroundHunter(),
+				new AimingLaser(),
+				new DoubleCyclone(),
+				new TwinSlasher(),
+			};
+	}
+
+	public static List<Weapon> getAllX4Weapons() {
+		return new List<Weapon>()
+		{
+				new Buster(),
+				new LightningWeb(),
+				new FrostTower(),
+				new SoulBody(),
+				new RisingFire(),
+				new GroundHunter(),
+				new AimingLaser(),
+				new DoubleCyclone(),
+				new TwinSlasher(),
 			};
 	}
 
@@ -298,6 +324,12 @@ public class Weapon {
 	public virtual void shootHypercharge(Character character, int[] args) {
 		shoot(character, args);
 	}
+	public virtual void shootStock(Character character, int[] args) {
+		shoot(character, args);
+	}
+	public virtual void shootPlasma(Character character, int[] args) {
+		shoot(character, args);
+	}
 
 	// ToDo: Remove default values from this.
 	public virtual float getAmmoUsage(int chargeLevel) {
@@ -334,6 +366,16 @@ public class Weapon {
 		if (player.isX && player.hasChip(3) && amount < 0) amount *= 0.5f;
 		ammo += amount;
 		ammo = Helpers.clamp(ammo, 0, maxAmmo);
+	}
+
+	public void addPercentAmmo(float ammoAdd) {
+		if (ammoAdd < 0 || ammo >= maxAmmo) {
+			return;
+		}
+		ammo += MathF.Ceiling(maxAmmo * ammoAdd * ammoGainMultiplier / 100f);
+		if (ammo >= maxAmmo) {
+			ammo = maxAmmo;
+		}
 	}
 
 	public virtual bool noAmmo() {

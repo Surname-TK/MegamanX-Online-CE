@@ -36,6 +36,7 @@ public enum CharIds {
 	ViralSigma,
 	KaiserSigma,
 	RagingChargeX,
+	SoulBodyClone,
 	// Non-vanilla chars start here.
 	Rock = 10,
 	/*Iris = 11,*/

@@ -175,6 +175,8 @@ public class TunnelFangProjCharged : Projectile {
 		shouldShieldBlock = true;
 		shouldVortexSuck = false;
 		character = player.character as MegamanX;
+		releasePlasma = player.hasPlasma();
+
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}

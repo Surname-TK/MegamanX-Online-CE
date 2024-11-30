@@ -52,7 +52,15 @@ public class CrystalHunter : Weapon {
 				}
 			}
 
-			new CrystalHunterCharged(pos, player, player.getNextActorNetId(), player.ownedByLocalPlayer, sendRpc: true);
+			var cHunterCharge = new CrystalHunterCharged(
+				pos, player, player.getNextActorNetId(), player.ownedByLocalPlayer, sendRpc: true
+			);
+			if (player.hasPlasma() && player.ownedByLocalPlayer) {
+				var plasma = new BusterForcePlasmaHit(
+					1, this, pos, xDir, player, player.getNextActorNetId(), rpc: true
+				);
+				cHunterCharge.followActor = plasma;
+			}
 		}
 	}
 }
@@ -95,6 +103,16 @@ public class CrystalHunterCharged : Actor {
 	public bool isSnails;
 	float maxTime = 6;
 	float soundTime;
+	private Actor internalFollowActor = null;
+	public Actor followActor {
+		set { internalFollowActor = value; }
+		get {
+			if (internalFollowActor?.destroyed == true) {
+				internalFollowActor = null;
+			}
+			return internalFollowActor;
+		}
+	}
 	public CrystalHunterCharged(
 		Point pos, Player owner, ushort? netId, bool ownedByLocalPlayer, 
 		float? overrideTime = null, bool sendRpc = false
@@ -154,6 +172,8 @@ public class CrystalHunterCharged : Actor {
 		if (time > maxTime) {
 			destroySelf(disableRpc: true);
 		}
+
+		if (followActor != null) changePos(followActor.pos);	
 	}
 
 	public override void onDestroy() {

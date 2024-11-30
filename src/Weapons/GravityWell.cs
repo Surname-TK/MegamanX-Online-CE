@@ -42,6 +42,11 @@ public class GravityWell : Weapon {
 		} else {
 			if (!character.ownedByLocalPlayer) return;
 			character.changeState(new GravityWellChargedState(), true);
+
+			if (player.hasPlasma()) {
+				pos = character.pos.addxy(0, -40);
+				new BusterForcePlasmaHit(5, this, pos, xDir, player, player.getNextActorNetId(), rpc: true);
+			}
 		}
 	}
 
@@ -425,6 +430,7 @@ public class GravityWellChargedState : CharState {
 	public override void onExit(CharState newState) {
 		base.onExit(newState);
 		character.useGravity = true;
+		character.shootAnimTime = 0;
 		//character.chargedGravityWell?.destroySelf();
 		//character.chargedGravityWell = null;
 	}

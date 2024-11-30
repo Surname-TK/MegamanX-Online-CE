@@ -23,30 +23,34 @@ public class XHover : CharState {
 		if (inputDir.x == character.xDir) {
 			if (!sprite.StartsWith("hover_forward")) {
 				sprite = "hover_forward";
+				defaultSprite = sprite;
 				shootSprite = sprite + "_shoot";
-				character.changeSpriteFromName(sprite, true);
+				character.changeSpriteFromName(sprite, false);
 			}
 		} else if (inputDir.x == -character.xDir) {
 			if (player.input.isHeld(Control.Jump, player)) {
 				if (!sprite.StartsWith("hover_backward")) {
 					sprite = "hover_backward";
+					defaultSprite = sprite;
 					shootSprite = sprite + "_shoot";
-					character.changeSpriteFromName(sprite, true);
+					character.changeSpriteFromName(sprite, false);
 				}
 			} else {
 				character.xDir = -character.xDir;
 				startXDir = character.xDir;
 				if (!sprite.StartsWith("hover_forward")) {
 					sprite = "hover_forward";
+					defaultSprite = sprite;
 					shootSprite = sprite + "_shoot";
-					character.changeSpriteFromName(sprite, true);
+					character.changeSpriteFromName(sprite, false);
 				}
 			}
 		} else {
 			if (sprite != "hover") {
 				sprite = "hover";
+				defaultSprite = sprite;
 				shootSprite = sprite + "_shoot";
-				character.changeSpriteFromName(sprite, true);
+				character.changeSpriteFromName(sprite, false);
 			}
 		}
 
@@ -92,13 +96,13 @@ public class X2ChargeShot : CharState {
 	bool pressFire;
 	MegamanX mmx = null!;
 
-	public X2ChargeShot(int type) : base(type == 0 || type == 2 ? "x2_shot" : "x2_shot2") {
+	public X2ChargeShot(int type) : base(type != 2 ? "x2_shot" : "x2_shot2") {
 		this.type = type;
 		useDashJumpSpeed = true;
 		airMove = true;
 		landSprite = "x2_shot";
 		airSprite = "x2_air_shot";
-		if (type == 1) {
+		if (type == 2) {
 			landSprite = "x2_shot2";
 			airSprite = "x2_air_shot2";
 		}
@@ -109,33 +113,12 @@ public class X2ChargeShot : CharState {
 		if (!fired && character.currentFrame.getBusterOffset() != null) {
 			fired = true;
 			mmx.secondArmorChargeShots(type);
-			/* if (type == 0) {
-				new Buster3Proj(
-					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
-					player, player.getNextActorNetId(), rpc: true
-				);
-				character.playSound("buster4X2", sendRpc: true);
-				mmx.stockedX2Charge = true;
-			} else if (type == 1) {
-				new Buster3Proj(
-					player.weapon, character.getShootPos(), character.getShootXDir(), 0,
-					player, player.getNextActorNetId(), rpc: true
-				);
-				character.playSound("buster4X2", sendRpc: true);
-				mmx.stockedX2Charge = false;
-			} else if (type == 2) {
-				new BusterPlasmaProj(
-					player.weapon, character.getShootPos(), character.getShootXDir(),
-					player, player.getNextActorNetId(), rpc: true
-				);
-				character.playSound("plasmaShot", sendRpc: true);
-				mmx.stockedX2Charge = true;
-			} */
 		}
+
 		if (character.isAnimOver()) {
-			if (type == 0 && pressFire) {
+			if (type is 0 or 1 && pressFire) {
 				fired = false;
-				type = 1;
+				type = 2;
 				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
 				sprite = "x2_shot2";
 				defaultSprite = sprite;
@@ -155,7 +138,7 @@ public class X2ChargeShot : CharState {
 			}
 			if (character.grounded && player.input.isPressed(Control.Jump, player)) {
 				character.vel.y = -character.getJumpPower();
-				if (type == 0) {
+				if (type is 0 or 1) {
 					sprite = "x2_air_shot";
 				} else {
 					sprite = "x2_air_shot2";
@@ -168,8 +151,19 @@ public class X2ChargeShot : CharState {
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
 		mmx = character as MegamanX ?? throw new NullReferenceException();
+
+		if (oldState is AirDash or UpDash) {
+			if (player.input.isPressed(Control.Jump, player)) {
+				character.isDashing = false;
+				character.vel.y = -character.getJumpPower();
+				if (character.dashedInAir > 0) {
+					character.dashedInAir--;
+				}
+			}
+		}
+	
 		if (!character.grounded || character.vel.y > 0) {
-			if (type == 0) {
+			if (type is 0 or 1) {
 				sprite = "x2_air_shot";
 			} else {
 				sprite = "x2_air_shot2";
@@ -213,25 +207,8 @@ public class X3ChargeShot : CharState {
 			int shootDir = character.getShootXDir();
 
 			mmx.maxArmorChargeShots(state, hyperBusterWeapon);
-			/* if (state == 0) {
-				new BusterX3Proj1(
-					player.weapon, shootPos, shootDir,
-					0, player, player.getNextActorNetId(), rpc: true
-				);
-				if (!(player.weapon is HyperBuster)) {
-					character.playSound("buster3X3", sendRpc: true);
-				}
-			} else {
-				if (hyperBusterWeapon != null) {
-					hyperBusterWeapon.ammo -= hyperBusterWeapon.getChipFactoredAmmoUsage(player);
-				}
-				character.playSound("buster3X3", sendRpc: true);
-				new Buster3Proj(
-					player.weapon, shootPos, shootDir,
-					0, player, player.getNextActorNetId(), rpc: true
-				);
-			} */
 		}
+
 		if (character.isAnimOver()) {
 			if (state == 0 && pressFire) {
 				if (hyperBusterWeapon != null) {
@@ -279,6 +256,17 @@ public class X3ChargeShot : CharState {
 		if (mmx == null) {
 			throw new NullReferenceException();
 		}
+
+		if (oldState is AirDash or UpDash) {
+			if (player.input.isPressed(Control.Jump, player)) {
+				character.isDashing = false;
+				character.vel.y = -character.getJumpPower();
+				if (character.dashedInAir > 0) {
+					character.dashedInAir--;
+				}
+			}
+		}
+	
 		if (!mmx.stockedX3Charge) {
 			sprite = "x3_shot";
 			defaultSprite = sprite;

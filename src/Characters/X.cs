@@ -86,6 +86,20 @@ public partial class MegamanX : Character {
 	public Buster specialBuster;
 	public float WeaknessT;
 
+	//Force Armor Stuff
+	public int forceStocks;
+	public float[] forceStocksChargeTimes = new float[4];
+	
+	//X4 Weapons variables
+	public SoulBodyHologram? sBodyHologram;
+	public SoulBodyClone? sBodyClone;
+	public List<Character> aLaserTargets = new();
+	public AimingLaserCursor? aLaserCursor;
+	public AimingLaserHud? aLaserHud;
+	public AimingLaserProj? aLaserProj;
+	public AimingLaserChargedProj? aLaserChargedProj;
+	public DoubleCycloneChargedSpawn? dCycloneSpawn;
+
 	public MegamanX(
 		Player player, float x, float y, int xDir,
 		bool isVisible, ushort? netId, bool ownedByLocalPlayer,
@@ -95,6 +109,11 @@ public partial class MegamanX : Character {
 	) {
 		charId = CharIds.X;
 		specialBuster = new Buster();
+
+		forceStocksChargeTimes[0] = charge1Time;
+		forceStocksChargeTimes[1] = charge2Time;
+		forceStocksChargeTimes[2] = charge3Time;
+		forceStocksChargeTimes[3] = charge4Time;
 	}
 
 	public bool canShootSpecialBuster() {
@@ -104,7 +123,7 @@ public partial class MegamanX : Character {
 		return isSpecialBuster() &&
 			player.weapon is not Buster &&
 			!stingActive &&
-			player.armorFlag == 0 &&
+			(player.armorFlag == 0 || player.hasAllForceArmor()) &&
 			streamCooldown == 0;
 	}
 
@@ -174,9 +193,11 @@ public partial class MegamanX : Character {
 		Helpers.decrementFrames(ref upPunchCooldown);
 		isHyperChargeActive = shouldShowHyperBusterCharge();
 
-		Helpers.decrementTime(ref shootAnimTime);
-		if (shootAnimTime <= 0 && charState.attackCtrl && !charState.isGrabbing) {
-			if (!hasBusterProj()) {
+		
+		if (shootAnimTime > 0 && (charState.attackCtrl || player.isDead) && !charState.isGrabbing) {
+			Helpers.decrementTime(ref shootAnimTime);
+			if (shootAnimTime <= 0 && !hasBusterProj()) {
+				shootAnimTime = 0;
 				changeSpriteFromName(charState.defaultSprite, false);
 				if (charState is WallSlide) {
 					frameIndex = sprite.totalFrameNum - 1;
@@ -185,10 +206,30 @@ public partial class MegamanX : Character {
 		}
 
 		if (lastShotWasSpecialBuster) chargeLogic(specialShoot);
+		else if (player.hasArmArmor(ArmorId.Force) && player.weapon is Buster) chargeLogic(baitFunction);
 		else chargeLogic(shoot);
 
 		if (beeSwarm != null) {
 			beeSwarm.update();
+		}
+
+		//Aiming Laser
+		if (player.weapon is AimingLaser al && !hasBusterProj() && ownedByLocalPlayer) {
+			if (aLaserCursor == null) {
+				new AimingLaserCursor(
+					al, getShootPos(), getShootXDir(),
+					player, player.getNextActorNetId()
+				);
+			}
+
+			if (aLaserHud == null) {
+				for (int i = 0; i < 11; i++) {
+					new AimingLaserHud(
+						getShootPos(), getShootXDir(),
+						player.getNextActorNetId(), player, i
+					);
+				}
+			}
 		}
 
 		updateBarrier();
@@ -371,6 +412,8 @@ public partial class MegamanX : Character {
 				}
 			}
 		}
+
+		if (player.hasArmArmor(ArmorId.Force)) forceStocks = forceStocksLogic();
 	}
 	public override void chargeGfx() {
 		if (ownedByLocalPlayer) {
@@ -405,7 +448,7 @@ public partial class MegamanX : Character {
 		if (!grounded) {
 			if (player.dashPressed(out string dashControl) && canAirDash() && canDash() && flag == null) {
 				CharState dashState;
-				if (player.input.isHeld(Control.Up, player) && player.hasBootsArmor(3)) {
+				if (player.input.isHeld(Control.Up, player) && (player.hasBootsArmor(3) || player.hasGoldenArmor())) {
 					dashState = new UpDash(Control.Dash);
 				} else {
 					dashState = new AirDash(dashControl);
@@ -426,7 +469,7 @@ public partial class MegamanX : Character {
 				changeState(new Jump());
 				return true;
 			}
-			if (!player.isAI && player.hasUltimateArmor() &&
+			if (!player.isAI && (player.hasUltimateArmor() || player.hasBootsArmor(ArmorId.Force)) &&
 				player.input.isPressed(Control.Jump, player) &&
 				canJump() && !isDashing && canAirDash() && flag == null
 			) {
@@ -530,11 +573,11 @@ public partial class MegamanX : Character {
 		} 
 		else if (Options.main.novaStrikeSpecial &&
 			player.input.isPressed(Control.Special1, player) &&
-			player.weapons.Any(w => w is NovaStrike) &&
+			player.weapons.Any(w => w is NovaStrike or ForceNovaStrike) &&
 			!inputDir.isZero()
 		) {
 			oldSlot = player.weaponSlot;
-			newSlot = player.weapons.FindIndex(w => w is NovaStrike);
+			newSlot = player.weapons.FindIndex(w => w is NovaStrike or ForceNovaStrike);
 			player.changeWeaponSlot(newSlot);
 			if (novaStrikeCooldown <= 0) {
 				shoot(getChargeLevel());
@@ -642,7 +685,7 @@ public partial class MegamanX : Character {
 		chargeLevel = stockedX2Charge ? 3 : chargeLevel;
 
 		//Change to shoot sprite
-		setShootAnim();
+		if (!player.weapon.hasCustomAnim) setShootAnim();
 
 		//Plays weapon sound.
 		if (player.weapon.soundTime <= 0) {
@@ -689,15 +732,18 @@ public partial class MegamanX : Character {
 
 		//Stock Chargeshots stuff
 		//Giga buster.
-		bool updatedStock = false;
+		//bool updatedStock = false;
 		if (chargeLevel >= 3 && player.hasArmArmor(2)) {
 			if (player.weapon is Buster && !stockedX2Charge) {
 				shootCooldown = hasUltimateArmor ? 0 : 0;
-			} else shootCooldown = 0;
-			stockX2Charge(!stockedX2Charge);
-			updatedStock = true;
+			} else if (player.weapon is not Buster) {
+				shootCooldown = 0;
+				stockX2Charge(!stockedX2Charge);
+			}
+			//stockX2Charge(!stockedX2Charge);
+			//updatedStock = true;
 		}
-		if (!updatedStock) stockX2Charge(false);
+		//if (!updatedStock) stockX2Charge(false);
 
 		//Max Buster.
 		if (chargeLevel >= 3 && player.hasGoldenArmor() && player.weapon is Buster) {
@@ -733,8 +779,16 @@ public partial class MegamanX : Character {
 				w.shootGiga(character, args);
 				break;
 
-			case (int)ArmorId.Max:
+			case (int)ArmorId.Max or 6:
 				w.shootMax(character, args);
+				break;
+			
+			case (int)ArmorId.Force:
+				w.shootStock(character, args);
+				break;
+			
+			case (int)ArmorId.Force + 1:
+				w.shootPlasma(character, args);
 				break;
 
 			default:
@@ -745,26 +799,33 @@ public partial class MegamanX : Character {
 
 	public void secondArmorChargeShots(int type) {
 		if (type == 0) {
-			new Buster3Proj(
-				player.weapon, getShootPos(), getShootXDir(), 0,
+			new Buster2Proj(
+				player.weapon, getShootPos(), getShootXDir(),
 				player, player.getNextActorNetId(), rpc: true
 			);
-			playSound("buster4X2", sendRpc: true);
-			//stockedX2Charge = true;
+			playSound("buster2X2", sendRpc: true);
+			stockX2Charge(true);
 		} else if (type == 1) {
 			new Buster3Proj(
 				player.weapon, getShootPos(), getShootXDir(), 0,
 				player, player.getNextActorNetId(), rpc: true
 			);
 			playSound("buster4X2", sendRpc: true);
-			//stockedX2Charge = false;
+			stockX2Charge(true);
 		} else if (type == 2) {
+			new Buster3Proj(
+				player.weapon, getShootPos(), getShootXDir(), 0,
+				player, player.getNextActorNetId(), rpc: true
+			);
+			playSound("buster4X2", sendRpc: true);
+			stockX2Charge(false);
+		} else if (type == 3) {
 			new BusterPlasmaProj(
 				player.weapon, getShootPos(), getShootXDir(),
 				player, player.getNextActorNetId(), rpc: true
 			);
 			playSound("plasmaShot", sendRpc: true);
-			//stockedX2Charge = true;
+			stockX2Charge(true);
 		}
 	}
 
@@ -793,6 +854,18 @@ public partial class MegamanX : Character {
 			);
 			stockedX3Charge = false;
 		}
+	}
+
+	void baitFunction(int cl) {
+		// Yeah this is used only to NOT shoot after releasing charge with stock buster.
+	}
+
+	int forceStocksLogic() {
+		int shots = forceStocks;
+
+		if (chargeTime >= forceStocksChargeTimes[(int)Helpers.clampMax(shots, 3)]) shots++;
+
+		return Math.Min(4, shots);
 	}
 
 	// Fast upgrading via command key.
@@ -925,7 +998,9 @@ public partial class MegamanX : Character {
 			chargedTunnelFang != null ||
 			strikeChainProj != null ||
 			strikeChainChargedProj != null ||
-			isShootingRaySplasher;
+			isShootingRaySplasher ||
+			aLaserProj != null ||
+			aLaserChargedProj != null;
 	}
 
 	public void destroyBusterProjs() {
@@ -934,6 +1009,8 @@ public partial class MegamanX : Character {
 		chargedTunnelFang?.destroySelf();
 		strikeChainProj?.destroySelf();
 		strikeChainChargedProj?.destroySelf();
+		aLaserProj?.destroySelf();
+		aLaserChargedProj?.destroySelf();
 	}
 
 	public bool checkMaverickWeakness(ProjIds projId) {
@@ -1202,6 +1279,8 @@ public partial class MegamanX : Character {
 		}
 		if (hasBusterProj() && string.IsNullOrEmpty(newState.shootSprite) && newState is not Hurt) {
 			destroyBusterProjs();
+		} else if (shootAnimTime > 0 && newState.attackCtrl && !string.IsNullOrEmpty(newState.shootSprite)) {
+			changeSprite(getSprite(newState.shootSprite), true);
 		}
 		return true;
 	}
@@ -1358,6 +1437,7 @@ public partial class MegamanX : Character {
 		shotgunIceChargeTime = 0;
 		strikeChainProj?.destroySelf();
 		strikeChainChargedProj?.destroySelf();
+		sBodyClone?.destroySelf();
 		if (newState is not Hurt hurtState) {
 			beeSwarm?.destroy();
 		} else {
@@ -1395,6 +1475,8 @@ public partial class MegamanX : Character {
 		return dashedInAir == 0 || (dashedInAir == 1 && player.hasChip(0));
 	}
 
+	public override bool isSoftLocked() { return base.isSoftLocked() && sBodyClone != null; }
+
 	public override string getSprite(string spriteName) {
 		return "mmx_" + spriteName;
 	}
@@ -1417,11 +1499,13 @@ public partial class MegamanX : Character {
 			index = player.weapons[player.hyperChargeSlot].index;
 		}
 		if (player.hasGoldenArmor()) {
-			index = 25;
+			index = 33;
 		}
 		if (hasUltimateArmor) {
 			index = 0;
 		}
+		if (sBodyClone != null) index = (int)WeaponIds.SoulBody;
+		
 		palette = player.xPaletteShader;
 
 		if (!isCStingInvisibleGraphics()) {

@@ -19,9 +19,10 @@ public class XWeaponCursor {
 	}
 
 	public int startOffset() {
-		if (index < 9) return 0;
-		else if (index >= 9 && index <= 16) return 9;
-		else return 17;
+		if (index < 9) return 0; //X1 page
+		else if (index is >= 9 and <= 16) return 9; //X2 page
+		else if (index is >= 17 and <= 24) return 17; //X3 page
+		return 25; //X4 page
 	}
 
 	public int numWeapons() {
@@ -30,15 +31,17 @@ public class XWeaponCursor {
 	}
 
 	public void cycleLeft() {
-		if (index < 9) index = 17;
-		else if (index >= 9 && index <= 16) index = 0;
-		else if (index > 16) index = 9;
+		if (index < 9) index = 25; //from x1 page to x4
+		else if (index is >= 9 and <= 16) index = 0; //from x2 page to x1
+		else if (index is >= 17 and <= 24) index = 9; //from x3 page to x2
+		else index = 17; //from x4 page to x3
 	}
 
 	public void cycleRight() {
-		if (index < 9) index = 9;
-		else if (index >= 9 && index <= 16) index = 17;
-		else if (index > 16) index = 0;
+		if (index < 9) index = 9; //from x1 page to x2
+		else if (index is >= 9 and <= 16) index = 17; //from x2 page to x3
+		else if (index is >= 17 and <= 24) index = 25; //from x3 page to x4
+		else index = 0; //from x4 page to x1
 	}
 }
 
@@ -77,6 +80,14 @@ public class SelectWeaponMenu : IMainMenu {
 			"Gravity Well",
 			"Frost Shield",
 			"Tornado Fang",
+			"Lightning Web",
+			"Frost Tower",
+			"Soul Body",
+			"Rising Fire",
+			"Ground Hunter",
+			"Aiming Laser",
+			"Double Cyclone",
+			"Twin Slasher",
 		};
 
 	public List<int> selectedWeaponIndices;
@@ -125,15 +136,15 @@ public class SelectWeaponMenu : IMainMenu {
 		if (selCursorIndex < 3) {
 			if (Global.input.isPressedMenu(Control.MenuLeft)) {
 				cursors[selCursorIndex].index--;
-				if (cursors[selCursorIndex].index == -1) cursors[selCursorIndex].index = 24; //8;
-				else if (cursors[selCursorIndex].index == 8) cursors[selCursorIndex].index = 8; //16;
-				else if (cursors[selCursorIndex].index == 16) cursors[selCursorIndex].index = 16; //24;
+				if (cursors[selCursorIndex].index <= -1) cursors[selCursorIndex].index = 32; //8;
+				//else if (cursors[selCursorIndex].index == 8) cursors[selCursorIndex].index = 8; //16;
+				//else if (cursors[selCursorIndex].index == 16) cursors[selCursorIndex].index = 16; //24;
 				Global.playSound("menuX2");
 			} else if (Global.input.isPressedMenu(Control.MenuRight)) {
 				cursors[selCursorIndex].index++;
-				if (cursors[selCursorIndex].index == 9) cursors[selCursorIndex].index = 9; //0;
-				else if (cursors[selCursorIndex].index == 17) cursors[selCursorIndex].index = 17; //9;
-				else if (cursors[selCursorIndex].index == 25) cursors[selCursorIndex].index = 0; //17;
+				//if (cursors[selCursorIndex].index == 9) cursors[selCursorIndex].index = 9; //0;
+				//else if (cursors[selCursorIndex].index == 17) cursors[selCursorIndex].index = 17; //9;
+				if (cursors[selCursorIndex].index >= 33) cursors[selCursorIndex].index = 0; //17;
 				Global.playSound("menuX2");
 			}
 			if (Global.input.isPressedMenu(Control.WeaponLeft)) {
@@ -261,7 +272,7 @@ public class SelectWeaponMenu : IMainMenu {
 
 			for (int j = 0; j < cursors[i].numWeapons(); j++) {
 				int jIndex = j + cursors[i].startOffset();
-				Global.sprites["hud_weapon_icon"].drawToHUD(jIndex, startX2 + (j * wepW), startY + (i * wepH));
+				Global.sprites["hud_loadoutmenu_icons"].drawToHUD(jIndex, startX2 + (j * wepW), startY + (i * wepH));
 				/*Helpers.drawTextStd(
 					(j + 1).ToString(), startX2 + (j * wepW), startY + (i * wepH) + 10, Alignment.Center
 				);*/

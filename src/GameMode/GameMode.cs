@@ -633,14 +633,25 @@ public class GameMode {
 					"x" + drawPlayer.currency.ToString(), 16, 140, Alignment.Left
 				);
 			}
-			if (drawPlayer.character is MegamanX mmx && mmx.unpoShotCount > 0) {
-				int x = 10, y = 156;
-				int count = mmx.unpoShotCount;
-				if (count >= 1) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x, y);
-				if (count >= 2) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x + 13, y);
-				if (count >= 3) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x, y + 11);
-				if (count >= 4) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x + 13, y + 11);
+			if (drawPlayer.character is MegamanX mmx) {
+				int x = 26, y = 156;
+				if (mmx.unpoShotCount > 0) {
+					int count = mmx.unpoShotCount;
+					if (count >= 1) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x, y);
+					if (count >= 2) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x + 13, y);
+					if (count >= 3) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x, y + 11);
+					if (count >= 4) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x + 13, y + 11);
+				}
+				
+				else if (mmx.forceStocks > 0) {
+					int count = mmx.forceStocks;
+					if (count >= 1) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x, y);
+					if (count >= 2) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x + 13, y);
+					if (count >= 3) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x, y + 11);
+					if (count >= 4) Global.sprites["hud_killfeed_weapon"].drawToHUD(180, x + 13, y + 11);
+				}
 			}
+
 			if (drawPlayer.character is Zero zero) {
 				int yStart = 159;
 				if (zero.isViral) {
@@ -1218,9 +1229,12 @@ public class GameMode {
 		//Health
 		renderHealth(player, position, false);
 		bool mechBarExists = renderHealth(player, position, true);
+		bool sbc = player.sClone != null;
 
 		//Weapon
-		if (!mechBarExists) renderWeapon(player, position);
+		if (!mechBarExists && !sbc) renderWeapon(player, position);
+		//Soul Body clone health
+		else if (sbc) renderSBodyHealth(player, position);
 	}
 
 	public Point getHUDHealthPosition(HUDHealthPosition position, bool isHealth) {
@@ -1350,6 +1364,46 @@ public class GameMode {
 		Global.sprites["hud_health_top"].drawToHUD(0, baseX, baseY);
 
 		return mechBarExists;
+	}
+
+	public void renderSBodyHealth(Player player, HUDHealthPosition position) {
+		if (player.sClone == null) return;
+
+		string spriteName = "hud_health_base_sbody";
+		float health = player.sClone.health;
+		float maxHealth = player.sClone.maxHealth;
+		float damageSavings = 0;
+
+		if (player.sClone.health > 0 && player.sClone.health < player.sClone.maxHealth) {
+			//damageSavings = MathInt.Floor(player.sClone.damageSavings);
+		}
+
+		int frameIndex = player.charNum;
+
+		var hudHealthPosition = getHUDHealthPosition(position, false);
+		float baseX = hudHealthPosition.x;
+		float baseY = hudHealthPosition.y;
+
+		baseY += 25;
+		string healthBaseSprite = spriteName;
+		Global.sprites[healthBaseSprite].drawToHUD(frameIndex, baseX, baseY);
+		baseY -= 16;
+		int barIndex = 0;
+
+		for (var i = 0; i < MathF.Ceiling(maxHealth); i++) {
+			// Draw HP
+			if (i < MathF.Ceiling(health)) {
+				Global.sprites["hud_health_full"].drawToHUD(barIndex, baseX, baseY);
+			} else if (i < MathInt.Ceiling(health) + damageSavings) {
+				Global.sprites["hud_health_full"].drawToHUD(4, baseX, baseY);
+			} else {
+				Global.sprites["hud_health_empty"].drawToHUD(0, baseX, baseY);
+			}
+
+			baseY -= 2;
+		}
+
+		Global.sprites["hud_health_top"].drawToHUD(0, baseX, baseY);
 	}
 
 	const int grayAmmoIndex = 30;
@@ -1802,7 +1856,7 @@ public class GameMode {
 			}
 		}
 		if (player.isX && Options.main.novaStrikeSpecial) {
-			Weapon? novaStrike = player.weapons.FirstOrDefault((Weapon w) => w is NovaStrike);
+			Weapon? novaStrike = player.weapons.FirstOrDefault((Weapon w) => w is NovaStrike or ForceNovaStrike);
 			if (novaStrike != null) {
 				drawWeaponSlot(novaStrike, gigaWeaponX, 159);
 				gigaWeaponX += 18;
@@ -1915,7 +1969,7 @@ public class GameMode {
 				offsetX -= width;
 				continue;
 			}
-			if (player.isX && Options.main.novaStrikeSpecial && weapon is NovaStrike) {
+			if (player.isX && Options.main.novaStrikeSpecial && weapon is NovaStrike or ForceNovaStrike) {
 				offsetX -= width;
 				continue;
 			}
@@ -2016,6 +2070,8 @@ public class GameMode {
 				mainPlayer.weapons[level.mainPlayer.hyperChargeSlot].ammo == 0
 			) {
 				drawWeaponSlotAmmo(x, y, 0);
+			} else if (weapon is AimingLaser && mmx.aLaserTargets.Count > 0) {
+				drawWeaponText(x, y, mmx.aLaserTargets.Count.ToString());
 			} else if (weapon is HyperBuster hb) {
 				drawWeaponSlotCooldown(x, y, mmx.hyperchargeCooldown / hb.getRateOfFire(level.mainPlayer));
 			} else if (weapon is NovaStrike ns) {
@@ -2334,7 +2390,11 @@ public class GameMode {
 	public float getWeaponSlotStartX(Player player, ref int iconW, ref int iconH, ref int width) {
 		int weaponCountOff = player.weapons.Count - 1;
 		if (mainPlayer.isX && Options.main.gigaCrushSpecial) {
-			weaponCountOff = player.weapons.Count((Weapon w) => w is not GigaCrush) - 1;
+			//weaponCountOff = player.weapons.Count((Weapon w) => w is not GigaCrush) - 1;
+			if (player.weapons.Any(w => w is GigaCrush))  weaponCountOff--;
+		}
+		if (mainPlayer.isX && Options.main.novaStrikeSpecial) {
+			if (player.weapons.Any(w => w is ForceNovaStrike or NovaStrike))  weaponCountOff--;
 		}
 		int weaponOffset = 0;
 		float halfSize = width / 2f;

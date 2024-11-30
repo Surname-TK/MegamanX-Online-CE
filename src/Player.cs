@@ -471,16 +471,18 @@ public partial class Player {
 	public List<ChillPIceStatueProj> iceStatues = new List<ChillPIceStatueProj>();
 	public List<WSpongeSpike> seeds = new List<WSpongeSpike>();
 	public List<Actor> mechaniloids = new List<Actor>();
+	public SoulBodyClone? sClone;
 
 	ExplodeDieEffect explodeDieEffect;
 	public Character limboChar;
 	public bool suicided;
 
 	ushort savedArmorFlag;
-	public bool[] headArmorsPurchased = new bool[] { false, false, false };
-	public bool[] bodyArmorsPurchased = new bool[] { false, false, false };
-	public bool[] armArmorsPurchased = new bool[] { false, false, false };
-	public bool[] bootsArmorsPurchased = new bool[] { false, false, false };
+	public bool[] headArmorsPurchased = new bool[] { false, false, false, false, false };
+	public bool[] bodyArmorsPurchased = new bool[] { false, false, false, false, false };
+	public bool[] armArmorsPurchased = new bool[] { false, false, false, false, false };
+	public bool[] bootsArmorsPurchased = new bool[] { false, false, false, false, false };
+	public bool[] chipsEquipped = new bool[] { false, false, false, false };
 
 	public float lastMashAmount;
 	public int lastMashAmountSetFrame;
@@ -652,17 +654,23 @@ public partial class Player {
 	}
 
 	public bool hasAllItems() {
+		int? maxHT;
+		int? maxST;
 		if (!Global.level.server.disableHtSt) {
-			int maxHT = Global.level.server.customMatchSettings.maxHeartTanks;
-			int maxST = Global.level.server.customMatchSettings.maxSubTanks;
+			if (Global.level?.server?.customMatchSettings != null) {
+				maxHT = Global.level?.server?.customMatchSettings.maxHeartTanks;
+				maxST = Global.level?.server?.customMatchSettings.maxSubTanks;
+			} else {
+				maxHT = 8;
+				maxST = 4;
+			} 
+
 			if (maxHT > 0 || maxST > 0) {
-				return subtanks.Count >= maxST && heartTanks >= maxHT;}
-			else {
-				return false;
+				return subtanks.Count >= maxST && heartTanks >= maxHT;
 			}
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	public static float getBaseHealth() {
@@ -1059,6 +1067,11 @@ public partial class Player {
 		if (charNum == (int)CharIds.Sigma) {
 			return [
 				(byte)loadout.sigmaLoadout.sigmaForm
+			];
+		}
+		if (charNum == (int)CharIds.SoulBodyClone) {
+			return [
+				(byte)WeaponIds.Buster
 			];
 		}
 		return [];
@@ -1743,6 +1756,16 @@ public partial class Player {
 		return bodyArmorNum == 3 && bootsArmorNum == 3 && armArmorNum == 3 && helmetArmorNum == 3;
 	}
 
+	public bool hasAllForceArmor() {
+		return 
+			bodyArmorNum == (int)ArmorId.Force &&
+			bootsArmorNum == (int)ArmorId.Force &&
+			helmetArmorNum == (int)ArmorId.Force &&
+			(armArmorNum == (int)ArmorId.Force || armArmorNum == (int)ArmorId.Force + 1);
+	}
+
+	public bool hasPlasma() { return armArmorNum == (int)ArmorId.Force + 1; }
+
 	public bool canUpgradeGoldenX() {
 		return character != null &&
 			isX && !isDisguisedAxl &&
@@ -1879,6 +1902,23 @@ public partial class Player {
 			*/
 			return true;
 		}
+	}
+
+	public void onKillEffects(bool killOrAssist) {
+		if (character == null || !ownedByLocalPlayer) return;
+
+		if (character is MegamanX) {
+			if (hasHelmetArmor(ArmorId.Force)) {
+				foreach (Weapon weapon in weapons) {
+					if (weapon is HyperBuster || weapon is GigaCrush ||
+						weapon is ForceNovaStrike || weapon is NovaStrike
+					) {
+						continue;
+					}
+					weapon.addPercentAmmo(25);
+				}
+			}
+		} 
 	}
 
 	public void awardCurrency() {
@@ -2287,7 +2327,8 @@ public partial class Player {
 		if (armorIndex == 3) bitStr = bits[12] + bits[13] + bits[14] + bits[15];
 
 		int retVal = Convert.ToInt32(bitStr, 2);
-		if (retVal > 3 && !isChipCheck) retVal = 3;
+		if (retVal > 5 && !isChipCheck) retVal = 5;
+		
 		return retVal;
 	}
 
@@ -2320,32 +2361,41 @@ public partial class Player {
 	}
 
 	public bool hasChip(int armorIndex) {
+		if (hasGoldenArmor()) return true;
 		if (!hasAllX3Armor()) return false;
-		return getArmorNum(armorFlag, armorIndex, true) == 15;
+		//return getArmorNum(armorFlag, armorIndex, true) == 6;
+		return chipsEquipped[armorIndex];
 	}
 
 	public void setChipNum(int armorIndex, bool remove) {
 		if (!remove) {
 			usedChipOnce = true;
 		}
-		setArmorNum(0, 3);
+		/* setArmorNum(0, 3);
 		setArmorNum(1, 3);
 		setArmorNum(2, 3);
 		setArmorNum(3, 3);
-		setArmorNum(armorIndex, remove ? 3 : 15);
+		setArmorNum(armorIndex, remove ? 3 : 6); */
+
+		chipsEquipped[0] = false;
+		chipsEquipped[1] = false;
+		chipsEquipped[2] = false;
+		chipsEquipped[3] = false;
+
+		if (!remove) chipsEquipped[armorIndex] = true;
 	}
 
 	public void setGoldenArmor(bool addOrRemove) {
 		if (addOrRemove) {
 			savedArmorFlag = armorFlag;
-			armorFlag = ushort.MaxValue;
+			armorFlag = 6;
 		} else {
 			armorFlag = savedArmorFlag;
 		}
 	}
 
 	public bool hasGoldenArmor() {
-		return armorFlag == ushort.MaxValue;
+		return armorFlag == 6;
 	}
 
 	public void setUltimateArmor(bool addOrRemove) {
@@ -2377,7 +2427,7 @@ public partial class Player {
 		set { setArmorNum(2, value); }
 	}
 	public int armArmorNum {
-		get { return getArmorNum(armorFlag, 3, false); }
+		get { return getArmorNum(armorFlag, 3, true); }
 		set { setArmorNum(3, value); }
 	}
 
@@ -2727,7 +2777,10 @@ public partial class Player {
 	}
 
 	public void stopSubtankHeal() {
-		if (character != null && character.subtankHealAmount > 0) character.subtankHealAmount = 0; character.usedSubtank = null;
+		if (character != null && character.subtankHealAmount > 0) {
+			character.subtankHealAmount = 0; 
+			character.usedSubtank = null;
+		} 
 	}
 
 	public void stopSubtankHealMav() {

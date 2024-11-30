@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MMXOnline;
 
@@ -138,6 +139,12 @@ public class Damager {
 		) {
 			return false;
 		}
+
+		//Aiming laser check
+		/* if (projId == (int)ProjIds.AimingLaser && owner.character is MegamanX xAttacker) {
+			if (!xAttacker.aLaserTargets.Any(c => c == victim)) return false;
+		} */
+
 		string key = projId.ToString() + "_" + owner.id.ToString();
 
 		// Key adjustment overrides for more fine tuned balance cases
@@ -481,7 +488,7 @@ public class Damager {
 					break;
 				//Other effects
 				case (int)ProjIds.PlasmaGun:
-					if (mmx != null && mmx.player.hasBodyArmor(3)) {
+					if (mmx != null && (mmx.player.hasBodyArmor(3) || mmx.player.hasGoldenArmor())) {
 						//The main shot fires an EMP burst that causes a full flinch and 
 						//destroys Rolling Shields as well as temporarily disabling X3 barriers
 						//He literally made an INFINITE DEACTIVATION
@@ -638,7 +645,7 @@ public class Damager {
 				}
 			}
 			//Damage above 0
-			if (damage > 0) {
+			if (damage > 0 || flinch > 0) {
 				//bool if the character is frozen
 				bool isShotgunIceAndFrozen = character?.sprite.name.Contains("frozen") == true && weaponKillFeedIndex == 8;
 				int hurtDir = -character.xDir; //Hurt Direction

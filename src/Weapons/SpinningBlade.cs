@@ -154,6 +154,8 @@ public class SpinningBladeProjCharged : Projectile {
 		destroyOnHit = false;
 		character = (player.character as MegamanX);
 		shouldVortexSuck = false;
+		releasePlasma = player.hasPlasma();
+
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
