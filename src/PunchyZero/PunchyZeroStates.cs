@@ -341,7 +341,7 @@ public class PZeroParryCounter : CharState {
 			counterAttackPos = counterAttackTarget.pos.addxy(character.xDir * -20, 0f);
 			float dist2 = currentPos.distanceTo(enemyAttackPos);
 
-			if (isMelee || dist <= 150 || dist2 <= 150) {
+			if (isMelee || dist <= 125 || dist2 <= 125) {
 				canCounterDash = true;
 			}
 			calcOnce = true;

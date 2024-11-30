@@ -17,8 +17,8 @@ public class BlizzardBuffalo : Maverick {
 		player, pos, destPos, xDir, netId, ownedByLocalPlayer
 	) {
 		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(false, true, 0.75f));
-		stateCooldowns.Add(typeof(BBuffaloDashState), new MaverickStateCooldown(false, true, 1.25f));
-		stateCooldowns.Add(typeof(BBuffaloShootBeamState), new MaverickStateCooldown(false, false, 1));
+		stateCooldowns.Add(typeof(BBuffaloDashState), new MaverickStateCooldown(false, true, 1f));
+		stateCooldowns.Add(typeof(BBuffaloShootBeamState), new MaverickStateCooldown(false, true, 1f));
 
 		spriteFrameToSounds["bbuffalo_run/2"] = "walkStomp";
 		spriteFrameToSounds["bbuffalo_run/6"] = "walkStomp";
@@ -296,12 +296,12 @@ public class BBuffaloBeamProj : Projectile {
 		Weapon weapon, Point pos, int xDir, BlizzardBuffalo bb,
 		Player player, ushort netProjId, bool sendRpc = false
 	) : base(
-		weapon, pos, xDir, 150, 0, player, "bbuffalo_proj_beam_head",
+		weapon, pos, xDir, 250, 0, player, "bbuffalo_proj_beam_head",
 		0, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.BBuffaloBeam;
 		setStartPos(pos.addxy(-xDir * 10, 0));
-		maxDistance2 = 200;
+		maxDistance2 = 250;
 		this.bb = bb;
 		setIndestructableProperties();
 
@@ -341,11 +341,11 @@ public class BBuffaloBeamProj : Projectile {
 		moveDistance2 = 0;
 	}
 
-	public override void onHitWall(CollideData other) {
+	/*public override void onHitWall(CollideData other) {
 		base.onHitWall(other);
 		if (!ownedByLocalPlayer) return;
 		release();
-	}
+	}*/
 
 	public void setStartPos(Point startPos) {
 		this.startPos = startPos;

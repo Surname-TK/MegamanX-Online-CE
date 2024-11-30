@@ -472,7 +472,7 @@ public class RideArmor : Actor, IDamagable {
 				character is Vile vile &&
 				punchCooldown == 0 &&
 				raNum == 2 &&
-				vile.napalmWeapon.shootTime == 0 &&
+				vile.napalmWeapon.shootCooldown == 0 &&
 				player.input.isPressed(Control.Special1, player) &&
 				player.input.isHeld(Control.Down, player) &&
 				!rideArmorState.inTransition()
@@ -540,7 +540,7 @@ public class RideArmor : Actor, IDamagable {
 	public bool canAttack() {
 		if (character == null) return false;
 		bool ignoreRideArmorHide = true;
-		if (raNum == 2 || raNum == 3) ignoreRideArmorHide = false;
+		if ((character.charState as InRideArmor)?.isHiding == true) return false;
 		if (missileCooldown > 0) return false;
 		return !string.IsNullOrEmpty(rideArmorState?.attackSprite) && !character.isInvulnerable(ignoreRideArmorHide, true) && !sprite.name.Contains("attack");
 	}
@@ -603,7 +603,7 @@ public class RideArmor : Actor, IDamagable {
 						} else if (!(ownedByLocalPlayer && chr.ownedByLocalPlayer)) {
 							return;
 						}
-					} else if (chr?.startRideArmor != this || selfDestructTime > 0) {
+					} else if (chr?.linkedRideArmor != this || selfDestructTime > 0) {
 						return;
 					}
 				} else {
@@ -691,7 +691,7 @@ public class RideArmor : Actor, IDamagable {
 		chr.changeState(new InRideArmor(), true);
 		changeState(new RAIdle("ridearmor_activating"), true);
 		if (character != null) {
-			if (!healedOnEnter && raNum == 4 && character.ownedByLocalPlayer && character.startRideArmor == this) {
+			if (!healedOnEnter && raNum == 4 && character.ownedByLocalPlayer && character.linkedRideArmor == this) {
 				healedOnEnter = true;
 				character.fillHealthToMax();
 			}
@@ -750,7 +750,7 @@ public class RideArmor : Actor, IDamagable {
 			health = 0;
 		}
 		if (health <= 0) {
-			if (character != null && !ownedByMK5 && character.startRideArmor == this) {
+			if (character != null && !ownedByMK5 && character.linkedRideArmor == this) {
 				character.invulnTime = 1;
 			}
 
@@ -1348,7 +1348,7 @@ public class RAIdle : RideArmorState {
 
 		Helpers.decrementTime(ref attackCooldown);
 
-		if (player != null && rideArmor.raNum == 1 && player.input.isHeld(Control.Shoot, player) && !rideArmor.isAttacking()) {
+		if (player != null && rideArmor.raNum == 1 && player.input.isHeld(Control.Shoot, player) && !rideArmor.isAttacking() && !(character.charState as InRideArmor).isHiding) {
 			shootHeldTime += Global.spf;
 			if (shootHeldTime > 0.5f) {
 				shootHeldTime = 0;
@@ -1912,7 +1912,7 @@ public class RAChainCharge : RideArmorState {
 				rideArmor.xDir = 1;
 			}
 
-			if (player.dashPressed(out string dashControl)) {
+			if (!(character.charState as InRideArmor).isHiding && player.dashPressed(out string dashControl)) {
 				bool isHiding = (character?.charState as InRideArmor)?.isHiding ?? false;
 				rideArmor.changeState(new RAChainChargeDash(dashControl, isHiding), true);
 				return;
@@ -2203,7 +2203,7 @@ public class InRideArmor : CharState {
 
 	public void tossGrenade(Vile vile) {
 		Projectile? grenade = null;
-		if (vile.napalmWeapon.shootTime > 0) {
+		if (vile.napalmWeapon.shootCooldown > 0) {
 			return;
 		}
 		if (vile.napalmWeapon.type == (int)NapalmType.SplashHit) {

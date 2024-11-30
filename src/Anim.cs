@@ -301,7 +301,7 @@ public enum GibPattern {
 
 public class BubbleAnim : Anim {
 	public BubbleAnim(Point pos, string spriteName, ushort? netId = null, bool sendRpc = false, bool ownedByLocalPlayer = true) :
-		base(pos, spriteName, 1, netId, true, sendRpc, ownedByLocalPlayer) {
+		base(pos, spriteName, 1, netId, false, sendRpc, ownedByLocalPlayer) {
 		vel.y = -50;
 		ttl = 2;
 	}

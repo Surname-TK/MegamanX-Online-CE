@@ -8,6 +8,7 @@ using static SFML.Window.Keyboard;
 namespace MMXOnline;
 
 public partial class Player {
+	public SpawnPoint? firstSpawn;
 	public Input input;
 	public Character character;
 	public Character lastCharacter;
@@ -139,11 +140,11 @@ public partial class Player {
 	public MaverickAIBehavior currentMaverickCommand;
 
 	public bool isX { get { return charNum == (int)CharIds.X; } }
-	public bool isZero { get { return charNum == (int)CharIds.Zero; } }
+	public bool isZero { get { return charNum == (int)CharIds.Zero ||
+	charNum == (int)CharIds.BusterZero || charNum == (int)CharIds.PunchyZero; } }
 	public bool isVile { get { return charNum == (int)CharIds.Vile; } }
 	public bool isAxl { get { return charNum == (int)CharIds.Axl; } }
 	public bool isSigma { get { return charNum == (int)CharIds.Sigma; } }
-	/*public bool isIris { get { return charNum == (int)CharIds.Iris; } }*/
 
 	public float healthBackup;
 	public float _health;
@@ -228,7 +229,6 @@ public partial class Player {
 		{ (int)CharIds.PunchyZero, new List<SubTank>() },
 		{ (int)CharIds.BusterZero, new List<SubTank>() },
 		{ (int)CharIds.Rock, new List<SubTank>() },
-		/*{ (int)CharIds.Iris, new List<SubTank>() },*/
 	};
 	// Heart tanks
 	public Dictionary<int, int> charHeartTanks = new Dictionary<int, int>(){
@@ -240,7 +240,6 @@ public partial class Player {
 		{ (int)CharIds.PunchyZero, 0 },
 		{ (int)CharIds.BusterZero, 0 },
 		{ (int)CharIds.Rock, 0 },
-		/*{ (int)CharIds.Iris, 0 },*/
 	};
 	// Getter functions.
 	public List<SubTank> subtanks {
@@ -250,22 +249,8 @@ public partial class Player {
 
 	public Dictionary<int, int> charHeartTanksBackup = new Dictionary<int, int>();
 	public int heartTanks {
-		get {
-			if (!ownedByLocalPlayer) {
-				return charHeartTanks[isDisguisedAxl ? 3 : charNum];
-			}
-			if (charHeartTanksBackup.GetValueOrDefault(isDisguisedAxl ? 3 : charNum)
-				!=
-				charHeartTanks[isDisguisedAxl ? 3 : charNum] * curMul
-			) {
-				throw new OverflowException();
-			}
-			return charHeartTanks[isDisguisedAxl ? 3 : charNum];
-		}
-		set {
-			charHeartTanks[isDisguisedAxl ? 3 : charNum] = value;
-			charHeartTanksBackup[isDisguisedAxl ? 3 : charNum] = value * curMul;
-		}
+		get { return charHeartTanks[isDisguisedAxl ? 3 : charNum]; }
+		set { charHeartTanks[isDisguisedAxl ? 3 : charNum] = value; }
 	}
 
 	// Currency
@@ -379,6 +364,22 @@ public partial class Player {
 	public string name;
 	public int id;
 	public int alliance;    // Only set on spawn with data read from ServerPlayer alliance. The ServerPlayer alliance changes earlier on team change/autobalance
+	public int getCharIcon(){
+		switch (charNum){
+			case (int)CharIds.X: { return 0; }
+
+			case (int)CharIds.Zero: { return 1; }
+			case (int)CharIds.BusterZero: { return 1; }
+			case (int)CharIds.PunchyZero: { return 1; }
+
+			case (int)CharIds.Vile: { return 2; }
+
+			case (int)CharIds.Axl: { return 3; }
+
+			case (int)CharIds.Sigma: { return 4; }
+			}
+		return 0;
+	}
 	public int charNum;
 
 	public int newCharNum;
@@ -524,14 +525,15 @@ public partial class Player {
 	public int getStartHeartTanksForChar() {
 		if (!Global.level.server.disableHtSt && Global.level?.server?.customMatchSettings == null && !Global.level.gameMode.isTeamMode) {
 			int leaderKills = Global.level.getLeaderKills();
-			if (leaderKills >= 32) return 8;
-			if (leaderKills >= 28) return 7;
-			if (leaderKills >= 24) return 6;
-			if (leaderKills >= 20) return 5;
-			if (leaderKills >= 16) return 4;
-			if (leaderKills >= 12) return 3;
-			if (leaderKills >= 8) return 2;
-			if (leaderKills >= 4) return 1;
+			float playingTo = Global.level.gameMode.playingTo;
+			if (leaderKills >= (playingTo * 0.8f)) return 8;
+			if (leaderKills >= (playingTo * 0.7f)) return 7;
+			if (leaderKills >= (playingTo * 0.6f)) return 6;
+			if (leaderKills >= (playingTo * 0.5f)) return 5;
+			if (leaderKills >= (playingTo * 0.4f)) return 4;
+			if (leaderKills >= (playingTo * 0.3f)) return 3;
+			if (leaderKills >= (playingTo * 0.2f)) return 2;
+			if (leaderKills >= (playingTo * 0.1f)) return 1;
 		}
 		return 0;
 	}
@@ -547,10 +549,11 @@ public partial class Player {
 	public int getStartSubTanksForChar() {
 		if (!Global.level.server.disableHtSt && Global.level?.server?.customMatchSettings == null && !Global.level.gameMode.isTeamMode) {
 			int leaderKills = Global.level.getLeaderKills();
-			if (leaderKills >= 32) return 4;
-			if (leaderKills >= 24) return 3;
-			if (leaderKills >= 16) return 2;
-			if (leaderKills >= 8) return 1;
+			float playingTo = Global.level.gameMode.playingTo;
+			if (leaderKills >= (playingTo * 0.8f)) return 4;
+			if (leaderKills >= (playingTo * 0.6f)) return 3;
+			if (leaderKills >= (playingTo * 0.4f)) return 2;
+			if (leaderKills >= (playingTo * 0.2f)) return 1;
 		}
 
 		return 0;
@@ -658,18 +661,16 @@ public partial class Player {
 		int? maxST;
 		if (!Global.level.server.disableHtSt) {
 			if (Global.level?.server?.customMatchSettings != null) {
-				maxHT = Global.level?.server?.customMatchSettings.maxHeartTanks;
-				maxST = Global.level?.server?.customMatchSettings.maxSubTanks;
+				maxHT = Global.level?.server?.customMatchSettings?.maxHeartTanks;
+				maxST = Global.level?.server?.customMatchSettings?.maxSubTanks;
 			} else {
 				maxHT = 8;
 				maxST = 4;
-			} 
-
+			}
 			if (maxHT > 0 || maxST > 0) {
 				return subtanks.Count >= maxST && heartTanks >= maxHT;
 			}
-		}
-
+		} 
 		return false;
 	}
 
@@ -710,13 +711,13 @@ public partial class Player {
 		// 1v1 is the only mode without possible heart tanks/sub tanks
 		if (Global.level.is1v1()) {
 			return getModifiedHealth(32);
-		}
+		}/*
 		int bonus = 0;
 		if (isSigma && isPuppeteer()) {
 			bonus = 0;
-		}
+		}*/
 		return MathF.Ceiling(
-			getModifiedHealth(16 + bonus) + (heartTanks * getHeartTankModifier())
+			getModifiedHealth(16) + (heartTanks * getHeartTankModifier())
 		);
 	}
 
@@ -965,11 +966,27 @@ public partial class Player {
 
 		// Never spawn a character if it already exists
 		if (character == null && ownedByLocalPlayer) {
+			if (!warpedInOnce && firstSpawn == null) {
+				firstSpawn = Global.level.getSpawnPoint(this, true);
+				Global.level.camX = MathF.Round(firstSpawn.pos.x) - Global.halfScreenW * Global.viewSize;
+				Global.level.camY = MathF.Round(firstSpawn.getGroundY()) - Global.halfScreenH * Global.viewSize - 30;
+
+				Global.level.camX = Helpers.clamp(Global.level.camX, 0, Global.level.width - Global.viewScreenW);
+				Global.level.camY = Helpers.clamp(Global.level.camY, 0, Global.level.height - Global.viewScreenH);
+
+				Global.level.computeCamPos(
+					new Point(
+						Global.level.camX + Global.halfScreenW * Global.viewSize,
+						Global.level.camY + Global.halfScreenH * Global.viewSize
+					),
+					null
+				);
+			}
 			bool sendRpc = ownedByLocalPlayer;
 			if (shouldRespawn()) {
 				ushort charNetId = getNextATransNetId();
 
-				if (Global.level.gameMode is TeamDeathMatch && Global.level.teamNum > 2) {
+				if (Global.level.gameMode is TeamDeathMatch && Global.level.teamNum > 2 && warpedInOnce) {
 					List<Player> spawnPoints = Global.level.players.FindAll(
 						p => p.teamAlliance == teamAlliance && p.health > 0 && p.character != null
 					);
@@ -983,7 +1000,8 @@ public partial class Player {
 							warpInPos, randomChar.xDir, charNetId, sendRpc
 						);
 					} else {
-						var spawnPoint = Global.level.getSpawnPoint(this, !warpedInOnce);
+						SpawnPoint spawnPoint = firstSpawn ?? Global.level.getSpawnPoint(this, !warpedInOnce);
+						firstSpawn = null;
 						int spawnPointIndex = Global.level.spawnPoints.IndexOf(spawnPoint);
 						spawnCharAtSpawnIndex(spawnPointIndex, charNetId, sendRpc);
 					}
@@ -1403,7 +1421,6 @@ public partial class Player {
 		retChar.infectedTime = character.infectedTime;
 
 		// Hit cooldowns.
-		retChar.grabCooldown = character.grabCooldown;
 		retChar.projectileCooldown = character.projectileCooldown;
 		retChar.flinchCooldown = character.flinchCooldown;
 
@@ -1606,14 +1623,13 @@ public partial class Player {
 		retChar.infectedTime = character.infectedTime;
 
 		// Hit cooldowns.
-		retChar.grabCooldown = character.grabCooldown;
 		retChar.projectileCooldown = character.projectileCooldown;
 		retChar.flinchCooldown = character.flinchCooldown;
 
 		character.cleanupBeforeTransform();
 		character = retChar;
 		if (weapon != null) {
-			weapon.shootTime = 0.25f;
+			weapon.shootCooldown = 0.25f;
 		}
 
 		if (character is Zero zero) {
@@ -2727,7 +2743,7 @@ public partial class Player {
 		if (subtank.health <= 0) return false;
 		if (character.charState is WarpOut) return false;
 		if (character.charState.invincible) return false;
-		if (character.isCStingInvisible()) return false;
+		if (character is MegamanX { stingActive: true }) return false;
 		// TODO: Add Wolf Check here.
 		//if (character.isHyperSigmaBS.getValue()) return false;
 
@@ -2778,15 +2794,19 @@ public partial class Player {
 
 	public void stopSubtankHeal() {
 		if (character != null && character.subtankHealAmount > 0) {
-			character.subtankHealAmount = 0; 
+			character.subtankHealAmount = 0;
 			character.usedSubtank = null;
-		} 
+		}
 	}
 
 	public void stopSubtankHealMav() {
-		if (currentMaverick != null && currentMaverick.subtankHealAmount > 0) currentMaverick.subtankHealAmount = 0;
+		if (currentMaverick != null && currentMaverick.subtankHealAmount > 0) {
+			currentMaverick.subtankHealAmount = 0;
+			currentMaverick.usedSubtank = null;
+			}
 		if (maverickWeapon?.maverick != null && maverickWeapon?.maverick.subtankHealAmount > 0) {
-			maverickWeapon.maverick.subtankHealAmount = 0; maverickWeapon.maverick.usedSubtank = null;
+			maverickWeapon.maverick.subtankHealAmount = 0;
+			maverickWeapon.maverick.usedSubtank = null;
 		}
 	}
 }

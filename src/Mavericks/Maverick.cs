@@ -126,7 +126,7 @@ public class Maverick : Actor, IDamagable {
 		if (this is MorphMothCocoon mmc && (mmc.selfDestructTime > 0 || mmc.isBurned)) {
 			return false;
 		}
-		if (this is CrystalSnail cs && cs.sprite.name.EndsWith("shell_end")) {
+		if (this is CrystalSnail cs && cs.sprite.name.EndsWith("shell_exit")) {
 			return false;
 		}
 		return true;
@@ -196,7 +196,7 @@ public class Maverick : Actor, IDamagable {
 		if (ammoRechargeTime <= 0) {
 			ammoRechargeTime = ammoRechargeCooldown;
 			ammo++;
-			if (ammo > 28) ammo = 28;
+			if (ammo > maxAmmo) ammo = maxAmmo;
 		}
 	}
 
@@ -228,6 +228,7 @@ public class Maverick : Actor, IDamagable {
 
 	public void addAmmo(float amount) {
 		weaponHealAmount += amount;
+		if (ammo > maxAmmo) ammo = maxAmmo;
 	}
 
 	public void deductAmmo(int v) {
@@ -761,10 +762,10 @@ public class Maverick : Actor, IDamagable {
 			if (awardWeaponId == WeaponIds.ShotgunIce) weaponToAdd = new ShotgunIce();
 			if (awardWeaponId == WeaponIds.ElectricSpark) weaponToAdd = new ElectricSpark();
 			if (awardWeaponId == WeaponIds.RollingShield) weaponToAdd = new RollingShield();
-			if (awardWeaponId == WeaponIds.Torpedo) weaponToAdd = new Torpedo();
-			if (awardWeaponId == WeaponIds.Boomerang) weaponToAdd = new Boomerang();
-			if (awardWeaponId == WeaponIds.Sting) weaponToAdd = new Sting();
-			if (awardWeaponId == WeaponIds.Tornado) weaponToAdd = new Tornado();
+			if (awardWeaponId == WeaponIds.HomingTorpedo) weaponToAdd = new HomingTorpedo();
+			if (awardWeaponId == WeaponIds.BoomerangCutter) weaponToAdd = new BoomerangCutter();
+			if (awardWeaponId == WeaponIds.ChameleonSting) weaponToAdd = new ChameleonSting();
+			if (awardWeaponId == WeaponIds.StormTornado) weaponToAdd = new StormTornado();
 			if (awardWeaponId == WeaponIds.FireWave) weaponToAdd = new FireWave();
 
 			if (awardWeaponId == WeaponIds.CrystalHunter) weaponToAdd = new CrystalHunter();
@@ -783,7 +784,7 @@ public class Maverick : Actor, IDamagable {
 			if (awardWeaponId == WeaponIds.RaySplasher) weaponToAdd = new RaySplasher();
 			if (awardWeaponId == WeaponIds.GravityWell) weaponToAdd = new GravityWell();
 			if (awardWeaponId == WeaponIds.FrostShield) weaponToAdd = new FrostShield();
-			if (awardWeaponId == WeaponIds.TunnelFang) weaponToAdd = new TunnelFang();
+			if (awardWeaponId == WeaponIds.TornadoFang) weaponToAdd = new TornadoFang();
 
 			if (weaponToAdd != null) {
 				var matchingW = player.weapons.FirstOrDefault(w => w.index == weaponToAdd.index);
@@ -819,19 +820,19 @@ public class Maverick : Actor, IDamagable {
 		if ((weaponId == WeaponIds.RollingShield || projId == ProjIds.ArmoredARoll) && this is LaunchOctopus lo) {
 			return true;
 		}
-		if ((weaponId == WeaponIds.Torpedo || projId == ProjIds.LaunchOMissle || projId == ProjIds.LaunchOTorpedo) && this is BoomerangKuwanger bk) {
+		if ((weaponId == WeaponIds.HomingTorpedo || projId == ProjIds.LaunchOMissile || projId == ProjIds.LaunchOTorpedo) && this is BoomerangKuwanger bk) {
 			return true;
 		}
-		if ((weaponId == WeaponIds.Boomerang || projId == ProjIds.BoomerangKBoomerang) && this is StingChameleon sc) {
+		if ((weaponId == WeaponIds.BoomerangCutter || projId == ProjIds.BoomerangKBoomerang) && this is StingChameleon sc) {
 			if (sc.isInvisible && sc.ownedByLocalPlayer) {
 				sc.decloak();
 			}
 			return true;
 		}
-		if ((weaponId == WeaponIds.Sting || projId == ProjIds.StingCSting) && this is StormEagle se) {
+		if ((weaponId == WeaponIds.ChameleonSting || projId == ProjIds.StingCSting) && this is StormEagle se) {
 			return true;
 		}
-		if ((weaponId == WeaponIds.Tornado || projId == ProjIds.StormETornado) && this is FlameMammoth fm) {
+		if ((weaponId == WeaponIds.StormTornado || projId == ProjIds.StormETornado) && this is FlameMammoth fm) {
 			return true;
 		}
 		if ((weaponId == WeaponIds.ShotgunIce || projId == ProjIds.ChillPIceShot || projId == ProjIds.ChillPIceBlow || projId == ProjIds.ChillPIcePenguin) && this is Velguarder vg) {
@@ -890,7 +891,7 @@ public class Maverick : Actor, IDamagable {
 		if ((weaponId == WeaponIds.AcidBurst || projId == ProjIds.TSeahorseAcid1 || projId == ProjIds.TSeahorseAcid2) && this is TunnelRhino) {
 			return true;
 		}
-		if ((weaponId == WeaponIds.TunnelFang || projId == ProjIds.TunnelRTornadoFang || projId == ProjIds.TunnelRTornadoFang2 || projId == ProjIds.TunnelRTornadoFangDiag) && this is VoltCatfish) {
+		if ((weaponId == WeaponIds.TornadoFang || projId == ProjIds.TunnelRTornadoFang || projId == ProjIds.TunnelRTornadoFang2 || projId == ProjIds.TunnelRTornadoFangDiag) && this is VoltCatfish) {
 			return true;
 		}
 		if ((weaponId == WeaponIds.TriadThunder || projId == ProjIds.VoltCBall || projId == ProjIds.VoltCTriadThunder || projId == ProjIds.VoltCUpBeam || projId == ProjIds.VoltCUpBeam2) && this is CrushCrawfish) {
@@ -945,7 +946,7 @@ public class Maverick : Actor, IDamagable {
 
 	public bool isInvincible(Player attacker, int? projId) {
 		return sprite.name == "drdoppler_dash" || sprite.name == "armoreda_charge" ||
-		sprite.name.Contains("_shell") || sprite.name.EndsWith("eat_loop");
+		sprite.name.Contains("shell_spin") || sprite.name.EndsWith("eat_loop");
 	}
 
 	public bool canBeHealed(int healerAlliance) {

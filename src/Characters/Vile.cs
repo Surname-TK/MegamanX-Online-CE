@@ -5,12 +5,13 @@ using System.Linq;
 namespace MMXOnline;
 
 public class Vile : Character {
+	public const float maxCalldownMechCooldown = 2;
+	public float grabCooldown = 1;
 	public bool vulcanActive;
 	public float vulcanLingerTime;
 	public const int callNewMechCost = 5;
 	float mechBusterCooldown;
 	public bool usedAmmoLastFrame;
-	public float vileLadderShootCooldown;
 	public int buckshotDanceNum;
 	public float vileAmmoRechargeCooldown;
 	public bool isShootingLongshotGizmo;
@@ -173,7 +174,7 @@ public class Vile : Character {
 			}
 		}
 
-		if (vulcanLingerTime <= 0.1f && vulcanWeapon.shootTime == 0f) {
+		if (vulcanLingerTime <= 0.1f && vulcanWeapon.shootCooldown == 0f) {
 			vulcanLingerTime += Global.spf;
 			if (vulcanLingerTime > 0.1f && sprite.name.EndsWith("shoot")) {
 				changeSpriteFromName(charState.sprite, resetFrame: false);
@@ -194,7 +195,6 @@ public class Vile : Character {
 			if (calldownMechCooldown < 0) calldownMechCooldown = 0;
 		}
 		Helpers.decrementTime(ref grabCooldown);
-		Helpers.decrementTime(ref vileLadderShootCooldown);
 		Helpers.decrementTime(ref mechBusterCooldown);
 		Helpers.decrementTime(ref gizmoCooldown);
 
@@ -221,7 +221,7 @@ public class Vile : Character {
 			return normalAttacks();
 		}
 		if (shootHeld) {
-			if (cutterWeapon.shootTime < cutterWeapon.rateOfFire * 0.75f) 
+			if (cutterWeapon.shootCooldown < cutterWeapon.fireRate * 0.75f) 
 				cannonWeapon.vileShoot(0, this);
 		}
 		if (WeaponRightHeld) {
@@ -360,16 +360,16 @@ public class Vile : Character {
 		chargeGfx();
 	}
 	public void RideLinkMK5() {
-		if (isVileMK5 && startRideArmor != null &&
+		if (isVileMK5 && linkedRideArmor != null &&
 			player.input.isPressed(Control.Special2, player) &&
 			player.input.isHeld(Control.Down, player)
 		) {
-			if (startRideArmor.rideArmorState is RADeactive) {
-				startRideArmor.manualDisabled = false;
-				startRideArmor.changeState(new RAIdle("ridearmor_activating"), true);
+			if (linkedRideArmor.rideArmorState is RADeactive) {
+				linkedRideArmor.manualDisabled = false;
+				linkedRideArmor.changeState(new RAIdle("ridearmor_activating"), true);
 			} else {
-				startRideArmor.manualDisabled = true;
-				startRideArmor.changeState(new RADeactive(), true);
+				linkedRideArmor.manualDisabled = true;
+				linkedRideArmor.changeState(new RADeactive(), true);
 				Global.level.gameMode.setHUDErrorMessage(
 					player, "Deactivated Ride Armor.",
 					playSound: false, resetCooldown: true
@@ -377,10 +377,10 @@ public class Vile : Character {
 			}
 		}
 		// Vile V Ride control.
-		if (!isVileMK5 || startRideArmor == null) {
+		if (!isVileMK5 || linkedRideArmor == null) {
 			if (player.input.isPressed(Control.Special2, player) &&
 				rideMenuWeapon != null && calldownMechCooldown == 0 &&
-				(!alreadySummonedNewMech || startRideArmor != null)
+				(!alreadySummonedNewMech || linkedRideArmor != null)
 			) {
 				onMechSlotSelect(rideMenuWeapon);
 				return;
@@ -396,35 +396,61 @@ public class Vile : Character {
 			}
 		}
 
-		if (isVileMK5 && startRideArmor != null) {
+		if (isVileMK5 && linkedRideArmor != null) {
 			if (canLinkMK5()) {
-				if (startRideArmor.character == null) {
-					startRideArmor.linkMK5(this);
+				if (linkedRideArmor.character == null) {
+					linkedRideArmor.linkMK5(this);
 				}
 			} else {
-				if (startRideArmor.character != null) {
-					startRideArmor.unlinkMK5();
+				if (linkedRideArmor.character != null) {
+					linkedRideArmor.unlinkMK5();
 				}
 			}
 		}
 	}
 	public bool canLinkMK5() {
-		if (startRideArmor == null) return false;
-		if (startRideArmor.rideArmorState is RADeactive && startRideArmor.manualDisabled) return false;
-		if (startRideArmor.pos.distanceTo(pos) > Global.screenW * 0.75f) return false;
+		if (linkedRideArmor == null) return false;
+		if (linkedRideArmor.rideArmorState is RADeactive && linkedRideArmor.manualDisabled) return false;
+		if (linkedRideArmor.pos.distanceTo(pos) > Global.screenW * 0.75f) return false;
 		return charState is not Die && charState is not VileRevive && charState is not CallDownMech && charState is not HexaInvoluteState;
 	}
 
 	public bool isVileMK5Linked() {
-		return isVileMK5 && startRideArmor?.character == this;
+		return isVileMK5 && linkedRideArmor?.character == this;
 	}
 
 	public bool canVileHover() {
 		return isVileMK5 && player.vileAmmo > 0 && flag == null;
 	}
 
+	public override bool canTurn() {
+		if (rideArmorPlatform != null) {
+			return false;
+		}
+		return base.canTurn();
+	}
+
+	public override bool canWallClimb() {
+		if (charState is VileHover) {
+			return !player.input.isHeld(Control.Jump, player);
+		}
+		return base.canWallClimb();
+	}
+
+	public override bool canUseLadder() {
+		if (charState is VileHover) {
+			return !player.input.isHeld(Control.Jump, player);
+		}
+		return base.canWallClimb();
+	}
+
+	public override Point getDashDustEffectPos(int xDir) {
+		float dashXPos = -30;
+		return pos.addxy(dashXPos * xDir + (5 * xDir), -4);
+	}
+
 	public override void onMechSlotSelect(MechMenuWeapon mmw) {
-		if (startRideArmor == null) {
+		if (linkedRideArmor == null) {
 			if (!mmw.isMenuOpened) {
 				mmw.isMenuOpened = true;
 				return;
@@ -434,7 +460,7 @@ public class Vile : Character {
 		if (player.isAI) {
 			calldownMechCooldown = maxCalldownMechCooldown;
 		}
-		if (startRideArmor == null) {
+		if (linkedRideArmor == null) {
 			if (alreadySummonedNewMech) {
 				Global.level.gameMode.setHUDErrorMessage(player, "Can only summon a mech once per life");
 			} else if (canAffordRideArmor()) {
@@ -451,19 +477,19 @@ public class Vile : Character {
 					}
 				} else {
 					alreadySummonedNewMech = true;
-					if (startRideArmor != null) startRideArmor.selfDestructTime = 1000;
+					if (linkedRideArmor != null) linkedRideArmor.selfDestructTime = 1000;
 					buyRideArmor();
 					mmw.isMenuOpened = false;
 					int raIndex = player.selectedRAIndex;
 					if (isVileMK5 && raIndex == 4) raIndex++;
-					startRideArmor = new RideArmor(player, pos, raIndex, 0, player.getNextActorNetId(), true, sendRpc: true);
-					if (startRideArmor.raNum == 4) summonedGoliath = true;
+					linkedRideArmor = new RideArmor(player, pos, raIndex, 0, player.getNextActorNetId(), true, sendRpc: true);
+					if (linkedRideArmor.raNum == 4) summonedGoliath = true;
 					if (isVileMK5) {
-						startRideArmor.ownedByMK5 = true;
-						startRideArmor.zIndex = zIndex - 1;
+						linkedRideArmor.ownedByMK5 = true;
+						linkedRideArmor.zIndex = zIndex - 1;
 						player.weaponSlot = 0;
 					}
-					changeState(new CallDownMech(startRideArmor, true), true);
+					changeState(new CallDownMech(linkedRideArmor, true), true);
 				}
 			} else {
 				if (player.selectedRAIndex == 4 && player.currency < 10) {
@@ -479,7 +505,7 @@ public class Vile : Character {
 			}
 		} else {
 			if (!(charState is Idle || charState is Run || charState is Crouch)) return;
-			changeState(new CallDownMech(startRideArmor, false), true);
+			changeState(new CallDownMech(linkedRideArmor, false), true);
 		}
 	}
 
@@ -575,10 +601,10 @@ public class Vile : Character {
 		targetCooldownWeapon = targetCooldownWeapon ?? weapon;
 		if (isVileMK2) {
 			float innerModifier = 1f;
-			if (weapon is VileMissile) innerModifier = 0.33f;
-			weapon.shootTime = targetCooldownWeapon.rateOfFire * innerModifier * modifier;
+			if (weapon is VileMissile) innerModifier = 0.3333f;
+			weapon.shootCooldown = MathF.Ceiling(targetCooldownWeapon.fireRate * innerModifier * modifier);
 		} else {
-			weapon.shootTime = targetCooldownWeapon.rateOfFire * modifier;
+			weapon.shootCooldown = MathF.Ceiling(targetCooldownWeapon.fireRate * modifier);
 		}
 	}
 
@@ -594,20 +620,13 @@ public class Vile : Character {
 		if (isShootingLongshotGizmo) {
 			return true;
 		}
-		if (isVileMK5 && startRideArmor != null && player.input.isHeld(Control.WeaponLeft, player)) {
+		if (isVileMK5 && linkedRideArmor != null && player.input.isHeld(Control.WeaponLeft, player)) {
 			return true;
 		}
 		if (sprite.name.EndsWith("_idle_shoot") && sprite.frameTime < 6) {
 			return true;
 		}
 		return base.isSoftLocked();
-	}
-
-	public override bool canClimbLadder() {
-		if (vileLadderShootCooldown > 0) {
-			return false;
-		}
-		return base.canClimbLadder();
 	}
 
 	public override bool canChangeWeapons() {

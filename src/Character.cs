@@ -16,15 +16,13 @@ public partial class Character : Actor, IDamagable {
 		"Axl",
 		"Sigma"
 	};
+
 	public CharState charState;
 	public Player player;
 	public bool isDashing;
-	public float shootTime {
-		get { return player.weapon.shootTime; }
-		set { player.weapon.shootTime = value; }
-	}
 	public bool changedStateInFrame;
 	public bool pushedByTornadoInFrame;
+
 	public float chargeTime;
 	public float charge1Time = 30;
 	public float charge2Time = 105;
@@ -32,13 +30,10 @@ public partial class Character : Actor, IDamagable {
 	public float charge4Time = 255;
 	public float hyperProgress;
 
-	public Point? sigmaHeadGroundCamCenterPos;
-	public float chargeFlashTime;
 	public ChargeEffect chargeEffect;
 	public float shootAnimTime = 0;
 	public AI? ai;
 
-	public float headbuttAirTime = 0;
 	public int dashedInAir = 0;
 	public float healAmount = 0;
 	public SubTank? usedSubtank;
@@ -54,7 +49,6 @@ public partial class Character : Actor, IDamagable {
 	public float healthBarInnerWidth;
 	public float slideVel = 0;
 	public Flag? flag;
-	public float stingChargeTime;
 	public bool isCrystalized;
 	public bool insideCharacter;
 	public float invulnTime = 0;
@@ -62,20 +56,7 @@ public partial class Character : Actor, IDamagable {
 	public List<Trail> lastFiveTrailDraws = new List<Trail>();
 	public LoopingSound chargeSound;
 
-	//public ShaderWrapper possessedShader;
-	//public ShaderWrapper acidShader;
-	//public ShaderWrapper igShader;
-	//public ShaderWrapper oilShader;
-	//public ShaderWrapper infectedShader;
-	//public ShaderWrapper frozenCastleShader;
-	//public ShaderWrapper vaccineShader;
-	//public ShaderWrapper darkHoldShader;
-
-	public float headshotRadius {
-		get {
-			return 6f;
-		}
-	}
+	public readonly float headshotRadius = 6;
 
 	public decimal damageSavings = 0;
 	public decimal damageDebt = 0;
@@ -83,7 +64,6 @@ public partial class Character : Actor, IDamagable {
 	public bool stopCamUpdate = false;
 	public Anim? warpBeam;
 	public float flattenedTime;
-	public float saberCooldown;
 
 	public const float maxLastAttackerTime = 5;
 
@@ -102,21 +82,14 @@ public partial class Character : Actor, IDamagable {
 	public Player lastGravityWellDamager;
 
 	// Some things previously in other char files used by multiple characters.
-	public int lastShootPressed;
-	public int lastShootReleased;
-	public long lastAttackFrame = -100;
-	public long framesSinceLastAttack = 1000;
-	public float grabCooldown;
-
-	public RideArmor? startRideArmor;
+	public RideArmor? linkedRideArmor;
 	public RideArmor? rideArmorPlatform;
-	public const float maxCalldownMechCooldown = 2;
 	public bool alreadySummonedNewMech;
 
 	// Was on Axl.cs before
-	public int lastXDir;
 	public Anim? transformAnim;
 	float transformSmokeTime;
+	public int fakeAlliance;
 
 	// For states with special propieties.
 	public int specialState = 0;
@@ -132,14 +105,9 @@ public partial class Character : Actor, IDamagable {
 	public CharIds charId;
 
 	// Random stuff.
-	public List<Tuple<string, int>> lastDTInputs = new List<Tuple<string, int>>();
-	public string holdingDTDash = "";
-	const int doubleDashFrames = 20;
 	public float dropFlagProgress;
 	public float dropFlagCooldown;
 	public bool dropFlagUnlocked;
-	long originalZIndex;
-	bool viralOnce;
 
 	// Status effects.
 	// Acid
@@ -232,7 +200,6 @@ public partial class Character : Actor, IDamagable {
 		visible = isVisible;
 
 		chargeTime = 0;
-		chargeFlashTime = 0;
 		useFrameProjs = true;
 
 		chargeSound = new LoopingSound("charge_start", "charge_loop", this);
@@ -405,17 +372,6 @@ public partial class Character : Actor, IDamagable {
 		}
 	}
 
-	public bool isCStingInvisible() {
-		return this is MegamanX { stingActive: true };
-	}
-
-	public bool isCStingInvisibleGraphics() {
-		return this is MegamanX {
-			hasUltimateArmor: false,
-			stingActive: true,
-		};
-	}
-
 	public override List<ShaderWrapper> getShaders() {
 		List<ShaderWrapper> shaders = new();
 
@@ -462,23 +418,7 @@ public partial class Character : Actor, IDamagable {
 			player.infectedShader.SetUniform("infectedFactor", infectedTime / 8f);
 			shaders.Add(player.infectedShader);
 		}
-		if (!isCStingInvisibleGraphics() && player.invisibleShader != null) {
-			if (renderEffects.ContainsKey(RenderEffectType.Invisible) && alpha == 1) {
-				player.invisibleShader.SetUniform("alpha", 0.33f);
-				shaders.Add(player.invisibleShader);
-			}
-			// alpha float doesn't work if one or more shaders exist. So need to use the invisible shader instead
-			else if (alpha < 1 && shaders.Count > 0) {
-				player.invisibleShader.SetUniform("alpha", alpha);
-				shaders.Add(player.invisibleShader);
-			}
-		}
-
 		return shaders;
-	}
-
-	public bool isInvisibleEnemy() {
-		return player.alliance != Global.level.mainPlayer.alliance;
 	}
 
 	public void splashLaserKnockback(Point splashDeltaPos) {
@@ -500,30 +440,18 @@ public partial class Character : Actor, IDamagable {
 	// Stuck in place and can't do any action but still can activate controls, etc.
 	public virtual bool isSoftLocked() {
 		if (charState is WarpOut) return true;
-		if (player.currentMaverick != null) return true;
-		//if (player.weapon is MaverickWeapon mw && mw.isMenuOpened) return true;
 		return false;
 	}
 
-	public bool canTurn() {
+	public virtual bool canTurn() {
 		if (rideArmorPlatform != null) {
 			return false;
-		}
-		if (this is Vile vile && vile.isShootingLongshotGizmo) {
-			return true;
 		}
 		return true;
 	}
 
 	public virtual bool canMove() {
 		if (rideArmorPlatform != null) {
-			return false;
-		}
-		// TODO: Move this to axl.cs
-		if (isAimLocked()) {
-			return false;
-		}
-		if (isSoftLocked()) {
 			return false;
 		}
 		return true;
@@ -534,7 +462,6 @@ public partial class Character : Actor, IDamagable {
 		if (rideArmorPlatform != null) return false;
 		if (charState is WallKick wallKick && wallKick.stateTime < 0.25f) return false;
 		if (isSoftLocked()) return false;
-		if (isAttacking()) return false;
 		return flag == null;
 	}
 
@@ -556,16 +483,16 @@ public partial class Character : Actor, IDamagable {
 	}
 
 	public virtual bool canAirJump() {
+		if (isWading() && !isUnderwater()) {
+			return true;
+		}
 		return false;
 	}
 
 	public virtual bool canWallClimb() {
+		if (charState is Hurt) return true;
 		if (rideArmorPlatform != null) return false;
 		if (isSoftLocked()) return false;
-		if (charState is VileHover) {
-			return !player.input.isHeld(Control.Jump, player);
-		}
-		if (charState is Hurt) {return true;}
 		return true;
 	}
 
@@ -573,9 +500,6 @@ public partial class Character : Actor, IDamagable {
 		if (!charState.normalCtrl) return false;
 		if (rideArmorPlatform != null) return false;
 		if (isSoftLocked()) return false;
-		if (charState is VileHover) {
-			return !player.input.isHeld(Control.Jump, player);
-		}
 		return true;
 	}
 
@@ -588,10 +512,7 @@ public partial class Character : Actor, IDamagable {
 		if (rideArmorPlatform != null) {
 			return false;
 		}
-		if (shootAnimTime > 0 ||
-			isAttacking() ||
-			isSoftLocked()
-		) {
+		if (shootAnimTime > 0 || isSoftLocked()) {
 			return false;
 		}
 		return true;
@@ -602,7 +523,6 @@ public partial class Character : Actor, IDamagable {
 	}
 
 	public virtual bool canShoot() {
-		// should we? if (Global.serverClient?.isLagging() == true) return false;
 		return charState.attackCtrl;
 	}
 
@@ -623,8 +543,25 @@ public partial class Character : Actor, IDamagable {
 		if (charState is Die || charState is VileRevive || charState is XReviveStart || charState is XRevive) return false;
 		if (player.currentMaverick != null && player.isTagTeam()) return false;
 		if (isWarpOut()) return false;
-		if (Global.serverClient?.isLagging() == true) return false;
+		if (Global.serverClient != null) {
+			if (Global.serverClient.isLagging() == true) return false;
+			if (player.serverPlayer.connection.AverageRoundtripTime >= 1000) return false;
+		}
 		if (charState is KaiserSigmaRevive || charState is WolfSigmaRevive || charState is ViralSigmaRevive) return false;
+		return true;
+	}
+
+	public virtual bool canKeepFlag() {
+		if (player.isPossessed()) return false;
+		if (player.health <= 0) return false;
+		if (isInvulnerable()) return false;
+		if (isCCImmuneHyperMode()) return false;
+		if (charState is Die) return false;
+		if (isWarpOut()) return false;
+		if (Global.serverClient != null) {
+			if (Global.serverClient.isLagging() == true) return false;
+			if (player.serverPlayer.connection.AverageRoundtripTime >= 1000) return false;
+		}
 		return true;
 	}
 
@@ -633,19 +570,6 @@ public partial class Character : Actor, IDamagable {
 			return false;
 		}
 		return true;
-	}
-
-	public bool isAimLocked() {
-		if (!player.isAxl) return false;
-		if (player.input.isPositionLocked(player) && Options.main.axlAimMode == 0) {
-			return true;
-		}
-		if (Options.main.axlAimMode == 0 && !Options.main.moveInDiagAim && !isDashing &&
-			(grounded || charState is Hover || player.input.isHeld(Control.Shoot, player) || player.input.isHeld(Control.Special1, player)) &&
-			(player.input.isHeld(Control.Up, player) || player.input.isHeld(Control.Down, player))) {
-			return true;
-		}
-		return false;
 	}
 
 	public virtual float getRunSpeed() {
@@ -760,11 +684,6 @@ public partial class Character : Actor, IDamagable {
 		return new Collider(rect.getPoints(), false, this, false, false, HitboxFlag.Hurtbox, new Point(0, 0));
 	}
 
-	public Collider getSigmaHeadCollider() {
-		var rect = new Rect(0, 0, 14, 20);
-		return new Collider(rect.getPoints(), false, this, false, false, HitboxFlag.Hurtbox, new Point(0, 0));
-	}
-
 	public virtual Collider getBlockCollider() {
 		var rect = new Rect(0, 0, 18, 34);
 		return new Collider(rect.getPoints(), false, this, false, false, HitboxFlag.Hurtbox, new Point(0, 0));
@@ -775,7 +694,6 @@ public partial class Character : Actor, IDamagable {
 		insideCharacter = false;
 		changedStateInFrame = false;
 		pushedByTornadoInFrame = false;
-		lastXDir = xDir;
 		if (grounded && !isDashing) {
 			dashedInAir = 0;
 		}
@@ -803,6 +721,7 @@ public partial class Character : Actor, IDamagable {
 				wsr.groundStart = true;
 				return;
 			}
+			if (!killZone.killInvuln && isInvulnerable()) return;
 			if (!killZone.killInvuln && player.isKaiserSigma()) return;
 			if (!killZone.killInvuln && this is MegamanX { stingActive: true} ) return;
 			if (!killZone.killInvuln && this is Axl { stealthActive: true} ) return;
@@ -892,8 +811,8 @@ public partial class Character : Actor, IDamagable {
 		if (Global.level.gameMode.isTeamMode && Global.level.mainPlayer != player) {
 			int alliance = player.alliance;
 			// If this is an enemy disguised Axl, change the alliance
-			if (player.alliance != Global.level.mainPlayer.alliance && player.isDisguisedAxl) {
-				alliance = Global.level.mainPlayer.alliance;
+			if (player.alliance != Global.level.mainPlayer.alliance && player.isDisguisedAxl && !disguiseCoverBlown) {
+				alliance = fakeAlliance;
 			}
 			RenderEffectType? allianceEffect = alliance switch {
 				0 => RenderEffectType.BlueShadow,
@@ -950,7 +869,7 @@ public partial class Character : Actor, IDamagable {
 					acidHurtCooldown = 0;
 				}
 				acidDamager?.applyDamage(
-					this, player.weapon is TunnelFang,
+					this, player.weapon is TornadoFang,
 					new AcidBurst(), this, (int)ProjIds.AcidBurstPoison,
 					overrideDamage: 1f
 				);
@@ -1045,8 +964,8 @@ public partial class Character : Actor, IDamagable {
 			flag.changePos(getCenterPos());
 		}
 
-		if (startRideArmor != null && !Global.level.hasGameObject(startRideArmor)) {
-			startRideArmor = null;
+		if (linkedRideArmor != null && !Global.level.hasGameObject(linkedRideArmor)) {
+			linkedRideArmor = null;
 		}
 
 		if (transformAnim != null) {
@@ -1066,63 +985,12 @@ public partial class Character : Actor, IDamagable {
 				transformAnim = null;
 			}
 		}
-
-		/*
-		if (!ownedByLocalPlayer || player.isAI)
-		{
-			if (isInvisibleBS.getValue() && player.alliance != Global.level.mainPlayer.alliance)
-			{
-				alpha -= Global.spf * 4;
-				if (alpha < 0) alpha = 0;
-				removeRenderEffect(RenderEffectType.StockedsexCharge);
-				removeRenderEffect(RenderEffectType.StockedX3Saber);
-			}
-			else
-			{
-				alpha += Global.spf * 4;
-				if (alpha > 1) alpha = 1;
-			}
-		}
-		*/
 		// Cutoff point for things that run but aren't owned by the player
 		if (!ownedByLocalPlayer) {
 			base.update();
-
-			if (sprite.name.Contains("sigma2_viral")) {
-				if (!viralOnce) {
-					viralOnce = true;
-					xScale = 0;
-					yScale = 0;
-					originalZIndex = zIndex;
-				}
-
-				if (sprite.name.Contains("sigma2_viral_possess")) {
-					setzIndex(ZIndex.Actor);
-				} else {
-					setzIndex(originalZIndex);
-				}
-			}
-
 			return;
 		}
 		updateParasite();
-
-		if (stingChargeTime > 0) {
-			if (player.isX) {
-				stingChargeTime -= Global.spf;
-
-				player.weapon.ammo -= (Global.spf * 3 * (player.hasChip(3) ? 0.5f : 1));
-				if (player.weapon.ammo < 0) player.weapon.ammo = 0;
-				stingChargeTime = player.weapon.ammo;
-			} else {
-				stingChargeTime -= Global.spf;
-			}
-			if (stingChargeTime <= 0) {
-				player.delaySubtank();
-				player.stopSubtankHeal();
-				stingChargeTime = 0;
-			}
-		}
 
 		if (pos.y > Global.level.killY && !isWarpIn() && charState is not WarpOut) {
 			if (charState is WolfSigmaRevive wsr) {
@@ -1159,7 +1027,7 @@ public partial class Character : Actor, IDamagable {
 				if (player == Global.level.mainPlayer || playHealSound) {
 					var mmx = this as MegamanX;
 					if (player.hasChip(2) && mmx.rechargeHealthTime == 0) {
-						playSound("goldenHelmetHP", forcePlay: true, sendRpc: true);
+						playSound("heal", forcePlay: true, sendRpc: true);
 					} else {
 						playSound("heal", forcePlay: true, sendRpc: true);
 					}
@@ -1332,10 +1200,15 @@ public partial class Character : Actor, IDamagable {
 		}
 		if (charState.canJump && (grounded || canAirJump() && flag == null)) {
 			if (player.input.isPressed(Control.Jump, player)) {
-				if (!grounded) {
-					dashedInAir++;
+				if (!grounded && isWading()) {
+					isDashing = false;
+					dashedInAir = 0;
 				} else {
-					grounded = false;
+					if (!grounded) {
+						dashedInAir++;
+					} else {
+						grounded = false;
+					}
 				}
 				vel.y = -getJumpPower();
 				playSound("jump", sendRpc: true);
@@ -1415,7 +1288,12 @@ public partial class Character : Actor, IDamagable {
 					!sprite.name.Contains("kick_air")
 				) {
 					lastJumpPressedTime = 0;
-					dashedInAir++;
+					if (isWading()){
+						isDashing = false;
+						dashedInAir = 0;
+					} else {
+						dashedInAir++;
+					}
 					vel.y = -getJumpPower();
 					changeState(new Jump(), true);
 					return true;
@@ -1535,12 +1413,6 @@ public partial class Character : Actor, IDamagable {
 	}
 
 	public override void changeSprite(string spriteName, bool resetFrame) {
-		if (!isHeadbuttSprite(sprite.name) && isHeadbuttSprite(spriteName)) {
-			headbuttAirTime = Global.spf;
-		}
-		if (isHeadbuttSprite(sprite.name) && !isHeadbuttSprite(spriteName)) {
-			headbuttAirTime = 0;
-		}
 		List<Trail>? trails = sprite?.lastFiveTrailDraws;
 		base.changeSprite(spriteName, resetFrame);
 		if (trails != null && sprite != null) {
@@ -1626,22 +1498,15 @@ public partial class Character : Actor, IDamagable {
 		if (isCharging()) {
 			chargeSound.play();
 			int chargeType = 0;
-			/*if (this is BusterZero) {
-				chargeType = 1;
-			} else if (player.isX && player.hasArmArmor(3)) {
-				if (player.hasGoldenArmor()) {
-					chargeType = 2;
-				}
-			} */
 			if (!sprite.name.Contains("ra_hide")) {
 				int level = getChargeLevel();
 				var renderGfx = RenderEffectType.ChargeBlue;
 				renderGfx = level switch {
 					1 => RenderEffectType.ChargeBlue,
 					2 => RenderEffectType.ChargeYellow,
-					3 when (chargeType == 2) => RenderEffectType.ChargeOrange,
+					3 when (chargeType == 1) => RenderEffectType.ChargeOrange,
 					3 => RenderEffectType.ChargePink,
-					_ when (chargeType == 1) => RenderEffectType.ChargeGreen,
+					_ when (chargeType == 2) => RenderEffectType.ChargeGreen,
 					_ => RenderEffectType.ChargeOrange
 				};
 				addRenderEffect(renderGfx, 0.033333f, 0.1f);
@@ -1739,15 +1604,12 @@ public partial class Character : Actor, IDamagable {
 		return false;
 	}
 
-
 	public Point getDashSparkEffectPos(int xDir) {
 		return getDashDustEffectPos(xDir).addxy(6 * xDir, 4);
 	}
 
-	public Point getDashDustEffectPos(int xDir) {
+	public virtual Point getDashDustEffectPos(int xDir) {
 		float dashXPos = -24;
-		if (this is Vile) dashXPos = -30;
-		if (this is BaseSigma) dashXPos = -35;
 		return pos.addxy(dashXPos * xDir + (5 * xDir), -4);
 	}
 
@@ -1804,55 +1666,6 @@ public partial class Character : Actor, IDamagable {
 	public virtual Point getCamCenterPos(bool ignoreZoom = false) {
 		if (rideArmorPlatform != null) {
 			return rideArmorPlatform.pos.round().addxy(0, -70);
-		}
-		if (player.isSigma) {
-			var maverick = player.currentMaverick;
-			if (maverick != null && player.isTagTeam()) {
-				if (maverick.state is MEnter me) {
-					return me.getDestPos().round().addxy(camOffsetX, -24);
-				}
-				if (maverick.state is MorphMCHangState hangState) {
-					return maverick.pos.addxy(camOffsetX, -24 + 17);
-				}
-				return maverick.pos.round().addxy(camOffsetX, -24);
-			}
-
-			if (player.isViralSigma()) {
-				return pos.round().addxy(camOffsetX, 25);
-			}
-
-			if (player.isKaiserSigma()) {
-				if (sprite.name.StartsWith("kaisersigma_virus")) return pos.addxy(camOffsetX, -12);
-				return pos.round().addxy(camOffsetX, -55);
-			}
-
-			if (player.weapon is WolfSigmaHandWeapon handWeapon && handWeapon.hand.isControlling) {
-				var hand = handWeapon.hand;
-				Point camCenter = sigmaHeadGroundCamCenterPos ?? getCenterPos();
-				if (hand.pos.x > camCenter.x + Global.halfScreenW || hand.pos.x < camCenter.x - Global.halfScreenW || hand.pos.y > camCenter.y + Global.halfScreenH || hand.pos.y < camCenter.y - Global.halfScreenH) {
-					float overFactorX = MathF.Abs(hand.pos.x - camCenter.x) - Global.halfScreenW;
-					if (overFactorX > 0) {
-						float remainder = overFactorX - Global.halfScreenW;
-						int sign = MathF.Sign(hand.pos.x - camCenter.x);
-						camCenter.x += Math.Min(overFactorX, Global.halfScreenW) * sign * 2;
-						camCenter.x += Math.Max(remainder, 0) * sign;
-					}
-
-					float overFactorY = MathF.Abs(hand.pos.y - camCenter.y) - Global.halfScreenH;
-					if (overFactorY > 0) {
-						float remainder = overFactorY - Global.halfScreenH;
-						int sign = MathF.Sign(hand.pos.y - camCenter.y);
-						camCenter.y += Math.Min(overFactorY, Global.halfScreenH) * sign * 2;
-						camCenter.y += Math.Max(remainder, 0) * sign;
-					}
-
-					return camCenter.round();
-				}
-			}
-
-			if (sigmaHeadGroundCamCenterPos != null) {
-				return sigmaHeadGroundCamCenterPos.Value;
-			}
 		}
 		if (rideArmor != null) {
 			if (ownedByLocalPlayer && rideArmor.rideArmorState is RADropIn rADropInState) {
@@ -1932,7 +1745,6 @@ public partial class Character : Actor, IDamagable {
 		if (chargeEffect == null) return;
 		chargeEffect.reset();
 		chargeTime = 0;
-		chargeFlashTime = 0;
 		chargeSound.stop();
 		chargeSound.reset();
 		chargeEffect.stop();
@@ -1959,7 +1771,7 @@ public partial class Character : Actor, IDamagable {
 		switch (this) {
 			case MegamanX mmx:
 				clampTo2 = player.hasArmArmor(0);
-				clampTo3 = player.hasArmArmor(1) || player.weapon is not Buster;
+				clampTo3 = player.hasArmArmor(1) || player.weapon is not XBuster;
 				break;
 			case Zero zero:
 				clampTo3 = true;
@@ -1970,9 +1782,6 @@ public partial class Character : Actor, IDamagable {
 			case BusterZero:
 				clampTo3 = false;
 				break;
-			/*case Iris iris:
-				clampTo3 = !iris.isHyperIris;
-				break;*/
 		}
 		if (chargeTime < charge1Time) {
 			return 0;
@@ -2053,13 +1862,13 @@ public partial class Character : Actor, IDamagable {
 			return false;
 		}
 		changedStateInFrame = true;
-		if (shootAnimTime > 0 && newState.canShoot() == true) {
+		bool hasShootAnim = newState.canUseShootAnim();
+		if (shootAnimTime > 0 && hasShootAnim) {
 			changeSprite(getSprite(newState.shootSprite), true);
 		} else {
-			string spriteName = sprite.name ?? "";
+			string spriteName = sprite.name;
 			changeSprite(getSprite(newState.sprite), true);
-
-			if (spriteName == sprite.name && this is not MegamanX) {
+			if (spriteName == sprite.name) {
 				sprite.frameIndex = 0;
 				sprite.frameTime = 0;
 				sprite.time = 0;
@@ -2890,16 +2699,6 @@ public partial class Character : Actor, IDamagable {
 					);
 				}
 			}
-			/*if (this is Iris iris) {
-				float currentAmmo = iris.IrisRakuhouhaWeapon.ammo;
-				iris.IrisRakuhouhaWeapon.addAmmo(gigaAmmoToAdd, player);
-				if (player.isMainPlayer) {
-					Weapon.gigaAttackSoundLogic(
-						this, currentAmmo, iris.IrisRakuhouhaWeapon.ammo,
-						iris.IrisRakuhouhaWeapon.getAmmoUsage(0), iris.IrisRakuhouhaWeapon.maxAmmo
-					);
-				}
-			}*/
 			if (this is MegamanX) {
 				var gigaCrush = player.weapons.FirstOrDefault(w => w is GigaCrush);
 				if (gigaCrush != null) {
@@ -2912,7 +2711,7 @@ public partial class Character : Actor, IDamagable {
 						);
 					}
 				}
-				var hyperBuster = player.weapons.FirstOrDefault(w => w is HyperBuster);
+				var hyperBuster = player.weapons.FirstOrDefault(w => w is HyperCharge);
 				if (hyperBuster != null) {
 					float currentAmmo = hyperBuster.ammo;
 					hyperBuster.addAmmo(gigaAmmoToAdd, player);
@@ -3102,26 +2901,13 @@ public partial class Character : Actor, IDamagable {
 		}
 	}
 
-	public void onFlagPickup(Flag flag) {
+	public virtual void onFlagPickup(Flag flag) {
 		if (isCharging()) {
 			stopCharge();
 		}
 		dropFlagProgress = 0;
 		this.flag = flag;
-		stingChargeTime = 0;
 
-		if (this is MegamanX mmx) {
-			if (mmx.chargedRollingShieldProj != null) {
-				mmx.chargedRollingShieldProj.destroySelf();
-			}
-			mmx.popAllBubbles();
-			mmx.stockedLv1Charge = false;
-			mmx.stockedX2Charge = false;
-			mmx.stockedX3Charge = false;
-			if (mmx.beeSwarm != null) {
-				mmx.beeSwarm.destroy();
-			}
-		}
 		if (player.isDisguisedAxl && player.ownedByLocalPlayer) {
 			player.revertToAxl();
 		}
@@ -3285,38 +3071,6 @@ public partial class Character : Actor, IDamagable {
 		parasiteDamager = null;
 	}
 
-	//AIMING LASER SECTION
-	public void addALaserAttacker(Character chr) {
-		if (!aLaserAttackers.Any(c => c == chr)) aLaserAttackers.Add(chr);
-	}
-
-	public void removeALaserAttacker(Character chr) {
-		if (aLaserAttackers.Any(c => c == chr)) aLaserAttackers.Remove(chr);
-	}
-
-	public void removeAllALaserAttackers() {
-		aLaserAttackers.Clear();
-	}
-
-	public void updateALaserTargetAnim() {
-		if (aLaserTargetAnim == null && aLaserAttackers.Count >= 1) {
-			aLaserTargetAnim = new Anim(
-				getCenterPos(), "aiming_laser_cursor", xDir, null, false, true
-			);
-		} else if (aLaserTargetAnim != null) {
-			aLaserTargetAnim.changePos(getCenterPos());
-
-			if (aLaserAttackers.Count == 0) {
-				aLaserTargetAnim.destroySelf();
-				aLaserTargetAnim = null!;
-			} 
-		} 
-	}
-
-	public virtual bool isInvisible() {
-		return stingChargeTime > 0 && player.isX;
-	}
-
 	public bool genmuImmune(Player owner) {
 		return false;
 	}
@@ -3378,10 +3132,6 @@ public partial class Character : Actor, IDamagable {
 		return false;
 	}
 
-	public virtual bool isAttacking() {
-		return sprite.name.Contains("attack");
-	}
-
 	public bool canLandOnRideArmor() {
 		if (charState is Fall) return true;
 		if (charState is VileHover vh && vh.fallY > 0) return true;
@@ -3390,7 +3140,7 @@ public partial class Character : Actor, IDamagable {
 
 	public void getOffMK5Platform() {
 		if (rideArmorPlatform != null) {
-			if (rideArmorPlatform != startRideArmor) {
+			if (rideArmorPlatform != linkedRideArmor) {
 				rideArmorPlatform.character = null;
 				rideArmorPlatform.changeState(new RADeactive(), true);
 			}
@@ -3409,24 +3159,24 @@ public partial class Character : Actor, IDamagable {
 	}
 
 	public virtual void onMechSlotSelect(MechMenuWeapon mmw) {
-		if (startRideArmor == null) {
+		if (linkedRideArmor == null) {
 			if (!mmw.isMenuOpened) {
 				mmw.isMenuOpened = true;
 				return;
 			}
 		}
 
-		if (startRideArmor == null) {
+		if (linkedRideArmor == null) {
 			if (alreadySummonedNewMech) {
 				Global.level.gameMode.setHUDErrorMessage(player, "Can only summon a mech once per life");
 			} else if (canAffordRideArmor()) {
 				if (!(charState is Idle || charState is Run || charState is Crouch)) return;
 				alreadySummonedNewMech = true;
-				if (startRideArmor != null) startRideArmor.selfDestructTime = 1000;
+				if (linkedRideArmor != null) linkedRideArmor.selfDestructTime = 1000;
 				buyRideArmor();
 				mmw.isMenuOpened = false;
 				int raIndex = player.selectedRAIndex;
-				startRideArmor = new RideArmor(
+				linkedRideArmor = new RideArmor(
 					player, pos, raIndex, 0, player.getNextActorNetId(), true, sendRpc: true
 				);
 			}
@@ -3449,10 +3199,9 @@ public partial class Character : Actor, IDamagable {
 			} else {
 				updateAxlDirectionalAim();
 			}
-		}
 		*/
 
-		if (this is Zero || this is Rock) {
+		if (this is Zero or PunchyZero or BusterZero or Vile) {
 			player.changeWeaponControls();
 		}
 

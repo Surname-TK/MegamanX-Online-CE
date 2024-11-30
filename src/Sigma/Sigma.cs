@@ -11,6 +11,8 @@ public class BaseSigma : Character {
 	public const float maxLeapSlashCooldown = 2;
 	public float tagTeamSwapProgress;
 	public int tagTeamSwapCase;
+	public long lastAttackFrame = -100;
+	public long framesSinceLastAttack = 1000;
 
 	public BaseSigma(
 		Player player, float x, float y, int xDir,
@@ -39,9 +41,24 @@ public class BaseSigma : Character {
 		}
 		changeState(intialCharState);
 	}
+	
+	public Collider getSigmaHeadCollider() {
+		var rect = new Rect(0, 0, 14, 20);
+		return new Collider(rect.getPoints(), false, this, false, false, HitboxFlag.Hurtbox, new Point(0, 0));
+	}
+	
+	public override Point getDashDustEffectPos(int xDir) {
+		float dashXPos = -35;
+		return pos.addxy(dashXPos * xDir + (5 * xDir), -4);
+	}
 
 	public bool isSigmaShooting() {
 		return sprite.name.Contains("_shoot_") || sprite.name.EndsWith("_shoot");
+	}
+
+	public override bool isSoftLocked() {
+		if (player.currentMaverick != null) return true;
+		return base.isSoftLocked();
 	}
 
 	public override void preUpdate() {
@@ -184,8 +201,8 @@ public class BaseSigma : Character {
 						cantAffordMaverickMessage();
 					}
 				} else if (isSummoner && !mw.isMenuOpened) {
-					if (shootPressed && mw.shootTime == 0) {
-						mw.shootTime = MaverickWeapon.summonerCooldown;
+					if (shootPressed && mw.shootCooldown == 0) {
+						mw.shootCooldown = MaverickWeapon.summonerCooldown;
 						changeState(new CallDownMaverick(mw.maverick, false, false), true);
 						player.changeToSigmaSlot();
 					}
@@ -200,7 +217,7 @@ public class BaseSigma : Character {
 		bool isSigmaIdle = charState is Idle;
 		if (isTagTeam && shootPressed) {
 			if (isMaverickIdle && player.weapon is SigmaMenuWeapon sw &&
-				sw.shootTime == 0 && charState is not Die && tagTeamSwapProgress == 0
+				sw.shootCooldown == 0 && charState is not Die && tagTeamSwapProgress == 0
 			) {
 				tagTeamSwapProgress = Global.spf;
 				tagTeamSwapCase = 0;
@@ -233,7 +250,7 @@ public class BaseSigma : Character {
 				tagTeamSwapProgress = 0;
 				if (tagTeamSwapCase == 0) {
 					var sw = player.weapons.FirstOrDefault(w => w is SigmaMenuWeapon);
-					sw.shootTime = sw.rateOfFire;
+					sw.shootCooldown = sw.fireRate;
 					player.currentMaverick.changeState(new MExit(player.currentMaverick.pos, true));
 					becomeSigma(player.currentMaverick.pos, player.currentMaverick.xDir);
 				} else {
@@ -262,7 +279,6 @@ public class BaseSigma : Character {
 		if (!ownedByLocalPlayer) {
 			return;
 		}
-		Helpers.decrementTime(ref saberCooldown);
 		Helpers.decrementTime(ref noBlockTime);
 		
 		if (player.sigmaAmmo >= player.sigmaMaxAmmo) {
@@ -550,10 +566,24 @@ public class BaseSigma : Character {
 		}
 	}
 
-	public override bool isAttacking() {
-		if (isSigmaShooting()) {
+	public bool isAttacking() {
+		if (isSigmaShooting() || sprite.name.Contains("attack")) {
 			return true;
 		}
-		return base.isAttacking();
+		return false;
+	}
+
+	public override Point getCamCenterPos(bool ignoreZoom = false) {
+		Maverick? maverick = player.currentMaverick;
+		if (maverick != null && player.isTagTeam()) {
+			if (maverick.state is MEnter me) {
+				return me.getDestPos().round().addxy(camOffsetX, -24);
+			}
+			if (maverick.state is MorphMCHangState hangState) {
+				return maverick.pos.addxy(camOffsetX, -24 + 17);
+			}
+			return maverick.pos.round().addxy(camOffsetX, -24);
+		}
+		return base.getCamCenterPos(ignoreZoom);
 	}
 }

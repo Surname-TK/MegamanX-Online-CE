@@ -131,8 +131,7 @@ public class DrDoppler : Maverick {
 }
 
 public class DrDopplerBallProj : Projectile {
-	public Actor target;
-	public float maxSpeed = 200;
+	public Actor? target;
 	public DrDopplerBallProj(
 		Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool sendRpc = false
 	) : base(
@@ -143,6 +142,9 @@ public class DrDopplerBallProj : Projectile {
 			projId = (int)ProjIds.DrDopplerBall;
 			if (target == null) {
 				target = Global.level.getClosestTarget(pos, player.alliance, false, 150, includeAllies: false);
+				if (target != null) {
+					vel = pos.directionToNorm(target.getCenterPos()).times(speed);
+				}
 			}
 		} else {
 			projId = (int)ProjIds.DrDopplerBall2;
@@ -150,16 +152,13 @@ public class DrDopplerBallProj : Projectile {
 			destroyOnHit = false;
 			if (target == null) {
 				target = Global.level.getClosestTarget(pos, player.alliance, false, 150, includeAllies: true);
+				if (target != null) {
+					vel = pos.directionToNorm(target.getCenterPos()).times(speed);
+				}
 			}
 		}
 		maxTime = 1f;
 		shouldShieldBlock = true;
-		if (target == null) {
-			// target = Global.level.getClosestTarget(pos, player.alliance, false, 150);
-		}
-		if (target == null) {
-			// vel = new Point(xDir, 2).normalize().times(150);
-		}
 
 		if (sendRpc) {
 			rpcCreate(pos, player, netProjId, xDir);
@@ -169,14 +168,14 @@ public class DrDopplerBallProj : Projectile {
 	public override void update() {
 		base.update();
 		updateProjectileCooldown();
-			if (target == null) {
-				target = Global.level.getClosestTarget(pos, damager.owner.alliance, true, aMaxDist: 200);
-				if (target != null) {
-					time = 1;
-					vel = pos.directionToNorm(target.getCenterPos()).times(speed);
-				}
+		/*if (target == null) {
+			target = Global.level.getClosestTarget(pos, damager.owner.alliance, true, aMaxDist: 200);
+			if (target != null) {
+				time = 0;
+				vel = pos.directionToNorm(target.getCenterPos()).times(speed);
 			}
-			forceNetUpdateNextFrame = true;
+		}*/
+		forceNetUpdateNextFrame = true;
 		
 	}
 }
@@ -198,8 +197,10 @@ public class DrDopplerDashStartState : MaverickState {
 public class DrDopplerDashState : MaverickState {
 	Anim? barrier;
 	float soundTime;
+	float bubbleTime;
 	public DrDopplerDashState() : base("dash", "dash_start") {
 		stopMovingOnEnter = true;
+		useGravity = false;
 	}
 
 	public override void update() {
@@ -226,6 +227,12 @@ public class DrDopplerDashState : MaverickState {
 		}
 
 		if (maverick.isUnderwater()) {
+			if (bubbleTime > 6) {
+				bubbleTime = 0;
+				new BubbleAnim(maverick.pos, "bigbubble1") { vel = new Point(0, -75) };
+			} else {
+				bubbleTime++;
+			}
 			if (!maverick.sprite.name.EndsWith("dash_water")) {
 				maverick.changeSpriteFromName("dash_water", false);
 			}

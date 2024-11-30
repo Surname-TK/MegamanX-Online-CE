@@ -55,8 +55,8 @@ public class FSplasherWeapon : Weapon {
 
 	public override void attack(Character character) {
 		if (character.dashedInAir > 0 && !character.isUnderwater()) return;
-		if (shootTime > 0) return;
-		shootTime = 1;
+		if (shootCooldown > 0) return;
+		shootCooldown = 1;
 		character.changeState(new FSplasherState(), true);
 	}
 }
@@ -95,9 +95,9 @@ public class FSplasherState : CharState {
 			fSplasherProj = null;
 		}
 		if (character.isUnderwater()) {
-			zero.airSpecial.shootTime = 0.125f;
+			zero.airSpecial.shootCooldown = 0.125f;
 		} else {
-			zero.airSpecial.shootTime = 1;
+			zero.airSpecial.shootCooldown = 1;
 		}
 		base.onExit(newState);
 	}
@@ -317,7 +317,7 @@ public class HyorogaStateB : CharState {
 					player, player.getNextActorNetId(), rpc: true);
 					break;
 			}
-			player.currency--;
+			// player.currency--;
 			character.stopCharge();		
 		}
 		if (character.isAnimOver()) {

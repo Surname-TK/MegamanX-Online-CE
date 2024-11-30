@@ -76,8 +76,8 @@ public class ChargeEffect {
 				part.pos.x = Helpers.moveTo(part.pos.x, 0, Global.spf * 70);
 				part.pos.y = Helpers.moveTo(part.pos.y, 0, Global.spf * 70);
 			}
-			if (chargeType == 3 && chargeLevel >= 3) {
-				chargePart = "charge_part_4";
+			if (chargeType != 2 && chargeLevel >= 3) {
+				chargePart = "charge_part_3";
 			} else {
 				chargePart = "charge_part_" + chargeLevel.ToString();
 			}

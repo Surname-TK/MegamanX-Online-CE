@@ -39,7 +39,6 @@ public enum CharIds {
 	SoulBodyClone,
 	// Non-vanilla chars start here.
 	Rock = 10,
-	/*Iris = 11,*/
 }
 
 public class CharSelection {
@@ -49,24 +48,24 @@ public class CharSelection {
 	public int mappedCharMaverick;
 	public string sprite;
 	public int frameIndex;
-	public Point offset = new Point(0, 45);
+	public Point offset = new Point(0, 5);
 
 	public static int sigmaIndex => Options.main?.sigmaLoadout?.sigmaForm ?? 0;
 
 	public static CharSelection[] selections => [
-		new CharSelection("X", 0, 1, 0, "menu_mmx", 0),
-		new CharSelection("Zero", 1, 1, 0, "menu_szero", 0),
-		new CharSelection("Kaiser Knuckle", 5, 1, 0, "menu_kzero", 5) {
+		new CharSelection("X", 0, 1, 0, "menu_megaman", 0),
+		new CharSelection("Zero", 1, 1, 0, "menu_zero", 0),
+		new CharSelection("Kaiser Knuckle", 5, 1, 0, "zero_megapunch", 5) {
 		},
-		new CharSelection("Buster Zero", 6, 1, 0, "menu_bzero", 0) {
-			offset = new Point(2, 45)
+		new CharSelection("Buster Zero", 6, 1, 0, "zero_shoot", 0) {
+			//offset = new Point(10, 5)
 		},
-		new CharSelection("Vile", 2, 1, 0, "menu_vvile", 0),
-		new CharSelection("Axl", 3, 1, 0, "menu_aaxl", 0){
-			offset = new Point(1, 45)
+		new CharSelection("Vile", 2, 1, 0, "menu_vile", 0),
+		new CharSelection("Axl", 3, 1, 0, "menu_axl", 0){
+			offset = new Point(1, 0)
 		},
-		new CharSelection("Sigma", 4, 1, 0, "menu_ssigma", sigmaIndex),
-		//new CharSelection("Rock", 10, 1, 0, "rock_idle", 0),
+		new CharSelection("Sigma", 4, 1, 0, "menu_sigma", sigmaIndex),
+		//new CharSelection ("Rock", 10, 1, 0, "rock_idle", 0),
 	];
 
 	public static CharSelection[] selections1v1 => [
@@ -336,9 +335,6 @@ public class SelectCharacterMenu : IMainMenu {
 			(int)CharIds.PunchyZero => new string[] {
 				"Close range melee brawler", "that can counter the enemy attacks."
 			},
-			/*(int)CharIds.Iris => new string[] {
-				"Zero (early) sprited over Iris."
-			},*/
 			_ => new string[] { "ERROR" }
 		};
 		if (description.Length > 0) {

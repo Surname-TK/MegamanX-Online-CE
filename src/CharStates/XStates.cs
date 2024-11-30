@@ -110,6 +110,9 @@ public class X2ChargeShot : CharState {
 
 	public override void update() {
 		base.update();
+		if (character.grounded) {
+			character.turnToInput(player.input, player);
+		}
 		if (!fired && character.currentFrame.getBusterOffset() != null) {
 			fired = true;
 			mmx.secondArmorChargeShots(type);
@@ -188,9 +191,9 @@ public class X3ChargeShot : CharState {
 	public int state = 0;
 	bool pressFire;
 	MegamanX mmx = null!;
-	public HyperBuster? hyperBusterWeapon;
+	public HyperCharge? hyperBusterWeapon;
 
-	public X3ChargeShot(HyperBuster? hyperBusterWeapon) : base("x3_shot", "", "", "") {
+	public X3ChargeShot(HyperCharge? hyperBusterWeapon) : base("x3_shot", "", "", "") {
 		this.hyperBusterWeapon = hyperBusterWeapon;
 		airMove = true;
 		useDashJumpSpeed = true;

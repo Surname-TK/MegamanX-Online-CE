@@ -877,17 +877,18 @@ class Program {
 				spriteFilePaths[(fileSplit*5)..],
 			};
 			string[] fileChecksums = new string[6];
-			List<Thread> threads = new();
+			List<Task> tasks = new();
 			for (int i = 0; i < treadedFilePaths.Length; i++) {
 				int j = i;
-				Thread tempThread = new Thread(() => { fileChecksums[j] = loadSpritesSub(treadedFilePaths[j]); });
-				threads.Add(tempThread);
-				tempThread.Start();
+				Task tempTask = new Task(() => { fileChecksums[j] = loadSpritesSub(treadedFilePaths[j]); });
+				tasks.Add(tempTask);
+				tempTask.ContinueWith(loadExceptionHandler, TaskContinuationOptions.OnlyOnFaulted);
+				tempTask.Start();
 			}
-			while (threads.Count > 0) {
-				for (int i = 0; i < threads.Count; i++) {
-					if (threads[i].ThreadState == System.Threading.ThreadState.Stopped) {
-						threads.Remove(threads[i]);
+			while (tasks.Count > 0) {
+				for (int i = 0; i < tasks.Count; i++) {
+					if (tasks[i].Status >= TaskStatus.RanToCompletion) {
+						tasks.Remove(tasks[i]);
 						i = 0;
 					}
 				}
@@ -1484,7 +1485,6 @@ class Program {
 		decimal deltaTime = 0;
 		decimal lastUpdateTime = 0;
 		decimal fpsLimit = (TimeSpan.TicksPerSecond / 60m);
-		bool exit = false;
 		Color clearColor = Color.Black;
 		Stopwatch watch = new Stopwatch();
 		int pos = textures.Length - 1;

@@ -83,10 +83,10 @@ public partial class RPCCreateProj : RPC {
 		{ (int)ProjIds.FrostShieldCharged, FrostShieldProjCharged.rpcInvoke },
 		{ (int)ProjIds.FrostShieldChargedGrounded, FrostShieldProjChargedGround.rpcInvoke },
 		{ (int)ProjIds.FrostShieldPlatform, FrostShieldProjPlatform.rpcInvoke },
-		{ (int)ProjIds.TunnelFang, TunnelFangProj.rpcInvoke },
-		{ (int)ProjIds.TunnelFang2, TunnelFangProj.rpcInvoke },
-		{ (int)ProjIds.TunnelFangCharged, TunnelFangProjCharged.rpcInvoke },
-		{ (int)ProjIds.XSaberProj, XSaberProj.rpcInvoke },
+		{ (int)ProjIds.TornadoFang, TornadoFangProj.rpcInvoke },
+		{ (int)ProjIds.TornadoFang2, TornadoFangProj.rpcInvoke },
+		{ (int)ProjIds.TornadoFangCharged, TornadoFangProjCharged.rpcInvoke },
+		{ (int)ProjIds.X3SaberProj, X3SaberProj.rpcInvoke },
 
 		//X4 PROJS
 		{ (int)ProjIds.LightningWebProj, LightningWebProj.rpcInvoke },

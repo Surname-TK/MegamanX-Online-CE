@@ -11,6 +11,7 @@ public class BusterZero : Character {
 	public bool stockedSaber;
 	public List<DZBusterProj> zeroLemonsOnField = new();
 	public ZBusterSaber meleeWeapon = new();
+	public int lastShootPressed;
 
 	public BusterZero(
 		Player player, float x, float y, int xDir,
@@ -69,7 +70,7 @@ public class BusterZero : Character {
 		}
 		if (isCharging()) {
 			chargeSound.play();
-			int chargeType = 1;
+			int chargeType = 2;
 			int level = getChargeLevel();
 			var renderGfx = RenderEffectType.ChargeBlue;
 			renderGfx = level switch {
@@ -306,6 +307,9 @@ public class BusterZero : Character {
 	}
 
 	public override bool canAirJump() {
+		if (isWading() && !isUnderwater()) {
+			return true;
+		}
 		return dashedInAir == 0 || (dashedInAir == 1 && isBlackZero);
 	}
 

@@ -255,13 +255,13 @@ public class Zero : Character {
 				shootPos, xDir, 0, player, player.getNextActorNetId(), rpc: true
 			);
 		} else if (chargeLevel == 2) {
-			currencyUse = 1;
+			currencyUse = 0;
 			playSound("buster3X3", sendRpc: true);
 			new ZBuster3Proj(
 				shootPos, xDir, 0, player, player.getNextActorNetId(), rpc: true
 			);
 		} else if (chargeLevel == 3 || chargeLevel >= 4) {
-			currencyUse = 1;
+			currencyUse = 0;
 			playSound("buster4X2", sendRpc: true);
 			new ZBuster4Proj(
 				shootPos, xDir, 0, player, player.getNextActorNetId(), rpc: true
@@ -424,7 +424,7 @@ public class Zero : Character {
 				  !player.isDisguisedAxl || player.input.isHeld(Control.Down, player)
 			  )
 			) {
-			if (grounded && !isAttacking()) {
+			if (grounded) {
 				turnToInput(player.input, player);
 				changeState(new SwordBlock());
 			}
@@ -470,7 +470,7 @@ public class Zero : Character {
 		int yDir = player.input.getYDir(player);
 		// Giga attacks.
 		if (yDir == 1 && specialPressed) {
-			if (gigaAttack.shootTime <= 0 && gigaAttack.ammo >= gigaAttack.getAmmoUsage(0)) {
+			if (gigaAttack.shootCooldown <= 0 && gigaAttack.ammo >= gigaAttack.getAmmoUsage(0)) {
 				if (gigaAttack is RekkohaWeapon) {
 					gigaAttack.addAmmo(-gigaAttack.getAmmoUsage(0), player);
 					changeState(new Rekkoha(gigaAttack), true);
@@ -599,6 +599,9 @@ public class Zero : Character {
 	
 	// Double jump.
 	public override bool canAirJump() {
+		if (isWading() && !isUnderwater()) {
+			return true;
+		}
 		return dashedInAir == 0;
 	}
 

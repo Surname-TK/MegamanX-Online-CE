@@ -1,0 +1,119 @@
+﻿namespace MMXOnline;
+
+public class XSaber : Weapon {
+
+	public static XSaber netWeapon = new(null!);
+	public XSaber(Player player) : base() {
+		damager = new Damager(player, 4, Global.defFlinch, 0.25f);
+		index = (int)WeaponIds.XSaber;
+		weaponBarBaseIndex = 21;
+		weaponBarIndex = weaponBarBaseIndex;
+		killFeedIndex = 66;
+	}
+}
+
+public class X3SaberProj : Projectile {
+	public X3SaberProj(
+		Weapon weapon, Point pos, int xDir,
+		Player player, ushort netProjId, bool rpc = false
+	) : base(
+		weapon, pos, xDir, 300, 4, player, "zsaber_shot", 
+		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+	) {
+		reflectable = false;
+		projId = (int)ProjIds.X3SaberProj;
+		maxTime = 0.5f;
+
+		if (rpc) {
+			rpcCreate(pos, player, netProjId, xDir);
+		}
+	}
+
+	public static Projectile rpcInvoke(ProjParameters arg) {
+		return new X3SaberProj(
+			XSaber.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
+		);
+	}
+}
+
+public class X3SaberState : CharState {
+	bool fired;
+	bool grounded;
+	public X3SaberState(bool grounded) : base(grounded ? "beam_saber" : "beam_saber_air", "", "", "") {
+		this.grounded = grounded;
+		landSprite = "beam_saber";
+		airMove = true;
+		useDashJumpSpeed = true;
+	}
+
+	public override void onEnter(CharState oldState) {
+		base.onEnter(oldState);
+		
+		if (oldState is AirDash or UpDash) {
+			if (player.input.isPressed(Control.Jump, player)) {
+				character.isDashing = false;
+				character.vel.y = -character.getJumpPower();
+				if (character.dashedInAir > 0) {
+					character.dashedInAir--;
+				}
+			}
+		}
+	}
+
+	public override void update() {
+		base.update();
+		if (character.frameIndex >= 6 && !fired) {
+			fired = true;
+			character.playSound("zerosaberx3");
+			new X3SaberProj(
+				new XSaber(player), character.pos.addxy(20 * character.xDir, -20), 
+				character.xDir, player, player.getNextActorNetId(), rpc: true
+			);
+		}
+
+		if (character.isAnimOver()) {
+			character.changeToIdleOrFall();
+		}
+	}
+	public override void onEnter(CharState oldState) {
+		base.onEnter(oldState);
+		if (oldState is AirDash or UpDash) {
+			if (player.input.isPressed(Control.Jump, player)) {
+				character.isDashing = false;
+				character.vel.y = -character.getJumpPower();
+				if (character.dashedInAir > 0) {
+				 character.dashedInAir--;
+				}
+			}
+		}
+	}
+}
+
+public class X6SaberState : CharState {
+	bool fired;
+	bool grounded;
+	public X6SaberState(bool grounded) : base(grounded ? "beam_saber2" : "beam_saber_air2", "", "", "") {
+		this.grounded = grounded;
+		landSprite = "beam_saber2";
+		airMove = true;
+		useDashJumpSpeed = true;
+	}
+
+	public override void update() {
+		base.update();
+		int frameSound = 1;
+		if (character.frameIndex >= frameSound && !fired) {
+			fired = true;
+			character.playSound("raijingeki");
+			//new XSaberProj(new XSaber(player), character.pos.addxy(30 * character.xDir, -29), character.xDir, player, player.getNextActorNetId(), rpc: true);
+		}
+
+		if (player.character.canCharge() && player.input.isHeld(Control.Shoot, player)) {
+			player.character.increaseCharge();
+		}
+
+		if (character.isAnimOver()) {
+			character.changeToIdleOrFall();
+		}
+	}
+}

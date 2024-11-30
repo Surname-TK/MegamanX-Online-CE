@@ -328,8 +328,8 @@ public class SelectWeaponMenu : IMainMenu {
 			int[] strongAgainstMaverickIndices = getStrongAgainstMaverickFrameIndex(wi);
 			int weakAgainstMaverickIndex = getWeakAgainstMaverickFrameIndex(wi);
 			string damage = weapon.damage;
-			string rateOfFire = weapon.rateOfFire.ToString();
-			string ammousage = weapon.ammousage.ToString();
+			string rateOfFire = weapon.fireRate.ToString();
+			string maxAmmo = weapon.maxAmmo.ToString();
 			string effect = weapon.effect;
 			string hitcooldown = weapon.hitcooldown;
 			string Flinch = weapon.Flinch;
@@ -345,41 +345,39 @@ public class SelectWeaponMenu : IMainMenu {
 				Global.halfScreenW + 10, 126, Alignment.Left
 			);
 			//Global.sprites["hud_weapon_icon"].drawToHUD(weapon.weaponSlotIndex, Global.halfScreenW + 75, 148);
-			Fonts.drawText(FontType.Green, "Counters: ", 86, wsy - 17, Alignment.Right);
+			Fonts.drawText(FontType.Green, "Counters: ", 89, wsy - 17, Alignment.Right);
 			if (strongAgainstIndex > 0) {
-				Global.sprites["hud_weapon_icon"].drawToHUD(strongAgainstIndex, 89, wsy - 13);
+				Global.sprites["hud_weapon_icon"].drawToHUD(strongAgainstIndex, 92, wsy - 13);
 			} else {
-				Fonts.drawText(FontType.Grey, "None", 86, wsy - 17);
+				Fonts.drawText(FontType.Grey, "None", 89, wsy - 17);
 			}
-			if (strongAgainstMaverickIndices.Length > 0 && strongAgainstMaverickIndices[0] > 0) {
-				Global.sprites["hud_weapon_icon"].drawToHUD(strongAgainstMaverickIndices[0], 107, wsy - 13);
+			for (int i = 0; i < strongAgainstMaverickIndices.Length; i++) {
+				if (strongAgainstMaverickIndices[0] == 0) {
+					continue;
+				}
+				Global.sprites["hud_weapon_icon"].drawToHUD(strongAgainstMaverickIndices[i], 107 + i * 15, wsy - 13);
 			}
-			if (strongAgainstMaverickIndices.Length > 1 && strongAgainstMaverickIndices[1] > 0) {
-				Global.sprites["hud_weapon_icon"].drawToHUD(strongAgainstMaverickIndices[1], 118, wsy - 13);
-			}
-			Fonts.drawText(FontType.Green, "Weakness: ", 86, wsy, Alignment.Right);
+			Fonts.drawText(FontType.Green, "Weakness: ", 89, wsy, Alignment.Right);
 			if (weakAgainstIndex > 0) {
 				Global.sprites["hud_weapon_icon"].drawToHUD(weakAgainstIndex, 89, wsy + 4);
 			} else {
-				Fonts.drawText(FontType.Grey, "None", 86, wsy);
+				Fonts.drawText(FontType.Grey, "None", 89, wsy);
 			}
 			if (weakAgainstMaverickIndex > 0) {
 				Global.sprites["hud_weapon_icon"].drawToHUD(weakAgainstMaverickIndex, 107, wsy + 4);
 			}
 			Fonts.drawText(FontType.Red, "Damage:", 128, wsy - 17);
-			Fonts.drawText(FontType.Red, "Ammo Usage:", 128, wsy - 5);
+			Fonts.drawText(FontType.Red, "Ammo: " + maxAmmo, 128, wsy - 5);
 			Fonts.drawText(FontType.Red, "Fire Rate:", 127, wsy + 7);
 			Fonts.drawText(FontType.RedishOrange, "Hit CD:", 232, wsy - 17);
 			Fonts.drawText(FontType.RedishOrange, "Flinch CD:", 231, wsy + 7);
 			Fonts.drawText(FontType.RedishOrange, "Flinch:", 231, wsy - 5);
-			Fonts.drawText(FontType.DarkPurple, "Effects:", 25, wsy + 20);
+			Fonts.drawText(FontType.Blue, effect, 28, wsy + 20);
 			Fonts.drawText(FontType.Red, damage, 172, wsy - 17);
 			Fonts.drawText(FontType.Red, rateOfFire, 190, wsy + 7);
-			Fonts.drawText(FontType.Red, ammousage, 200, wsy - 5);
 			Fonts.drawText(FontType.RedishOrange, hitcooldown, 279, wsy -17);
 			Fonts.drawText(FontType.RedishOrange, Flinch, 274, wsy + -5);
 			Fonts.drawText(FontType.RedishOrange, FlinchCD, 297, wsy +7);
-			Fonts.drawText(FontType.DarkPurple, effect, 74, wsy + 20);
 			if (weapon is FrostShield) {
 				if (Global.frameCount % 600 < 120) {
 					effect = "Missile,Mine,Shield,'Unbreakable' you name it."; } 
@@ -414,19 +412,19 @@ public class SelectWeaponMenu : IMainMenu {
 
 	private int getWeakAgainstMaverickFrameIndex(int wi) {
 		switch (wi) {
-			case (int)WeaponIds.Torpedo:
+			case (int)WeaponIds.HomingTorpedo:
 				return new ArmoredArmadilloWeapon(null).weaponSlotIndex;
-			case (int)WeaponIds.Sting:
+			case (int)WeaponIds.ChameleonSting:
 				return new BoomerangKuwangerWeapon(null).weaponSlotIndex;
 			case (int)WeaponIds.RollingShield:
 				return new SparkMandrillWeapon(null).weaponSlotIndex;
 			case (int)WeaponIds.FireWave:
 				return new StormEagleWeapon(null).weaponSlotIndex;
-			case (int)WeaponIds.Tornado:
+			case (int)WeaponIds.StormTornado:
 				return new StingChameleonWeapon(null).weaponSlotIndex;
 			case (int)WeaponIds.ElectricSpark:
 				return new ChillPenguinWeapon(null).weaponSlotIndex;
-			case (int)WeaponIds.Boomerang:
+			case (int)WeaponIds.BoomerangCutter:
 				return new LaunchOctopusWeapon(null).weaponSlotIndex;
 			case (int)WeaponIds.ShotgunIce:
 				return new FlameMammothWeapon(null).weaponSlotIndex;
@@ -460,7 +458,7 @@ public class SelectWeaponMenu : IMainMenu {
 				return new NeonTigerWeapon(null).weaponSlotIndex;
 			case (int)WeaponIds.FrostShield:
 				return new BlastHornetWeapon(null).weaponSlotIndex;
-			case (int)WeaponIds.TunnelFang:
+			case (int)WeaponIds.TornadoFang:
 				return new ToxicSeahorseWeapon(null).weaponSlotIndex;
 			default:
 				return 0;
@@ -469,13 +467,13 @@ public class SelectWeaponMenu : IMainMenu {
 
 	private int[] getStrongAgainstMaverickFrameIndex(int weaponIndex) {
 		return weaponIndex switch {
-			(int)WeaponIds.Torpedo => new int[] { new BoomerangKuwangerWeapon(null).weaponSlotIndex },
-			(int)WeaponIds.Sting => new int[] { new StormEagleWeapon(null).weaponSlotIndex },
+			(int)WeaponIds.HomingTorpedo => new int[] { new BoomerangKuwangerWeapon(null).weaponSlotIndex },
+			(int)WeaponIds.ChameleonSting => new int[] { new StormEagleWeapon(null).weaponSlotIndex },
 			(int)WeaponIds.RollingShield => new int[] { new LaunchOctopusWeapon(null).weaponSlotIndex },
 			(int)WeaponIds.FireWave => new int[] { new ChillPenguinWeapon(null).weaponSlotIndex },
-			(int)WeaponIds.Tornado => new int[] { new FlameMammothWeapon(null).weaponSlotIndex },
+			(int)WeaponIds.StormTornado => new int[] { new FlameMammothWeapon(null).weaponSlotIndex },
 			(int)WeaponIds.ElectricSpark => new int[] { new ArmoredArmadilloWeapon(null).weaponSlotIndex },
-			(int)WeaponIds.Boomerang => new int[] { new StingChameleonWeapon(null).weaponSlotIndex },
+			(int)WeaponIds.BoomerangCutter => new int[] { new StingChameleonWeapon(null).weaponSlotIndex },
 			(int)WeaponIds.ShotgunIce => new int[] {
 				new SparkMandrillWeapon(null).weaponSlotIndex,
 				new VelguarderWeapon(null).weaponSlotIndex
@@ -501,7 +499,7 @@ public class SelectWeaponMenu : IMainMenu {
 			(int)WeaponIds.RaySplasher => new int[] { new GravityBeetleWeapon(null).weaponSlotIndex },
 			(int)WeaponIds.GravityWell => new int[] { new BlastHornetWeapon(null).weaponSlotIndex },
 			(int)WeaponIds.FrostShield => new int[] { new ToxicSeahorseWeapon(null).weaponSlotIndex },
-			(int)WeaponIds.TunnelFang => new int[] { new VoltCatfishWeapon(null).weaponSlotIndex },
+			(int)WeaponIds.TornadoFang => new int[] { new VoltCatfishWeapon(null).weaponSlotIndex },
 			_ => new int[] { }
 		};
 	}

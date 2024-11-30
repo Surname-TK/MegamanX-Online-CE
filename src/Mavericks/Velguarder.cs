@@ -119,7 +119,7 @@ public class VelGFireProj : Projectile {
 		Weapon weapon, Point pos, int xDir,
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 125, 1, player, "velg_proj_fire",
+		weapon, pos, xDir, 125, 0.5f, player, "velg_proj_fire",
 		0, 0.01f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.VelGFire;

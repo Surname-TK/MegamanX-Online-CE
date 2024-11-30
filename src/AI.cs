@@ -535,7 +535,7 @@ public class AI {
 			weaponTime += Global.spf;
 			if (weaponTime > 5) {
 				weaponTime = 0;
-				var wasBuster = (player.weapon is Buster or AxlBullet);
+				var wasBuster = (player.weapon is XBuster or AxlBullet);
 				player.changeWeaponSlot(getRandomWeaponIndex());
 				if (wasBuster && maxChargeTime > 0) {
 					maxChargeTime = 4.25f * 60f;
@@ -543,7 +543,7 @@ public class AI {
 			}
 		}
 
-		if (player.weapon != null && player.weapon.ammo <= 0 && player.weapon is not Buster or AxlBullet) {
+		if (player.weapon != null && player.weapon.ammo <= 0 && player.weapon is not XBuster or AxlBullet) {
 			player.changeWeaponSlot(getRandomWeaponIndex());
 		}
 
@@ -603,7 +603,7 @@ public class AI {
 			int FrostShield = player.weapons.FindIndex(w => w is FrostShield);
 			int TriadThunder = player.weapons.FindIndex(w => w is TriadThunder);
 			int GravityWell = player.weapons.FindIndex(w => w is GravityWell);
-			int TunnelFang = player.weapons.FindIndex(w => w is TunnelFang);
+			int TornadoFang = player.weapons.FindIndex(w => w is TornadoFang);
 			int AcidBurst = player.weapons.FindIndex(w => w is AcidBurst);
 			int ParasiticBomb = player.weapons.FindIndex(w => w is ParasiticBomb);
 			int CrystalHunter = player.weapons.FindIndex(w => w is CrystalHunter);
@@ -611,17 +611,17 @@ public class AI {
 			int SpinWheel = player.weapons.FindIndex(w => w is SpinWheel);
 			int ElectricSpark = player.weapons.FindIndex(w => w is ElectricSpark);
 			int RollingShield = player.weapons.FindIndex(w => w is RollingShield);
-			int Tornado = player.weapons.FindIndex(w => w is Tornado);
-			int Torpedo = player.weapons.FindIndex(w => w is Torpedo);
-			int Sting = player.weapons.FindIndex(w => w is Sting);
-			int Boomerang = player.weapons.FindIndex(w => w is Boomerang);
+			int Tornado = player.weapons.FindIndex(w => w is StormTornado);
+			int Torpedo = player.weapons.FindIndex(w => w is HomingTorpedo);
+			int Sting = player.weapons.FindIndex(w => w is ChameleonSting);
+			int Boomerang = player.weapons.FindIndex(w => w is BoomerangCutter);
 			int ShotgunIce = player.weapons.FindIndex(w => w is ShotgunIce);
 			int SonicSlicer = player.weapons.FindIndex(w => w is SonicSlicer);
 			int StrikeChain = player.weapons.FindIndex(w => w is StrikeChain);
 			int BubbleSplash = player.weapons.FindIndex(w => w is BubbleSplash);
 
 			int Xattack = Helpers.randomRange(0, 12);
-			if (!player.isDead && megamanX.charState.canAttack() && megamanX.canShoot() && megamanX.canChangeWeapons()
+			if (!player.isDead && !megamanX.isInvulnerableAttack() && megamanX.canShoot() && megamanX.canChangeWeapons()
 				&& character.charState.normalCtrl && character.charState is not LadderClimb
 			) {
 				switch (Xattack) {
@@ -656,7 +656,7 @@ public class AI {
 								// Tunnel Fang
 								case 4:
 									if (isTargetSuperClose)
-										megamanX.player.changeWeaponSlot(TunnelFang);
+										megamanX.player.changeWeaponSlot(TornadoFang);
 									megamanX.player.press(Control.Shoot);
 									break;
 								// Acid Burst
@@ -898,9 +898,9 @@ public class AI {
 						}
 						break;
 					case 8:
-						int hyperbuster = player.weapons.FindIndex(w => w is HyperBuster);
+						int hypercharge = player.weapons.FindIndex(w => w is HyperCharge);
 						if (player.hasArmArmor(3)) {
-							player.changeWeaponSlot(hyperbuster);
+							player.changeWeaponSlot(hypercharge);
 							if (megamanX.player.weapon.ammo >= 16) {
 								megamanX.player.press(Control.Shoot);
 								megamanX.player.release(Control.Shoot);
@@ -1047,7 +1047,7 @@ public class AI {
 		ComboAttacks(zero);
 		WildDance(zero);
 		if (zero.charState.attackCtrl && !player.isDead && zero.sprite.name != null && !isWildDance
-			&& zero.charState.canAttack() && !zero.isSpriteInvulnerable() && !zero.isInvulnerable()
+			&& !zero.isInvulnerableAttack() && !zero.isSpriteInvulnerable() && !zero.isInvulnerable()
 			) {
 			int ZSattack = Helpers.randomRange(0, 11);
 			if (!(zero.sprite.name == "zero_attack" || zero.sprite.name == "zero_attack3" || zero.sprite.name == "zero_attack2")) {
@@ -1070,7 +1070,7 @@ public class AI {
 						zero.slideVel = zero.xDir * zero.getDashSpeed() * 2f;
 						break;		
 					case 5 when zero.grounded:
-						if (zero.gigaAttack.shootTime <= 0 && zero.gigaAttack.ammo >= zero.gigaAttack.getAmmoUsage(0)) {
+						if (zero.gigaAttack.shootCooldown <= 0 && zero.gigaAttack.ammo >= zero.gigaAttack.getAmmoUsage(0)) {
 							if (zero.gigaAttack is RekkohaWeapon) {
 								zero.gigaAttack.addAmmo(-zero.gigaAttack.getAmmoUsage(0), player);
 								zero.changeState(new Rekkoha(zero.gigaAttack), true);
@@ -1135,7 +1135,7 @@ public class AI {
 								zero.changeState(new ZeroCrouchSlashState(), true);
 								break;
 							case 3:
-								if (zero.gigaAttack.shootTime <= 0 && zero.gigaAttack.ammo >= zero.gigaAttack.getAmmoUsage(0)) {
+								if (zero.gigaAttack.shootCooldown <= 0 && zero.gigaAttack.ammo >= zero.gigaAttack.getAmmoUsage(0)) {
 									if (zero.gigaAttack is RekkohaWeapon) {
 										zero.gigaAttack.addAmmo(-zero.gigaAttack.getAmmoUsage(0), player);
 										zero.changeState(new Rekkoha(zero.gigaAttack), true);
@@ -1269,11 +1269,11 @@ public class AI {
 	}
 	public void WildDanceMove(Character zero) {
 		if (character is Zero zero7) {
-			if (!zero7.isAttacking() && zero7.charState.canAttack() && zero7.charState.attackCtrl) {
+			if (zero7.charState.attackCtrl && !zero7.isInvulnerableAttack() && zero7.charState.attackCtrl) {
 				zero7.changeState(new ZeroShippuugaState(), true);
 				zero7.slideVel = zero.xDir * zero7.getDashSpeed() * 2f;
 			}
-			if (zero.isAttacking()) {
+			if (!zero7.charState.attackCtrl) {
 				if (zero7.sprite.name == "zero_attack_dash2" && zero7.sprite.frameIndex >= 7) {
 					zero7.changeState(new ZeroSlash1State(), true);
 					zero7.stopMoving();				
@@ -1309,7 +1309,7 @@ public class AI {
 					|| proj.projId == (int)ProjIds.MagnetMine || proj.projId == (int)ProjIds.FrostShield || proj.projId == (int)ProjIds.FrostShieldCharged 
 					|| proj.projId == (int)ProjIds.FrostShieldAir || proj.projId == (int)ProjIds.FrostShieldChargedPlatform || proj.projId == (int)ProjIds.FrostShieldPlatform)	
 				){					
-					if (zero.gigaAttack.shootTime <= 0 && zero.grounded) {
+					if (zero.gigaAttack.shootCooldown <= 0 && zero.grounded) {
 						switch (zero.gigaAttack) {
 							case RekkohaWeapon when zero.gigaAttack.ammo >= 28:
 								zero.gigaAttack.addAmmo(-zero.gigaAttack.getAmmoUsage(0), player);
@@ -1398,7 +1398,7 @@ public class AI {
 		foreach (GameObject gameObject in pzero.getCloseActors(64, true, false, false)) {
 			if (gameObject is Projectile proj && player.character is PunchyZero pzero1
 			&& proj.damager.owner.alliance != player.alliance && pzero.charState.attackCtrl) { 									
-				if (pzero1.gigaAttack.shootTime <= 0 && pzero1.grounded) {
+				if (pzero1.gigaAttack.shootCooldown <= 0 && pzero1.grounded) {
 					switch (pzero1.gigaAttack) {
 						case RekkohaWeapon when pzero1.gigaAttack.ammo >= 28:
 							pzero1.gigaAttack.addAmmo(-pzero1.gigaAttack.getAmmoUsage(0), player);
@@ -1522,7 +1522,7 @@ public class AI {
 				int Sattack = Helpers.randomRange(0, 4);
 				if (isTargetInAir) Sattack = 1;
 				if (cmdSigma.charState.attackCtrl && cmdSigma?.charState?.isGrabbedState == false && !player.isDead
-					&& !cmdSigma.isInvulnerable() && cmdSigma.charState.canAttack() 
+					&& !cmdSigma.isInvulnerable() && !cmdSigma.isInvulnerableAttack()
 					&& !(cmdSigma.charState is CallDownMaverick or SigmaSlashState)) {
 					switch (Sattack) {
 						case 0 when cmdSigma.saberCooldown == 0: // Beam Saber
@@ -1563,12 +1563,12 @@ public class AI {
 				int Neoattack = Helpers.randomRange(0, 5);
 				if (isTargetInAir) Neoattack = 2;
 				if (neoSigma?.charState?.isGrabbedState == false && !player.isDead && !neoSigma.isInvulnerable()
-				    && neoSigma.charState.canAttack()
+				    && !neoSigma.isInvulnerableAttack()
 					&& !(neoSigma.charState is CallDownMaverick or SigmaElectricBall2State or SigmaElectricBallState)) {
 					switch (Neoattack) {
-						case 0 when neoSigma.saberCooldown == 0:
+						case 0 when neoSigma.normalAttackCooldown == 0:
 							neoSigma.changeState(new SigmaClawState(neoSigma.charState, neoSigma.grounded), true);
-							neoSigma.saberCooldown = neoSigma.sigmaSaberMaxCooldown;
+							neoSigma.normalAttackCooldown = neoSigma.sigmaSaberMaxCooldown;
 							break;
 						case 1 when neoSigma.sigmaDownSlashCooldown == 0:
 							if (neoSigma.grounded && isTargetInAir) {
@@ -1616,7 +1616,7 @@ public class AI {
 				int DoppmaSigmaAttack = Helpers.randomRange(0, 4);
 				if (isTargetInAir) DoppmaSigmaAttack = 1;
 				if (DoppmaSigma?.charState?.isGrabbedState == false && !player.isDead &&
-				   !DoppmaSigma.isInvulnerable() && DoppmaSigma.charState.canAttack()
+				   !DoppmaSigma.isInvulnerable() && !DoppmaSigma.isInvulnerableAttack()
 				   && !(DoppmaSigma.charState is CallDownMaverick or SigmaThrowShieldState or Sigma3Shoot)) {
 					switch (DoppmaSigmaAttack) {
 						case 0 when DoppmaSigma.fireballCooldown == 0:
@@ -1703,7 +1703,7 @@ public class AI {
 		//Vile Start	
 		if (character is Vile vile) {
 			int Vattack = Helpers.randomRange(0, 12);
-			if (vile?.charState?.isGrabbedState == false && !player.isDead && vile.charState.canAttack()
+			if (vile?.charState?.isGrabbedState == false && !player.isDead && !vile.isInvulnerableAttack()
 				&& !(character.charState is VileRevive or HexaInvoluteState or NecroBurstAttack
 				or StraightNightmareAttack or RisingSpecterState or VileMK2GrabState)) {
 				switch (Vattack) {
@@ -1795,7 +1795,7 @@ public class AI {
 			}
 
 			int AAttack = Helpers.randomRange(0, 1);
-			if (axl.charState.canShoot() && !axl.isSpriteInvulnerable() && player.weapon.ammo > 0 && player.axlWeapon != null && axl.canShoot()
+			if (axl.canShoot() && !axl.isSpriteInvulnerable() && player.weapon.ammo > 0 && player.axlWeapon != null && axl.canShoot()
 				&& axl?.charState?.isGrabbedState == false && !player.isDead && axl.canChangeWeapons() && character.canChangeWeapons()
 				&& !(axl.charState is Hurt or Die or GenericStun or WarpIn or HyperAxlStart or WallSlide or WallKick or LadderClimb or DodgeRoll)) {
 				switch (AAttack) {

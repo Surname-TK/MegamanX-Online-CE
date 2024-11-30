@@ -11,12 +11,12 @@ public class SigmaSlashWeapon : Weapon {
 
 public class SigmaSlashState : CharState {
 	CharState prevCharState;
-	int attackFrame = 3;
+	int attackFrame = 2;
 	bool fired;
 	public SigmaSlashState(CharState prevCharState) : base(prevCharState.attackSprite, "", "", "") {
 		this.prevCharState = prevCharState;
 		if (prevCharState is Dash || prevCharState is AirDash) {
-			attackFrame = 2;
+			attackFrame = 1;
 		}
 		useDashJumpSpeed = true;
 		airMove = true;
@@ -44,8 +44,8 @@ public class SigmaSlashState : CharState {
 				off = new Point(20, -30);
 			}
 
-			float damage = character.grounded ? 3 : 2;
-			int flinch = character.grounded ? Global.halfFlinch : 13;
+			float damage = (character.grounded && prevCharState is not Dash) ? 3 : 2;
+			int flinch = (character.grounded && prevCharState is not Dash) ? Global.halfFlinch : 6;
 			new SigmaSlashProj(
 				SigmaSlashWeapon.netWeapon, character.pos.addxy(off.x * character.xDir, off.y),
 				character.xDir, player, player.getNextActorNetId(), damage: damage, flinch: flinch, rpc: true
@@ -258,7 +258,7 @@ public class SigmaWallDashState : CharState {
 		}
 
 		if (player.input.isPressed(Control.Shoot, player) &&
-			!fired && character.saberCooldown == 0 && character.invulnTime == 0
+			!fired && sigma.saberCooldown == 0 && character.invulnTime == 0
 		) {
 			if (yDir == 0) {
 				character.changeState(new SigmaSlashState(new Dash(Control.Dash)), true);
@@ -266,7 +266,7 @@ public class SigmaWallDashState : CharState {
 			}
 
 			fired = true;
-			character.saberCooldown = sigma.sigmaSaberMaxCooldown;
+			sigma.saberCooldown = sigma.sigmaSaberMaxCooldown;
 
 			character.playSound("sigmaSaber", sendRpc: true);
 			character.changeSpriteFromName("wall_dash_attack", true);

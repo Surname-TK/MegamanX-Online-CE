@@ -27,13 +27,13 @@ public class VileMissile : Weapon {
 			vileAmmo = 7;
 			killFeedIndex = 126;
 		} else if (vileMissileType == VileMissileType.ElectricShock) {
-			rateOfFire = 0.75f;
+			fireRate = 30;
 			displayName = "Electric Shock";
-			vileAmmo = 14;
+			vileAmmo = 21;
 			description = new string[] { "Stops enemies in their tracks,", "but deals no damage." };
 			vileWeight = 3;
 		} else if (vileMissileType == VileMissileType.HumerusCrush) {
-			rateOfFire = 0.75f;
+			fireRate = 45;
 			displayName = "Humerus Crush";
 			projSprite = "missile_hc_proj";
 			vileAmmo = 7;
@@ -41,10 +41,10 @@ public class VileMissile : Weapon {
 			killFeedIndex = 74;
 			vileWeight = 3;
 		} else if (vileMissileType == VileMissileType.PopcornDemon) {
-			rateOfFire = 0.75f;
+			fireRate = 20;
 			displayName = "Popcorn Demon";
 			projSprite = "missile_pd_proj";
-			vileAmmo = 7;
+			vileAmmo = 14;
 			description = new string[] { "This missile splits into 3", "and can cause great damage." };
 			killFeedIndex = 76;
 			vileWeight = 3;
@@ -53,7 +53,7 @@ public class VileMissile : Weapon {
 
 	public override void vileShoot(WeaponIds weaponInput, Vile vile) {
 		Player player = vile.player;
-		if (shootTime > 0) return;
+		if (shootCooldown > 0) return;
 
 		if (vile.charState is Idle || vile.charState is Run || vile.charState is Crouch) {
 			if (vile.tryUseVileAmmo(vileAmmo)) {
@@ -119,7 +119,7 @@ public class VileMissileProj : Projectile {
 			this.xDir = 1;
 			this.vel = vel.Value.times(speed);
 			angle = this.vel.angle;
-			damager.damage = 2;
+			damager.damage = 1;
 			damager.hitCooldown = 0;
 		}
 
@@ -163,7 +163,7 @@ public class VileMissileProj : Projectile {
 
 public class VileMK2StunShot : Weapon {
 	public VileMK2StunShot() : base() {
-		rateOfFire = 0.75f;
+		fireRate = 45;
 		index = (int)WeaponIds.MK2StunShot;
 		killFeedIndex = 67;
 	}

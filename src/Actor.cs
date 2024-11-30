@@ -157,6 +157,7 @@ public partial class Actor : GameObject {
 	public float bubbleTime;
 	public float bigBubbleTime;
 	public float waterTime;
+	public float splashCooldown;
 
 	public float timeStopTime;
 
@@ -597,18 +598,31 @@ public partial class Actor : GameObject {
 		bool isChrSpawning = (chr != null && chr.isSpawning());
 		if (splashable && !isChrSpawning && !isRaSpawning) {
 			if (wading || underwater) {
-				if (waterTime == 0) {
+				if (waterTime == 0 && splashCooldown == 0) {
 					new Anim(new Point(pos.x, lastWaterY), "splash", 1, null, true);
 					playSound("splash");
 					vel.y = 0;
+					splashCooldown = 8;
 				}
 				waterTime += Global.spf;
+				if (splashCooldown > 0){
+					splashCooldown--;
+				} else {
+					splashCooldown = 0;
+				}
+				
 			} else {
-				if (waterTime > 0) {
+				if (waterTime > 0 && splashCooldown == 0) {
 					new Anim(new Point(pos.x, lastWaterY), "splash", 1, null, true);
 					playSound("splash");
+					splashCooldown = 8;
 				}
 				waterTime = 0;
+				if (splashCooldown > 0){
+					splashCooldown--;
+				} else {
+					splashCooldown = 0;
+				}
 			}
 
 			if (wading && !underwater) {
@@ -911,7 +925,7 @@ public partial class Actor : GameObject {
 				return false;
 			}
 			*/
-			if (character.isCStingInvisibleGraphics() && this is MegamanX mmx && mmx.cStingPaletteTime % 3 == 0) {
+			if (this is MegamanX mmx && mmx.isCStingInvisibleGraphics() && mmx.cStingPaletteTime % 3 == 0) {
 				return false;
 			}
 			if (character.invulnTime > 0) {

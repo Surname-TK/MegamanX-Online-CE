@@ -1456,7 +1456,7 @@ public partial class Level {
 				if (camPlayer.character?.charState is not InRideChaser &&
 					(camPlayer.character as Axl)?.isZooming() != true
 				) {
-					int camSpeed = 4;
+					int camSpeed = 40;
 					if (MathF.Abs(deltaX) > camSpeed) {
 						deltaX = camSpeed * MathF.Sign(fullDeltaX);
 					}
@@ -2410,6 +2410,41 @@ public partial class Level {
 		}).ToArray();
 
 		return unoccupied.GetRandomItem();
+	}
+
+	public SpawnPoint getFirstSpawnPoint(Player player) {
+		if (Global.overrideSpawnPoint != null) {
+			var sp = spawnPoints.FirstOrDefault(s => s.name == Global.overrideSpawnPoint);
+			if (sp != null) return sp;
+		}
+		if (isRace()) {
+			return raceStartSpawnPoints[player.getSpawnIndex(raceStartSpawnPoints.Count)];
+		}
+		if (is1v1()) {
+			return spawnPoints[player.getSpawnIndex(spawnPoints.Count)];
+		}
+		if (Global.quickStart && Global.quickStartSpawn != null) {
+			return spawnPoints[Global.quickStartSpawn.Value];
+		}
+		SpawnPoint[] availableSpawns;
+		if (!gameMode.useTeamSpawns() || player.newAlliance < 0 || player.newAlliance > 1) {
+			availableSpawns = spawnPoints.Where(
+				(spawnPoint) => {
+					return (
+						spawnPoint.alliance == -1
+					);
+				}
+			).ToArray();
+		} else {
+			availableSpawns = spawnPoints.Where(
+				(spawnPoint) => {
+					return (
+						spawnPoint.alliance == player.newAlliance
+					);
+				}
+			).ToArray();
+		}
+		return availableSpawns[player.getSpawnIndex(availableSpawns.Length)];
 	}
 
 	public bool isRace() {

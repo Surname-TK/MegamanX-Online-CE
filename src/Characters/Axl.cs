@@ -13,6 +13,12 @@ public class RaycastHitData {
 }
 
 public class Axl : Character {
+	public float stingChargeTime;
+	public int lastXDir;
+	public float shootTime {
+		get { return player.weapon.shootCooldown; }
+		set { player.weapon.shootCooldown = value; }
+	}
 	public bool aiming;
 	public IDamagable? axlCursorTarget = null;
 	public Character? axlHeadshotTarget = null;
@@ -261,6 +267,13 @@ public class Axl : Character {
 	float assassinSmokeTime;
 	float lastAltShootPressedTime;
 	float voltTornadoTime;
+
+
+	public override void preUpdate() {
+		lastXDir = xDir;
+		base.preUpdate();
+	}
+
 	public override void update() {
 		base.update();
 
@@ -304,6 +317,18 @@ public class Axl : Character {
 				}
 			}
 			return;
+		}
+
+		if (stingChargeTime > 0) {
+			stingChargeTime -= Global.spf;
+			player.weapon.ammo -= (Global.spf * 3 * (player.hasChip(3) ? 0.5f : 1));
+			if (player.weapon.ammo < 0) player.weapon.ammo = 0;
+			stingChargeTime = player.weapon.ammo;
+			
+			if (stingChargeTime <= 0) {
+				player.delaySubtank();
+				stingChargeTime = 0;
+			}
 		}
 
 		isRevving = false;
@@ -517,45 +542,45 @@ public class Axl : Character {
 		}
 		chargeGfx();
 
-		bool canShoot = (undisguiseTime == 0 && assassinTime == 0);
-		if (canShoot) {
+		bool weCanShoot = (undisguiseTime == 0 && assassinTime == 0);
+		if (weCanShoot) {
 			// Axl bullet
 			if (!isCharging() && player.axlWeapon != null) {
-				if (player.weapon is AxlBullet && charState.canShoot() && !player.weapon.noAmmo()) {
-					if (shootHeld && shootTime == 0 && player.weapon.altShootTime == 0) {
+				if (player.weapon is AxlBullet && canShoot() && !player.weapon.noAmmo()) {
+					if (shootHeld && shootTime == 0 && player.weapon.altShotCooldown == 0) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player);
-					} else if ((altShootPressed || altShootRecentlyPressed) && shootTime == 0 && player.weapon.altShootTime == 0 && player.weapon.ammo >= 4) {
+					} else if ((altShootPressed || altShootRecentlyPressed) && shootTime == 0 && player.weapon.altShotCooldown == 0 && player.weapon.ammo >= 4) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 					}
 				}
 
 				// Double bullet
-				if (player.weapon is DoubleBullet && charState.canShoot() && !(charState is LadderClimb) && !player.weapon.noAmmo()) {
+				if (player.weapon is DoubleBullet && canShoot() && !(charState is LadderClimb) && !player.weapon.noAmmo()) {
 					if (shootHeld && shootTime == 0) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player);
-						if (bothHeld) player.axlWeapon.shootTime *= 2f;
+						if (bothHeld) player.axlWeapon.shootCooldown *= 2f;
 					}
-					if (bothHeld && player.weapon.altShootTime == 0) {
+					if (bothHeld && player.weapon.altShotCooldown == 0) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
-						if (bothHeld) player.axlWeapon.altShootTime *= 2f;
-					} else if ((altShootPressed || altShootRecentlyPressed) && shootTime == 0 && player.weapon.altShootTime == 0 && player.weapon.ammo >= 4) {
+						if (bothHeld) player.axlWeapon.altShotCooldown *= 2f;
+					} else if ((altShootPressed || altShootRecentlyPressed) && shootTime == 0 && player.weapon.altShotCooldown == 0 && player.weapon.ammo >= 4) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 					}
 				}
 
-				if (player.weapon is BlastLauncher && charState.canShoot() && !(charState is LadderClimb)) {
+				if (player.weapon is BlastLauncher && canShoot() && !(charState is LadderClimb)) {
 					if (shootHeld && shootTime == 0 && player.weapon.ammo >= 1) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player);
 					}
 
 					if (player.axlLoadout.blastLauncherAlt == 0) {
-						if (altShootPressed && shootTime == 0 && player.weapon.altShootTime == 0 && player.weapon.ammo >= 1) {
+						if (altShootPressed && shootTime == 0 && player.weapon.altShotCooldown == 0 && player.weapon.ammo >= 1) {
 							recoilTime = 0.2f;
 							player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 						}
@@ -569,7 +594,7 @@ public class Axl : Character {
 					}
 				}
 
-				if (player.weapon is RayGun && charState.canShoot() && !player.weapon.noAmmo()) {
+				if (player.weapon is RayGun && canShoot() && !player.weapon.noAmmo()) {
 					if (shootHeld && shootTime == 0) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player);
@@ -588,17 +613,17 @@ public class Axl : Character {
 					}
 				}
 
-				if (player.weapon is BlackArrow && charState.canShoot() && !player.weapon.noAmmo()) {
+				if (player.weapon is BlackArrow && canShoot() && !player.weapon.noAmmo()) {
 					if (shootHeld && shootTime == 0) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player);
-					} else if (altShootHeld && shootTime == 0 && player.weapon.altShootTime == 0) {
+					} else if (altShootHeld && shootTime == 0 && player.weapon.altShotCooldown == 0) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 					}
 				}
 
-				if (player.weapon is SpiralMagnum && charState.canShoot()) {
+				if (player.weapon is SpiralMagnum && canShoot()) {
 					if (shootHeld && shootTime == 0) {
 						if (!player.weapon.noAmmo()) {
 							recoilTime = 0.2f;
@@ -606,7 +631,7 @@ public class Axl : Character {
 						}
 					} else {
 						if (player.axlLoadout.spiralMagnumAlt == 0) {
-							if (altShootPressed && player.axlWeapon.ammo > 0 && shootTime == 0 && player.weapon.altShootTime == 0) {
+							if (altShootPressed && player.axlWeapon.ammo > 0 && shootTime == 0 && player.weapon.altShotCooldown == 0) {
 								recoilTime = 0.2f;
 								player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 							}
@@ -622,30 +647,30 @@ public class Axl : Character {
 					}
 				}
 
-				if (player.weapon is BoundBlaster && charState.canShoot() && !player.weapon.noAmmo()) {
+				if (player.weapon is BoundBlaster && canShoot() && !player.weapon.noAmmo()) {
 					if (shootHeld && shootTime == 0) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player);
-					} else if (altShootHeld && shootTime == 0 && player.weapon.altShootTime == 0) {
+					} else if (altShootHeld && shootTime == 0 && player.weapon.altShotCooldown == 0) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 					}
 				}
 
-				if (player.weapon is PlasmaGun && charState.canShoot() && !player.weapon.noAmmo()) {
+				if (player.weapon is PlasmaGun && canShoot() && !player.weapon.noAmmo()) {
 					if (shootHeld && shootTime == 0) {
 						recoilTime = 0.2f;
-						player.axlWeapon.altShootTime = player.axlWeapon.altFireCooldown;
+						player.axlWeapon.altShotCooldown = player.axlWeapon.altFireCooldown;
 						player.axlWeapon.axlShoot(player);
 					} else if (altShootHeld) {
 						if (player.axlLoadout.plasmaGunAlt == 0) {
-							if (player.axlWeapon.altShootTime == 0 && grounded) {
+							if (player.axlWeapon.altShotCooldown == 0 && grounded) {
 								recoilTime = 0.2f;
 								voltTornadoTime = 0.2f;
 								player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 							}
 						} else {
-							if (player.axlWeapon.altShootTime == 0) {
+							if (player.axlWeapon.altShotCooldown == 0) {
 								recoilTime = 0.2f;
 								player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 							}
@@ -654,7 +679,7 @@ public class Axl : Character {
 					}
 				}
 
-				if (player.weapon is IceGattling && charState.canShoot() && !(charState is LadderClimb) && player.weapon.ammo > 0) {
+				if (player.weapon is IceGattling && canShoot() && !(charState is LadderClimb) && player.weapon.ammo > 0) {
 					if (altShootPressed && player.axlLoadout.iceGattlingAlt == 0 && gaeaShield == null) {
 						recoilTime = 0.2f;
 						player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
@@ -675,21 +700,21 @@ public class Axl : Character {
 					}
 				}
 
-				if (player.weapon is FlameBurner && charState.canShoot() && !(charState is LadderClimb) && player.weapon.ammo > 0) {
+				if (player.weapon is FlameBurner && canShoot() && !(charState is LadderClimb) && player.weapon.ammo > 0) {
 					if (shootHeld && shootTime == 0) {
 						recoilTime = 0.05f;
 						player.axlWeapon.axlShoot(player);
 					}
 
 					if (player.axlLoadout.flameBurnerAlt == 0) {
-						if (altShootHeld && shootTime == 0 && player.weapon.altShootTime == 0) {
+						if (altShootHeld && shootTime == 0 && player.weapon.altShotCooldown == 0) {
 							recoilTime = 0.2f;
 							player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
-							player.axlWeapon.shootTime = 0.5f;
+							player.axlWeapon.shootCooldown = 30;
 						}
 					} else {
 						if (altShootHeld) {
-							if (shootTime == 0 && player.weapon.altShootTime == 0) {
+							if (shootTime == 0 && player.weapon.altShotCooldown == 0) {
 								recoilTime = 0.2f;
 								player.axlWeapon.axlShoot(player, AxlBulletType.AltFire);
 							}
@@ -698,7 +723,7 @@ public class Axl : Character {
 				}
 
 				// DNA Core
-				if (player.weapon is DNACore && charState.canShoot()) {
+				if (player.weapon is DNACore && canShoot()) {
 					AxlWeapon? realWeapon = player.weapons[player.weaponSlot] as AxlWeapon;
 					if (realWeapon != null) {
 						if (shootPressed && shootTime == 0) {
@@ -1173,8 +1198,8 @@ public class Axl : Character {
 	public bool isAxlLadderShooting() {
 		if (player.weapon is AssassinBullet) return false;
 		if (recoilTime > 0) return true;
-		bool canShoot = charState.canShoot() && !player.weapon.noAmmo() && player.axlWeapon != null && !player.axlWeapon.isTwoHanded(true) && shootTime == 0;
-		if (player.input.isHeld(Control.Shoot, player) && canShoot) {
+		bool canShootBool = canShoot() && !player.weapon.noAmmo() && player.axlWeapon != null && !player.axlWeapon.isTwoHanded(true) && shootTime == 0;
+		if (player.input.isHeld(Control.Shoot, player) && canShootBool) {
 			return true;
 		}
 		return false;
@@ -1734,7 +1759,7 @@ public class Axl : Character {
 		);
 	}
 
-	public override bool isInvisible() {
+	public bool isInvisible() {
 		return stingChargeTime > 0 && stealthRevealTime == 0;
 	}
 
@@ -1824,6 +1849,35 @@ public class Axl : Character {
 			return true;
 		}*/
 		return invul;
+	}
+
+	public override void onFlagPickup(Flag flag) {
+		stingChargeTime = 0;
+		base.onFlagPickup(flag);
+	}
+
+	public override bool canMove() {
+		// TODO: Move this to axl.cs
+		if (isAimLocked()) {
+			return false;
+		}
+		if (isSoftLocked()) {
+			return false;
+		}
+		return base.canMove();
+	}
+
+	
+	public bool isAimLocked() {
+		if (player.input.isPositionLocked(player) && Options.main.axlAimMode == 0) {
+			return true;
+		}
+		if (Options.main.axlAimMode == 0 && !Options.main.moveInDiagAim && !isDashing &&
+			(grounded || charState is Hover || player.input.isHeld(Control.Shoot, player) || player.input.isHeld(Control.Special1, player)) &&
+			(player.input.isHeld(Control.Up, player) || player.input.isHeld(Control.Down, player))) {
+			return true;
+		}
+		return false;
 	}
 
 	public override List<byte> getCustomActorNetData() {

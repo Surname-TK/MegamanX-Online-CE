@@ -22,7 +22,7 @@ public class TunnelRhino : Maverick {
 		spriteFrameToSounds["tunnelr_run/3"] = "walkStomp";
 		spriteFrameToSounds["tunnelr_run/11"] = "walkStomp";
 
-		awardWeaponId = WeaponIds.TunnelFang;
+		awardWeaponId = WeaponIds.TornadoFang;
 		weakWeaponId = WeaponIds.AcidBurst;
 		weakMaverickWeaponId = WeaponIds.ToxicSeahorse;
 
@@ -117,7 +117,7 @@ public class TunnelRTornadoFang : Projectile {
 	public TunnelRTornadoFang(
 		Weapon weapon, Point pos, int xDir, int type, Player player, ushort netProjId, bool sendRpc = false
 	) : base(
-		weapon, pos, xDir, 100, 1, player, "tunnelr_proj_drillbig", 0, 0.25f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 100, 0.5f, player, "tunnelr_proj_drillbig", 0, 0.25f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 1.5f;
 		projId = (int)ProjIds.TunnelRTornadoFang;
