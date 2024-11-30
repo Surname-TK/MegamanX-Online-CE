@@ -171,6 +171,15 @@ public class X2ChargeShot : CharState {
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
 		mmx = character as MegamanX ?? throw new NullReferenceException();
+		if (oldState is AirDash or UpDash) {
+			if (player.input.isPressed(Control.Jump, player)) {
+				character.isDashing = false;
+				character.vel.y = -character.getJumpPower();
+				if (character.dashedInAir > 0) {
+				 character.dashedInAir--;
+				}
+			}
+		}
 		if (!character.grounded || character.vel.y > 0) {
 			if (type == 0) {
 				sprite = "x2_air_shot";
@@ -281,6 +290,15 @@ public class X3ChargeShot : CharState {
 		mmx = character as MegamanX ?? throw new NullReferenceException();
 		if (mmx == null) {
 			throw new NullReferenceException();
+		}
+		if (oldState is AirDash or UpDash) {
+			if (player.input.isPressed(Control.Jump, player)) {
+				character.isDashing = false;
+				character.vel.y = -character.getJumpPower();
+				if (character.dashedInAir > 0) {
+				 character.dashedInAir--;
+				}
+			}
 		}
 		if (!mmx.stockedX3Charge) {
 			sprite = "x3_shot";

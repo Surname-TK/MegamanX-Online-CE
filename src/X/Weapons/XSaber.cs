@@ -36,10 +36,10 @@ public class X3SaberProj : Projectile {
 	}
 }
 
-public class XSaberState : CharState {
+public class X3SaberState : CharState {
 	bool fired;
 	bool grounded;
-	public XSaberState(bool grounded) : base(grounded ? "beam_saber" : "beam_saber_air", "", "", "") {
+	public X3SaberState(bool grounded) : base(grounded ? "beam_saber" : "beam_saber_air", "", "", "") {
 		this.grounded = grounded;
 		landSprite = "beam_saber";
 		airMove = true;
@@ -59,6 +59,18 @@ public class XSaberState : CharState {
 
 		if (character.isAnimOver()) {
 			character.changeToIdleOrFall();
+		}
+	}
+	public override void onEnter(CharState oldState) {
+		base.onEnter(oldState);
+		if (oldState is AirDash or UpDash) {
+			if (player.input.isPressed(Control.Jump, player)) {
+				character.isDashing = false;
+				character.vel.y = -character.getJumpPower();
+				if (character.dashedInAir > 0) {
+				 character.dashedInAir--;
+				}
+			}
 		}
 	}
 }

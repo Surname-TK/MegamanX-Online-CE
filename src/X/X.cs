@@ -654,7 +654,7 @@ public partial class MegamanX : Character {
 		if (stockedX3Saber && !stockedX3Charge) {
 			if (xSaberCooldown == 0) {
 				stockX3Saber(false);
-				changeState(new XSaberState(grounded), true);
+				changeState(new X3SaberState(grounded), true);
 			}
 			return;
 		}
