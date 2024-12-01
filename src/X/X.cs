@@ -770,7 +770,7 @@ public partial class MegamanX : Character {
 		//if (!updatedStock) stockX2Charge(false);
 
 		//Max Buster.
-		if (chargeLevel >= 3 && player.weapon is XBuster) {
+		if (chargeLevel >= 4 && player.weapon is XBuster) {
 			shootCooldown = 0;
 			if (player.hasGoldenArmor()) {
 				stockX3Saber(true);
@@ -834,14 +834,14 @@ public partial class MegamanX : Character {
 			stockX2Charge(true);
 		} else if (type == 1) {
 			new Buster3Proj(
-				player.weapon, getShootPos(), getShootXDir(), 0,
+				player.weapon, getShootPos(), getShootXDir(), type,
 				player, player.getNextActorNetId(), rpc: true
 			);
 			playSound("buster4X2", sendRpc: true);
 			stockX2Charge(true);
 		} else if (type == 2) {
 			new Buster3Proj(
-				player.weapon, getShootPos(), getShootXDir(), 0,
+				player.weapon, getShootPos(), getShootXDir(), type,
 				player, player.getNextActorNetId(), rpc: true
 			);
 			playSound("buster4X2", sendRpc: true);
@@ -859,34 +859,37 @@ public partial class MegamanX : Character {
 	public void maxArmorChargeShots(int type, HyperCharge hcWep) {
 		Point shootPos = getShootPos();
 		int shootDir = getShootXDir();
-
-
+		if (hcWep != null) {
+			hcWep.ammo -= hcWep.getChipFactoredAmmoUsage(player);
+		}
 		if (type == 0) {
 			new BusterX3Proj1(
 				player.weapon, shootPos, shootDir,
 				0, player, player.getNextActorNetId(), rpc: true
 			);
-			if (!(player.weapon is HyperCharge)) {
-				playSound("buster3X3", sendRpc: true);
-			}
-			stockedX3Charge = true;
-		} else if (type == 1) {
 			playSound("buster3X3", sendRpc: true);
-			new Buster3Proj(
-				player.weapon, shootPos, shootDir, 0,
+			stockLv1Charge(true);
+		} else if (type == 1) {
+			new BusterX3Proj1(
+				player.weapon, shootPos, shootDir,
+				0, player, player.getNextActorNetId(), rpc: true
+			);
+			playSound("buster3X3", sendRpc: true);
+			stockX3Charge(true);
+		} else if (type == 2) {
+			new Buster2Proj(
+				player.weapon, shootPos, shootDir,
 				player, player.getNextActorNetId(), rpc: true
 			);
-			stockedLv1Charge = false;
-		} else if (type == 2) {
-			if (hcWep != null) {
-				hcWep.ammo -= hcWep.getChipFactoredAmmoUsage(player);
-			}
 			playSound("buster3X3", sendRpc: true);
+			stockLv1Charge(false);
+		} else if (type == 3) {
 			new Buster3Proj(
 				player.weapon, shootPos, shootDir,
 				0, player, player.getNextActorNetId(), rpc: true
 			);
-			stockedX3Charge = false;
+			playSound("buster3X3", sendRpc: true);
+			stockX3Charge(false);
 		}
 	}
 

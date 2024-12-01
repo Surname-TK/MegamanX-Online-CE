@@ -20,11 +20,11 @@ public class BlackArrow : AxlWeapon {
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel == 3) {
 			if (altFire == 1) {
-				return 3;
+				return 1.5f;
 			}
-			return 2;
+			return 1;
 		}
-		return 1;
+		return 0.5f;
 	}
 
 	public override float whiteAxlFireRateMod() {
@@ -63,7 +63,7 @@ public class BlackArrowProj : Projectile {
 	public List<Point> lastPoses = new List<Point>();
 
 	public BlackArrowProj(Weapon weapon, Point pos, Player player, Point bulletDir, int type, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, 1, 450, 1, player, "blackarrow_proj", 0, 0f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, 1, 450, 0.5f, player, "blackarrow_proj", 0, 0f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 0.75f;
 		vel.x = bulletDir.x * speed;
 		vel.y = bulletDir.y * speed;
