@@ -136,9 +136,9 @@ public class X2ChargeShot : CharState {
 			} */
 		}
 		if (character.isAnimOver()) {
-			if (type == 0 && pressFire) {
+			if ((type == 0 || type == 1) && pressFire) {
 				fired = false;
-				type = 1;
+				type = 2;
 				Global.serverClient?.rpc(RPC.playerToggle, (byte)player.id, (int)RPCToggleType.UnstockX2Charge);
 				sprite = "x2_shot2";
 				defaultSprite = sprite;
@@ -158,7 +158,7 @@ public class X2ChargeShot : CharState {
 			}
 			if (character.grounded && player.input.isPressed(Control.Jump, player)) {
 				character.vel.y = -character.getJumpPower();
-				if (type == 0) {
+				if (type == 0 || type == 1) {
 					sprite = "x2_air_shot";
 				} else {
 					sprite = "x2_air_shot2";
@@ -181,7 +181,7 @@ public class X2ChargeShot : CharState {
 			}
 		}
 		if (!character.grounded || character.vel.y > 0) {
-			if (type == 0) {
+			if (type == 0 || type == 1) {
 				sprite = "x2_air_shot";
 			} else {
 				sprite = "x2_air_shot2";
@@ -245,15 +245,18 @@ public class X3ChargeShot : CharState {
 			} */
 		}
 		if (character.isAnimOver()) {
-			if (state == 0 && pressFire) {
-				if (hyperBusterWeapon != null) {
+			if ((state == 0 || state == 1) && pressFire) {
+				fired = false;
+				state = mmx.stockedLv1Charge ? 2 : 3;
+				/*if (hyperBusterWeapon != null) {
 					if (hyperBusterWeapon.ammo < hyperBusterWeapon.getChipFactoredAmmoUsage(player)) {
 						character.changeToIdleOrFall();
 						return;
 					}
 				} else {
 					mmx.stockedX3Charge = false;
-				}
+					mmx.stockedLv1Charge = false;
+				}*/
 				sprite = "x3_shot2";
 				landSprite = "x3_shot2";
 				if (!character.grounded || character.vel.y < 0) {
@@ -262,8 +265,6 @@ public class X3ChargeShot : CharState {
 				}
 				defaultSprite = sprite;
 				character.changeSpriteFromName(sprite, true);
-				state = 1;
-				fired = false;
 			} else {
 				character.changeToIdleOrFall();
 			}
@@ -273,7 +274,7 @@ public class X3ChargeShot : CharState {
 			}
 			if (character.grounded && player.input.isPressed(Control.Jump, player)) {
 				character.vel.y = -character.getJumpPower();
-				if (state == 0) {
+				if (state == 0 || state == 1) {
 					sprite = "x2_air_shot";
 					defaultSprite = sprite;
 				} else {
@@ -300,7 +301,7 @@ public class X3ChargeShot : CharState {
 				}
 			}
 		}
-		if (!mmx.stockedX3Charge) {
+		if (state == 0 || state == 1) {
 			sprite = "x3_shot";
 			defaultSprite = sprite;
 			landSprite = "x3_shot";
@@ -309,8 +310,7 @@ public class X3ChargeShot : CharState {
 			}
 			character.changeSpriteFromName(sprite, true);
 		} else {
-			mmx.stockedX3Charge = false;
-			state = 1;
+			state = mmx.stockedLv1Charge ? 2 : 3;
 			sprite = "x3_shot2";
 			defaultSprite = sprite;
 			landSprite = "x3_shot2";
@@ -322,11 +322,6 @@ public class X3ChargeShot : CharState {
 	}
 
 	public override void onExit(CharState newState) {
-		if (state == 0) {
-			mmx.stockedX3Charge = true;
-		} else {
-			mmx.stockedX3Charge = false;
-		}
 		character.shootAnimTime = 0;
 		base.onExit(newState);
 	}

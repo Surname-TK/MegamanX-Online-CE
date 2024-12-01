@@ -135,11 +135,11 @@ public class Buster3Proj : Projectile {
 		// Big fat mess lol
 		if (player.hasArmArmor(ArmorId.Giga)) {
 			changeSprite("buster3_x2", true);
-			if (Charge > 2){
-					projId = (int)ProjIds.Buster4;
-					damager.flinch = Global.defFlinch;
-					reflectable = false;
-			} else if (mmx.stockedX2Charge == true) {
+			if (type == 1){
+				projId = (int)ProjIds.Buster4;
+				damager.flinch = Global.defFlinch;
+				reflectable = false;
+			} else if (type == 2) {
 				changeSprite("buster4_x2", true);
 				fadeSprite = "buster4_x2_fade";
 				projId = (int)ProjIds.Buster4;
@@ -158,7 +158,7 @@ public class Buster3Proj : Projectile {
 		}
 
 		// Cross Shot Finale
-		if (type == 1) {
+		if (type == 3) {
 			damager.damage = 4;
 			damager.flinch = Global.defFlinch;
 			changeSprite("buster4_x3", true);
@@ -181,7 +181,7 @@ public class Buster3Proj : Projectile {
 						Global.level.delayedActions.Add(new DelayedAction(delegate { 
 						if (!owner.hasUltimateArmor()) {
 							new Buster3Proj(
-								weapon, pos, xDir, 1, owner, owner.getNextActorNetId(), rpc: true
+								weapon, pos, xDir, 3, owner, owner.getNextActorNetId(), rpc: true
 							);
 						} else {
 							new BusterPlasmaProj(

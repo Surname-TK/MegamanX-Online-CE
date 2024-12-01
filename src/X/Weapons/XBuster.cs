@@ -146,12 +146,12 @@ public class XBuster : Weapon {
 			if (player.ownedByLocalPlayer) {
 				if (mmx.hasUltimateArmor && !mmx.stockedX2Charge) {
 					if (mmx.charState is not WallSlide) {
-						mmx.changeState(new X2ChargeShot(2), true);
+						mmx.changeState(new X2ChargeShot(3), true);
 					} else {
-						mmx.gigaArmorChargeShots(2);
+						mmx.gigaArmorChargeShots(3);
 					}
 				} else {
-					int type = mmx.stockedX2Charge ? 1 : 0;
+					int type = mmx.stockedX2Charge ? 2 : 0;
 
 					if (character.charState is not WallSlide) {
 						mmx.shootCooldown = 0;
@@ -194,14 +194,11 @@ public class XBuster : Weapon {
 		string sound = "";
 
 		if (mmx.stockedX3Charge || mmx.stockedX2Charge || mmx.stockedLv1Charge) {
+			int type = mmx.stockedLv1Charge ? 2 : 3;
 			if (mmx.charState is not WallSlide) {
-				mmx.changeState(new X3ChargeShot(null) {state = 1}, true);
+				mmx.changeState(new X3ChargeShot(null) {state = type}, true);
 			} else {
-				if (mmx.stockedLv1Charge) {
-					mmx.maxArmorChargeShots(1, null);
-				} else {
-					mmx.maxArmorChargeShots(2, null);
-				}
+				mmx.maxArmorChargeShots(type, null);
 			}
 			
 		} else if (chargeLevel == 0) {
@@ -213,25 +210,25 @@ public class XBuster : Weapon {
 		} else if (chargeLevel == 2) {
 			new Buster3Proj(this, pos, xDir, 0, player, player.getNextActorNetId(), true);
 			sound = "buster3";
-		} else if (chargeLevel >= 3) {
+		} else if (chargeLevel == 3) {
 			if (player.ownedByLocalPlayer) {
 				if (character.charState is not WallSlide) {
-					character.changeState(new X3ChargeShot(null), true);
+					character.changeState(new X3ChargeShot(null) {state = 0}, true);
 					mmx.shootCooldown = 0;
 				} else {
 					mmx.maxArmorChargeShots(0, null);
 				}
 			}
-		} /*else if (chargeLevel == 4) {
+		} else if (chargeLevel >= 4) {
 			if (player.ownedByLocalPlayer) {
 				if (character.charState is not WallSlide) {
-					character.changeState(new X3ChargeShot(null), true);
+					character.changeState(new X3ChargeShot(null) {state = 1}, true);
 					mmx.shootCooldown = 0;
 				} else {
-					mmx.maxArmorChargeShots(0, null);
+					mmx.maxArmorChargeShots(1, null);
 				}
 			}
-		}*/
+		}
 
 		if (!string.IsNullOrEmpty(sound)) character.playSound(sound, sendRpc: true);
 	}
