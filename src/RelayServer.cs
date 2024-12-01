@@ -195,7 +195,7 @@ public class RelayServer {
 		Server requestServer = JsonConvert.DeserializeObject<Server>(requestServerJson);
 		Server server = Server.servers.Keys.Where((Server s) => s.name == requestServer.name).FirstOrDefault();
 		if (Helpers.compareVersions(requestServer.gameVersion, Global.version) == -1) {
-			client.SendStringMessage("CreateServer:fail:Outdated game version (update to v" + Global.version + ")", networkStream);
+			client.SendStringMessage("CreateServer:fail:Outdated game version (update to B" + Global.version + Global.subVersionShortName + ")", networkStream);
 		} else if (Server.servers.Count >= 5) {
 			client.SendStringMessage("CreateServer:fail:Too many concurrent servers (max " + Server.servers.Count + ")", networkStream);
 		} else if (server == null) {
