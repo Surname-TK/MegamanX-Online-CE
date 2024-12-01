@@ -2046,7 +2046,7 @@ public class GameMode {
 			if (mainPlayer.character != null && !mainPlayer.character.destroyed) {
 				mmx = mainPlayer.character as MegamanX ?? throw new NullReferenceException();
 			}
-			if (weapon is Weapon wp){
+			if (weapon is Weapon wp && selected){
 				drawWeaponSlotCooldown(x, y, mmx.shootCooldown / wp.fireRate);
 			}/*
 

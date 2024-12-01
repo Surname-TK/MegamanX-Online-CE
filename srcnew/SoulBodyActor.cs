@@ -32,7 +32,7 @@ public class SoulBodyClone : MegamanX {
 
 		player.clearXWeapons();
 		player.weapons.Clear();
-		player.weapons.Add(new Buster());
+		player.weapons.Add(new XBuster());
 		player.changeWeaponSlot(0);
 	}
 
@@ -93,7 +93,7 @@ public class SoulBodyClone : MegamanX {
 		) {
 			index = 0;
 		}
-		if (index == (int)WeaponIds.HyperBuster && ownedByLocalPlayer) {
+		if (index == (int)WeaponIds.HyperCharge && ownedByLocalPlayer) {
 			index = player.weapons[player.hyperChargeSlot].index;
 		}
 		if (player.hasGoldenArmor()) {

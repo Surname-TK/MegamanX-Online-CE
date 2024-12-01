@@ -111,13 +111,12 @@ public partial class MegamanX : Character {
 		player, x, y, xDir, isVisible, netId, ownedByLocalPlayer, isWarpIn
 	) {
 		charId = CharIds.X;
-		specialBuster = new Buster();
+		specialBuster = new XBuster();
 
 		forceStocksChargeTimes[0] = charge1Time;
 		forceStocksChargeTimes[1] = charge2Time;
 		forceStocksChargeTimes[2] = charge3Time;
 		forceStocksChargeTimes[3] = charge4Time;
-		specialBuster = new XBuster();
 	}
 
 	public bool canShootSpecialBuster() {
@@ -227,7 +226,7 @@ public partial class MegamanX : Character {
 		} 
 
 		if (lastShotWasSpecialBuster) chargeLogic(specialShoot);
-		else if (player.hasArmArmor(ArmorId.Force) && player.weapon is Buster) chargeLogic(baitFunction);
+		else if (player.hasArmArmor(ArmorId.Force) && player.weapon is XBuster) chargeLogic(baitFunction);
 		else chargeLogic(shoot);
 
 		if (beeSwarm != null) {
@@ -761,7 +760,7 @@ public partial class MegamanX : Character {
 		if (chargeLevel >= 3 && player.hasArmArmor(2)) {
 			if (player.weapon is XBuster && !stockedX2Charge) {
 				shootCooldown = hasUltimateArmor ? 0 : 0;
-			} else if (player.weapon is not Buster) {
+			} else if (player.weapon is not XBuster) {
 				shootCooldown = 0;
 				stockX2Charge(!stockedX2Charge);
 			}
@@ -1543,6 +1542,7 @@ public partial class MegamanX : Character {
 
 	public override bool chargeButtonHeld() {
 		if (isSpecialBuster() && player.input.isHeld(Control.Special1, player)) {
+			lastShotWasSpecialBuster = true;
 			return true;
 		}
 		return player.input.isHeld(Control.Shoot, player);
@@ -1568,7 +1568,8 @@ public partial class MegamanX : Character {
 			index == (int)WeaponIds.ItemTracer ||
 			index == (int)WeaponIds.AssassinBullet ||
 			index == (int)WeaponIds.Undisguise ||
-			index == (int)WeaponIds.UPParry
+			index == (int)WeaponIds.UPParry ||
+			index == (int)WeaponIds.ForceNovaStrike
 		) {
 			index = 0;
 		}

@@ -8,7 +8,7 @@ public class RisingFire : Weapon {
 
 	public RisingFire() {
 		shootSounds = new string[] { "ryuenjin", "ryuenjin", "ryuenjin", "ryuenjin" };
-		fireRateFrames = 45;
+		fireRate = 45;
 		index = (int)WeaponIds.RisingFire;
 		weaponBarIndex = 64;
 		weaponBarBaseIndex = 75;
@@ -16,6 +16,11 @@ public class RisingFire : Weapon {
 		killFeedIndex = 183;
 		weaknessIndex = (int)WeaponIds.DoubleCyclone;
 		hasCustomAnim = true;
+		/* damage = "2+1-1/2+1-1";
+		hitcooldown = "0.5";
+		Flinch = "0/13-26";
+		FlinchCD = hitcooldown;
+		effect = "Burns upper enemies. C: Resets airdashes count."; */
 	}
 
 	public override void shoot(Character character, int[] args) {
@@ -94,6 +99,7 @@ public class RisingFireProj : Projectile {
 		shouldVortexSuck = false;
 		destroyOnHit = false;
 		vel.y = -275;
+		
 		
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}
@@ -237,7 +243,7 @@ public class RisingFireProjCharged : Projectile {
 		Weapon weapon, Point pos, int xDir, 
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 0f, 4f, player, "risingfire_proj_charged", 
+		weapon, pos, xDir, 0, 2, player, "risingfire_proj_charged", 
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 0.6f;

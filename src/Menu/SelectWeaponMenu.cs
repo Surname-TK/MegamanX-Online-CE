@@ -347,7 +347,7 @@ public class SelectWeaponMenu : IMainMenu {
 			//Global.sprites["hud_weapon_icon"].drawToHUD(weapon.weaponSlotIndex, Global.halfScreenW + 75, 148);
 			Fonts.drawText(FontType.Green, "Counters: ", 89, wsy - 17, Alignment.Right);
 			if (strongAgainstIndex > 0) {
-				Global.sprites["hud_weapon_icon"].drawToHUD(strongAgainstIndex, 92, wsy - 13);
+				Global.sprites["hud_loadoutmenu_icons"].drawToHUD(strongAgainstIndex, 92, wsy - 13);
 			} else {
 				Fonts.drawText(FontType.Grey, "None", 89, wsy - 17);
 			}
@@ -359,7 +359,7 @@ public class SelectWeaponMenu : IMainMenu {
 			}
 			Fonts.drawText(FontType.Green, "Weakness: ", 89, wsy, Alignment.Right);
 			if (weakAgainstIndex > 0) {
-				Global.sprites["hud_weapon_icon"].drawToHUD(weakAgainstIndex, 89, wsy + 4);
+				Global.sprites["hud_loadoutmenu_icons"].drawToHUD(weakAgainstIndex, 92, wsy + 4);
 			} else {
 				Fonts.drawText(FontType.Grey, "None", 89, wsy);
 			}

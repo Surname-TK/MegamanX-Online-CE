@@ -360,6 +360,11 @@ public class Damager {
 				case (int)ProjIds.SpeedBurner:
 					character.addBurnTime(owner, new SpeedBurner(null), 1);
 					break;
+				case (int)ProjIds.RisingFire:
+				case (int)ProjIds.RisingFireChargedStart:
+				case (int)ProjIds.RisingFireCharged:
+					character.addBurnTime(owner, new RisingFire(), 1);
+					break;
 				case (int)ProjIds.Napalm2Wall:
 				case (int)ProjIds.Napalm2:
 					character.addBurnTime(owner, new Napalm(NapalmType.FireGrenade), 1); ;

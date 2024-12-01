@@ -18,7 +18,7 @@ public class BlastLauncher : AxlWeapon {
 		sprite = "axl_arm_blastlauncher";
 		flashSprite = "axl_pistol_flash_charged";
 		chargedFlashSprite = "axl_pistol_flash_charged";
-		altFireCooldown = 1.5f;
+		altFireCooldown = 90;
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {

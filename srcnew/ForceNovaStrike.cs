@@ -7,7 +7,7 @@ public class ForceNovaStrike : Weapon {
 
 	public ForceNovaStrike(Player player) {
 		damager = new Damager(player, 3f, 13, 0.5f);
-		fireRateFrames = 90;
+		fireRate = 90;
 		index = (int)WeaponIds.ForceNovaStrike;
 		weaponBarBaseIndex = 42;
 		weaponBarIndex = 36;

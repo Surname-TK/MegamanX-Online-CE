@@ -11,12 +11,17 @@ public class AimingLaser : Weapon {
 
 	public AimingLaser() : base() {
 		index = (int)WeaponIds.AimingLaser;
-		fireRateFrames = 60;
+		fireRate = 60;
 		weaponSlotIndex = 128;
         weaponBarBaseIndex = 77;
         weaponBarIndex = 66;
 		shootSounds = new string[] {"","","",""};
 		weaknessIndex = (int)WeaponIds.SoulBody;
+		/* damage = "1";
+		hitcooldown = "0.3";
+		Flinch = "0";
+		FlinchCD = "0";
+		effect = "Focuses scanned enemies."; */
 	}
 
 	public override bool canShoot(int chargeLevel, Player player) {
@@ -29,7 +34,7 @@ public class AimingLaser : Weapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 0;
-		return 8;
+		return base.getAmmoUsage(chargeLevel);
 	}
 	
 	public override void shoot(Character character, int[] args) {
@@ -248,7 +253,7 @@ public class AimingLaserProj : Projectile {
 
 	public override void update() {
 		base.update();
-		if (!ownedByLocalPlayer || target.destroyed || target == null) return;
+		if (!ownedByLocalPlayer || target == null) return;
 
 		if (target.charState is Die) mmx.aLaserTargets.Remove(target);
 	}
@@ -314,6 +319,7 @@ public class AimingLaserProj : Projectile {
 
 	public override void render(float x, float y) {
 		base.render(x,y);
+		if (destroyed) return;
 		
 		var colors = new List<Color>()
 		{

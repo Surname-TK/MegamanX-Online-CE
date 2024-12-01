@@ -1926,7 +1926,7 @@ public partial class Player {
 		if (character is MegamanX) {
 			if (hasHelmetArmor(ArmorId.Force)) {
 				foreach (Weapon weapon in weapons) {
-					if (weapon is HyperBuster || weapon is GigaCrush ||
+					if (weapon is HyperCharge || weapon is GigaCrush ||
 						weapon is ForceNovaStrike || weapon is NovaStrike
 					) {
 						continue;

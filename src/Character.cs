@@ -1730,7 +1730,7 @@ public partial class Character : Actor, IDamagable {
 			return getCenterPos();
 		}
 		var busterOffset = (Point)busterOffsetPos;
-		if (player.isX && player.armArmorNum == 3 && sprite.needsX3BusterCorrection()) {
+		if (player.isX && player.armArmorNum == 3 && sprite.needsBusterCorrection()) {
 			if (busterOffset.x > 0) busterOffset.x += 4;
 			else if (busterOffset.x < 0) busterOffset.x -= 4;
 		}
@@ -2731,6 +2731,18 @@ public partial class Character : Actor, IDamagable {
 						Weapon.gigaAttackSoundLogic(
 							this, currentAmmo, novaStrike.ammo,
 							novaStrike.getAmmoUsage(0), novaStrike.maxAmmo
+						);
+					}
+				}
+
+				var forceNovaStrike = player.weapons.FirstOrDefault(w => w is ForceNovaStrike);
+				if (forceNovaStrike != null) {
+					float currentAmmo = forceNovaStrike.ammo;
+					forceNovaStrike.addAmmo(gigaAmmoToAdd, player);
+					if (player.isMainPlayer) {
+						Weapon.gigaAttackSoundLogic(
+							this, currentAmmo, forceNovaStrike.ammo,
+							forceNovaStrike.getAmmoUsage(0), forceNovaStrike.maxAmmo
 						);
 					}
 				}

@@ -8,7 +8,7 @@ public class PlasmaGun : AxlWeapon {
 	public PlasmaGun(int altFire) : base(altFire) {
 		shootSounds = new string[] { "plasmaGun", "plasmaGun", "plasmaGun", "plasmaGun" };
 		fireRate = 90;
-		altFireCooldown = 2f;
+		altFireCooldown = 120;
 		index = (int)WeaponIds.PlasmaGun;
 		weaponBarBaseIndex = 36;
 		weaponSlotIndex = 56;
@@ -16,7 +16,7 @@ public class PlasmaGun : AxlWeapon {
 		sprite = "axl_arm_plasmagun";
 
 		if (altFire == 1) {
-			altFireCooldown = 0.1f;
+			altFireCooldown = 6;
 			shootSounds[3] = "";
 		}
 	}

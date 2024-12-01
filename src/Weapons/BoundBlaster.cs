@@ -16,7 +16,7 @@ public class BoundBlaster : AxlWeapon {
 		sprite = "axl_arm_boundblaster";
 		flashSprite = "axl_pistol_flash";
 		chargedFlashSprite = "axl_pistol_flash_charged";
-		altFireCooldown = 2;
+		altFireCooldown = 120;
 
 		if (altFire == 1) {
 			shootSounds[3] = "boundBlaster";

@@ -75,18 +75,6 @@ public class X3SaberState : CharState {
 			character.changeToIdleOrFall();
 		}
 	}
-	public override void onEnter(CharState oldState) {
-		base.onEnter(oldState);
-		if (oldState is AirDash or UpDash) {
-			if (player.input.isPressed(Control.Jump, player)) {
-				character.isDashing = false;
-				character.vel.y = -character.getJumpPower();
-				if (character.dashedInAir > 0) {
-				 character.dashedInAir--;
-				}
-			}
-		}
-	}
 }
 
 public class X6SaberState : CharState {

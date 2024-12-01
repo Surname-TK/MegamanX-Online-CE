@@ -9,7 +9,7 @@ public class FrostTower : Weapon {
 	public FrostTower()
 	{
 		shootSounds = new string[] { "frostTower", "frostTower", "frostTower", "" };
-		fireRateFrames = 90;
+		fireRate = 90;
 		switchCooldownFrames = 21;
 		index = (int)WeaponIds.FrostTower;
 		weaponBarIndex = 62;
@@ -18,6 +18,11 @@ public class FrostTower : Weapon {
 		killFeedIndex = 184;
 		weaknessIndex = (int)WeaponIds.RisingFire;
 		hasCustomAnim = true;
+		/* damage = "1-2/3";
+		hitcooldown = "0.75/0.5";
+		Flinch = "0-13/26";
+		FlinchCD = hitcooldown;
+		effect = "Blocks projectiles. C: Summons huge icicles that drop from above."; */
 	}
 
 	public override void shoot(Character character, int[] args) {
@@ -200,7 +205,7 @@ public class FrostTowerProjCharged : Projectile {
 		weapon, pos, xDir, 0, 3, player, "frosttowercharged_proj", 
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
-		maxTime = 3f;
+		maxTime = 2f;
 		projId = (int)ProjIds.FrostTowerCharged;
 		isShield = true;
 		
@@ -222,9 +227,9 @@ public class FrostTowerProjCharged : Projectile {
 	public override void onHitWall(CollideData other) {
 		base.onHitWall(other);
 
-		if (other.isCeilingHit()) return;
+		/* if (other.isCeilingHit()) return;
 		else if (other.isSideWallHit()) return;
-		else if (other.isGroundHit()) destroySelf();
+		else if (other.isGroundHit()) destroySelf(); */
 	}
 
 	public override void onHitDamagable(IDamagable damagable) {

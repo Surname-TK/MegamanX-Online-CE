@@ -9,13 +9,18 @@ public class SoulBody : Weapon {
 	public static SoulBody netWeapon = new();
 	public SoulBody() : base() {
 		index = (int)WeaponIds.SoulBody;
-		fireRateFrames = 90;
+		fireRate = 90;
 		weaponSlotIndex = 125;
         weaponBarBaseIndex = 74;
         weaponBarIndex = 63;
 		shootSounds = new string[] {"","","",""};
 		weaknessIndex = (int)WeaponIds.LightningWeb;
 		hasCustomAnim = true;
+		/* damage = "1/3";
+		hitcooldown = "0.5/0.75";
+		Flinch = "0/13";
+		FlinchCD = hitcooldown;
+		effect = "Deals damage on contact. C: Spawns 5 holograms that track enemies."; */
 	}
 
 	public override bool canShoot(int chargeLevel, Player player) {

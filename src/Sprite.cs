@@ -282,7 +282,7 @@ public class Sprite {
 		}
 
 		if (!isUltX && armors != null && animData.isXSprite) {
-			bool isShootSprite = needsX3BusterCorrection();
+			bool isShootSprite = needsBusterCorrection();
 
 			if (isShootSprite) {
 				if (name.Contains("mmx_wall_slide_shoot")) {
@@ -290,7 +290,7 @@ public class Sprite {
 					extraW = flippedExtraW;
 					extraXOff = -flippedExtraW * flipX;
 				} else {
-					extraW = 5;
+					extraW = 4;
 				}
 			}
 			if (armors[2] == 2) {
@@ -494,9 +494,10 @@ public class Sprite {
 		}
 	}
 
-	public bool needsX3BusterCorrection() {
-		return name.Contains("mmx_shoot") || name.Contains("mmx_run_shoot") || name.Contains("mmx_fall_shoot") || name.Contains("mmx_jump_shoot") || name.Contains("mmx_dash_shoot") || name.Contains("mmx_ladder_shoot")
-			|| name.Contains("mmx_wall_slide_shoot") || name.Contains("mmx_up_dash_shoot") || name.Contains("mmx_wall_kick_shoot");
+	public bool needsBusterCorrection() {
+		/* return name.Contains("mmx_shoot") || name.Contains("mmx_run_shoot") || name.Contains("mmx_fall_shoot") || name.Contains("mmx_jump_shoot") || name.Contains("mmx_dash_shoot") || name.Contains("mmx_ladder_shoot")
+			|| name.Contains("mmx_wall_slide_shoot") || name.Contains("mmx_up_dash_shoot") || name.Contains("mmx_wall_kick_shoot"); */
+			return name.Contains("mmx") && name.Contains("shoot");
 	}
 
 	public Frame getCurrentFrame(int frameIndex = -1) {

@@ -15,8 +15,13 @@ public class TwinSlasher : Weapon {
 		weaponSlotIndex = 130;
 		weaknessIndex = (int)WeaponIds.GroundHunter;
 		shootSounds = new string[] { "twinSlasher", "twinSlasher", "twinSlasher", "twinSlasherCharged" };
-		fireRateFrames = 15;
+		fireRate = 15;
 		switchCooldownFrames = 9;
+		/* damage = "1";
+		hitcooldown = "0.5";
+		Flinch = "0/26";
+		FlinchCD = hitcooldown;
+		effect = "Pierces enemies."; */
 	}
 
 	public override void shoot(Character character, int[] args) {

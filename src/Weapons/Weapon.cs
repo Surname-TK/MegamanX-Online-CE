@@ -89,7 +89,7 @@ public class Weapon {
 	public static List<Weapon> getAllSwitchableWeapons(AxlLoadout axlLoadout) {
 		var weaponList = new List<Weapon>() {
 			new GigaCrush(),
-			new HyperBuster(),
+			new HyperCharge(),
 			new ForceNovaStrike(null!),
 			new NovaStrike(null),
 			new DoubleBullet(),
@@ -189,7 +189,7 @@ public class Weapon {
 	public static List<Weapon> getAllX4Weapons() {
 		return new List<Weapon>()
 		{
-				new Buster(),
+				new XBuster(),
 				new LightningWeb(),
 				new FrostTower(),
 				new SoulBody(),

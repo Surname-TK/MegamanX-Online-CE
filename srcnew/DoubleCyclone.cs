@@ -9,13 +9,18 @@ public class DoubleCyclone : Weapon {
 
 	public DoubleCyclone() : base() {
 		index = (int)WeaponIds.DoubleCyclone;
-		fireRateFrames = 60;
+		fireRate = 60;
 		weaponSlotIndex = 129;
 		weaponBarBaseIndex = 78;
         weaponBarIndex = 67;
 		shootSounds = new string[] {"","","",""};
 		weaknessIndex = (int)WeaponIds.AimingLaser;
 		hasCustomAnim = true;
+		/* damage = "1";
+		hitcooldown = "0.33";
+		Flinch = "0";
+		FlinchCD = hitcooldown;
+		effect = "Pushes enemies away."; */
 	}
 
 	public override void shoot(Character character, int[] args) {

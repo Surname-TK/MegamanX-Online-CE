@@ -8,7 +8,7 @@ public class LightningWeb : Weapon {
 	public LightningWeb()
 	{
 		shootSounds = new string[] { "lightningWeb", "lightningWeb", "lightningWeb", "lightningWeb" };
-		fireRateFrames = 45;
+		fireRate = 45;
 		index = (int)WeaponIds.LightningWeb;
 		weaponBarBaseIndex = 72;
 		weaponBarIndex = 61;
@@ -16,6 +16,11 @@ public class LightningWeb : Weapon {
 		//killFeedIndex = 181;
 		switchCooldownFrames = 9;
 		weaknessIndex = (int)WeaponIds.TwinSlasher;
+		/* damage = "1/1";
+		hitcooldown = "0.75";
+		Flinch = "6/26";
+		FlinchCD = hitcooldown;
+		effect = "Can be used as a wall. C: Creates a network of nine webs."; */
 	}
 
 	public override void shoot(Character character, int[] args) {
@@ -175,7 +180,7 @@ public class LightningWebProjWebCharged : Projectile {
 		weapon, pos, xDir, 0f, 1f, player, "lightningweb_proj_charged", 
 		Global.defFlinch, 0.75f, netProjId, player.ownedByLocalPlayer
 	) {
-		maxTime = type == 0 ? 3f : 2f;
+		maxTime = type == 0 ? 2 : 1;
 		projId = (int)ProjIds.LightningWebCharged;
 		fadeSprite = "lightningweb_proj_chargedexausth";
 		fadeOnAutoDestroy = true;
@@ -222,7 +227,7 @@ public class LightningWebProjWebCharged : Projectile {
 				}
 			}
 		} else {
-			if (moveTime < 16 || time >= maxTime - (Global.spf * 20)) {
+			if (moveTime < 12/*  || time >= maxTime - (Global.spf * 20) */) {
 				move(Point.createFromByteAngle((type - 1) * 32) * 240);
 			}
 			moveTime++;

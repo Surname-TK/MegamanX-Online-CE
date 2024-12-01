@@ -23,7 +23,7 @@ public class BusterStockProj : Projectile {
 
 	public static Projectile rpcInvoke(ProjParameters arg) {
 		return new BusterStockProj(
-			Buster.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
+			XBuster.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
 		);
 	}
 }
@@ -54,7 +54,7 @@ public class BusterForcePlasmaProj : Projectile {
 
 	public static Projectile rpcInvoke(ProjParameters arg) {
 		return new BusterForcePlasmaProj(
-			Buster.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
+			XBuster.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
 		);
 	}
 }
@@ -221,7 +221,7 @@ public class BusterForcePlasmaHit : Projectile {
 
 	public static Projectile rpcInvoke(ProjParameters arg) {
 		return new BusterForcePlasmaHit(
-			arg.extraData[0], Buster.netWeapon, arg.pos, 
+			arg.extraData[0], XBuster.netWeapon, arg.pos, 
 			arg.xDir, arg.player, arg.netId
 		);
 	}
@@ -253,7 +253,7 @@ public class ForceBuster3Proj : Projectile {
 
 	public static Projectile rpcInvoke(ProjParameters arg) {
 		return new ForceBuster3Proj(
-			Buster.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
+			XBuster.netWeapon, arg.pos, arg.xDir, arg.player, arg.netId
 		);
 	}
 }

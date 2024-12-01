@@ -115,7 +115,7 @@ public class X2ChargeShot : CharState {
 		}
 		if (!fired && character.currentFrame.getBusterOffset() != null) {
 			fired = true;
-			mmx.secondArmorChargeShots(type);
+			mmx.gigaArmorChargeShots(type);
 		}
 
 		if (character.isAnimOver()) {
