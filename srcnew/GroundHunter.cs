@@ -9,7 +9,7 @@ public class GroundHunter : Weapon {
 
 	public GroundHunter() : base() {
 		index = (int)WeaponIds.GroundHunter;
-		fireRate = 45;
+		fireRate = 30;
 		weaponSlotIndex = 127;
 		weaponBarIndex = 65;
 		weaponBarBaseIndex = 76;
@@ -60,6 +60,7 @@ public class GroundHunterProj : Projectile {
 		wallCrawlSpeed = projSpeed;
 		maxTime = 0.75f;
 		useGravity = true;
+		gravityModifier = 0;
 		fadeSprite = "ground_hunter_fade";
 		canBeLocal = false;
 
@@ -74,6 +75,8 @@ public class GroundHunterProj : Projectile {
 
 	public override void update() {
 		base.update();
+
+		gravityModifier = Helpers.lerp(gravityModifier, 1, (Global.speedMul * 1.5f) / 60);
 		
 		updateWallCrawl();
 		if (sparks != null) {
@@ -82,7 +85,7 @@ public class GroundHunterProj : Projectile {
 
 		downPressed = player.input.isPressed(Control.Down, player);
 
-		if (downPressed && !down) {
+		if (downPressed && !down && !groundedOnce) {
 			down = true;
 			changeSprite("ground_hunter_fall", false);
 			stopMoving();

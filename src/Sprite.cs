@@ -290,7 +290,7 @@ public class Sprite {
 					extraW = flippedExtraW;
 					extraXOff = -flippedExtraW * flipX;
 				} else {
-					extraW = 4;
+					extraW = 5;
 				}
 			}
 			if (armors[2] == 2) {
@@ -495,9 +495,9 @@ public class Sprite {
 	}
 
 	public bool needsBusterCorrection() {
-		/* return name.Contains("mmx_shoot") || name.Contains("mmx_run_shoot") || name.Contains("mmx_fall_shoot") || name.Contains("mmx_jump_shoot") || name.Contains("mmx_dash_shoot") || name.Contains("mmx_ladder_shoot")
-			|| name.Contains("mmx_wall_slide_shoot") || name.Contains("mmx_up_dash_shoot") || name.Contains("mmx_wall_kick_shoot"); */
-			return name.Contains("mmx") && name.Contains("shoot");
+		return name.Contains("mmx_shoot") || name.Contains("mmx_run_shoot") || name.Contains("mmx_fall_shoot") || name.Contains("mmx_jump_shoot") || name.Contains("mmx_dash_shoot") || name.Contains("mmx_ladder_shoot")
+			|| name.Contains("mmx_wall_slide_shoot") || name.Contains("mmx_up_dash_shoot") || name.Contains("mmx_wall_kick_shoot"); 
+			//return name.Contains("mmx") && name.Contains("shoot");
 	}
 
 	public Frame getCurrentFrame(int frameIndex = -1) {

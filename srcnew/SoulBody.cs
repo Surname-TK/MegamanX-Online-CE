@@ -9,7 +9,7 @@ public class SoulBody : Weapon {
 	public static SoulBody netWeapon = new();
 	public SoulBody() : base() {
 		index = (int)WeaponIds.SoulBody;
-		fireRate = 90;
+		fireRate = 60;
 		weaponSlotIndex = 125;
         weaponBarBaseIndex = 74;
         weaponBarIndex = 63;
@@ -48,14 +48,14 @@ public class SoulBodyHologram : Projectile {
 
 	MegamanX mmx = null!;
 	float distance;
-	const float maxDist = 64;
+	const float maxDist = 96;
 	int frameCount;
 	public SoulBodyHologram(
 		Weapon weapon, Point pos, int xDir, 
 		Player player, ushort netProjId,  bool rpc = false
 	) : base(
 		weapon, pos, xDir, 0, 1, player,
-		"empty", 0, 0.5f, netProjId,
+		"empty", 0, 0.33f, netProjId,
 		player.ownedByLocalPlayer
 	) {
 		mmx = player.character as MegamanX ?? throw new NullReferenceException();
@@ -64,7 +64,7 @@ public class SoulBodyHologram : Projectile {
 		changeSprite(mmx.sprite.name, false);
 		frameIndex = mmx.frameIndex;
 		mmx.sBodyHologram = this;
-		maxTime = 2f;
+		maxTime = 1.5f;
 		setIndestructableProperties();
 		canBeLocal = false;
 
@@ -129,6 +129,7 @@ public class ControlClone : CharState {
 	public ControlClone() : base("summon") {
 		normalCtrl = false;
 		attackCtrl = false;
+		useDashJumpSpeed = true;
 	}
 
 	public override void onEnter(CharState oldState) {
@@ -164,7 +165,7 @@ public class ControlClone : CharState {
 	void x5Update() {
 		Helpers.decrementFrames(ref cloneCooldown);
 
-		if (cloneCount >= 5 && cloneCooldown <= 0) character.changeToIdleOrFall();
+		if (cloneCount >= 5 && cloneCooldown <= 10) character.changeToIdleOrFall();
 
 		else if (character.isAnimOver() && cloneCooldown <= 0) {
 			float ang = altAngles[cloneCount];
@@ -179,7 +180,7 @@ public class ControlClone : CharState {
 			) { releasePlasma = player.hasPlasma() && cloneCount == 0 };
 
 			cloneCount++;
-			cloneCooldown = 10;
+			cloneCooldown = 20;
 		}
 	}
 }
@@ -193,12 +194,13 @@ public class SoulBodyX5 : Projectile {
 		Weapon weapon, Point pos, int xDir, Player player,
 		ushort? netId, int color, float ang, bool rpc = false
 	) : base (
-		weapon, pos, 1, 300, 3, 
-		player, "soul_body_x5", Global.halfFlinch, 0.75f,
+		weapon, pos, 1, 360, 2, 
+		player, "soul_body_x5", Global.halfFlinch, 0.5f,
 		netId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.SoulBodyX5;
 		maxTime = 0.75f;
+		destroyOnHit = false;
 		vel = Point.createFromByteAngle(ang).times(speed);
 		this.color = color;
 		byteAngle = ang;

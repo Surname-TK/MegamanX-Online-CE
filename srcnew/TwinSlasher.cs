@@ -15,13 +15,18 @@ public class TwinSlasher : Weapon {
 		weaponSlotIndex = 130;
 		weaknessIndex = (int)WeaponIds.GroundHunter;
 		shootSounds = new string[] { "twinSlasher", "twinSlasher", "twinSlasher", "twinSlasherCharged" };
-		fireRate = 15;
+		fireRate = 9;
 		switchCooldownFrames = 9;
 		/* damage = "1";
 		hitcooldown = "0.5";
 		Flinch = "0/26";
 		FlinchCD = hitcooldown;
 		effect = "Pierces enemies."; */
+	}
+
+	public override float getAmmoUsage(int chargeLevel) {
+		if (chargeLevel < 3) return 0.75f;
+		return base.getAmmoUsage(chargeLevel);
 	}
 
 	public override void shoot(Character character, int[] args) {
@@ -60,8 +65,8 @@ public class TwinSlasherProj : Projectile {
 		Weapon weapon, Point pos, int xDir, int type, 
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 400f, 1f, player, "twin_slasher_proj", 
-		0, 0.5f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 400f, 0.5f, player, "twin_slasher_proj", 
+		0, 0, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 0.35f;
 		projId = (int)ProjIds.TwinSlasher;
@@ -129,7 +134,7 @@ public class TwinSlasherProjCharged : Projectile {
 		Weapon weapon, Point pos, int xDir, int type, 
 		Player player, int id, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 350, 1, player, "twin_slasher_charged_proj2", 
+		weapon, pos, xDir, 350, 0.5f, player, "twin_slasher_charged_proj2", 
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 0.40f;

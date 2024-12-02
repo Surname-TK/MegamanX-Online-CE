@@ -64,6 +64,7 @@ public class BusterForcePlasmaHit : Projectile {
 	public int type = 0;
 	public float xDest = 0;
 	public Actor actorOwner = null!;
+	public Player player = null!;
 
 	public BusterForcePlasmaHit(
 		int type, Weapon weapon, Point pos, int xDir,
@@ -129,6 +130,7 @@ public class BusterForcePlasmaHit : Projectile {
 		}
 
 		this.type = type;
+		this.player = player;
 	}
 
 	public override void update() {
@@ -224,6 +226,22 @@ public class BusterForcePlasmaHit : Projectile {
 			arg.extraData[0], XBuster.netWeapon, arg.pos, 
 			arg.xDir, arg.player, arg.netId
 		);
+	}
+
+	public override List<ShaderWrapper>? getShaders() {
+		var shaders = new List<ShaderWrapper>();
+
+		ShaderWrapper plasmaShader = Helpers.cloneShaderSafe("plasmaPalette");
+
+		plasmaShader.SetUniform("palette", type);
+		plasmaShader.SetUniform("paletteTexture", Global.textures["buster_plasma_hit_palette"]);
+		shaders.Add(plasmaShader);
+	
+		if (shaders.Count > 0) {
+			return shaders;
+		} else {
+			return base.getShaders();
+		}
 	}
 }
 

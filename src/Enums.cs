@@ -758,6 +758,10 @@ public enum ProjIds {
 	TwinSlasherCharged2,
 	TwinSlasherCharged3,
 	TwinSlasherCharged4,
+	TwinSlasherCharged5,
+	TwinSlasherCharged6,
+	TwinSlasherCharged7,
+	TwinSlasherCharged8,
 
 	// Special damage types.
 	SelfDmg = 30000,

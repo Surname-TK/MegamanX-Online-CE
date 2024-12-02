@@ -42,6 +42,7 @@ public class FrostTowerState : CharState {
 		attackCtrl = false;
 		normalCtrl = false;
 		useGravity = false;
+		useDashJumpSpeed = true;
 	}
 
 	public override void onEnter(CharState oldState) {
@@ -68,11 +69,13 @@ public class FrostTowerState : CharState {
 public class FrostTowerProj : Projectile, IDamagable
 
 {
-	public float health = 4f;
+	public float health = 4;
 
-	public float maxHealth = 4f;
+	public float maxHealth = 4;
 
 	public bool landed;
+	float zTime;
+	int zMul = -1;
 
 	public FrostTowerProj(
 		Weapon weapon, Point pos, int xDir, 
@@ -89,6 +92,7 @@ public class FrostTowerProj : Projectile, IDamagable
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 		collider.isClimbable = true;
+		zIndex = ZIndex.MainPlayer + 10;
 		
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}
@@ -108,13 +112,15 @@ public class FrostTowerProj : Projectile, IDamagable
 
 		if (!grounded && MathF.Abs(vel.y) > 60) updateDamager(2, Global.halfFlinch);
 		else updateDamager(1, 0);
-		
+
+		zIndex = zTime % 2 == 0 ? ZIndex.MainPlayer + 10 : ZIndex.Character - 10;
+		zTime += Global.speedMul;
 		
 		if (!ownedByLocalPlayer || base.owner == null || landed) return;
 	}
 	public void applyDamage(float damage, Player? owner, Actor? actor, int? weaponIndex, int? projId) {
 		health -= damage;
-		if (health <= 0f) destroySelf();
+		if (health <= 0) destroySelf();
 	}
 
 	public bool canBeDamaged(int damagerAlliance, int? damagerPlayerId, int? projId) {
@@ -150,6 +156,7 @@ public class FrostTowerChargedState : CharState {
 	public FrostTowerChargedState() : base("summon") {
 		normalCtrl = false;
 		attackCtrl = false;
+		useDashJumpSpeed = true;
 	}
 
 	public override void onEnter(CharState oldState) {

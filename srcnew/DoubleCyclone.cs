@@ -42,6 +42,7 @@ public class DoubleCycloneState : CharState {
 		normalCtrl = false;
 		attackCtrl = false;
 		this.chargeLv = chargeLv;
+		useDashJumpSpeed = true;
 	}
 
 	public override void onEnter(CharState oldState) {
@@ -91,18 +92,6 @@ public class DoubleCycloneState : CharState {
 				condition = true;
 			}
 
-			if (character.isAnimOver() && condition) character.changeToIdleOrFall();if (!fired && character.currentFrame.getBusterOffset() != null) {
-				Point? shootPos1 = character.getFirstPOI() ?? character.getShootPos();
-				Point? shootPos2 = character.getFirstPOI(1) ?? character.getShootPos();
-				int xDir = character.getShootXDir();
-				Player player = character.player;
-			
-				new DoubleCycloneProj(new DoubleCyclone(), shootPos1.Value, -xDir, player, player.getNextActorNetId(), true);
-				new DoubleCycloneProj(new DoubleCyclone(), shootPos2.Value, xDir, player, player.getNextActorNetId(), true);
-				fired = true;
-				condition = true;
-			}	
-
 			if (character.isAnimOver() && condition) character.changeToIdleOrFall();
 		}
 	}
@@ -129,6 +118,7 @@ public class DoubleCycloneProj : Projectile {
 	) {
 		projId = (int)ProjIds.DoubleCyclone;
 		maxTime = 1f;
+		fadeSprite = "double_cyclone_fade";
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 
@@ -203,6 +193,7 @@ public class DoubleCycloneChargedSpawn : Projectile {
 
 	public override void update() {
 		base.update();
+		if (!ownedByLocalPlayer) return;
 
 		if (shootCooldown <= 0) {
 
@@ -228,8 +219,8 @@ public class DoubleCycloneChargedProj : Projectile {
 		Player player, ushort? netProjId,
 		bool rpc = false
 	) : base(
-		weapon, pos, xDir, 180, 1,
-		player, "double_cyclone_charged_proj", 0, 0.33f,
+		weapon, pos, xDir, 180, 0.5f,
+		player, "double_cyclone_charged_proj", 0, 0.15f,
 		netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.DoubleCycloneCharged;

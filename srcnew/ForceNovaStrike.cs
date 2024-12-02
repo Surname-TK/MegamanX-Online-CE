@@ -44,7 +44,8 @@ public class ForceNovaStrike : Weapon {
 
 public class ForceNovaStrikeStart : CharState {
 	public ForceNovaStrikeStart() : base("nova_strike_start") {
-		superArmor = true;
+		invincible = true;
+		useDashJumpSpeed = true;
 		enterSound = "land";
 	}
 
@@ -57,7 +58,8 @@ public class ForceNovaStrikeStart : CharState {
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
 		character.vel.y = -character.getJumpPower() * 0.5f;
-		character.xPushVel = character.xDir * 90;
+		if (oldState is WallSlide) character.xDir *= -1;
+		character.xPushVel = character.xDir * 180;
 	}
 }
 
@@ -68,6 +70,8 @@ public class ForceNovaStrikeState : CharState {
 	public ForceNovaStrikeState() : base("nova_strike") {
 		immuneToWind = true;
 		superArmor = true;
+		invincible = true;
+		useDashJumpSpeed = true;
 		enterSound = "novaStrikeX4";
 	}
 
@@ -92,7 +96,8 @@ public class ForceNovaStrikeState : CharState {
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
 		player.character.useGravity = false;
-		player.character.vel.y = 0;
+		character.stopMoving();
+		//player.character.vel.y = 0;
 		player.character.stopCharge();
 	}
 

@@ -84,6 +84,7 @@ public class NovaStrikeState : CharState {
 		base.onEnter(oldState);
 		character.stopMoving();
 		character.stopCharge();
+		if (oldState is WallSlide) character.xDir *= -1;
 	}
 
 	public override void onExit(CharState newState) {

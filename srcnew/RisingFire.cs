@@ -42,6 +42,7 @@ public class RisingFireState : CharState {
 		: base("risingfire")
 	{
 		superArmor = false;
+		useDashJumpSpeed = true;
 	}
 
 	public override void update() {
@@ -124,9 +125,8 @@ public class RisingFireChargedState : CharState {
 
 	private Projectile? proj;
 
-    public RisingFireChargedState()
-		: base("risingfire_charged") {
-	
+    public RisingFireChargedState() : base("risingfire_charged") {
+		useDashJumpSpeed = true;
 	}
 
 	public override void update() {
@@ -140,6 +140,7 @@ public class RisingFireChargedState : CharState {
 		if (character.sprite.frameIndex >= 2 && !jumpedYet) {
 			jumpedYet = true;
 			character.vel.y = -character.getJumpPower();
+			character.useGravity = true;
 		}
 		
 		if (character.vel.y < 0) character.move(new Point(character.xDir * 165, 0f));
@@ -197,6 +198,8 @@ public class RisingFireChargedState : CharState {
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
 		character.dashedInAir = 0;
+		character.stopMovingWeak();
+		character.useGravity = false;
 	}
 	
 

@@ -225,8 +225,8 @@ public partial class MegamanX : Character {
 			}		
 		} 
 
-		if (lastShotWasSpecialBuster) chargeLogic(specialShoot);
-		else if (player.hasArmArmor(ArmorId.Force) && player.weapon is XBuster) chargeLogic(baitFunction);
+		if (player.hasArmArmor(ArmorId.Force) && player.weapon is XBuster) chargeLogic(baitFunction);
+		else if (lastShotWasSpecialBuster) chargeLogic(specialShoot);
 		else chargeLogic(shoot);
 
 		if (beeSwarm != null) {
@@ -460,7 +460,7 @@ public partial class MegamanX : Character {
 				1 => RenderEffectType.ChargeBlue,
 				2 => RenderEffectType.ChargeBlue,
 				3 => RenderEffectType.ChargePink,
-				4 when (chargeType == 0) => RenderEffectType.ChargePink,
+				4 when (chargeType == 0) => RenderEffectType.ChargeOrange,
 				4 when (chargeType == 1) => RenderEffectType.ChargeOrange,
 				4 when (chargeType == 2) => RenderEffectType.ChargeGreen,
 				_ => RenderEffectType.ChargeOrange
@@ -1536,7 +1536,7 @@ public partial class MegamanX : Character {
 	}
 
 	public bool isSpecialBuster() {
-		return player.loadout.xLoadout.melee == 0 && !isHyperX;
+		return (player.loadout.xLoadout.melee == 0 || player.hasAllForceArmor()) && !isHyperX;
 	}
 
 	public bool isSpecialSaber() {

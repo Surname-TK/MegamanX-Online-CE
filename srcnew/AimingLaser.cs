@@ -255,7 +255,10 @@ public class AimingLaserProj : Projectile {
 		base.update();
 		if (!ownedByLocalPlayer || target == null) return;
 
-		if (target.charState is Die) mmx.aLaserTargets.Remove(target);
+		if (target.charState is Die || mmx.player.weapon is not AimingLaser) {
+			//mmx.aLaserTargets.Remove(target);
+			destroySelf();
+		} 
 	}
 
 	public override void postUpdate() {
