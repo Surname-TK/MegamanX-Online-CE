@@ -171,16 +171,18 @@ public class BeeSwarm {
 	int currentIndex;
 	float currentTime = 0f;
 	const float beeCooldown = 0.75f;
+	public int plasmaShootNum;
 
 	public BeeSwarm(MegamanX mmx) {
 		this.mmx = mmx;
 
-		beeCursors = new List<BeeCursorAnim>() {
-			new BeeCursorAnim(getCursorStartPos(0), mmx),
-			new BeeCursorAnim(getCursorStartPos(1), mmx),
-			new BeeCursorAnim(getCursorStartPos(2), mmx),
-			new BeeCursorAnim(getCursorStartPos(3), mmx),
-		};
+		beeCursors = new List<BeeCursorAnim>()
+		{
+				new BeeCursorAnim(getCursorStartPos(0), mmx, this),
+				new BeeCursorAnim(getCursorStartPos(1), mmx, this),
+				new BeeCursorAnim(getCursorStartPos(2), mmx, this),
+				new BeeCursorAnim(getCursorStartPos(3), mmx, this),
+			};
 	}
 
 	public Point getCursorStartPos(int index) {
@@ -222,7 +224,7 @@ public class BeeSwarm {
 				beeCursors[i].pos = getCursorStartPos(i);
 			}
 			if (beeCursors[i].state == 4) {
-				beeCursors[i] = new BeeCursorAnim(getCursorStartPos(i), mmx);
+				beeCursors[i] = new BeeCursorAnim(getCursorStartPos(i), mmx, this);
 			}
 		}
 
@@ -262,10 +264,12 @@ public class BeeCursorAnim : Anim {
 	MegamanX? character;
 	Player player;
 	public Actor? target;
-	public BeeCursorAnim(Point pos, Character character)
+	public BeeSwarm parent;
+	public BeeCursorAnim(Point pos, Character character, BeeSwarm parent)
 		: base(pos, "parasite_cursor_start", 1, character.player.getNextActorNetId(), false, true, character.ownedByLocalPlayer) {
 		this.character = character as MegamanX;
 		player = character.player;
+		this.parent = parent;
 	}
 
 	public override void update() {
@@ -305,9 +309,18 @@ public class BeeCursorAnim : Anim {
 						if (character.charState.attackCtrl) character.setShootAnim();
 						player.weapon.addAmmo(-player.weapon.getAmmoUsage(3), player);
 						character.chargeTime = 0;
-						new ParasiticBombProjCharged(new ParasiticBomb(), character.getShootPos(), character.pos.x - target.getCenterPos().x < 0 ? 1 : -1, character.player, character.player.getNextActorNetId(), target, rpc: true);
-					}	
-				}
+						var bee = new ParasiticBombProjCharged(
+							new ParasiticBomb(), character.getShootPos(), character.pos.x - target.getCenterPos().x < 0 ? 1 : -1, 
+							character.player, character.player.getNextActorNetId(), target, rpc: true
+						);
+
+						if (character.player.hasPlasma() && parent.plasmaShootNum == 0) {
+							bee.releasePlasma = true;
+						}
+						parent.plasmaShootNum++;
+						if (parent.plasmaShootNum >= 3) parent.plasmaShootNum = 0;
+					}		
+				}			
 			}
 		}
 	}

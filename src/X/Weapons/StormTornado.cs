@@ -181,6 +181,7 @@ public class TornadoProjCharged : Projectile {
 		//this.ground();
 		destroyOnHit = false;
 		shouldShieldBlock = false;
+		releasePlasma = player.hasPlasma();
 
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}
@@ -239,6 +240,7 @@ public class TornadoProjCharged : Projectile {
 	}
 
 	public override void onHitDamagable(IDamagable damagable) {
+		base.onHitDamagable(damagable);
 		/*
 		character.move(new Point(this.speed * 0.9 * this.xDir, 0));
 		if(character.isClimbingLadder()) {

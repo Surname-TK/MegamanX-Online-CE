@@ -38,6 +38,9 @@ public class ChameleonSting : Weapon {
 			new StingProj(this, pos, xDir, player, 0, player.getNextActorNetId(), true);
 		} else {
 			mmx.stingChargeTime = 4;
+			if (player.hasPlasma()) {
+				new BusterForcePlasmaHit(0, this, pos, xDir, player, player.getNextActorNetId(), rpc: true);
+			}
 		}
 	}
 }

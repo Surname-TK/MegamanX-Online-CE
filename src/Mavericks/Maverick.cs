@@ -736,6 +736,7 @@ public class Maverick : Actor, IDamagable {
 			}
 
 			killer.awardCurrency();
+			killer.onKillEffects(true);
 			awardXWeapon(killer);
 		}
 
@@ -743,6 +744,7 @@ public class Maverick : Actor, IDamagable {
 			assister.addAssist();
 			assister.addKill();
 			assister.awardCurrency();
+			assister.onKillEffects(false);
 			awardXWeapon(killer);
 		}
 

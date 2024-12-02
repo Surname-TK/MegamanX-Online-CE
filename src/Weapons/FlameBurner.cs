@@ -6,7 +6,7 @@ public class FlameBurner : AxlWeapon {
 	public FlameBurner(int altFire) : base(altFire) {
 		shootSounds = new string[] { "flameBurner", "flameBurner", "flameBurner", "circleBlaze" };
 		fireRate = 6;
-		altFireCooldown = 1.5f;
+		altFireCooldown = 90;
 		index = (int)WeaponIds.FlameBurner;
 		weaponBarBaseIndex = 38;
 		weaponSlotIndex = 58;
@@ -16,7 +16,7 @@ public class FlameBurner : AxlWeapon {
 
 		if (altFire == 1) {
 			shootSounds[3] = "flameBurner2";
-			altFireCooldown = 1;
+			altFireCooldown = 60;
 		}
 	}
 

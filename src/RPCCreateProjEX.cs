@@ -14,6 +14,9 @@ public partial class RPCCreateProj : RPC {
 		/*{ (int)ProjIds.BusterX3Proj2, BusterX3Proj2.rpcInvoke },*/
 		{ (int)ProjIds.BusterX3Plasma, BusterPlasmaProj.rpcInvoke },
 		{ (int)ProjIds.BusterX3PlasmaHit, BusterPlasmaHitProj.rpcInvoke },
+		{ (int)ProjIds.StockBuster, BusterStockProj.rpcInvoke },
+		{ (int)ProjIds.PlasmaBuster, BusterForcePlasmaProj.rpcInvoke },
+		{ (int)ProjIds.PlasmaBusterHit, BusterForcePlasmaHit.rpcInvoke },
 
 		//X1 PROJS
 		{ (int)ProjIds.Torpedo, TorpedoProj.rpcInvoke },
@@ -84,6 +87,35 @@ public partial class RPCCreateProj : RPC {
 		{ (int)ProjIds.TornadoFang2, TornadoFangProj.rpcInvoke },
 		{ (int)ProjIds.TornadoFangCharged, TornadoFangProjCharged.rpcInvoke },
 		{ (int)ProjIds.X3SaberProj, X3SaberProj.rpcInvoke },
+
+		//X4 PROJS
+		{ (int)ProjIds.LightningWebProj, LightningWebProj.rpcInvoke },
+		{ (int)ProjIds.LightningWeb, LightningWebProjWeb.rpcInvoke },
+		{ (int)ProjIds.LightningWebChargedProj, LightningWebProjCharged.rpcInvoke },
+		{ (int)ProjIds.LightningWebCharged, LightningWebProjWebCharged.rpcInvoke },
+		{ (int)ProjIds.FrostTower, FrostTowerProj.rpcInvoke },
+		{ (int)ProjIds.FrostTowerCharged, FrostTowerProjCharged.rpcInvoke },
+		{ (int)ProjIds.SoulBodyHologram, SoulBodyHologram.rpcInvoke },
+		{ (int)ProjIds.SoulBodyX5, SoulBodyX5.rpcInvoke },
+		{ (int)ProjIds.RisingFire, RisingFireProj.rpcInvoke },
+		{ (int)ProjIds.RisingFireChargedStart, RisingFireProjChargedStart.rpcInvoke },
+		{ (int)ProjIds.RisingFireCharged, RisingFireProjCharged.rpcInvoke },
+		{ (int)ProjIds.RisingFireUnderwater, RisingFireWaterProj.rpcInvoke },
+		{ (int)ProjIds.RisingFireUnderwaterCharged, RisingFireWaterProjCharged.rpcInvoke },
+		{ (int)ProjIds.GroundHunter, GroundHunterProj.rpcInvoke },
+		{ (int)ProjIds.GroundHunterCharged, GroundHunterChargedProj.rpcInvoke },
+		{ (int)ProjIds.GroundHunterSmall, GroundHunterSmallProj.rpcInvoke },
+		{ (int)ProjIds.AimingLaser, AimingLaserProj.rpcInvoke },
+		{ (int)ProjIds.AimingLaserCharged, AimingLaserChargedProj.rpcInvoke },
+		{ (int)ProjIds.DoubleCyclone, DoubleCycloneProj.rpcInvoke },
+		{ (int)ProjIds.DoubleCycloneChargedSpawn, DoubleCycloneChargedSpawn.rpcInvoke },
+		{ (int)ProjIds.DoubleCycloneCharged, DoubleCycloneChargedProj.rpcInvoke },
+		{ (int)ProjIds.TwinSlasher, TwinSlasherProj.rpcInvoke },
+		{ (int)ProjIds.TwinSlasher2, TwinSlasherProj.rpcInvoke },
+		{ (int)ProjIds.TwinSlasherCharged, TwinSlasherProjCharged.rpcInvoke },
+		{ (int)ProjIds.TwinSlasherCharged2, TwinSlasherProjCharged.rpcInvoke },
+		{ (int)ProjIds.TwinSlasherCharged3, TwinSlasherProjCharged.rpcInvoke },
+		{ (int)ProjIds.TwinSlasherCharged4, TwinSlasherProjCharged.rpcInvoke },
 
 		//EXTRA
 		{ (int)ProjIds.UPParryMelee, UPParryMeleeProj.rpcInvoke },

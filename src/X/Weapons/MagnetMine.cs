@@ -174,6 +174,8 @@ public class MagnetMineProjCharged : Projectile {
 		shouldShieldBlock = false;
 		projId = (int)ProjIds.MagnetMineCharged;
 		startY = pos.y;
+		releasePlasma = player.hasPlasma();
+
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}

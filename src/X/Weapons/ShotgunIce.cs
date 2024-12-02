@@ -199,8 +199,9 @@ public class ShotgunIceProjSled : Projectile {
 		isPlatform = true;
 		Global.level.modifyObjectGridGroups(this, isActor: true, isTerrain: true);
 		//this.collider.wallOnly = true;
+		releasePlasma = player.hasPlasma();
 		canBeLocal = false;
-
+		
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}
 

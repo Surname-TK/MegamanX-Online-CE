@@ -26,9 +26,9 @@ public class XLoadout {
 	}
 
 	public void validate() {
-		if (weapon1 < 0 || weapon1 > 24) weapon1 = 0;
-		if (weapon2 < 0 || weapon2 > 24) weapon2 = 0;
-		if (weapon3 < 0 || weapon3 > 24) weapon3 = 0;
+		if (weapon1 < 0 || weapon1 > 32) weapon1 = 0;
+		if (weapon2 < 0 || weapon2 > 32) weapon2 = 0;
+		if (weapon3 < 0 || weapon3 > 32) weapon3 = 0;
 
 		if ((weapon1 == weapon2 && weapon1 >= 0) ||
 			(weapon1 == weapon3 && weapon2 >= 0) ||
@@ -48,6 +48,7 @@ public class XLoadout {
 		indices.Add((byte)weapon3);
 		if (player.hasArmArmor(3)) indices.Add((int)WeaponIds.HyperCharge);
 		if (player.hasBodyArmor(2)) indices.Add((int)WeaponIds.GigaCrush);
+		if (player.hasBodyArmor(ArmorId.Force)) indices.Add((int)WeaponIds.ForceNovaStrike);
 		if (player.hasUltimateArmor()) indices.Add((int)WeaponIds.NovaStrike);
 
 		return indices.Select(index => {

@@ -144,6 +144,8 @@ public class SilkShotProjCharged : Projectile {
 		vel.y = -100;
 		projId = (int)ProjIds.SilkShotCharged;
 		healAmount = 4;
+		releasePlasma = player.hasPlasma();
+
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}

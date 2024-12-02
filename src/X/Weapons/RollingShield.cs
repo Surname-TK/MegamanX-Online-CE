@@ -115,6 +115,7 @@ public class RollingShieldProjCharged : Projectile {
 		shouldVortexSuck = false;
 		neverReflect = true;
 		canBeLocal = false;
+		releasePlasma = player.hasPlasma();
 
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}

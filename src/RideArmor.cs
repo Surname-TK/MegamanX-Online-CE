@@ -1025,12 +1025,14 @@ public class RideArmor : Actor, IDamagable {
 			*/
 
 			killer.awardCurrency();
+			killer.onKillEffects(true);
 		}
 
 		if (assister != null && assister != player) {
 			//assister.addAssist();
 			//assister.addKill();
 			assister.awardCurrency();
+			assister.onKillEffects(false);
 		}
 
 		if (ownedByLocalPlayer) {

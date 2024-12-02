@@ -49,6 +49,12 @@ public class BoomerangCutter : Weapon {
 			twin2.twin = b;
 			twin3.twin = c;
 			twin4.twin = d;
+
+			if (player.hasPlasma()) {
+			
+				if (xDir == 1) twin2.releasePlasma = true;
+				else if (xDir == -1) twin4.releasePlasma = true;
+			}
 		}
 	}
 }

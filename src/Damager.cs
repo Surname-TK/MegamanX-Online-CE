@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MMXOnline;
 
@@ -131,6 +132,12 @@ public class Damager {
 		) {
 			return false;
 		}
+
+		//Aiming laser check
+		/* if (projId == (int)ProjIds.AimingLaser && owner.character is MegamanX xAttacker) {
+			if (!xAttacker.aLaserTargets.Any(c => c == victim)) return false;
+		} */
+
 		string key = projId.ToString() + "_" + owner.id.ToString();
 
 		// Key adjustment overrides for more fine tuned balance cases
@@ -352,6 +359,11 @@ public class Damager {
 					break;
 				case (int)ProjIds.SpeedBurner:
 					character.addBurnTime(owner, new SpeedBurner(null), 1);
+					break;
+				case (int)ProjIds.RisingFire:
+				case (int)ProjIds.RisingFireChargedStart:
+				case (int)ProjIds.RisingFireCharged:
+					character.addBurnTime(owner, new RisingFire(), 1);
 					break;
 				case (int)ProjIds.Napalm2Wall:
 				case (int)ProjIds.Napalm2:
@@ -585,7 +597,7 @@ public class Damager {
 				}
 			}
 			//Damage above 0
-			if (damage > 0) {
+			if (damage > 0 || flinch > 0) {
 				//bool if the character is frozen
 				bool isShotgunIceAndFrozen = character?.sprite.name.Contains("frozen") == true && weaponKillFeedIndex == 8;
 				int hurtDir = -character.xDir; //Hurt Direction

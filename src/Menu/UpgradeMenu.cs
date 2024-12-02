@@ -91,7 +91,7 @@ public class UpgradeMenu : IMainMenu {
 		if (Global.input.isPressedMenu(Control.MenuLeft)) {
 			if (mainPlayer.realCharNum == 0) {
 				if (mainPlayer.canUpgradeXArmor()) {
-					UpgradeArmorMenu.xGame = 3;
+					UpgradeArmorMenu.xGame = 4;
 					Menu.change(new UpgradeArmorMenu(prevMenu));
 					onUpgradeMenu = false;
 					return;
@@ -121,7 +121,7 @@ public class UpgradeMenu : IMainMenu {
 				if (mainPlayer.heartTanks < getMaxHeartTanks() && mainPlayer.currency >= getHeartTankCost()) {
 					mainPlayer.currency -= getHeartTankCost();
 					mainPlayer.heartTanks++;
-					Global.playSound("upgradeX1");
+					Global.playSound("hearthX1");
 					float currentMaxHp = mainPlayer.maxHealth;
 					mainPlayer.maxHealth = mainPlayer.getMaxHealth();
 					mainPlayer.character?.addHealth(mainPlayer.maxHealth - currentMaxHp);
@@ -141,7 +141,7 @@ public class UpgradeMenu : IMainMenu {
 				if (mainPlayer.subtanks.Count < selectArrowPosY && mainPlayer.currency >= subtankCost) {
 					mainPlayer.currency -= subtankCost;
 					mainPlayer.subtanks.Add(new SubTank());
-					Global.playSound("upgradeX1");
+					Global.playSound("hearthX1");
 				} else if (mainPlayer.subtanks.InRange(selectArrowPosY - 1)) {
 					bool maverickUsed = false;
 					if (subtankTargets.Count > 0) {

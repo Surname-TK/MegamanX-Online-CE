@@ -36,6 +36,7 @@ public enum CharIds {
 	ViralSigma,
 	KaiserSigma,
 	RagingChargeX,
+	SoulBodyClone,
 	// Non-vanilla chars start here.
 	Rock = 10,
 }
@@ -47,23 +48,23 @@ public class CharSelection {
 	public int mappedCharMaverick;
 	public string sprite;
 	public int frameIndex;
-	public Point offset = new Point(0, 5);
+	public Point offset = new Point(0, 45);
 
 	public static int sigmaIndex => Options.main?.sigmaLoadout?.sigmaForm ?? 0;
 
 	public static CharSelection[] selections => [
-		new CharSelection("X", 0, 1, 0, "menu_megaman", 0),
-		new CharSelection("Zero", 1, 1, 0, "menu_zero", 0),
-		new CharSelection("Kaiser Knuckle", 5, 1, 0, "zero_megapunch", 5) {
+		new CharSelection("X", 0, 1, 0, "menu_mmx", 0),
+		new CharSelection("Zero", 1, 1, 0, "menu_szero", 0),
+		new CharSelection("Kaiser Knuckle", 5, 1, 0, "menu_kzero", 5) {
 		},
-		new CharSelection("Buster Zero", 6, 1, 0, "zero_shoot", 0) {
-			//offset = new Point(10, 5)
+		new CharSelection("Buster Zero", 6, 1, 0, "menu_bzero", 0) {
+			offset = new Point(2, 45)
 		},
-		new CharSelection("Vile", 2, 1, 0, "menu_vile", 0),
-		new CharSelection("Axl", 3, 1, 0, "menu_axl", 0){
-			offset = new Point(1, 0)
+		new CharSelection("Vile", 2, 1, 0, "menu_vvile", 0),
+		new CharSelection("Axl", 3, 1, 0, "menu_aaxl", 0){
+			offset = new Point(1, 45)
 		},
-		new CharSelection("Sigma", 4, 1, 0, "menu_sigma", sigmaIndex),
+		new CharSelection("Sigma", 4, 1, 0, "menu_ssigma", sigmaIndex),
 		//new CharSelection ("Rock", 10, 1, 0, "rock_idle", 0),
 	];
 

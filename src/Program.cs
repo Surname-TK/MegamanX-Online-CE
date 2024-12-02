@@ -960,6 +960,19 @@ class Program {
 		Sprite.xArmorHelmetBitmap[2] = Global.textures["XHelmet3"];
 		Sprite.xArmorArmBitmap[2] = Global.textures["XArm3"];
 
+		Sprite.xArmorBootsBitmap[3] = Global.textures["XBoots4"];
+		Sprite.xArmorBodyBitmap[3] = Global.textures["XBody4"];
+		Sprite.xArmorHelmetBitmap[3] = Global.textures["XHelmet4"];
+		Sprite.xArmorArmBitmap[3] = Global.textures["XArm4"];
+		Sprite.xArmorArmBitmap[4] = Global.textures["XArm5"];
+
+		Sprite.xArmorBootsBitmap[5] = Global.textures["XBoots3"];
+		Sprite.xArmorBodyBitmap[5] = Global.textures["XBody3"];
+		Sprite.xArmorHelmetBitmap[5] = Global.textures["XHelmet3"];
+		Sprite.xArmorArmBitmap[5] = Global.textures["XArm3"];
+
+
+
 		Sprite.axlArmBitmap = Global.textures["axlArm"];
 	}
 

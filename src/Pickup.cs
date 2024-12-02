@@ -56,7 +56,7 @@ public class Pickup : Actor {
 			if (pickupType == PickupType.HeartTank) {
 				if (player.heartTanks >= getMaxHeartTanks()) return;
 					player.heartTanks++;
-					Global.playSound("upgradeX1");
+					Global.playSound("hearthX1");
 					float currentMaxHp = player.maxHealth;
 					player.maxHealth = player.getMaxHealth();
 					player.character?.addHealth(player.maxHealth - currentMaxHp);
@@ -64,7 +64,7 @@ public class Pickup : Actor {
 			} else if (pickupType == PickupType.SubTank) {
 				if (player.subtanks.Count >= getMaxSubTanks()) return;
 					player.subtanks.Add(new SubTank());
-					Global.playSound("upgradeX1");
+					Global.playSound("hearthX1");
 					destroySelf(doRpcEvenIfNotOwned: true);
 			} else if (pickupType == PickupType.Health) {
 				if (chr.player.health >= chr.player.maxHealth && !chr.player.hasSubtankCapacity()) return;

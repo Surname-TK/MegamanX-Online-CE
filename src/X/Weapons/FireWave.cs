@@ -88,6 +88,7 @@ public class FireWaveProjChargedStart : Projectile {
 		collider.wallOnly = true;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
+		releasePlasma = player.hasPlasma();
 
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}
@@ -109,10 +110,12 @@ public class FireWaveProjChargedStart : Projectile {
 		if (grounded) {
 			destroySelf();
 			if (ownedByLocalPlayer) {
-				new FireWaveProjCharged(
+				var fw = new FireWaveProjCharged(
 					weapon, pos, xDir, damager.owner, 0,
 					Global.level.mainPlayer.getNextActorNetId(), 0, rpc: true
 				);
+
+				if (releasePlasma && !hasReleasedPlasma) fw.releasePlasma = true;
 				playSound("fireWave");
 			}
 		}
@@ -216,6 +219,8 @@ public class FireWaveProjCharged : Projectile {
 					damager.owner, time + parentTime, Global.level.mainPlayer.getNextActorNetId(),
 					timesReversed, rpc: true
 				);
+
+				if (releasePlasma && !hasReleasedPlasma) child.releasePlasma = true;
 			}
 		}
 	}

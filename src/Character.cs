@@ -143,6 +143,11 @@ public partial class Character : Actor, IDamagable {
 	public float crystalizedTime;
 	public float crystalizedMaxTime;
 	
+	//Aiming Laser stuff
+	public bool isTargetByALaser;
+	public List<Character> aLaserAttackers = new();
+	public Anim? aLaserTargetAnim;
+	
 	// Buffs.
 	public float vaccineTime;
 	public float vaccineHurtCooldown;
@@ -1111,6 +1116,8 @@ public partial class Character : Actor, IDamagable {
 		}
 
 		updateCtrl();
+
+		//updateALaserTargetAnim();
 	}
 
 	public override void stateUpdate() {
@@ -1589,7 +1596,7 @@ public partial class Character : Actor, IDamagable {
 
 	public int getShootXDir() {
 		int xDir = this.xDir;
-		if (charState is WallSlide) xDir *= -1;
+		if (charState is WallSlide || (charState is XHover && sprite.name.Contains("hover_backward"))) xDir *= -1;
 		return xDir;
 	}
 
@@ -1723,7 +1730,7 @@ public partial class Character : Actor, IDamagable {
 			return getCenterPos();
 		}
 		var busterOffset = (Point)busterOffsetPos;
-		if (player.isX && player.armArmorNum == 3 && sprite.needsX3BusterCorrection()) {
+		if (player.isX && player.armArmorNum == 3 && sprite.needsBusterCorrection()) {
 			if (busterOffset.x > 0) busterOffset.x += 4;
 			else if (busterOffset.x < 0) busterOffset.x -= 4;
 		}
@@ -2517,6 +2524,7 @@ public partial class Character : Actor, IDamagable {
 		decimal decimalHP = originalHP;
 		Axl? axl = this as Axl;
 		MegamanX? mmx = this as MegamanX;
+		bool isSBody = this is SoulBodyClone;
 
 		// For Dark Hold break.
 		if (damage > 0 && charState is DarkHoldState dhs && dhs.stateFrames > 10 && !Damager.isDot(projId)) {
@@ -2543,6 +2551,12 @@ public partial class Character : Actor, IDamagable {
 		) {
 			crystalizedTime = 0; // Dash to destroy crystal
 		}
+
+		//Aiming Laser
+		/* if (projId is (int)ProjIds.AimingLaser) {
+			MegamanX xAttacker = attacker?.character as MegamanX ?? throw new NullReferenceException();
+			if (!xAttacker.aLaserTargets.Any(c => c == this)) return;
+		} */
 
 		var inRideArmor = charState as InRideArmor;
 		if (inRideArmor != null && inRideArmor.crystalizeTime > 0) {
@@ -2720,6 +2734,18 @@ public partial class Character : Actor, IDamagable {
 						);
 					}
 				}
+
+				var forceNovaStrike = player.weapons.FirstOrDefault(w => w is ForceNovaStrike);
+				if (forceNovaStrike != null) {
+					float currentAmmo = forceNovaStrike.ammo;
+					forceNovaStrike.addAmmo(gigaAmmoToAdd, player);
+					if (player.isMainPlayer) {
+						Weapon.gigaAttackSoundLogic(
+							this, currentAmmo, forceNovaStrike.ammo,
+							forceNovaStrike.getAmmoUsage(0), forceNovaStrike.maxAmmo
+						);
+					}
+				}
 				//fgMoveAmmo += gigaAmmoToAdd;
 				//if (fgMoveAmmo > 32) fgMoveAmmo = 28;
 			}
@@ -2743,7 +2769,7 @@ public partial class Character : Actor, IDamagable {
 			}
 			killPlayer(attacker, null, weaponIndex, projId);
 		} else {
-			if (mmx != null && player.hasBodyArmor(3) && damage > 0) {
+			if (mmx != null && (player.hasBodyArmor(3) || player.hasGoldenArmor()) && damage > 0) {
 				mmx.addBarrier(charState is Hurt);
 			}
 		}
@@ -2773,12 +2799,15 @@ public partial class Character : Actor, IDamagable {
 				}
 
 				killer.awardCurrency();
+				killer.onKillEffects(true);
 			} else if (Global.level.gameMode.level.is1v1()) {
 				// In 1v1 the other player should always be considered a killer to prevent suicide
+				// Adrian: What.
 				var otherPlayer = Global.level.nonSpecPlayers().Find(p => p.id != player.id);
 				if (otherPlayer != null) {
 					otherPlayer.addKill();
 					otherPlayer.awardCurrency();
+					otherPlayer.onKillEffects(true);
 				}
 			}
 
@@ -2787,6 +2816,7 @@ public partial class Character : Actor, IDamagable {
 				assister.addKill();
 
 				assister.awardCurrency();
+				assister.onKillEffects(false);
 			}
 			//bool isSuicide = killer == null || killer == player;
 			player.addDeath(false);
@@ -2942,6 +2972,7 @@ public partial class Character : Actor, IDamagable {
 		chargeEffect?.destroy();
 		chargeSound?.destroy();
 		parasiteAnim?.destroySelf();
+		aLaserTargetAnim?.destroySelf();
 
 		// This ensures that the "onExit" charState function
 		// Can do any cleanup it needs to do without having to copy-paste that code here too.

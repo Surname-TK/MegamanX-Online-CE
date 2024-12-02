@@ -14,10 +14,10 @@ public class Sprite {
 	public Collider[] hitboxes;
 	public Collider[][] frameHitboxes;
 
-	public static Texture[] xArmorBootsBitmap = new Texture[3];
-	public static Texture[] xArmorBodyBitmap = new Texture[3];
-	public static Texture[] xArmorHelmetBitmap = new Texture[3];
-	public static Texture[] xArmorArmBitmap = new Texture[3];
+	public static Texture[] xArmorBootsBitmap = new Texture[7];
+	public static Texture[] xArmorBodyBitmap = new Texture[7];
+	public static Texture[] xArmorHelmetBitmap = new Texture[7];
+	public static Texture[] xArmorArmBitmap = new Texture[7];
 	public static Texture axlArmBitmap = null!;
 
 	public float time;
@@ -155,6 +155,7 @@ public class Sprite {
 		bool hyperBusterReady = false;
 		bool isUPX = false;
 		bool isUltX = false;
+		bool isGolden = false;
 		Character? character = actor as Character;
 		if (character != null) {
 			// TODO: Fix this.
@@ -182,6 +183,7 @@ public class Sprite {
 				character.sprite.name == "mmx_revive" && character.frameIndex > 3
 			);
 			isUltX = character is MegamanX { hasUltimateArmor: true };
+			isGolden = character.player.hasGoldenArmor();
 		}
 
 		if (name == "mmx_unpo_grab" || name == "mmx_unpo_grab2") zIndex = ZIndex.MainPlayer;
@@ -280,7 +282,7 @@ public class Sprite {
 		}
 
 		if (!isUltX && armors != null && animData.isXSprite) {
-			bool isShootSprite = needsX3BusterCorrection();
+			bool isShootSprite = needsBusterCorrection();
 
 			if (isShootSprite) {
 				if (name.Contains("mmx_wall_slide_shoot")) {
@@ -295,7 +297,6 @@ public class Sprite {
 				extraYOff = 0;
 				extraY = 2;
 			}
-
 			var x3ArmShaders = new List<ShaderWrapper>(shaders);
 			if (hyperBusterReady) {
 				if (Global.isOnFrameCycle(5)) {
@@ -306,18 +307,26 @@ public class Sprite {
 			}
 
 			compositeBitmaps.Add(bitmap);
-			if (armors[2] > 0) {
-				compositeBitmaps.Add(xArmorHelmetBitmap[armors[2] - 1]);
+			if (isGolden) {
+				compositeBitmaps.Add(xArmorHelmetBitmap[2]);
+				compositeBitmaps.Add(xArmorBootsBitmap[2]);
+				compositeBitmaps.Add(xArmorBodyBitmap[2]);
+				compositeBitmaps.Add(xArmorArmBitmap[2]);
+			} else {
+				if (armors[2] > 0) {
+					compositeBitmaps.Add(xArmorHelmetBitmap[armors[2] - 1]);
+				}
+				if (armors[0] > 0) {
+					compositeBitmaps.Add(xArmorBootsBitmap[armors[0] - 1]);
+				}	
+				if (armors[1] > 0) {
+					compositeBitmaps.Add(xArmorBodyBitmap[armors[1] - 1]);
+				}
+				if (armors[3] > 0) {
+					compositeBitmaps.Add(xArmorArmBitmap[armors[3] - 1]);
+				}
 			}
-			if (armors[0] > 0) {
-				compositeBitmaps.Add(xArmorBootsBitmap[armors[0] - 1]);
-			}
-			if (armors[1] > 0) {
-				compositeBitmaps.Add(xArmorBodyBitmap[armors[1] - 1]);
-			}
-			if (armors[3] > 0) {
-				compositeBitmaps.Add(xArmorArmBitmap[armors[3] - 1]);
-			}
+			
 			if (compositeBitmaps.Count > 1) {
 				isCompositeSprite = true;
 			}
@@ -445,16 +454,31 @@ public class Sprite {
 				});
 			}
 		}
-		DrawWrappers.DrawTexture(
-			bitmap,
-			currentFrame.rect.x1,
-			currentFrame.rect.y1 - extraYOff,
+		if (!isCompositeSprite) {
+			DrawWrappers.DrawTexture(
+				bitmap,
+				currentFrame.rect.x1,
+				currentFrame.rect.y1 - extraYOff,
 				currentFrame.rect.w(),
 				currentFrame.rect.h() + extraY,
-				x + frameOffsetX, y + frameOffsetY - extraYOff,
-				zIndex, cx, cy, xDirArg, yDirArg, angle, alpha, shaders, true
+				x + frameOffsetX,
+				y + frameOffsetY - extraYOff,
+				zIndex, cx, cy, xDirArg, yDirArg,
+				angle, alpha, shaders, true
 			);
-
+		} else {
+			DrawWrappers.DrawCompositeTexture(
+				compositeBitmaps.ToArray(),
+				currentFrame.rect.x1 - flippedExtraW,
+				currentFrame.rect.y1 - extraYOff,
+				currentFrame.rect.w() + extraW,
+				currentFrame.rect.h() + extraY,
+				x + frameOffsetX + extraXOff,
+				y + frameOffsetY,
+				zIndex, cx, cy, xDirArg, yDirArg,
+				angle, alpha, shaders, true
+			);
+		}
 		if (isUPX) {
 			var upShaders = new List<ShaderWrapper>(shaders);
 			if (Global.isOnFrameCycle(5)) {
@@ -470,9 +494,10 @@ public class Sprite {
 		}
 	}
 
-	public bool needsX3BusterCorrection() {
+	public bool needsBusterCorrection() {
 		return name.Contains("mmx_shoot") || name.Contains("mmx_run_shoot") || name.Contains("mmx_fall_shoot") || name.Contains("mmx_jump_shoot") || name.Contains("mmx_dash_shoot") || name.Contains("mmx_ladder_shoot")
-			|| name.Contains("mmx_wall_slide_shoot") || name.Contains("mmx_up_dash_shoot") || name.Contains("mmx_wall_kick_shoot");
+			|| name.Contains("mmx_wall_slide_shoot") || name.Contains("mmx_up_dash_shoot") || name.Contains("mmx_wall_kick_shoot"); 
+			//return name.Contains("mmx") && name.Contains("shoot");
 	}
 
 	public Frame getCurrentFrame(int frameIndex = -1) {
