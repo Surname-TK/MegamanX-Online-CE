@@ -127,8 +127,7 @@ public class GroundHunterProj : Projectile {
 
 	public override void onDestroy() {
 		base.onDestroy();
-
-		if (sparks != null) sparks.destroySelf();
+		sparks?.destroySelf();
 	}
 }
 
