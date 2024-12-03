@@ -60,7 +60,7 @@ public class GroundHunterProj : Projectile {
 		wallCrawlSpeed = projSpeed;
 		maxTime = 0.75f;
 		useGravity = true;
-		gravityModifier = 0;
+		gravityModifier = 0.5f;
 		fadeSprite = "ground_hunter_fade";
 		canBeLocal = false;
 
@@ -76,7 +76,7 @@ public class GroundHunterProj : Projectile {
 	public override void update() {
 		base.update();
 
-		gravityModifier = Helpers.lerp(gravityModifier, 1, (Global.speedMul * 1.5f) / 60);
+		//gravityModifier = Helpers.lerp(gravityModifier, 1, (Global.speedMul * 1.5f) / 60);
 		
 		updateWallCrawl();
 		if (sparks != null) {
@@ -107,7 +107,7 @@ public class GroundHunterProj : Projectile {
 			
 			if (sparks == null) {
 				sparks = new Anim(pos, "ground_hunter_sparks", xDir,
-				damager.owner.getNextActorNetId(), false, true);
+				damager.owner.getNextActorNetId(), true, true);
 			}
 		} 
 	}
