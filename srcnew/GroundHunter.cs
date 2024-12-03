@@ -27,12 +27,45 @@ public class GroundHunter : Weapon {
 		Point pos = character.getShootPos();
 		int xDir = character.getShootXDir();
 		Player player = character.player;
+		bool down = player.input.isHeld(Control.Down, player);
 
 		if (chargeLevel >= 3) {
 			new GroundHunterChargedProj(this, pos, xDir, player, player.getNextActorNetId(), true);
 		} else {
-			new GroundHunterProj(this, pos, xDir, player, player.getNextActorNetId(), true);
+			new GroundHunterProj(this, pos, xDir, player, player.getNextActorNetId(), true)
+			{ downPressed = down };
 		}
+	}
+}
+
+
+public class GroundHunterAnim : Anim {
+	
+	GroundHunterProj gh;
+
+	public GroundHunterAnim(
+		Point pos, int xDir, Player player, GroundHunterProj gh
+	) : base(
+		pos, "ground_hunter_sparks", xDir, 
+		player.getNextActorNetId(), false, true
+	) {
+		this.gh = gh;
+	}
+
+	public override void update() {
+		base.update();
+
+		if (gh == null || gh.destroyed) {
+			destroySelf();
+			return;
+		}
+
+		changePos(gh.pos);
+	}
+
+	public override void onDestroy() {
+		base.onDestroy();
+		if (!gh.destroyed) gh.sparks = null!;
 	}
 }
 
@@ -40,11 +73,11 @@ public class GroundHunter : Weapon {
 public class GroundHunterProj : Projectile {
 
 	const float projSpeed = 240;
-	bool downPressed;
+	public bool downPressed;
 	bool down;
 	Player player;
 	bool groundedOnce;
-	Anim? sparks;
+	public Anim? sparks;
 
 	public GroundHunterProj(
 		Weapon weapon, Point pos, int xDir,
@@ -83,8 +116,6 @@ public class GroundHunterProj : Projectile {
 			sparks.changePos(pos);
 		}
 
-		downPressed = player.input.isPressed(Control.Down, player);
-
 		if (downPressed && !down && !groundedOnce) {
 			down = true;
 			changeSprite("ground_hunter_fall", false);
@@ -106,10 +137,13 @@ public class GroundHunterProj : Projectile {
 			changeSprite("ground_hunter_proj", false);
 			
 			if (sparks == null) {
-				sparks = new Anim(pos, "ground_hunter_sparks", xDir,
-				damager.owner.getNextActorNetId(), true, true);
+				sparks = new GroundHunterAnim(
+					pos, xDir, damager.owner, this
+				);
 			}
-		} 
+		}
+
+		downPressed = player.input.isPressed(Control.Down, player);
 	}
 
 	public override void onHitWall(CollideData other) {
@@ -127,7 +161,7 @@ public class GroundHunterProj : Projectile {
 
 	public override void onDestroy() {
 		base.onDestroy();
-		sparks?.destroySelf();
+		//sparks?.destroySelf();
 	}
 }
 
