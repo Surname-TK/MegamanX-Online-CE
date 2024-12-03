@@ -41,11 +41,9 @@ public class TwinSlasher : Weapon {
 			new TwinSlasherProj(this, pos, xDir, 1, player, player.getNextActorNetId(), true);
 		} else {
 			for (int i = 0; i < 9; i++) {
-				
-				int id = MathInt.Floor(i / 2);
 				if (i != 4) {
 					var tsc = new TwinSlasherProjCharged(
-						this, pos, xDir, i, player, id, player.getNextActorNetId(), true);
+						this, pos, xDir, i, player, i, player.getNextActorNetId(), true);
 				
 					if (i == 5) tsc.releasePlasma = player.hasPlasma();
 				}
