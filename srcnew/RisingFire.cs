@@ -120,6 +120,7 @@ public class RisingFireProj : Projectile {
 
 public class RisingFireChargedState : CharState {
 	private bool jumpedYet;
+	private bool fired = false;
 
 	private float timeInWall;
 
@@ -137,11 +138,11 @@ public class RisingFireChargedState : CharState {
 		Player player = character.player;
 		Point shootPos = character.getShootPos();
 
-		if (character.sprite.frameIndex >= 2 && !jumpedYet) {
+		if (character.sprite.frameIndex >= 3 && !jumpedYet) {
 			jumpedYet = true;
 			character.vel.y = -character.getJumpPower();
 			character.useGravity = true;
-		}
+		} 
 		
 		if (character.vel.y < 0) character.move(new Point(character.xDir * 165, 0f));
 
@@ -179,7 +180,9 @@ public class RisingFireChargedState : CharState {
 		}
 		if (character.isAnimOver()) {
 			character.changeState(new Fall());
-
+		}
+		if (character.frameIndex > 3 && !fired) {
+			fired = true;
 			Projectile? rf;
 			if (!character.isUnderwater()) {
 				rf = new RisingFireProjCharged(
@@ -200,6 +203,10 @@ public class RisingFireChargedState : CharState {
 		character.dashedInAir = 0;
 		character.stopMovingWeak();
 		character.useGravity = false;
+		if (!character.grounded) {
+			character.frameIndex = 2;
+			character.frameTime = 2;
+		}
 	}
 	
 
