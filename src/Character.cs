@@ -1504,9 +1504,11 @@ public partial class Character : Actor, IDamagable {
 				renderGfx = level switch {
 					1 => RenderEffectType.ChargeBlue,
 					2 => RenderEffectType.ChargeYellow,
-					3 when (chargeType == 1) => RenderEffectType.ChargeOrange,
 					3 => RenderEffectType.ChargePink,
-					_ when (chargeType == 2) => RenderEffectType.ChargeGreen,
+					4 when (chargeType == 0) => RenderEffectType.ChargePink,
+					4 when (chargeType == 1) => RenderEffectType.ChargeOrange,
+					4 when (chargeType == 2) => RenderEffectType.ChargeGreen,
+					4 => RenderEffectType.ChargePink,
 					_ => RenderEffectType.ChargeOrange
 				};
 				addRenderEffect(renderGfx, 0.033333f, 0.1f);
@@ -1770,8 +1772,8 @@ public partial class Character : Actor, IDamagable {
 		bool clampTo3 = true;
 		switch (this) {
 			case MegamanX mmx:
-				clampTo2 = player.hasArmArmor(0);
-				clampTo3 = player.hasArmArmor(1) || player.weapon is not XBuster;
+				clampTo2 = player.hasArmArmor(ArmorId.None);
+				clampTo3 = player.hasArmArmor(ArmorId.Light) || player.hasArmArmor(ArmorId.Force) || player.weapon is not XBuster;
 				break;
 			case Zero zero:
 				clampTo3 = true;

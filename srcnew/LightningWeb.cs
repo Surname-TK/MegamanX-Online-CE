@@ -178,9 +178,9 @@ public class LightningWebProjWebCharged : Projectile {
 		int type, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 0f, 1f, player, "lightningweb_proj_charged", 
-		Global.defFlinch, 0.75f, netProjId, player.ownedByLocalPlayer
+		Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
-		maxTime = type == 0 ? 2 : 1;
+		maxTime = type == 0 ? 1.5f : 1;
 		projId = (int)ProjIds.LightningWebCharged;
 		fadeSprite = "lightningweb_proj_chargedexausth";
 		fadeOnAutoDestroy = true;
@@ -227,7 +227,7 @@ public class LightningWebProjWebCharged : Projectile {
 				}
 			}
 		} else {
-			if (moveTime < 12/*  || time >= maxTime - (Global.spf * 20) */) {
+			if (moveTime < 16  || time >= maxTime - (Global.spf * 20)) {
 				move(Point.createFromByteAngle((type - 1) * 32) * 240);
 			}
 			moveTime++;

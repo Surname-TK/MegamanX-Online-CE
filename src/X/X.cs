@@ -170,11 +170,11 @@ public partial class MegamanX : Character {
 			addRenderEffect(RenderEffectType.ChargeGreen, 0.05f, 0.1f);
 		}
 		if (stockedX3Charge) {
-			if (player.weapon is not XBuster) {
-				stockedX3Charge = false;
-			} else {
-				addRenderEffect(RenderEffectType.ChargeOrange, 0.05f, 0.1f);
-			}
+			addRenderEffect(RenderEffectType.ChargeOrange, 0.05f, 0.1f);
+		}
+		if (player.weapon is not (XBuster or HyperCharge)) {
+			stockedX3Charge = false;
+			stockedX3Saber = false;
 		}
 
 		stingActive = stingChargeTime > 0;
@@ -443,27 +443,24 @@ public partial class MegamanX : Character {
 			int chargeType = 0;
 			chargeSound.play();
 			if (player.hasArmArmor(2)) {
-				chargeType = 0;
+				chargeType = 1;
 			}
-
 			if (player.hasArmArmor(3)) {
-				if (!player.hasGoldenArmor()) {
-					chargeType = 1;
-				} else {
-					chargeType = 2;
-				}
+				chargeType = 1;
 			}
-			
+			if (player.hasGoldenArmor()) {
+				chargeType = 2;
+			}
 			int level = isHyperX ? unpoShotCount : getChargeLevel();
 			var renderGfx = RenderEffectType.ChargeBlue;
 			renderGfx = level switch {
 				1 => RenderEffectType.ChargeBlue,
 				2 => RenderEffectType.ChargeBlue,
 				3 => RenderEffectType.ChargePink,
-				4 when (chargeType == 0) => RenderEffectType.ChargeOrange,
+				4 when (chargeType == 0) => RenderEffectType.ChargePink,
 				4 when (chargeType == 1) => RenderEffectType.ChargeOrange,
 				4 when (chargeType == 2) => RenderEffectType.ChargeGreen,
-				_ => RenderEffectType.ChargeOrange
+				_ => RenderEffectType.ChargeGreen
 			};
 			addRenderEffect(renderGfx, 0.033333f, 0.1f);			
 			chargeEffect.update(level, chargeType);
@@ -746,7 +743,9 @@ public partial class MegamanX : Character {
 
 		//Spends ammo and spawns the projectile.
 		
-		player.weapon.addAmmo(ammoUsage, player);
+		if (player.weapons[player.hyperChargeSlot] is not XBuster) {
+			player.weapon.addAmmo(ammoUsage, player);
+		}
 
 		//player.weapon.shoot(this, new int[] {chargeLevel});
 		shootWeapon(this, new int[] {chargeLevel}, player.weapon);
@@ -761,7 +760,7 @@ public partial class MegamanX : Character {
 			if (player.weapon is XBuster && !stockedX2Charge) {
 				shootCooldown = hasUltimateArmor ? 0 : 0;
 			} else if (player.weapon is not XBuster) {
-				shootCooldown = 0;
+				shootCooldown /= 2;
 				stockX2Charge(!stockedX2Charge);
 			}
 			//stockX2Charge(!stockedX2Charge);
@@ -860,7 +859,7 @@ public partial class MegamanX : Character {
 		Point shootPos = getShootPos();
 		int shootDir = getShootXDir();
 		if (hcWep != null) {
-			hcWep.ammo -= hcWep.getChipFactoredAmmoUsage(player);
+			hcWep.ammo -= hcWep.getChipFactoredAmmoUsage(player) / 2;
 		}
 		if (type == 0) {
 			new BusterX3Proj1(
@@ -869,6 +868,7 @@ public partial class MegamanX : Character {
 			);
 			playSound("buster3X3", sendRpc: true);
 			stockLv1Charge(true);
+			shootCooldown = 0;
 		} else if (type == 1) {
 			new BusterX3Proj1(
 				player.weapon, shootPos, shootDir,
@@ -876,6 +876,7 @@ public partial class MegamanX : Character {
 			);
 			playSound("buster3X3", sendRpc: true);
 			stockX3Charge(true);
+			shootCooldown = 0;
 		} else if (type == 2) {
 			new Buster2Proj(
 				player.weapon, shootPos, shootDir,
@@ -883,6 +884,7 @@ public partial class MegamanX : Character {
 			);
 			playSound("buster3X3", sendRpc: true);
 			stockLv1Charge(false);
+			shootCooldown = 30f;
 		} else if (type == 3) {
 			new Buster3Proj(
 				player.weapon, shootPos, shootDir,
@@ -890,6 +892,7 @@ public partial class MegamanX : Character {
 			);
 			playSound("buster3X3", sendRpc: true);
 			stockX3Charge(false);
+			shootCooldown = 30f;
 		}
 	}
 

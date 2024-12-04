@@ -208,7 +208,6 @@ public class X3ChargeShot : CharState {
 			fired = true;
 			Point shootPos = character.getShootPos();
 			int shootDir = character.getShootXDir();
-
 			mmx.maxArmorChargeShots(state, hyperBusterWeapon);
 		}
 

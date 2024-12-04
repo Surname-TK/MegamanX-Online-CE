@@ -104,7 +104,7 @@ public class BusterUnpoProj : Projectile {
 }
 
 public class Buster3Proj : Projectile {
-	public MegamanX mmx;
+	public MegamanX? mmx;
 	public int type;
 	public List<Sprite> spriteMids = new List<Sprite>();
 	float partTime;
@@ -155,6 +155,8 @@ public class Buster3Proj : Projectile {
 		} else if (player.hasArmArmor(ArmorId.Max) || player.hasGoldenArmor()) {
 			damager.flinch = Global.halfFlinch;
 			changeSprite("buster3_x3", true);
+		} else if (player.hasArmArmor(ArmorId.Force) || player.hasUltimateArmor()) {
+			damager.flinch = Global.halfFlinch;
 		}
 
 		// Cross Shot Finale
@@ -173,37 +175,37 @@ public class Buster3Proj : Projectile {
 	// Down here is where the Cross Shot actually happens
 	public override void onCollision(CollideData other) {
 		base.onCollision(other);	
-			if (other.gameObject is BusterX3Proj1 X3shot && X3shot.ownedByLocalPlayer && !destroyed) {
-				if (!ownedByLocalPlayer) return;
-					Global.level.delayedActions.Add(new DelayedAction(delegate {
-						new Anim(new Point(pos.x, pos.y), "buster4_x3_muzzle", xDir, null, true, true);
-						destroySelfNoEffect(); X3shot.destroySelfNoEffect();
-						Global.level.delayedActions.Add(new DelayedAction(delegate { 
-						if (!owner.hasUltimateArmor()) {
-							new Buster3Proj(
-								weapon, pos, xDir, 3, owner, owner.getNextActorNetId(), rpc: true
-							);
-						} else {
-							new BusterPlasmaProj(
-								weapon, pos, xDir, owner, owner.getNextActorNetId(), rpc: true
-							);
-							playSound("plasmaShot", sendRpc: true);
-						}
-						new BusterX3Proj3(
-							weapon, pos, xDir, 0, owner, owner.getNextActorNetId(), rpc: true
-						);
-						new BusterX3Proj3(
-							weapon, pos, xDir, 1, owner, owner.getNextActorNetId(), rpc: true
-						);
-						new BusterX3Proj3(
-							weapon, pos, xDir, 2, owner, owner.getNextActorNetId(), rpc: true
-						);
-						new BusterX3Proj3(
+		if (type == 0 && other.gameObject is BusterX3Proj1 X3shot && X3shot.ownedByLocalPlayer && !destroyed) {
+			if (!ownedByLocalPlayer) return;
+				Global.level.delayedActions.Add(new DelayedAction(delegate {
+					new Anim(new Point(pos.x, pos.y), "buster4_x3_muzzle", xDir, null, true, true);
+					destroySelfNoEffect(); X3shot.destroySelfNoEffect();
+					Global.level.delayedActions.Add(new DelayedAction(delegate { 
+					if (!owner.hasUltimateArmor()) {
+						new Buster3Proj(
 							weapon, pos, xDir, 3, owner, owner.getNextActorNetId(), rpc: true
+						);
+					} else {
+						new BusterPlasmaProj(
+							weapon, pos, xDir, owner, owner.getNextActorNetId(), rpc: true
+						);
+						playSound("plasmaShot", sendRpc: true);
+					}
+					new BusterX3Proj3(
+						weapon, pos, xDir, 0, owner, owner.getNextActorNetId(), rpc: true
 					);
-					}, 20f / 60f ));
-					}, 1f / 60f ));
-			}
+					new BusterX3Proj3(
+						weapon, pos, xDir, 1, owner, owner.getNextActorNetId(), rpc: true
+					);
+					new BusterX3Proj3(
+						weapon, pos, xDir, 2, owner, owner.getNextActorNetId(), rpc: true
+					);
+					new BusterX3Proj3(
+						weapon, pos, xDir, 3, owner, owner.getNextActorNetId(), rpc: true
+					);
+				}, 20f / 60f ));
+			}, 1f / 60f ));
+		}
 	}
 
 	public static Projectile rpcInvoke(ProjParameters arg) {

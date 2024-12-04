@@ -36,7 +36,7 @@ public class BusterForcePlasmaProj : Projectile {
 		Weapon weapon, Point pos, int xDir, 
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 360, 4f, player, "buster_plasma", 
+		weapon, pos, xDir, 360, 3f, player, "buster_plasma", 
 		Global.defFlinch, 0.25f, netProjId, player.ownedByLocalPlayer
 	) {
 		fadeSprite = "buster4_x3_muzzle";

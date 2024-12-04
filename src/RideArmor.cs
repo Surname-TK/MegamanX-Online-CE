@@ -612,7 +612,7 @@ public class RideArmor : Actor, IDamagable {
 						return;
 					}
 				}
-
+				chr.dashedInAir = 0;
 				putCharInRideArmor(chr);
 			}
 		}
@@ -872,7 +872,7 @@ public class RideArmor : Actor, IDamagable {
 
 	public float getDashSpeed() {
 		if (isDashing && !(raNum == 3 && (isUnderwater() || isWading()))) {
-			return raNum == 3 ? 1.5f : 2.5f;
+			return raNum == 3 ? 1.5f : 3f;
 		}
 		return 1;
 	}
@@ -885,7 +885,7 @@ public class RideArmor : Actor, IDamagable {
 		}
 		*/
 		if (rideArmorState is RAFall raFall && raFall.hovering && raNum != 2) {
-			return 30;
+			return 40;
 		}
 		if (raNum == 3) {
 			if (isSwimming) {
@@ -896,7 +896,7 @@ public class RideArmor : Actor, IDamagable {
 			return 80;
 		} else if (raNum == 1) {
 			if (isNeutral) return 70;
-			return 54;
+			return 55;
 		} else {
 			if (isNeutral) return 80;
 			return 60;
@@ -1335,6 +1335,25 @@ public class RAIdle : RideArmorState {
 	float attackCooldown = 0;
 	public override void update() {
 		base.update();
+		var move = new Point(0, 0);
+		if (player != null && transitionSprite.Contains("land")) {
+			if (player.input.isHeld(Control.Left, player)) {
+				rideArmor.xDir = -1;
+				move.x = -rideArmor.getRunSpeed();
+			} else if (player.input.isHeld(Control.Right, player)) {
+				rideArmor.xDir = 1;
+				move.x = rideArmor.getRunSpeed();
+			}
+			if (move.magnitude > 0) {
+				rideArmor.move(move);
+			} /*else {
+				rideArmor.changeState(new RAIdle());
+			}**/
+			groundCode();
+			if (player.input.isPressed(Control.Dash, player) && rideArmor.canDash()) {
+				rideArmor.changeState(new RADash());
+			}
+		}
 
 		if (inTransition()) {
 			if (!(transitionSprite == "frog_land" && rideArmor.frameIndex > 1)) {
@@ -1786,7 +1805,7 @@ public class RADash : RideArmorState {
 				dashTime = 0;
 				dashAttackTime += Global.spf;
 				if (dashAttackTime > 2) {
-					rideArmor.changeState(new RAIdle());
+					rideArmor.changeState(new RADash() {dashTime = dashTime});
 					return;
 				}
 				if (rideArmor.sprite.name.Contains("attack") && rideArmor.frameIndex == 2) {
@@ -1810,7 +1829,7 @@ public class RADash : RideArmorState {
 		}
 
 		dashTime += Global.spf;
-		if (dashTime > 0.6) {
+		if (dashTime > 1.2) {
 			rideArmor.changeState(new RAIdle());
 			return;
 		}

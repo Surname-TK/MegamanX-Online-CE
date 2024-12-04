@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace MMXOnline;
 
 public class HyperCharge : Weapon {
-	public const float ammoUsage = 4;
+	public const float ammoUsage = 8;
 
 	public HyperCharge() : base() {
 		index = (int)WeaponIds.HyperCharge;
@@ -13,7 +13,7 @@ public class HyperCharge : Weapon {
 		weaponBarIndex = 31;
 		weaponSlotIndex = 36;
 		//shootSounds = new string[] { "buster3X3", "buster3X3", "buster3X3", "buster3X3" };
-		fireRate = 90;
+		fireRate = 120;
 		//switchCooldown = 0.25f;
 		switchCooldownFrames = 30;
 		ammo = 0;
@@ -28,7 +28,7 @@ public class HyperCharge : Weapon {
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
-		return 4;
+		return ammoUsage;
 	}
 
 	public float getChipFactoredAmmoUsage(Player player) {
@@ -38,7 +38,7 @@ public class HyperCharge : Weapon {
 	public static float getRateofFireMod(Player player) {
 		if (player != null && player.hyperChargeSlot < player.weapons.Count &&
 			player.weapons[player.hyperChargeSlot] is XBuster) {
-			return 0.5f;
+			return 0;
 		}
 		return 1;
 	}
@@ -74,10 +74,12 @@ public class HyperCharge : Weapon {
 		Player player = character.player;
 		MegamanX mmx = character as MegamanX ?? throw new NullReferenceException();
 		Weapon wep = player.weapons[player.hyperChargeSlot];
-
 		if (wep is XBuster) {
-			character.changeState(new X3ChargeShot(this), true);
-			character.playSound("buster3X3");
+			if (character.charState is WallSlide){
+				mmx.maxArmorChargeShots(mmx.stockedX3Charge? 3 : 1, this);
+			} else {
+				mmx.changeState(new X3ChargeShot(this) {state = mmx.stockedX3Charge? 3 : 1}, true);
+			}
 		} else {
 			if (changeToWeaponSlot(wep)) player.changeWeaponSlot(player.hyperChargeSlot);
 			wep.shootHypercharge(character, new int[] {3});
