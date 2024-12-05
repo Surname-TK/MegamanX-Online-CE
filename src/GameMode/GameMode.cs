@@ -2047,7 +2047,7 @@ public class GameMode {
 				mmx = mainPlayer.character as MegamanX ?? throw new NullReferenceException();
 			}
 			if (weapon is Weapon wp && selected){
-				drawWeaponSlotCooldown(x, y, mmx.shootCooldown / wp.fireRate);
+				drawWeaponSlotCooldown(x, y, mmx.shootCooldown / mmx.oldCooldown);
 			}/*
 
 			if (weapon is HyperCharge &&

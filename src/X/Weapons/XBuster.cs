@@ -156,8 +156,8 @@ public class XBuster : Weapon {
 					int type = mmx.stockedX2Charge ? 2 : 0;
 
 					if (character.charState is not WallSlide) {
-						mmx.shootCooldown = 0;
 						character.changeState(new X2ChargeShot(type), true);
+						mmx.shootCooldown = 0;
 					} else {
 						mmx.gigaArmorChargeShots(type);
 					}	
@@ -175,8 +175,8 @@ public class XBuster : Weapon {
 					int type = mmx.stockedX2Charge ? 2 : 1;
 
 					if (character.charState is not WallSlide) {
-						mmx.shootCooldown = 0;
 						character.changeState(new X2ChargeShot(type), true);
+						mmx.shootCooldown = 0;
 					} else {
 						mmx.gigaArmorChargeShots(type);
 					}	

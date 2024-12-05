@@ -35,6 +35,7 @@ public partial class MegamanX : Character {
 	public int unpoShotCount;
 
 	public float shootCooldown;
+	public float oldCooldown;
 	public float hyperchargeCooldown;
 	public float novaStrikeCooldown; // This one is mostly used just to show its cooldown on screen.
 	public float hadoukenCooldownTime;
@@ -730,6 +731,7 @@ public partial class MegamanX : Character {
 		//Triggers weapon cooldown.
 		shootCooldown = player.weapon is HyperCharge hc ?
 			hc.getRateOfFire(player) : player.weapon.fireRate;
+		oldCooldown = shootCooldown;
 		//Triggers hypercharge special cooldown if used.
 		if (player.weapon is HyperCharge h) hyperchargeCooldown = h.getRateOfFire(player);
 		//Triggers hypercharge special cooldown when shooting a charged shot.
@@ -758,7 +760,7 @@ public partial class MegamanX : Character {
 		//bool updatedStock = false;
 		if (chargeLevel >= 3 && player.hasArmArmor(2)) {
 			if (player.weapon is XBuster && !stockedX2Charge) {
-				shootCooldown = hasUltimateArmor ? 0 : 0;
+				// shootCooldown = hasUltimateArmor ? 0 : 0;
 			} else if (player.weapon is not XBuster) {
 				shootCooldown /= 2;
 				stockX2Charge(!stockedX2Charge);
@@ -770,7 +772,6 @@ public partial class MegamanX : Character {
 
 		//Max Buster.
 		if (chargeLevel >= 4 && player.weapon is XBuster) {
-			shootCooldown = 0;
 			if (player.hasGoldenArmor()) {
 				stockX3Saber(true);
 				xSaberCooldown = 0;
@@ -831,6 +832,7 @@ public partial class MegamanX : Character {
 			);
 			playSound("buster2X2", sendRpc: true);
 			stockX2Charge(true);
+			shootCooldown = 0;
 		} else if (type == 1) {
 			new Buster3Proj(
 				player.weapon, getShootPos(), getShootXDir(), type,
@@ -838,6 +840,7 @@ public partial class MegamanX : Character {
 			);
 			playSound("buster4X2", sendRpc: true);
 			stockX2Charge(true);
+			shootCooldown = 0;
 		} else if (type == 2) {
 			new Buster3Proj(
 				player.weapon, getShootPos(), getShootXDir(), type,
@@ -845,6 +848,7 @@ public partial class MegamanX : Character {
 			);
 			playSound("buster4X2", sendRpc: true);
 			stockX2Charge(false);
+			shootCooldown = 30f;
 		} else if (type == 3) {
 			new BusterPlasmaProj(
 				player.weapon, getShootPos(), getShootXDir(),
@@ -852,7 +856,9 @@ public partial class MegamanX : Character {
 			);
 			playSound("plasmaShot", sendRpc: true);
 			stockX2Charge(true);
+			shootCooldown = 30f;
 		}
+		oldCooldown = shootCooldown;
 	}
 
 	public void maxArmorChargeShots(int type, HyperCharge hcWep) {
@@ -894,6 +900,7 @@ public partial class MegamanX : Character {
 			stockX3Charge(false);
 			shootCooldown = 30f;
 		}
+		oldCooldown = shootCooldown;
 	}
 
 	void baitFunction(int cl) {
