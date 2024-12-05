@@ -14,7 +14,7 @@ public class TwinSlasher : Weapon {
 		weaponBarBaseIndex = 79;
 		weaponSlotIndex = 130;
 		weaknessIndex = (int)WeaponIds.GroundHunter;
-		shootSounds = new string[] { "twinSlasher", "twinSlasher", "twinSlasher", "twinSlasherCharged" };
+		shootSounds = new string[] { "buster2X4", "buster2X4", "buster2X4", "twinSlasherCharged" };
 		fireRate = 9;
 		switchCooldownFrames = 9;
 		/* damage = "1";
@@ -68,12 +68,14 @@ public class TwinSlasherProj : Projectile {
 	) {
 		maxTime = 0.35f;
 		projId = (int)ProjIds.TwinSlasher;
-		//destroyOnHit = false;
+		destroyOnHit = false;
 		reflectable = false;
 		shouldShieldBlock = false;
 		shouldVortexSuck = false;
 		vel.y = type == 0 ? -100 : 100;
 		yDir = type == 0 ? 1 : -1;
+		/*fadeSprite = "twin_slasher_trail";
+		fadeOnAutoDestroy = true;*/
 		
 		if (rpc) {
 			byte[] extraArgs = new byte[] { (byte)type };
@@ -98,10 +100,17 @@ public class TwinSlasherProj : Projectile {
 			changeSprite("twin_slasher_charged_proj", false);
 			changedSprite = true;
 		} 
+		if (sprite.name is "twin_slasher_trail" && sprite.isAnimOver()) {
+			destroySelfNoEffect();
+		}
 	}
 
 	public override void onHitDamagable(IDamagable damagable) {
 		base.onHitDamagable(damagable);
+		damager.damage = 0;
+		changeSprite("twin_slasher_trail", true);
+		vel *= 0.5f;
+		changedSprite = true;
 		if (!ownedByLocalPlayer) {
 			return;
 		}

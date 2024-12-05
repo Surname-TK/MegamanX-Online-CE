@@ -13,7 +13,7 @@ public class GroundHunter : Weapon {
 		weaponSlotIndex = 127;
 		weaponBarIndex = 65;
 		weaponBarBaseIndex = 76;
-		shootSounds = new string[] {"","","",""};
+		shootSounds = new string[] {"busterX4","busterX4","busterX4","buster2X4"};
 		weaknessIndex = (int)WeaponIds.FrostTower;
 		/* damage = "2/1-1";
 		hitcooldown = "0/0.5-0";
@@ -91,10 +91,12 @@ public class GroundHunterProj : Projectile {
 		projId = (int)ProjIds.GroundHunter;
 		this.player = player;
 		wallCrawlSpeed = projSpeed;
-		maxTime = 0.75f;
-		useGravity = true;
-		gravityModifier = 0.5f;
+		maxDistance = 250;
+		useGravity = false;
+		// gravityModifier = 0.5f;
+		vel.y = 25;
 		fadeSprite = "ground_hunter_fade";
+		fadeOnAutoDestroy = true;
 		canBeLocal = false;
 
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
@@ -121,6 +123,7 @@ public class GroundHunterProj : Projectile {
 			changeSprite("ground_hunter_fall", false);
 			stopMoving();
 			vel.y = Physics.MaxFallSpeed;
+			moveDistance -= 125;
 		}
 		
 		if (deltaPos.y > 0 && !down && groundedOnce) {
@@ -186,6 +189,8 @@ public class GroundHunterChargedProj : Projectile {
 		maxTime = 1f;
 		this.player = player;
 		destroyOnHit = false;
+		fadeSprite = "ground_hunter_fade";
+		fadeOnAutoDestroy = true;
 		releasePlasma = player.hasPlasma();
 		canBeLocal = false;
 
@@ -234,6 +239,8 @@ public class GroundHunterSmallProj : Projectile {
 	) {
 		projId = (int)ProjIds.GroundHunterSmall;
 		maxTime = 0.33f;
+		fadeSprite = "ground_hunter_fade";
+		fadeOnAutoDestroy = true;
 		if (type == 2) yScale *= -1;
 		vel.y = -yScale * 300;
 

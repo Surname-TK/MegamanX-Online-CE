@@ -82,7 +82,7 @@ public class FrostTowerProj : Projectile, IDamagable
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 0, 1, player, "frosttower_proj", 
-		0, 0.75f, netProjId, player.ownedByLocalPlayer
+		0, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 2f;
 		projId = (int)ProjIds.FrostTower;

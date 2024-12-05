@@ -13,7 +13,7 @@ public class DoubleCyclone : Weapon {
 		weaponSlotIndex = 129;
 		weaponBarBaseIndex = 78;
         weaponBarIndex = 67;
-		shootSounds = new string[] {"","","",""};
+		shootSounds = new string[] {"fakeDoubleCyclone","fakeDoubleCyclone","fakeDoubleCyclone","fakeDoubleCyclone"};
 		weaknessIndex = (int)WeaponIds.AimingLaser;
 		hasCustomAnim = true;
 		/* damage = "1";
@@ -112,13 +112,14 @@ public class DoubleCycloneProj : Projectile {
 		Player player, ushort? netProjId,
 		bool rpc = false
 	) : base (
-		weapon, pos, xDir, 0, 1,
-		player, "double_cyclone_proj", 0, 0.33f,
+		weapon, pos, xDir, 0, 0.5f,
+		player, "double_cyclone_proj", 0, 0.15f,
 		netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.DoubleCyclone;
 		maxTime = 1f;
 		fadeSprite = "double_cyclone_fade";
+		fadeOnAutoDestroy = true;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 
@@ -144,6 +145,7 @@ public class DoubleCycloneProj : Projectile {
 
 	public override void onHitDamagable(IDamagable damagable) {
 		base.onHitDamagable(damagable);
+		vel = new Point (0, 0);
 		var chr = damagable as Character;
 		var mav = damagable as Maverick;
 

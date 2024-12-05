@@ -45,25 +45,26 @@ public class ShotgunIceProj : Projectile {
 	public int type = 0;
 	public float sparkleTime = 0;
 	public Character? hitChar;
-	public float maxSpeed = 400;
+	public float maxSpeed = 500;
 
 	public ShotgunIceProj(
 		Weapon weapon, Point pos, int xDir, Player player, int type, ushort netProjId,
 		(int x, int y)? velOverride = null, Character? hitChar = null, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 400, 2, player, "shotgun_ice", 0, 0.01f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, 500, 2, player, "shotgun_ice", 0, 0.005f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.ShotgunIce;
-		maxTime = 0.4f;
+		maxTime = 0.35f;
 		this.hitChar = hitChar;
 		if (type == 1) {
 			changeSprite("shotgun_ice_piece", true);
+			damager.damage = 1;
 		}
 
 		fadeSprite = "buster1_fade";
 		this.type = type;
 		if (velOverride != null) {
-			vel = new Point(maxSpeed * velOverride.Value.x, maxSpeed * (velOverride.Value.y * 0.5f));
+			vel = new Point(maxSpeed * (velOverride.Value.x * 0.1f), maxSpeed * (velOverride.Value.y * 0.1f));
 		}
 		reflectable = true;
 		//this.fadeSound = "explosion";
@@ -92,6 +93,7 @@ public class ShotgunIceProj : Projectile {
 	}
 
 	public void onHit() {
+		new Anim(pos, "shotgun_ice_sparkles", xDir, null, true);
 		if (!ownedByLocalPlayer && type == 0) {
 			destroySelf(disableRpc: true);
 			return;
@@ -99,26 +101,28 @@ public class ShotgunIceProj : Projectile {
 		if (type == 0) {
 			destroySelf(disableRpc: true);
 			Character? chr = null;
-			new ShotgunIceProj(
-				weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
-				((-1 * xDir), -2), chr, rpc: true
-			);
-			new ShotgunIceProj(
-				weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
-				((-1 * xDir), -1), chr, rpc: true
-			);
-			new ShotgunIceProj(
-				weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
-				((-1 * xDir), 0), chr, rpc: true
-			);
-			new ShotgunIceProj(
-				weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
-				((-1 * xDir), 1), chr, rpc: true
-			);
-			new ShotgunIceProj(
-				weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
-				((-1 * xDir), 2), chr, rpc: true
-			);
+			Global.level.delayedActions.Add(new DelayedAction(delegate {
+				new ShotgunIceProj(
+					weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
+					((-7 * xDir), -7), chr, rpc: true
+				);
+				new ShotgunIceProj(
+					weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
+					((-9 * xDir), -4), chr, rpc: true
+				);
+				new ShotgunIceProj(
+					weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
+					((-10 * xDir), 0), chr, rpc: true
+				);
+				new ShotgunIceProj(
+					weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
+					((-9 * xDir), 4), chr, rpc: true
+				);
+				new ShotgunIceProj(
+					weapon, pos.clone(), xDir, damager.owner, 1, Global.level.mainPlayer.getNextActorNetId(),
+					((-7 * xDir), 7), chr, rpc: true
+				);
+			}, 1f /60f));
 		}
 	}
 
@@ -212,10 +216,10 @@ public class ShotgunIceProjSled : Projectile {
 
 			float absVelX = MathF.Abs(vel.x);
 			if (absVelX > 200) {
-				damager.damage = 5 + MathInt.Floor((absVelX - 200f) / 25f);
+				damager.damage = 4 + MathInt.Floor((absVelX - 200f) / 25f);
 
-				if (damager.damage > 12) {
-					damager.damage = 12;
+				if (damager.damage > 8) {
+					damager.damage = 8;
 				}
 			}
 		}
@@ -234,14 +238,14 @@ public class ShotgunIceProjSled : Projectile {
 		if (!ownedByLocalPlayer) return;
 
 		if (sprite.frameIndex == sprite.totalFrameNum - 1) {
-			damager.flinch = Global.defFlinch;
+			damager.flinch = Global.halfFlinch;
 			useGravity = true;
 		}
 
 		if (time > 3) {
 			if (!setVelOnce) {
 				setVelOnce = true;
-				damager.damage = 4;
+				damager.damage = 3;
 				damager.flinch = Global.defFlinch;
 				vel.x = xDir * 175;
 			}

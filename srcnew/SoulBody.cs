@@ -13,7 +13,7 @@ public class SoulBody : Weapon {
 		weaponSlotIndex = 125;
         weaponBarBaseIndex = 74;
         weaponBarIndex = 63;
-		shootSounds = new string[] {"","","",""};
+		shootSounds = new string[] {"buster2X4","buster2X4","buster2X4","buster2X4"};
 		weaknessIndex = (int)WeaponIds.LightningWeb;
 		/* damage = "1/3";
 		hitcooldown = "0.5/0.75";
@@ -63,7 +63,7 @@ public class SoulBodyHologram : Projectile {
 		changeSprite(mmx.sprite.name, false);
 		frameIndex = mmx.frameIndex;
 		mmx.sBodyHologram = this;
-		maxTime = 1.5f;
+		maxTime = 2.5f;
 		setIndestructableProperties();
 		canBeLocal = false;
 

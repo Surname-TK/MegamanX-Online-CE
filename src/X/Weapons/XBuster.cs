@@ -289,12 +289,12 @@ public class XBuster : Weapon {
 		if (mmx.forceStocks >= 1) {
 			new BusterStockProj(this, pos, xDir, player, player.getNextActorNetId());
 			mmx.forceStocks--;
-			sound = "buster2";
+			sound = "buster2X4";
 		} else {
 			BusterProj lemon = new BusterProj(
 				this, pos, xDir, 0, player, player.getNextActorNetId());
 			lemonsOnField.Add(lemon);
-			sound = "buster";
+			sound = "busterX4";
 		}
 
 		if (!string.IsNullOrEmpty(sound)) character.playSound(sound, sendRpc: true);	
@@ -319,12 +319,12 @@ public class XBuster : Weapon {
 				sound = "buster3";
 			} else if (chargeLevel == 1) {
 				new Buster2Proj(this, pos, xDir, player, player.getNextActorNetId());
-				sound = "buster2";
+				sound = "buster2X4";
 			} else {
 				BusterProj lemon = new BusterProj(
 					this, pos, xDir, 0, player, player.getNextActorNetId());
 				lemonsOnField.Add(lemon);
-				sound = "buster";
+				sound = "busterX4";
 			}
 
 		if (!string.IsNullOrEmpty(sound)) character.playSound(sound, sendRpc: true);	

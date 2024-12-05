@@ -127,6 +127,7 @@ public class RisingFireChargedState : CharState {
 	private Projectile? proj;
 
     public RisingFireChargedState() : base("risingfire_charged") {
+		superArmor = true;
 		useDashJumpSpeed = true;
 	}
 
@@ -222,7 +223,7 @@ public class RisingFireProjChargedStart : Projectile {
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 0f, 2f, player, "risingfire_proj_charged",
-		Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 0.6f;
 		projId = (int)ProjIds.RisingFireChargedStart;
@@ -314,7 +315,7 @@ public class RisingFireWaterProjCharged : Projectile {
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 0, 1, player, "risingfire_proj_water", 
-		0, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 0.6f;
 		projId = (int)ProjIds.RisingFireUnderwaterCharged;
