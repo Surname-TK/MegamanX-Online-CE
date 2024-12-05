@@ -113,6 +113,11 @@ public class AimingLaserHud : Anim {
 		mmx = player.character as MegamanX ?? throw new NullReferenceException();
 		mmx.aLaserHud = this;
 		ang = ang + (frame * 12.8f);
+
+		finalAng = xDir > 0 ? ang : -ang + 128;
+		float posX = mmx.getCenterPos().x + (distance * Helpers.cosb(finalAng));
+		float posY = mmx.getCenterPos().y + (distance * Helpers.sinb(finalAng));
+		changePos(new Point(posX, posY));
 	}
 
 	public override void update() {
@@ -154,6 +159,9 @@ public class AimingLaserCursor : Projectile {
 		mmx = player.character as MegamanX ?? throw new NullReferenceException();
 		mmx.aLaserCursor = this;
 		setIndestructableProperties();
+
+		laserAngle = xDir > 0 ? 0 : 128;
+		changePos(mmx.getCenterPos().add(Point.createFromByteAngle(laserAngle).times(laserDistance)));
 	}
 
 	public override void update() {

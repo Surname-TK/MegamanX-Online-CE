@@ -15,7 +15,6 @@ public class SoulBody : Weapon {
         weaponBarIndex = 63;
 		shootSounds = new string[] {"","","",""};
 		weaknessIndex = (int)WeaponIds.LightningWeb;
-		hasCustomAnim = true;
 		/* damage = "1/3";
 		hitcooldown = "0.5/0.75";
 		Flinch = "0/13";
@@ -32,7 +31,7 @@ public class SoulBody : Weapon {
 
 	public override void shoot(Character character, int[] args) {
 		int chargeLevel = args[0];
-		Point pos = character.getShootPos();
+		Point pos = character.pos;
 		int xDir = character.getShootXDir();
 		Player player = character.player;
 

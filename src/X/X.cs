@@ -747,7 +747,7 @@ public partial class MegamanX : Character {
 
 		//Spends ammo and spawns the projectile.
 		
-		if (player.weapons[player.hyperChargeSlot] is not XBuster) {
+		if (player.weapon is HyperCharge && player.weapons[player.hyperChargeSlot] is not XBuster) {
 			player.weapon.addAmmo(ammoUsage, player);
 		}
 
