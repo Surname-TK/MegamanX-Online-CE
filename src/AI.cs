@@ -1437,7 +1437,7 @@ public class AI {
 			return;
 		}
 		// Go hypermode 
-		if (player.currency >= 10 && !zero.isBlackZero && !zero.isInvulnerable()
+		if (player.currency >= 10 && !zero.isBlack && !zero.isInvulnerable()
 			&& zero.charState is not HyperBusterZeroStart and not WarpIn) {
 			zero.changeState(new HyperBusterZeroStart(), true);
 		}

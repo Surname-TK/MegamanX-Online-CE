@@ -125,7 +125,7 @@ public class BusterZeroDoubleBuster : CharState {
 			character.playSound("buster3X3", sendRpc: true);
 			new DZBuster3Proj(
 				character.getShootPos(), character.getShootXDir(),
-				zero.isBlackZero, player, player.getNextActorNetId(), rpc: true
+				zero.isBlack, player, player.getNextActorNetId(), rpc: true
 			);
 		}
 		if (!fired2 && character.frameIndex == 7) {
@@ -135,7 +135,7 @@ public class BusterZeroDoubleBuster : CharState {
 				character.playSound("buster3X3", sendRpc: true);
 				new DZBuster3Proj(
 					character.getShootPos(), character.getShootXDir(),
-					zero.isBlackZero, player, player.getNextActorNetId(), rpc: true
+					zero.isBlack, player, player.getNextActorNetId(), rpc: true
 				);
 			} else {
 				zero.stockedBusterLv = 0;
@@ -213,7 +213,7 @@ public class BusterZeroHadangeki : CharState {
 			fired = true;
 			new DZHadangekiProj(
 				character.pos.addxy(30 * character.xDir, -20), character.xDir,
-				zero.isBlackZero, player, player.getNextActorNetId(), rpc: true
+				zero.isBlack, player, player.getNextActorNetId(), rpc: true
 			);
 		}
 		if (character.isAnimOver()) {
@@ -258,7 +258,7 @@ public class BusterZeroHadangekiWall : CharState {
 			fired = true;
 			new DZHadangekiProj(
 				character.pos.addxy(30 * -wallDir, -20), -wallDir,
-				zero.isBlackZero, player, player.getNextActorNetId(), rpc: true
+				zero.isBlack, player, player.getNextActorNetId(), rpc: true
 			);
 		}
 		if (character.isAnimOver()) {
@@ -299,7 +299,7 @@ public class HyperBusterZeroStart : CharState {
 			} else {
 				time = Global.spf;
 				radius = 0;
-				zero.isBlackZero = true;
+				zero.isBlack = true;
 				character.playSound("ching");
 				// character.fillHealthToMax();
 			}

@@ -1233,6 +1233,13 @@ public class LadderClimb : CharState {
 
 	public override void update() {
 		base.update();
+		// MegamanX? mmx = character as MegamanX;
+
+		bool isBlackZero = character is Zero zero && zero.isBlack ||
+			character is PunchyZero kknuckle && kknuckle.isBlack ||
+			character is BusterZero zbuster && zbuster.isBlack;
+
+		// Vile? vile = character as Vile;
 		character.changePos(new Point(snapX, character.pos.y));
 		character.xPushVel = 0;
 		character.vel.x = 0;
@@ -1249,12 +1256,13 @@ public class LadderClimb : CharState {
 		} else {
 			character.frameSpeed = 0;
 		}
+		float climbSpeedMod = !player.hasArmArmor(0) || isBlackZero || player.speedDevil ? 2 : 1;
 		if (!isAttacking && character.canClimbLadder()) {
 			if (player.input.isHeld(Control.Up, player)) {
-				character.move(new Point(0, -75));
+				character.move(new Point(0, -75 * climbSpeedMod));
 				character.frameSpeed = 1;
 			} else if (player.input.isHeld(Control.Down, player)) {
-				character.move(new Point(0, 75));
+				character.move(new Point(0, 75 * climbSpeedMod));
 				character.frameSpeed = 1;
 			}
 		}

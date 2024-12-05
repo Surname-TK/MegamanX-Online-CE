@@ -1456,7 +1456,7 @@ public partial class Level {
 				if (camPlayer.character?.charState is not InRideChaser &&
 					(camPlayer.character as Axl)?.isZooming() != true
 				) {
-					int camSpeed = 40;
+					int camSpeed = 6;
 					if (MathF.Abs(deltaX) > camSpeed) {
 						deltaX = camSpeed * MathF.Sign(fullDeltaX);
 					}

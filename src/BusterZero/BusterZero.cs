@@ -6,7 +6,7 @@ namespace MMXOnline;
 public class BusterZero : Character {
 	public float zSaberCooldown;
 	public float lemonCooldown;
-	public bool isBlackZero;
+	public bool isBlack;
 	public int stockedBusterLv;
 	public bool stockedSaber;
 	public List<DZBusterProj> zeroLemonsOnField = new();
@@ -38,7 +38,7 @@ public class BusterZero : Character {
 		}
 		// Hypermode music.
 		if (!Global.level.isHyper1v1()) {
-			if (isBlackZero && ownedByLocalPlayer) {
+			if (isBlack && ownedByLocalPlayer) {
 				if (musicSource == null) {
 					addMusicSource("zero_X3", getCenterPos(), true);
 				}
@@ -91,7 +91,7 @@ public class BusterZero : Character {
 	public override bool normalCtrl() {
 		// Handles Standard Hypermode Activations.
 		if (player.currency >= Player.zBusterZeroHyperCost &&
-			!isBlackZero &&
+			!isBlack &&
 			player.input.isHeld(Control.Special2, player) &&
 			charState is not HyperZeroStart and not WarpIn
 		) {
@@ -216,7 +216,7 @@ public class BusterZero : Character {
 		} else if (chargeLevel == 2) {
 			playSound("buster3X3", sendRpc: true);
 			new DZBuster3Proj(
-				shootPos, xDir, isBlackZero, player, player.getNextActorNetId(), rpc: true
+				shootPos, xDir, isBlack, player, player.getNextActorNetId(), rpc: true
 			);
 			lemonCooldown = 22f / 60f;
 		} else if (chargeLevel == 3) {
@@ -257,7 +257,7 @@ public class BusterZero : Character {
 		Projectile? proj = id switch {
 			(int)MeleeIds.SaberSwing => new GenericMeleeProj(
 				meleeWeapon, projPos, ProjIds.DZMelee, player,
-				3, isBlackZero ? Global.defFlinch : Global.halfFlinch, 0.5f, isReflectShield: true, addToLevel: addToLevel
+				3, isBlack ? Global.defFlinch : Global.halfFlinch, 0.5f, isReflectShield: true, addToLevel: addToLevel
 			),
 			_ => null
 		};
@@ -279,13 +279,13 @@ public class BusterZero : Character {
 
 	public override void increaseCharge() {
 		float factor = 1;
-		if (isBlackZero) factor = 1.5f;
+		if (isBlack) factor = 1.5f;
 		chargeTime += Global.speedMul * factor;
 	}
 
 	public override float getRunSpeed() {
 		float runSpeed = 90;
-		if (isBlackZero) {
+		if (isBlack) {
 			runSpeed *= 1.15f;
 		}
 		return runSpeed * getRunDebuffs();
@@ -296,21 +296,21 @@ public class BusterZero : Character {
 			return getRunSpeed();
 		}
 		float dashSpeed = 210;
-		if (isBlackZero) {
+		if (isBlack) {
 			dashSpeed *= 1.15f;
 		}
 		return dashSpeed * getRunDebuffs();
 	}
 
 	public override bool canAirDash() {
-		return dashedInAir == 0 || (dashedInAir == 1 && isBlackZero);
+		return dashedInAir == 0 || (dashedInAir == 1 && isBlack);
 	}
 
 	public override bool canAirJump() {
 		if (isWading() && !isUnderwater()) {
 			return true;
 		}
-		return dashedInAir == 0 || (dashedInAir == 1 && isBlackZero);
+		return dashedInAir == 0 || (dashedInAir == 1 && isBlack);
 	}
 
 	public override float getLabelOffY() {
@@ -325,7 +325,7 @@ public class BusterZero : Character {
 		List<ShaderWrapper> shaders = new();
 		ShaderWrapper? palette = null;
 
-		if (isBlackZero) {
+		if (isBlack) {
 			palette = player.zeroPaletteShader;
 			palette?.SetUniform("palette", 1);
 			palette?.SetUniform("paletteTexture", Global.textures["hyperBusterZeroPalette"]);
@@ -342,7 +342,7 @@ public class BusterZero : Character {
 	public override List<byte> getCustomActorNetData() {
 		List<byte> customData = base.getCustomActorNetData();
 		customData.Add(Helpers.boolArrayToByte([
-			isBlackZero,
+			isBlack,
 		]));
 		return customData;
 	}
@@ -351,6 +351,6 @@ public class BusterZero : Character {
 		base.updateCustomActorNetData(data);
 		data = data[data[0]..];
 		bool[] flags = Helpers.byteToBoolArray(data[0]);
-		isBlackZero = flags[0];
+		isBlack = flags[0];
 	}
 }

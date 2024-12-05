@@ -1349,7 +1349,7 @@ public class RAIdle : RideArmorState {
 			} /*else {
 				rideArmor.changeState(new RAIdle());
 			}**/
-			groundCode();
+			commonGroundCode();
 			if (player.input.isPressed(Control.Dash, player) && rideArmor.canDash()) {
 				rideArmor.changeState(new RADash());
 			}
