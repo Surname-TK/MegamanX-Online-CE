@@ -2046,11 +2046,13 @@ public class GameMode {
 			if (mainPlayer.character != null && !mainPlayer.character.destroyed) {
 				mmx = mainPlayer.character as MegamanX ?? throw new NullReferenceException();
 			}
-			if (weapon is Weapon wp && selected){
+			if (weapon is HyperCharge) {
+				drawWeaponSlotCooldown(x, y, mmx.hyperchargeCooldown / mmx.oldHyperCooldown);
+			} else if (weapon is Weapon && selected) {
 				drawWeaponSlotCooldown(x, y, mmx.shootCooldown / mmx.oldCooldown);
-			}/*
-
-			if (weapon is HyperCharge &&
+			}
+			
+			/*if (weapon is HyperCharge &&
 				!mainPlayer.isSpectator &&
 				mainPlayer.weapons[level.mainPlayer.hyperChargeSlot].ammo == 0
 			) {

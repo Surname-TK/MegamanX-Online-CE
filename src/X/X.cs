@@ -37,6 +37,7 @@ public partial class MegamanX : Character {
 	public float shootCooldown;
 	public float oldCooldown;
 	public float hyperchargeCooldown;
+	public float oldHyperCooldown;
 	public float novaStrikeCooldown; // This one is mostly used just to show its cooldown on screen.
 	public float hadoukenCooldownTime;
 	public float maxHadoukenCooldownTime = 10f;
@@ -731,7 +732,6 @@ public partial class MegamanX : Character {
 		//Triggers weapon cooldown.
 		shootCooldown = player.weapon is HyperCharge hc ?
 			hc.getRateOfFire(player) : player.weapon.fireRate;
-		oldCooldown = shootCooldown;
 		//Triggers hypercharge special cooldown if used.
 		if (player.weapon is HyperCharge h) hyperchargeCooldown = h.getRateOfFire(player);
 		//Triggers hypercharge special cooldown when shooting a charged shot.
@@ -741,6 +741,8 @@ public partial class MegamanX : Character {
 				hyperchargeCooldown = hcWep.getRateOfFire(player);
 			}
 		}
+		oldCooldown = shootCooldown;
+		oldHyperCooldown = hyperchargeCooldown;
 
 
 		//Spends ammo and spawns the projectile.
