@@ -32,6 +32,9 @@ public partial class Global {
 
 	public static uint screenW = 384;
 	public static uint screenH = 216;
+	
+	/*public static uint OGscreenW = 256;
+	public static uint OGscreenH = 224;*/
 
 	public static uint viewScreenW { get { return screenW * (uint)viewSize; } }
 	public static uint viewScreenH { get { return screenH * (uint)viewSize; } }
