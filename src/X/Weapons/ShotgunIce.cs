@@ -64,7 +64,7 @@ public class ShotgunIceProj : Projectile {
 		fadeSprite = "buster1_fade";
 		this.type = type;
 		if (velOverride != null) {
-			vel = new Point(maxSpeed * (velOverride.Value.x * 0.1f), maxSpeed * (velOverride.Value.y * 0.1f));
+			vel = new Point(type == 0 ? maxSpeed * xDir : maxSpeed * (velOverride.Value.x * 0.1f), maxSpeed * (velOverride.Value.y * 0.1f));
 		}
 		reflectable = true;
 		//this.fadeSound = "explosion";
