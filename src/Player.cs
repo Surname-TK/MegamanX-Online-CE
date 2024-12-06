@@ -415,6 +415,7 @@ public partial class Player {
 
 	// Shaders
 	public ShaderWrapper xPaletteShader = Helpers.cloneShaderSafe("palette");
+	public ShaderWrapper uaxPaletteShader = Helpers.cloneShaderSafe("palette_ua");
 	public ShaderWrapper invisibleShader = Helpers.cloneShaderSafe("invisible");
 	public ShaderWrapper zeroPaletteShader = Helpers.cloneGenericPaletteShader("hyperZeroPalette");
 	public ShaderWrapper nightmareZeroShader = Helpers.cloneGenericPaletteShader("paletteViralZero");

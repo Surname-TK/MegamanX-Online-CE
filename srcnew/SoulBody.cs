@@ -59,6 +59,8 @@ public class SoulBodyHologram : Projectile {
 	) {
 		mmx = player.character as MegamanX ?? throw new NullReferenceException();
 		projId = (int)ProjIds.SoulBodyHologram;
+		fadeSprite = "soul_body_fade";
+		fadeOnAutoDestroy = true;
 		frameSpeed = 0;
 		changeSprite(mmx.sprite.name, false);
 		frameIndex = mmx.frameIndex;

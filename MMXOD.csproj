@@ -8,12 +8,12 @@
 		<Version>2.01</Version>
 		<AssemblyVersion>2.01</AssemblyVersion>
 		<ApplicationIcon>app.ico</ApplicationIcon>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net7.0-windows</TargetFramework>
 		<ImplicitUsings>false</ImplicitUsings>
 		<SelfContained>false</SelfContained>
 		<OutputPath>./bin/</OutputPath>
 		<!--OutDir>./bin/anycpu/</OutDir-->
-		<RunWorkingDirectory>./bin/runenv/</RunWorkingDirectory>
+		<RunWorkingDirectory>./bin/</RunWorkingDirectory>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<DebugType>embedded</DebugType>
 		<Deterministic>true</Deterministic>

@@ -1584,26 +1584,29 @@ public partial class MegamanX : Character {
 			index == (int)WeaponIds.AssassinBullet ||
 			index == (int)WeaponIds.Undisguise ||
 			index == (int)WeaponIds.UPParry ||
-			index == (int)WeaponIds.ForceNovaStrike
+			index == (int)WeaponIds.ForceNovaStrike ||
+			index == (int)WeaponIds.NovaStrike
 		) {
 			index = 0;
 		}
-		if (index == (int)WeaponIds.HyperCharge && ownedByLocalPlayer) {
+		
+		else if (index == (int)WeaponIds.HyperCharge && ownedByLocalPlayer) {
 			index = player.weapons[player.hyperChargeSlot].index;
 		}
-		if (player.hasGoldenArmor()) {
-			index = 33;
-		}
-		if (hasUltimateArmor) {
-			index = 0;
-		}
-		if (sBodyClone != null) index = (int)WeaponIds.SoulBody;
 		
-		palette = player.xPaletteShader;
+		else if (sBodyClone != null) index = (int)WeaponIds.SoulBody;
+
+		else if (player.hasGoldenArmor()) {
+			index = 33;
+		} 
+
+		
+		palette = hasUltimateArmor ? player.uaxPaletteShader : player.xPaletteShader;
 
 		if (!isCStingInvisibleGraphics()) {
+			string textureName = hasUltimateArmor ? "paletteTexture_UA" : "paletteTexture";
 			palette?.SetUniform("palette", index);
-			palette?.SetUniform("paletteTexture", Global.textures["paletteTexture"]);
+			palette?.SetUniform("paletteTexture", Global.textures[textureName]);
 		} else {
 			palette?.SetUniform("palette", this.cStingPaletteIndex % 9);
 			palette?.SetUniform("paletteTexture", Global.textures["cStingPalette"]);

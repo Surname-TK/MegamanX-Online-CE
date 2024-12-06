@@ -135,11 +135,11 @@ public class DoubleCycloneProj : Projectile {
 	public override void update() {
 		base.update();
 
-		if (vel.y > -120 && screenFrames >= 15) {
+		if (vel.y > -120 && screenFrames >= 30) {
 			vel.y -= Global.speedMul * 6;
-			vel.x -= Global.speedMul * xDir * 6;
+			//vel.x -= Global.speedMul * xDir * 6;
 		} 
-		if (Math.Abs(vel.x) < 120 && screenFrames < 15) vel.x += xDir * Global.speedMul * 4;
+		if (Math.Abs(vel.x) < 120 && screenFrames < 30) vel.x += xDir * Global.speedMul * 8;
 		screenFrames++;
 	}
 

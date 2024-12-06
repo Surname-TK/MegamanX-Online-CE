@@ -157,18 +157,19 @@ public class FrostTowerChargedState : CharState {
 		normalCtrl = false;
 		attackCtrl = false;
 		useDashJumpSpeed = true;
+		useGravity = false;
 	}
 
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
 		character.stopMoving();
-		character.useGravity = false;
 		spawnPos = character.getCenterPos().addxy(0, -96);
 	}
 
 	public override void onExit(CharState newState) {
 		base.onExit(newState);
-		character.useGravity = true;
+		MegamanX mmx = character as MegamanX ?? throw new NullReferenceException();
+		mmx.shootCooldown = 60;
 	}
 
 	public override void update() {

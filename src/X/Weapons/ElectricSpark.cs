@@ -126,7 +126,7 @@ public class ElectricSparkProjChargedStart : Projectile {
 		Weapon weapon, Point pos, int xDir, 
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 0, 4, player, "electric_spark_charge_start",
+		weapon, pos, xDir, 0, 2, player, "electric_spark_charge_start",
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.ElectricSparkChargedStart;
