@@ -507,6 +507,7 @@ public class XReviveStart : CharState {
 
 	public XReviveStart() : base("revive_start") {
 		invincible = true;
+		immuneToWind = true;
 	}
 
 	public bool cancellable() {

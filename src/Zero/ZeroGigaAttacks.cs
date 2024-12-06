@@ -343,6 +343,7 @@ public class Rekkoha : CharState {
 	public Rekkoha(Weapon weapon) : base("rekkoha", "", "", "") {
 		this.weapon = weapon;
 		invincible = true;
+		immuneToWind = true;
 	}
 
 	public override void update() {

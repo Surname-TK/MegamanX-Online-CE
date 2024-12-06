@@ -46,8 +46,8 @@ public class NovaStrikeState : CharState {
 	int upOrDown;
 	int leftOrRight;
 	public NovaStrikeState(Point inputDir) : base(getNovaDir(inputDir), "", "", "nova_strike_start") {
-		immuneToWind = true;
 		invincible = true;
+		immuneToWind = true;
 		useDashJumpSpeed = true;
 		normalCtrl = false;
 		attackCtrl = false;

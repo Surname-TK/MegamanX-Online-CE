@@ -237,8 +237,8 @@ public class LightningWebProjWebCharged : Projectile {
 	public override void onHitDamagable(IDamagable damagable) {
 		lastHitTime = 0.2f;
 		if (damagable is Character chr && chr.ownedByLocalPlayer && !chr.isImmuneToKnockback()) {
-			chr.vel = Point.lerp(chr.vel, Point.zero, Global.spf * 25f);
-			chr.slowdownTime = 0.25f;
+			chr.vel = Point.lerp(chr.vel, Point.zero, Global.spf * 50f);
+			chr.slowdownTime = 0.125f;
 		}
 		base.onHitDamagable(damagable);
 	}
