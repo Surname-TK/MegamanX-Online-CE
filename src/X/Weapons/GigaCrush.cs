@@ -150,6 +150,7 @@ public class GigaCrushCharState : CharState {
 
 	public GigaCrushCharState() : base("gigacrush", "", "", "") {
 		invincible = true;
+		immuneToWind = true;
 		useDashJumpSpeed = true;
 	}
 

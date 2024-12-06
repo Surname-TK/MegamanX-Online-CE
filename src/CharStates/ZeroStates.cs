@@ -14,6 +14,7 @@ public class HyperZeroStart : CharState {
 
 	public HyperZeroStart() : base("hyper_start") {
 		invincible = true;
+		immuneToWind = true;
 		useDashJumpSpeed = true;
 	}
 

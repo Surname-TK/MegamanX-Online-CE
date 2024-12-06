@@ -289,6 +289,7 @@ public class HyperBusterZeroStart : CharState {
 
 	public HyperBusterZeroStart() : base("hyper_start") {
 		invincible = true;
+		immuneToWind = true;
 	}
 
 	public override void update() {

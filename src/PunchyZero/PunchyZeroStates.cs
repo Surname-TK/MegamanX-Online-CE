@@ -454,6 +454,7 @@ public class HyperPunchyZeroStart : CharState {
 
 	public HyperPunchyZeroStart() : base("hyper_start") {
 		invincible = true;
+		immuneToWind = true;
 	}
 
 	public override void update() {

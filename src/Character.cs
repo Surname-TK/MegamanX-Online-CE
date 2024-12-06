@@ -1772,8 +1772,8 @@ public partial class Character : Actor, IDamagable {
 		bool clampTo3 = true;
 		switch (this) {
 			case MegamanX mmx:
-				clampTo2 = player.hasArmArmor(ArmorId.None);
-				clampTo3 = player.hasArmArmor(ArmorId.Light) || player.hasArmArmor(ArmorId.Force) || player.weapon is not XBuster;
+				clampTo2 = player.hasArmArmor(ArmorId.None) && !player.hasUltimateArmor();
+				clampTo3 = player.hasArmArmor(ArmorId.Light) || player.hasArmArmor(ArmorId.Force) || player.hasUltimateArmor() || player.weapon is not XBuster;
 				break;
 			case Zero zero:
 				clampTo3 = true;

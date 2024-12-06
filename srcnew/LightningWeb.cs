@@ -8,7 +8,7 @@ public class LightningWeb : Weapon {
 	public LightningWeb()
 	{
 		shootSounds = new string[] { "busterX4", "busterX4", "busterX4", "busterX4" };
-		fireRate = 45;
+		fireRate = 60;
 		index = (int)WeaponIds.LightningWeb;
 		weaponBarBaseIndex = 72;
 		weaponBarIndex = 61;
@@ -178,7 +178,7 @@ public class LightningWebProjWebCharged : Projectile {
 		int type, ushort netProjId, bool rpc = false
 	) : base(
 		weapon, pos, xDir, 0f, 1f, player, "lightningweb_proj_charged", 
-		Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.miniFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = type == 0 ? 1.5f : 1;
 		projId = (int)ProjIds.LightningWebCharged;
@@ -238,7 +238,7 @@ public class LightningWebProjWebCharged : Projectile {
 		lastHitTime = 0.2f;
 		if (damagable is Character chr && chr.ownedByLocalPlayer && !chr.isImmuneToKnockback()) {
 			chr.vel = Point.lerp(chr.vel, Point.zero, Global.spf * 50f);
-			chr.slowdownTime = 0.25f;
+			chr.slowdownTime = 0.125f;
 		}
 		base.onHitDamagable(damagable);
 	}

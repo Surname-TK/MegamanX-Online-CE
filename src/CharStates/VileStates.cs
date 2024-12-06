@@ -56,7 +56,9 @@ public class VileRevive : CharState {
 	Vile vile;
 
 	public VileRevive(bool isMK5) : base(isMK5 ? "revive_to5" : "revive") {
+		useGravity = false;
 		invincible = true;
+		immuneToWind = true;
 		this.isMK5 = isMK5;
 	}
 

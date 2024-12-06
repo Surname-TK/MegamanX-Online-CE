@@ -821,7 +821,11 @@ public partial class MegamanX : Character {
 				break;
 
 			default:
-				w.shoot(character, args);
+				if (player.hasUltimateArmor()) {
+					w.shootPlasma(character, args);
+				} else {
+					w.shoot(character, args);
+				}
 				break;
 		}
 	}

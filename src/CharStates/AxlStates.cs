@@ -9,6 +9,7 @@ public class HyperAxlStart : CharState {
 
 	public HyperAxlStart(bool isGrounded) : base(isGrounded ? "hyper_start" : "hyper_start_air", "", "", "") {
 		invincible = true;
+		immuneToWind = true;
 	}
 
 	public override void update() {
