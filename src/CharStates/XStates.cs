@@ -63,8 +63,9 @@ public class XHover : CharState {
 			character.vel.y = 53;
 		}
 
-		hoverTime += Global.spf;
-		if (hoverTime > 2 || player.input.checkDoubleTap(Control.Dash)) {
+		//Infinite Hover while UA.
+		if (!player.hasUltimateArmor()) hoverTime += Global.speedMul;
+		if (hoverTime > 120 || player.input.checkDoubleTap(Control.Dash)) {
 			character.changeState(new Fall(), true);
 		}
 	}

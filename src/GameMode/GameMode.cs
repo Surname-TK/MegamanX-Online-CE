@@ -1543,7 +1543,7 @@ public class GameMode {
 					int spriteIndex = weapon.weaponBarIndex;
 					if (weapon.drawGrayOnLowAmmo && weapon.ammo < weapon.getAmmoUsage(0) ||
 						(weapon is GigaCrush && !weapon.canShoot(0, player)) ||
-						(weapon is NovaStrike && !weapon.canShoot(0, player)) ||
+						//(weapon is NovaStrike && !weapon.canShoot(0, player)) ||
 						(weapon is HyperCharge hc && !hc.canShootIncludeCooldown(level.mainPlayer))) {
 						spriteIndex = grayAmmoIndex;
 					}
@@ -1552,7 +1552,11 @@ public class GameMode {
 					}
 					Global.sprites["hud_weapon_full"].drawToHUD(spriteIndex, baseX, baseY);	
 				} else {
-					Global.sprites["hud_health_empty"].drawToHUD(0, baseX, baseY);
+					//UA NovaStrike case
+					bool isNovaStrike = weapon is NovaStrike;
+					string barSprite = isNovaStrike ? "hud_weapon_full" : "hud_health_empty";
+					int barColor = isNovaStrike ? 36 : 0; 
+					Global.sprites[barSprite].drawToHUD(barColor, baseX, baseY);
 				}
 				baseY -= 2;
 			}

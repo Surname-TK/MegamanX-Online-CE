@@ -6,72 +6,67 @@ public class NovaStrike : Weapon {
 	public const float ammoUsage = 14;
 	public NovaStrike(Player? player) : base() {
 		if (player != null) {
-			damager = new Damager(player, 2, Global.halfFlinch, 0.5f);
+			int flinch = player.hasUltimateArmor() ? 0 : Global.halfFlinch;
+			damager = new Damager(player, 2, flinch, 0.5f);
 		}
 		shootSounds = new string[] { "", "", "", "" };
 		fireRate = 60;
 		index = (int)WeaponIds.NovaStrike;
 		weaponBarBaseIndex = 42;
-		weaponBarIndex = 36;
+		weaponBarIndex = 12;
 		weaponSlotIndex = 95;
 		killFeedIndex = 104;
 		ammo = 28;
-		drawGrayOnLowAmmo = true;
+		drawGrayOnLowAmmo = false;
 		drawRoundedDown = true;
 		hasCustomAnim = true;
 	}
 
 	public override void shoot(Character character, int[] args) {
 		if (character.ownedByLocalPlayer) {
-			Point inputDir = character.player.input.getInputDir(character.player);
-			character.changeState(new NovaStrikeState(inputDir), true);
+			MegamanX mmx = character as MegamanX ?? throw new NullReferenceException();
+			mmx.novaStrikeCooldown = fireRate;
+			int level = mmx.novaStrikeLevel(ammo);
+
+			character.changeState(new NovaStrikeState(level), true);
+			addAmmo(-ammoUsage, mmx.player);
 		}
-		MegamanX mmx = character as MegamanX ?? throw new NullReferenceException();
-		mmx.novaStrikeCooldown = fireRate;
+		
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (Global.level?.isHyper1v1() == true) {
 			return 0;
 		}
-		return ammoUsage;
+		return 0;
 	}
 
 	public override bool canShoot(int chargeLevel, Player player) {
-		return player.character?.flag == null && ammo >= (player.hasChip(3) ? ammoUsage / 2 : ammoUsage);
+		return player.character?.flag == null/*  && ammo >= (player.hasChip(3) ? ammoUsage / 2 : ammoUsage) */;
 	}
 }
 
 public class NovaStrikeState : CharState {
 	int upOrDown;
 	int leftOrRight;
-	public NovaStrikeState(Point inputDir) : base(getNovaDir(inputDir), "", "", "nova_strike_start") {
-		invincible = true;
-		immuneToWind = true;
+	int level;
+	float[] speed = new float[] {120, 300, 420};
+	public NovaStrikeState(int level) : base(getLevel(level), "", "", "nova_strike_start") {
+		invincible = level >= 3;
+		immuneToWind = level >= 2;
+		superArmor = level >= 2;
 		useDashJumpSpeed = true;
 		normalCtrl = false;
 		attackCtrl = false;
 		useGravity = false;
-
-		if (inputDir.y != 0) upOrDown = (int)inputDir.y;
-		else leftOrRight = 1;
+		this.level = level;
 	}
 
 	public override void update() {
 		base.update();
 
-		if (!once && character.isAnimOver()) {
-			once = true;
-
-			if (Helpers.randomRange(0, 10) < 10) {
-				character.playSound("novaStrikeX4", forcePlay: false, sendRpc: true);
-			} else {
-				character.playSound("novaStrikeX6", forcePlay: false, sendRpc: true);
-			}
-		}
-
 		if (!inTransition()) {
-			if (!character.tryMove(new Point(character.xDir * 350 * leftOrRight, 350 * upOrDown), out _) ||
+			if (!character.tryMove(new Point(character.xDir * speed[level - 1], 350 * upOrDown), out _) ||
 				character.flag != null || stateTime > 0.6f
 			) {
 				character.changeToIdleOrFall();
@@ -92,12 +87,17 @@ public class NovaStrikeState : CharState {
 		character.yDir = 1;
 	}
 
-	static string getNovaDir(Point input) {
-		if (input.y != 0) {
-			if (input.y == -1) return "nova_strike_up";
-			return "nova_strike_down";
-		}
-
-		return "nova_strike";
+	public override void onTransition() {
+		string sound = level >= 3 ? "novaStrikeX6" : "novaStrikeX4";
+		character.playSound(sound, sendRpc: true);
 	}
+
+	static string getLevel(int lv) {
+		return lv switch {
+			3 => "nova_strike_3",
+			2 => "nova_strike_2",
+			_ => "nova_strike"
+		};
+	}
+
 }

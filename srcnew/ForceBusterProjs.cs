@@ -43,7 +43,7 @@ public class BusterForcePlasmaProj : Projectile {
 		fadeOnAutoDestroy = true;
 		maxTime = 0.5f;
 		projId = (int)ProjIds.PlasmaBuster;
-		destroyOnHit = true;
+		destroyOnHit = !player.hasUltimateArmor();
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
