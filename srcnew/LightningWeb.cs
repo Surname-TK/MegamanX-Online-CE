@@ -63,7 +63,7 @@ public class LightningWebProj : Projectile {
 
 	public override void update() {
 		base.update();
-		
+		if (!ownedByLocalPlayer) {return;}
 		if (character.player.input.isPressed(Control.Shoot, character.player)) {
 			destroySelf();
 		}
@@ -152,7 +152,7 @@ public class LightningWebProjCharged : Projectile {
 
 	public override void update() {
 		base.update();
-		 
+		if (!ownedByLocalPlayer) {return;}
 		if (character.player.input.isPressed(Control.Shoot, character.player)) {
 			destroySelf();
 		}
