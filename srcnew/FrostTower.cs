@@ -84,7 +84,7 @@ public class FrostTowerProj : Projectile, IDamagable
 		weapon, pos, xDir, 0, 1, player, "frosttower_proj", 
 		0, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
-		maxTime = 2f;
+		maxTime = 2.5f;
 		projId = (int)ProjIds.FrostTower;
 		grounded = false;
 		canBeGrounded = true;
