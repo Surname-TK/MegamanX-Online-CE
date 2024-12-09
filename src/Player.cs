@@ -127,7 +127,7 @@ public partial class Player {
 	public const int reviveSigmaCost = 10;
 	public const int reviveXCost = 10;
 	public const int goldenArmorCost = 5;
-	public const int ultimateArmorCost = 5;
+	public const int ultimateArmorCost = 10;
 	public bool lastDeathCanRevive;
 	public int vileFormToRespawnAs;
 	public bool hyperSigmaRespawn;
@@ -415,6 +415,7 @@ public partial class Player {
 
 	// Shaders
 	public ShaderWrapper xPaletteShader = Helpers.cloneShaderSafe("palette");
+	public ShaderWrapper uaxPaletteShader = Helpers.cloneShaderSafe("palette_ua");
 	public ShaderWrapper invisibleShader = Helpers.cloneShaderSafe("invisible");
 	public ShaderWrapper zeroPaletteShader = Helpers.cloneGenericPaletteShader("hyperZeroPalette");
 	public ShaderWrapper nightmareZeroShader = Helpers.cloneGenericPaletteShader("paletteViralZero");
@@ -1792,7 +1793,7 @@ public partial class Player {
 
 	public bool canUpgradeUltimateX() {
 		return character != null &&
-			isX && !isDisguisedAxl && armorFlag == 0 &&
+			isX && !isDisguisedAxl && hasAllForceArmor() &&
 			character.charState is not Die && !Global.level.is1v1() &&
 			!hasUltimateArmor() && !canUpgradeGoldenX() && currency >= ultimateArmorCost;
 	}
@@ -1924,14 +1925,14 @@ public partial class Player {
 		if (character == null || !ownedByLocalPlayer) return;
 
 		if (character is MegamanX) {
-			if (hasHelmetArmor(ArmorId.Force)) {
+			if (hasHelmetArmor(ArmorId.Force) || hasUltimateArmor()) {
 				foreach (Weapon weapon in weapons) {
 					if (weapon is HyperCharge || weapon is GigaCrush ||
 						weapon is ForceNovaStrike || weapon is NovaStrike
 					) {
 						continue;
 					}
-					weapon.addPercentAmmo(25);
+					weapon.addPercentAmmo(hasUltimateArmor() ? 25 : 12.5f);
 				}
 			}
 		} 

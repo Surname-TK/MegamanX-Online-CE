@@ -1197,6 +1197,8 @@ public partial class MegamanX : Character {
 		X3Saber,
 		X6Saber,
 		NovaStrike,
+		NovaStrikeLv2,
+		NovaStrikeLv3,
 		UPGrab,
 		UPPunch,
 		UPParryBlock,
@@ -1218,6 +1220,8 @@ public partial class MegamanX : Character {
 			"mmx_nova_strike" or
 			"mmx_nova_strike_down" or
 			"mmx_nova_strike_up" => MeleeIds.NovaStrike,
+			"mmx_nova_strike_2" => MeleeIds.NovaStrikeLv2,
+			"mmx_nova_strike_3" => MeleeIds.NovaStrikeLv3,
 			"mmx_unpo_grab_dash" => MeleeIds.UPGrab,
 			"mmx_unpo_punch" or
 			"mmx_unpo_air_punch" => MeleeIds.UPPunch,
@@ -1238,7 +1242,7 @@ public partial class MegamanX : Character {
 		};
 	}
 
-	public override Projectile? getMeleeProjById(int id, Point projPos, bool addToLevel = true) {
+	public override Projectile? getMeleeProjById(int id, Point projPos, bool addToLevel = false) {
 		// We create the headbutt melee attack ONLY when X is using x1 helmet, obviosly.
 		if (id == (int)MeleeIds.Headbutt && player.hasHelmetArmor(ArmorId.Light)) {
 			float hDamage = sprite.name.Contains("up_dash") ? 4 : 2;
@@ -1267,6 +1271,12 @@ public partial class MegamanX : Character {
 			(int)MeleeIds.NovaStrike => new GenericMeleeProj(
 				new NovaStrike(player), projPos, ProjIds.NovaStrike, player
 			),
+			(int)MeleeIds.NovaStrikeLv2 => new GenericMeleeProj(
+				new NovaStrike(player), projPos, ProjIds.NovaStrike, player, 3, Global.halfFlinch
+			),
+			(int)MeleeIds.NovaStrikeLv3 => new GenericMeleeProj(
+				new NovaStrike(player), projPos, ProjIds.NovaStrike, player, 4, Global.defFlinch
+			),
 			(int)MeleeIds.UPGrab => new GenericMeleeProj(
 				new XUPGrab(), projPos, ProjIds.UPGrab, player, 0, 0, 0
 			),
@@ -1279,6 +1289,14 @@ public partial class MegamanX : Character {
 			),
 			
 			_ => null
+		};
+	}
+
+	public int novaStrikeLevel(float ammo) {
+		return ammo switch {
+			>= 24 => 3,
+			>= 8 => 2,
+			_ => 1
 		};
 	}
 
@@ -1588,26 +1606,29 @@ public partial class MegamanX : Character {
 			index == (int)WeaponIds.AssassinBullet ||
 			index == (int)WeaponIds.Undisguise ||
 			index == (int)WeaponIds.UPParry ||
-			index == (int)WeaponIds.ForceNovaStrike
+			index == (int)WeaponIds.ForceNovaStrike ||
+			index == (int)WeaponIds.NovaStrike
 		) {
 			index = 0;
 		}
-		if (index == (int)WeaponIds.HyperCharge && ownedByLocalPlayer) {
+		
+		else if (index == (int)WeaponIds.HyperCharge && ownedByLocalPlayer) {
 			index = player.weapons[player.hyperChargeSlot].index;
 		}
-		if (player.hasGoldenArmor()) {
-			index = 33;
-		}
-		if (hasUltimateArmor) {
-			index = 0;
-		}
-		if (sBodyClone != null) index = (int)WeaponIds.SoulBody;
 		
-		palette = player.xPaletteShader;
+		else if (sBodyClone != null) index = (int)WeaponIds.SoulBody;
+
+		else if (player.hasGoldenArmor()) {
+			index = 33;
+		} 
+
+		
+		palette = hasUltimateArmor ? player.uaxPaletteShader : player.xPaletteShader;
 
 		if (!isCStingInvisibleGraphics()) {
+			string textureName = hasUltimateArmor ? "paletteTexture_UA" : "paletteTexture";
 			palette?.SetUniform("palette", index);
-			palette?.SetUniform("paletteTexture", Global.textures["paletteTexture"]);
+			palette?.SetUniform("paletteTexture", Global.textures[textureName]);
 		} else {
 			palette?.SetUniform("palette", this.cStingPaletteIndex % 9);
 			palette?.SetUniform("paletteTexture", Global.textures["cStingPalette"]);
@@ -1681,6 +1702,7 @@ public partial class MegamanX : Character {
 	public override void increaseCharge() {
 		float factor = 1;
 		if (player.hasArmArmor(1)) { factor = 1.5f; }
+		else if (player.hasArmArmor(ArmorId.Force) && player.hasUltimateArmor()) { factor = 1.25f; }
 		chargeTime += Global.speedMul * factor;
 
 		if (isHyperX) {

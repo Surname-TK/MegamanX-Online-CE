@@ -160,6 +160,8 @@ public class CharState {
 		);
 	}
 
+	public virtual void onTransition() {}
+
 	public virtual void render(float x, float y) {
 	}
 
@@ -173,6 +175,7 @@ public class CharState {
 			if (character.isAnimOver() && !Global.level.gameMode.isOver) {
 				sprite = defaultSprite;
 				character.changeSpriteFromName(sprite, true);
+				onTransition();
 			}
 		}
 		var lastLeftWallData = character.getHitWall(-1, 0);

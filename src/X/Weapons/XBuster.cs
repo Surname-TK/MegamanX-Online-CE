@@ -287,12 +287,12 @@ public class XBuster : Weapon {
 		string sound = "";
 
 		if (mmx.forceStocks >= 1) {
-			new BusterStockProj(this, pos, xDir, player, player.getNextActorNetId());
+			new BusterStockProj(this, pos, xDir, player, player.getNextActorNetId(), true);
 			mmx.forceStocks--;
 			sound = "buster2X4";
 		} else {
 			BusterProj lemon = new BusterProj(
-				this, pos, xDir, 0, player, player.getNextActorNetId());
+				this, pos, xDir, 0, player, player.getNextActorNetId(), true);
 			lemonsOnField.Add(lemon);
 			sound = "busterX4";
 		}
@@ -310,19 +310,19 @@ public class XBuster : Weapon {
 		string sound = "";
 
 		if (chargeLevel >= 3) {
-				new BusterForcePlasmaProj(this, pos, xDir, player, player.getNextActorNetId());
+				new BusterForcePlasmaProj(this, pos, xDir, player, player.getNextActorNetId(), true);
 				new Anim(pos, "buster_plasma_muzzle", xDir, null, true);
 				sound = "plasmaShot";
 			} else if (chargeLevel == 2) {
-				new ForceBuster3Proj(this, pos, xDir, player, player.getNextActorNetId());
+				new ForceBuster3Proj(this, pos, xDir, player, player.getNextActorNetId(), true);
 				new Anim(pos.addxy(player.character.xDir + 2, 0), "buster4_x3_muzzle", xDir, null, destroyOnEnd: true);
 				sound = "buster3";
 			} else if (chargeLevel == 1) {
-				new Buster2Proj(this, pos, xDir, player, player.getNextActorNetId());
+				new Buster2Proj(this, pos, xDir, player, player.getNextActorNetId(), true);
 				sound = "buster2X4";
 			} else {
 				BusterProj lemon = new BusterProj(
-					this, pos, xDir, 0, player, player.getNextActorNetId());
+					this, pos, xDir, 0, player, player.getNextActorNetId(), true);
 				lemonsOnField.Add(lemon);
 				sound = "busterX4";
 			}

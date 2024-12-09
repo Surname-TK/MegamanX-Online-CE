@@ -43,7 +43,7 @@ public class BusterForcePlasmaProj : Projectile {
 		fadeOnAutoDestroy = true;
 		maxTime = 0.5f;
 		projId = (int)ProjIds.PlasmaBuster;
-		destroyOnHit = true;
+		destroyOnHit = !player.hasUltimateArmor();
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
@@ -64,7 +64,7 @@ public class BusterForcePlasmaHit : Projectile {
 	public int type = 0;
 	public float xDest = 0;
 	public Actor actorOwner = null!;
-	public Player player = null!;
+	public Player? pl;
 
 	public BusterForcePlasmaHit(
 		int type, Weapon weapon, Point pos, int xDir,
@@ -81,6 +81,10 @@ public class BusterForcePlasmaHit : Projectile {
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 		shouldVortexSuck = false;
+
+		this.type = type;
+		this.pl = player;
+
 		// Hunter
 		if (type == 1) {
 			maxTime = 6;
@@ -126,11 +130,8 @@ public class BusterForcePlasmaHit : Projectile {
 		if (rpc) {
 			byte[] extraArgs = new byte[] { (byte)type };
 
-			rpcCreate(pos, player, netProjId, xDir, extraArgs);
+			rpcCreate(pos, pl, netProjId, xDir, extraArgs);
 		}
-
-		this.type = type;
-		this.player = player;
 	}
 
 	public override void update() {
