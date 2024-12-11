@@ -1541,6 +1541,15 @@ public class GameMode {
 				}
 				if (i < floorOrCeiling) {
 					int spriteIndex = weapon.weaponBarIndex;
+
+					if (weapon is NovaStrike) {
+						spriteIndex = weapon.ammo switch {
+							>= 24 => spriteIndex,
+							>= 8 => 66,
+							_ => 63
+						};
+					}
+
 					if (weapon.drawGrayOnLowAmmo && weapon.ammo < weapon.getAmmoUsage(0) ||
 						(weapon is GigaCrush && !weapon.canShoot(0, player)) ||
 						//(weapon is NovaStrike && !weapon.canShoot(0, player)) ||

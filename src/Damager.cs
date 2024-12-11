@@ -24,6 +24,7 @@ public class Damager {
 		{ (int)ProjIds.PlasmaGun2, 1 },
 		{ (int)ProjIds.VoltTornado, 1 },
 		{ (int)ProjIds.TornadoCharged, 1.2f },
+		{ (int)ProjIds.StockBuster, 0.75f },
 		//{ (int)ProjIds.KKnuckle, 1 },
 		{ (int)ProjIds.PZeroPunch2, 1 },
 		{ (int)ProjIds.PZeroSenpuukyaku, 1 },

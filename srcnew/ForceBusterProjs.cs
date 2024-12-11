@@ -16,6 +16,8 @@ public class BusterStockProj : Projectile {
 		reflectable = true;
 		maxTime = 0.5f;
 		projId = (int)ProjIds.StockBuster;
+		if (player.hasUltimateArmor()) updateDamager(damager.damage, Global.halfFlinch);
+
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}

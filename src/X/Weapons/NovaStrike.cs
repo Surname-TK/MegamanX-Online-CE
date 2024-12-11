@@ -26,7 +26,11 @@ public class NovaStrike : Weapon {
 		if (character.ownedByLocalPlayer) {
 			MegamanX mmx = character as MegamanX ?? throw new NullReferenceException();
 			mmx.novaStrikeCooldown = fireRate;
-			int level = mmx.novaStrikeLevel(ammo);
+			int level = ammo switch {
+				>= 24 => 3,
+				>= 8 => 2,
+				_ => 1
+			};
 
 			character.changeState(new NovaStrikeState(level), true);
 			addAmmo(-ammoUsage, mmx.player);

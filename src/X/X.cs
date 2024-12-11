@@ -94,6 +94,7 @@ public partial class MegamanX : Character {
 	//Force Armor Stuff
 	public int forceStocks;
 	public float[] forceStocksChargeTimes = new float[4];
+	public float uaStockChargeTime;
 	
 	//X4 Weapons variables
 	public SoulBodyHologram? sBodyHologram;
@@ -915,9 +916,15 @@ public partial class MegamanX : Character {
 
 	int forceStocksLogic() {
 		int shots = forceStocks;
-
-		if (chargeTime >= forceStocksChargeTimes[(int)Helpers.clampMax(shots, 3)]) shots++;
-
+		
+		if (!player.hasUltimateArmor()) {
+			if (chargeTime >= forceStocksChargeTimes[(int)Helpers.clampMax(shots, 3)]) shots++;
+		} else {
+			if (uaStockChargeTime >= 60) {
+				uaStockChargeTime = 0;
+				shots++;
+			}
+		}
 		return Math.Min(4, shots);
 	}
 
@@ -1292,14 +1299,6 @@ public partial class MegamanX : Character {
 		};
 	}
 
-	public int novaStrikeLevel(float ammo) {
-		return ammo switch {
-			>= 24 => 3,
-			>= 8 => 2,
-			_ => 1
-		};
-	}
-
 	public void popAllBubbles() {
 		for (int i = chargedBubbles.Count - 1; i >= 0; i--) {
 			chargedBubbles[i].destroySelf();
@@ -1630,8 +1629,10 @@ public partial class MegamanX : Character {
 			palette?.SetUniform("palette", index);
 			palette?.SetUniform("paletteTexture", Global.textures[textureName]);
 		} else {
+			string textureName = hasUltimateArmor ? "cStingPalette_UA" : "cStingPalette";
+			palette = hasUltimateArmor ? player.uaxCStingPaletteShader : palette;
 			palette?.SetUniform("palette", this.cStingPaletteIndex % 9);
-			palette?.SetUniform("paletteTexture", Global.textures["cStingPalette"]);
+			palette?.SetUniform("paletteTexture", Global.textures[textureName]);
 		}
 		if (palette != null) {
 			shaders.Add(palette);
@@ -1645,7 +1646,7 @@ public partial class MegamanX : Character {
 
 	public bool isCStingInvisibleGraphics() {
 		return this is MegamanX {
-			hasUltimateArmor: false,
+			//hasUltimateArmor: false,
 			stingActive: true,
 		};
 	}
@@ -1702,8 +1703,10 @@ public partial class MegamanX : Character {
 	public override void increaseCharge() {
 		float factor = 1;
 		if (player.hasArmArmor(1)) { factor = 1.5f; }
-		else if (player.hasArmArmor(ArmorId.Force) && player.hasUltimateArmor()) { factor = 1.25f; }
 		chargeTime += Global.speedMul * factor;
+		if (player.hasArmArmor(ArmorId.Force) && player.hasUltimateArmor()) {
+			uaStockChargeTime += Global.speedMul * factor;
+		}
 
 		if (isHyperX) {
 			player.weapon.addAmmo(player.weapon.getAmmoUsage(0) * 0.625f * Global.spf, player);
