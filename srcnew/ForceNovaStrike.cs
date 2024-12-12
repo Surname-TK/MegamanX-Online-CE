@@ -13,7 +13,7 @@ public class ForceNovaStrike : Weapon {
 		weaponBarIndex = 36;
 		weaponSlotIndex = 95;
 		killFeedIndex = 104;
-		ammo = 0;
+		ammo = 28;
 		shootSounds = new string[] { "", "", "", "" };
 		drawGrayOnLowAmmo = true;
 		drawRoundedDown = true;
@@ -37,7 +37,7 @@ public class ForceNovaStrike : Weapon {
 	}
 
 	public override bool canShoot(int chargeLevel, Player player) {
-		return player.character?.flag == null && ammo >= ammoUsage;
+		return player.character?.flag == null && (player.hasUltimateArmor() || ammo >= ammoUsage);
 	}
 }
 
@@ -52,12 +52,13 @@ public class ForceNovaStrikeStart : CharState {
 	public override void update() {
 		base.update();
 
-		if (character.isAnimOver() && character.vel.y >= 0) character.changeState(new ForceNovaStrikeState());
+		if (character.isAnimOver() && MathF.Round(character.vel.y) >= 0) character.changeState(new ForceNovaStrikeState());
 	}
 
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
-		character.vel.y = -character.getJumpPower() * 0.5f;
+		character.isDashing = true;
+		character.vel.y = -character.getJumpPower() * 0.6f;
 		if (oldState is WallSlide) character.xDir *= -1;
 		character.xPushVel = character.xDir * 180;
 	}
@@ -79,22 +80,23 @@ public class ForceNovaStrikeState : CharState {
 		base.update();
 
 		if (!character.tryMove(new Point(character.xDir * 350 * leftOrRight, 0), out _)) {
-			player.character.changeState(new Idle(), true);
+			player.character.changeToIdleOrFall();
 			return;
 		}
 
 		if (character.flag != null) {
-			player.character.changeState(new Idle(), true);
+			player.character.changeToIdleOrFall();
 			return;
 		}
 		if (stateTime > 0.6f) {
-			player.character.changeState(new Idle(), true);
+			player.character.changeToIdleOrFall();
 			return;
 		}
 	}
 
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
+		player.character.isDashing = true;
 		player.character.useGravity = false;
 		character.stopMoving();
 		//player.character.vel.y = 0;

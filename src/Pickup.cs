@@ -72,7 +72,7 @@ public class Pickup : Actor {
 					destroySelf(doRpcEvenIfNotOwned: true);
 			} else if (pickupType == PickupType.Ammo) {
 				if (chr.canAddAmmo()) {
-					chr.addPercentAmmo(healAmount);
+					chr.addAmmo(healAmount);
 					destroySelf(doRpcEvenIfNotOwned: true);
 				}
 			}
@@ -178,7 +178,7 @@ public class SmallHealthPickup : Pickup {
 		owner, pos, "pickup_health_small", netId, ownedByLocalPlayer,
 		NetActorCreateId.SmallHealth, sendRpc: sendRpc
 	) {
-		healAmount = 4;
+		healAmount = 2;
 		pickupType = PickupType.Health;
 	}
 }
@@ -191,7 +191,7 @@ public class LargeAmmoPickup : Pickup {
 		owner, pos, "pickup_ammo_large", netId, ownedByLocalPlayer,
 		NetActorCreateId.LargeAmmo, sendRpc: sendRpc
 	) {
-		healAmount = 50;
+		healAmount = 8;
 		pickupType = PickupType.Ammo;
 	}
 }
@@ -204,7 +204,7 @@ public class SmallAmmoPickup : Pickup {
 		owner, pos, "pickup_ammo_small", netId, ownedByLocalPlayer,
 		NetActorCreateId.SmallAmmo, sendRpc: sendRpc
 	) {
-		healAmount = 25;
+		healAmount = 2;
 		pickupType = PickupType.Ammo;
 	}
 }

@@ -110,7 +110,7 @@ public class FrostTowerProj : Projectile, IDamagable
 
 		if (landed && ownedByLocalPlayer) moveWithMovingPlatform();
 
-		if (!grounded && MathF.Abs(vel.y) > 60) updateDamager(2, Global.halfFlinch);
+		if (!grounded && MathF.Abs(vel.y) > 60) updateDamager(Helpers.clamp(MathF.Floor(deltaPos.y * 0.6f), 1, 4), Global.halfFlinch);
 		else updateDamager(1, 0);
 
 		zIndex = zTime % 2 == 0 ? ZIndex.MainPlayer + 10 : ZIndex.Character - 10;
@@ -120,7 +120,7 @@ public class FrostTowerProj : Projectile, IDamagable
 	}
 	public void applyDamage(float damage, Player? owner, Actor? actor, int? weaponIndex, int? projId) {
 		health -= damage;
-		if (health <= 0) destroySelf();
+		if (health <= 0 || weaponIndex == (int)WeaponIds.RisingFire) destroySelf();
 	}
 
 	public bool canBeDamaged(int damagerAlliance, int? damagerPlayerId, int? projId) {
@@ -202,7 +202,9 @@ public class FrostTowerChargedState : CharState {
 	} 
 }
 
-public class FrostTowerProjCharged : Projectile {
+public class FrostTowerProjCharged : Projectile, IDamagable {
+	public float health = 4;
+	public float maxHealth = 4;
 
 	public bool canReleasePlasma;
 
@@ -215,7 +217,7 @@ public class FrostTowerProjCharged : Projectile {
 	) {
 		maxTime = 2f;
 		projId = (int)ProjIds.FrostTowerCharged;
-		isShield = true;
+		isShield = false;
 		
 		if (rpc) rpcCreate(pos, player, netProjId, xDir);
 	}
@@ -232,13 +234,29 @@ public class FrostTowerProjCharged : Projectile {
 		
 	}
 	
-	public override void onHitWall(CollideData other) {
+	public void applyDamage(float damage, Player? owner, Actor? actor, int? weaponIndex, int? projId) {
+		health -= damage;
+		if (health <= 0 || weaponIndex == (int)WeaponIds.RisingFire) destroySelf();
+	}
+	public bool canBeDamaged(int damagerAlliance, int? damagerPlayerId, int? projId) {
+		return base.owner.alliance != damagerAlliance;
+	}
+	public bool isInvincible(Player attacker, int? projId) {
+		return false;
+	}
+	public bool canBeHealed(int healerAlliance) {
+		return false;
+	}
+	public void heal(Player healer, float healAmount, bool allowStacking = true, bool drawHealText = false) {}
+
+	
+	/*public override void onHitWall(CollideData other) {
 		base.onHitWall(other);
 
 		/* if (other.isCeilingHit()) return;
 		else if (other.isSideWallHit()) return;
-		else if (other.isGroundHit()) destroySelf(); */
-	}
+		else if (other.isGroundHit()) destroySelf(); 
+	}*/
 
 	public override void onHitDamagable(IDamagable damagable) {
 		base.onHitDamagable(damagable);
