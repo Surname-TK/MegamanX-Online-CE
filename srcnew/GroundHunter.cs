@@ -110,6 +110,7 @@ public class GroundHunterProj : Projectile {
 
 	public override void update() {
 		base.update();
+		if (!ownedByLocalPlayer) return;
 
 		//gravityModifier = Helpers.lerp(gravityModifier, 1, (Global.speedMul * 1.5f) / 60);
 		
@@ -205,6 +206,7 @@ public class GroundHunterChargedProj : Projectile {
 
 	public override void update() {
 		base.update();
+		if (!ownedByLocalPlayer) return;
 
 		if (shootCooldown > 0) shootCooldown--;
 

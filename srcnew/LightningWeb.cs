@@ -219,7 +219,7 @@ public class LightningWebProjWebCharged : Projectile {
 						{frameIndex = frameIndex, frameTime = frameTime};
 					}
 				}
-				if (player.hasPlasma()) {
+				if (player.hasPlasma() && ownedByLocalPlayer) {
 					new BusterForcePlasmaHit(
 						6, weapon, pos, xDir, damager.owner,
 						damager.owner.getNextActorNetId(), true

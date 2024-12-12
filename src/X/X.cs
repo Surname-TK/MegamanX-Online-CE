@@ -103,6 +103,7 @@ public partial class MegamanX : Character {
 	public AimingLaserCursor? aLaserCursor;
 	public AimingLaserHud? aLaserHud;
 	public AimingLaserProj? aLaserProj;
+	public List<AimingLaserProj?> aLasers = new();
 	public AimingLaserChargedProj? aLaserChargedProj;
 	public DoubleCycloneChargedSpawn? dCycloneSpawn;
 
@@ -1060,7 +1061,8 @@ public partial class MegamanX : Character {
 			strikeChainChargedProj != null ||
 			isShootingRaySplasher ||
 			aLaserProj != null ||
-			aLaserChargedProj != null;
+			aLaserChargedProj != null ||
+			aLasers.Count >= 1;
 	}
 
 	public void destroyBusterProjs() {
@@ -1249,7 +1251,7 @@ public partial class MegamanX : Character {
 		};
 	}
 
-	public override Projectile? getMeleeProjById(int id, Point projPos, bool addToLevel = false) {
+	public override Projectile? getMeleeProjById(int id, Point projPos, bool addToLevel = true) {
 		// We create the headbutt melee attack ONLY when X is using x1 helmet, obviosly.
 		if (id == (int)MeleeIds.Headbutt && player.hasHelmetArmor(ArmorId.Light)) {
 			float hDamage = sprite.name.Contains("up_dash") ? 4 : 2;
@@ -1257,42 +1259,44 @@ public partial class MegamanX : Character {
 
 			return new GenericMeleeProj(
 				new LhHeadbutt(), projPos, ProjIds.Headbutt, player,
-				hDamage, hFlinch, 0.5f
+				hDamage, hFlinch, 0.5f, addToLevel: addToLevel
 			);
 		}
 
 		return id switch {
 			(int)MeleeIds.SpeedBurnerCharged => new GenericMeleeProj(
-				new SpeedBurner(player), projPos, ProjIds.SpeedBurnerCharged, player
+				new SpeedBurner(player), projPos, ProjIds.SpeedBurnerCharged, player, addToLevel: addToLevel
 			),
 			(int)MeleeIds.Shoryuken => new GenericMeleeProj(
-				new ShoryukenWeapon(player), projPos, ProjIds.Shoryuken, player
+				new ShoryukenWeapon(player), projPos, ProjIds.Shoryuken, player, addToLevel: addToLevel
 			),
 			(int)MeleeIds.X3Saber => new GenericMeleeProj(
-				new XSaber(player), projPos, ProjIds.X3Saber, player
+				new XSaber(player), projPos, ProjIds.X3Saber, player, addToLevel: addToLevel
 			),
 			(int)MeleeIds.X6Saber => new GenericMeleeProj(
 				new XSaber(player), projPos, ProjIds.X6Saber, player,
-				damage:  2, flinch: 0
+				damage:  2, flinch: 0, addToLevel: addToLevel
 			),
 			(int)MeleeIds.NovaStrike => new GenericMeleeProj(
-				new NovaStrike(player), projPos, ProjIds.NovaStrike, player
+				new NovaStrike(player), projPos, ProjIds.NovaStrike, player, addToLevel: addToLevel
 			),
 			(int)MeleeIds.NovaStrikeLv2 => new GenericMeleeProj(
-				new NovaStrike(player), projPos, ProjIds.NovaStrike, player, 3, Global.halfFlinch
+				new NovaStrike(player), projPos, ProjIds.NovaStrike, player, 3, Global.halfFlinch, 
+				addToLevel: addToLevel
 			),
 			(int)MeleeIds.NovaStrikeLv3 => new GenericMeleeProj(
-				new NovaStrike(player), projPos, ProjIds.NovaStrike, player, 4, Global.defFlinch
+				new NovaStrike(player), projPos, ProjIds.NovaStrike, player, 4, Global.defFlinch,
+				addToLevel: addToLevel
 			),
 			(int)MeleeIds.UPGrab => new GenericMeleeProj(
-				new XUPGrab(), projPos, ProjIds.UPGrab, player, 0, 0, 0
+				new XUPGrab(), projPos, ProjIds.UPGrab, player, 0, 0, 0, addToLevel: addToLevel
 			),
 			(int)MeleeIds.UPPunch => new GenericMeleeProj(
 				new XUPPunch(player), projPos, ProjIds.UPPunch, player,
-				flinch: grounded ? Global.defFlinch : Global.halfFlinch
+				flinch: grounded ? Global.defFlinch : Global.halfFlinch, addToLevel: addToLevel
 			),
 			(int)MeleeIds.UPParryBlock => new GenericMeleeProj(
-				new XUPParry(), projPos, ProjIds.UPParryBlock, player, 0, 0, 1
+				new XUPParry(), projPos, ProjIds.UPParryBlock, player, 0, 0, 1, addToLevel: addToLevel
 			),
 			
 			_ => null
@@ -1554,6 +1558,9 @@ public partial class MegamanX : Character {
 			beeSwarm?.destroy();
 		} else {
 			beeSwarm?.reset(hurtState.isMiniFlinch());
+		}
+		for (int i = 0; i < aLasers.Count; i++) {
+			if (aLasers[i] != null) aLasers[i]?.destroySelf();
 		}
 		base.onFlinchOrStun(newState);
 	}

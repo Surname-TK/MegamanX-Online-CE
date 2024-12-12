@@ -8,6 +8,8 @@ public class XHover : CharState {
 	public SoundWrapper? sound;
 	float hoverTime;
 	int startXDir;
+	string newSprite = "";
+	MegamanX mmx = null!;
 	public XHover() : base("hover", "hover_shoot", "", "") {
 		airMove = true;
 		attackCtrl = true;
@@ -21,6 +23,24 @@ public class XHover : CharState {
 		Point inputDir = player.input.getInputDir(player);
 
 		if (inputDir.x == character.xDir) {
+			newSprite = "hover_forward";
+		} else if (inputDir.x == -character.xDir) {
+			if (player.input.isHeld(Control.Jump, player)) newSprite = "hover_backward";
+			else {
+				character.xDir *= -1;
+				newSprite = "hover_forward";
+			} 
+		} else {
+			newSprite = "hover";
+		}
+
+		sprite = newSprite;
+		defaultSprite = sprite;
+		shootSprite = sprite + "_shoot";
+		newSprite = mmx.hasBusterProj() || mmx.shootAnimTime > 0 ? shootSprite : sprite;
+		character.changeSpriteFromNameIfDifferent(newSprite, false);
+
+		/* if (inputDir.x == character.xDir) {
 			if (!sprite.StartsWith("hover_forward")) {
 				sprite = "hover_forward";
 				defaultSprite = sprite;
@@ -52,7 +72,7 @@ public class XHover : CharState {
 				shootSprite = sprite + "_shoot";
 				character.changeSpriteFromName(sprite, false);
 			}
-		}
+		} */
 
 		if (character.vel.y < 0) {
 			character.vel.y += Global.speedMul * character.getGravity();
@@ -72,6 +92,7 @@ public class XHover : CharState {
 
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
+		mmx = character as MegamanX ?? throw new NullReferenceException();
 		character.useGravity = false;
 		character.vel = new Point();
 		startXDir = character.xDir;
@@ -209,7 +230,7 @@ public class X3ChargeShot : CharState {
 			fired = true;
 			Point shootPos = character.getShootPos();
 			int shootDir = character.getShootXDir();
-			mmx.maxArmorChargeShots(state, hyperBusterWeapon);
+			mmx.maxArmorChargeShots(state, hyperBusterWeapon!);
 		}
 
 		if (character.isAnimOver()) {

@@ -181,11 +181,12 @@ public class TwinSlasherProjCharged : Projectile {
 
 	public override void update() {
 		base.update();
+		if (!ownedByLocalPlayer) return;
 
 		Helpers.decrementFrames(ref animCooldown);
 
 		if (animCooldown <= 0) {
-			Anim trail = new Anim(pos, trailName, xDir, damager.owner.getNextActorNetId(), true);
+			Anim trail = new Anim(pos, trailName, xDir, damager.owner.getNextActorNetId(), true, true);
 			animCooldown = 4;
 			trail.yDir = yDir;
 		}

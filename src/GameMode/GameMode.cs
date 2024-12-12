@@ -2061,9 +2061,9 @@ public class GameMode {
 			}
 			if (weapon is HyperCharge) {
 				drawWeaponSlotCooldown(x, y, mmx.hyperchargeCooldown / mmx.oldHyperCooldown);
-			} else if (weapon is Weapon && selected) {
+			} /* else if (weapon is Weapon && selected) {
 				drawWeaponSlotCooldown(x, y, mmx.shootCooldown / mmx.oldCooldown);
-			}
+			} */
 			
 			/*if (weapon is HyperCharge &&
 				!mainPlayer.isSpectator &&
@@ -2226,6 +2226,7 @@ public class GameMode {
 	}
 
 	public static void drawWeaponSlotCooldown(float x, float y, float val) {
+		return; //Bro using a list inside of anoter list :skull:
 		if (val <= 0) return;
 		val = Helpers.clamp01(val);
 

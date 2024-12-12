@@ -80,6 +80,8 @@ public class SoulBodyHologram : Projectile {
 	
 	public override void update() {
 		base.update();
+		if (!ownedByLocalPlayer) return;
+		
 		globalCollider = new Collider(new Rect(0,0, 18, 34).getPoints(), 
 			true, this, false, false, HitboxFlag.Hitbox, Point.zero);
 

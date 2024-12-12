@@ -239,7 +239,8 @@ public class AimingLaserProj : Projectile {
 		this.type = type;
 		//endPos = target.pos. ?? target.getCenterPos();
 		mmx = player.character as MegamanX ?? throw new NullReferenceException();
-		mmx.aLaserProj = this;
+		//mmx.aLaserProj = this;
+		mmx.aLasers.Add(this);
 
 		setEndPos(endPos);
 
@@ -360,10 +361,8 @@ public class AimingLaserProj : Projectile {
 	public override void onDestroy() {
 		base.onDestroy();
 		mmx.aLaserTargets.Remove(target);
-		//target.removeALaserAttacker(mmx);
-		//target.isTargetByALaser = false;
-		mmx.aLaserProj = null!;
-		mmx.changeSpriteFromName(mmx.charState.defaultSprite, true);
+		mmx.aLasers.Remove(this);
+		mmx.shootAnimTime = 0;
 	}
 }
 

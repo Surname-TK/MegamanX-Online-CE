@@ -1737,6 +1737,7 @@ public partial class Character : Actor, IDamagable {
 			else if (busterOffset.x < 0) busterOffset.x -= 4;
 		}
 		busterOffset.x *= xDir;
+		if (charState is XHover && sprite.name.Contains("hover_backward")) busterOffset.x *= -1;
 		if (player.weapon is RollingShield && charState is Dash) {
 			busterOffset.y -= 2;
 		}
