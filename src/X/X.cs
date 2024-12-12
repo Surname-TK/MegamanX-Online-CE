@@ -1553,7 +1553,9 @@ public partial class MegamanX : Character {
 		shotgunIceChargeTime = 0;
 		strikeChainProj?.destroySelf();
 		strikeChainChargedProj?.destroySelf();
+		sBodyHologram?.destroySelf();
 		sBodyClone?.destroySelf();
+		aLaserChargedProj?.destroySelf();
 		if (newState is not Hurt hurtState) {
 			beeSwarm?.destroy();
 		} else {
@@ -1589,6 +1591,10 @@ public partial class MegamanX : Character {
 			return true;
 		}
 		return player.input.isHeld(Control.Shoot, player);
+	}
+
+	public override bool canTurn() {
+		return base.canTurn() && charState is not XHover;
 	}
 
 	public override bool canAirDash() {

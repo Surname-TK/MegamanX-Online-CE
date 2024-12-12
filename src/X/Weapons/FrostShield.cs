@@ -345,7 +345,7 @@ public class FrostShieldProjCharged : Projectile {
 		if (destroyed) return;
 
 		changePos(character.getShootPos());
-		xDir = character.getShootXDir();
+		xDir = character.xDir;
 	}
 
 	public override void onDestroy() {
