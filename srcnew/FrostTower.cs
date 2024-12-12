@@ -120,7 +120,14 @@ public class FrostTowerProj : Projectile, IDamagable
 	}
 	public void applyDamage(float damage, Player? owner, Actor? actor, int? weaponIndex, int? projId) {
 		health -= damage;
-		if (health <= 0 || weaponIndex == (int)WeaponIds.RisingFire) destroySelf();
+		bool isRisingFire =
+			projId == (int)ProjIds.RisingFire ||
+			projId == (int)ProjIds.RisingFireCharged ||
+			projId == (int)ProjIds.RisingFireChargedStart ||
+			projId == (int)ProjIds.RisingFireUnderwater ||
+			projId == (int)ProjIds.RisingFireUnderwaterCharged;
+
+		if (health <= 0 || isRisingFire) destroySelf();
 	}
 
 	public bool canBeDamaged(int damagerAlliance, int? damagerPlayerId, int? projId) {
@@ -236,7 +243,14 @@ public class FrostTowerProjCharged : Projectile, IDamagable {
 	
 	public void applyDamage(float damage, Player? owner, Actor? actor, int? weaponIndex, int? projId) {
 		health -= damage;
-		if (health <= 0 || weaponIndex == (int)WeaponIds.RisingFire) destroySelf();
+		bool isRisingFire =
+			projId == (int)ProjIds.RisingFire ||
+			projId == (int)ProjIds.RisingFireCharged ||
+			projId == (int)ProjIds.RisingFireChargedStart ||
+			projId == (int)ProjIds.RisingFireUnderwater ||
+			projId == (int)ProjIds.RisingFireUnderwaterCharged;
+			
+		if (health <= 0 || isRisingFire) destroySelf();
 	}
 	public bool canBeDamaged(int damagerAlliance, int? damagerPlayerId, int? projId) {
 		return base.owner.alliance != damagerAlliance;
