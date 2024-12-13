@@ -344,7 +344,7 @@ public partial class MegamanX : Character {
 				}
 			}
 
-			unpoShotCount = MathInt.Floor(player.weapon.ammo / player.weapon.getAmmoUsage(0));
+			//unpoShotCount = MathInt.Floor(player.weapon.ammo / player.weapon.getAmmoUsage(0));
 		}
 
 		//Giga Helmet Scan.
@@ -456,6 +456,7 @@ public partial class MegamanX : Character {
 				chargeType = 2;
 			}
 			int level = getChargeLevel();
+			if (player.hasArmArmor(ArmorId.Force) && isHyperX) level = forceStocks;
 			var renderGfx = RenderEffectType.ChargeBlue;
 			renderGfx = level switch {
 				1 => RenderEffectType.ChargeBlue,
@@ -464,7 +465,7 @@ public partial class MegamanX : Character {
 				4 when (chargeType == 0) => RenderEffectType.ChargePink,
 				4 when (chargeType == 1) => RenderEffectType.ChargeOrange,
 				4 when (chargeType == 2) => RenderEffectType.ChargeGreen,
-				_ => RenderEffectType.ChargeGreen
+				_ => RenderEffectType.ChargeBlue
 			};
 			addRenderEffect(renderGfx, 0.033333f, 0.1f);			
 			chargeEffect.update(level, chargeType);
