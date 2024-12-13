@@ -485,6 +485,6 @@ public class AimingLaserChargedProj : Projectile {
 	public override void onDestroy() {
 		base.onDestroy();
 		mmx.aLaserChargedProj = null!;
-		mmx.changeSpriteFromName(mmx.charState.defaultSprite, true);
+		mmx.shootAnimTime = 0;
 	}
 }

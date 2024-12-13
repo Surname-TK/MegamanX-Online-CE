@@ -202,7 +202,8 @@ public class SpinningBladeProjCharged : Projectile {
 
 		float xOff = Helpers.cosd(spinAngle) * xDist;
 		float yOff = Helpers.sind(spinAngle) * xDist;
-		changePos(character.getShootPos().addxy(xDir * xOff, yOff));
+		Point newPos = character.getShootPos();
+		changePos(newPos.addxy(character.getShootXDir() * xOff, yOff));
 
 		if (character.player.input.isPressed(Control.Shoot, character.player) && xDist >= maxXDist) {
 			retracted = true;
@@ -217,6 +218,7 @@ public class SpinningBladeProjCharged : Projectile {
 
 	public override void render(float x, float y) {
 		base.render(x, y);
+		if (character == null) return;
 		Point sPos = character.getShootPos();
 		DrawWrappers.DrawLine(sPos.x, sPos.y, pos.x, pos.y, new Color(0, 224, 0), 3, zIndex - 100);
 		DrawWrappers.DrawLine(sPos.x, sPos.y, pos.x, pos.y, new Color(224, 224, 96), 1, zIndex - 100);

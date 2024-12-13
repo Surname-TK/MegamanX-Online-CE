@@ -94,6 +94,10 @@ public class SoulBodyHologram : Projectile {
 		changeSprite(mmx.sprite.name, false);
 		frameIndex = mmx.frameIndex;
 		frameCount++;
+
+		if (time >= maxTime * 0.75f) {
+			visible = frameCount % 2 == 0;
+		}
 	}
 	
 	public override List<ShaderWrapper>? getShaders() {

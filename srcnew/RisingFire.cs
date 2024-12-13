@@ -137,7 +137,6 @@ public class RisingFireChargedState : CharState {
 		int xDir = character.xDir;
 		Point pos = character.pos;
 		Player player = character.player;
-		Point shootPos = character.getShootPos();
 
 		if (character.sprite.frameIndex >= 3 && !jumpedYet) {
 			jumpedYet = true;
@@ -152,18 +151,20 @@ public class RisingFireChargedState : CharState {
 			Point firePos = character.pos.addxy(poi.x * (float)character.xDir, poi.y);
 
 			if (proj == null) {
-
 				if (!character.isUnderwater()){
-					proj = new RisingFireProjChargedStart(new RisingFire(), pos, xDir, player, player.getNextActorNetId(), true);
+					proj = new RisingFireProjChargedStart(
+						new RisingFire(), pos, xDir, player, player.getNextActorNetId(), true
+					);
 				} else {
-					proj = new RisingFireProjChargedStart(new RisingFire(), pos, xDir, player, player.getNextActorNetId(), true);
+					proj = new RisingFireProjChargedStart(
+						new RisingFire(), pos, xDir, player, player.getNextActorNetId(), true
+					);
 				}
 				proj.releasePlasma = player.hasPlasma();
 			}
-			
 			else proj.changePos(firePos);
-			
 		}
+
 		else if (character.sprite.frameIndex == 3 && proj != null) {
 			proj.destroySelf();
 			proj = null!;
@@ -175,27 +176,17 @@ public class RisingFireChargedState : CharState {
 			timeInWall++;
 			if (timeInWall > 6) {
 				character.vel.y = 1;
-				character.changeState(new Fall());
+				character.changeToIdleOrFall();
 				return;
 			}
 		}
+
 		if (character.isAnimOver()) {
-			character.changeState(new Fall());
+			character.changeToIdleOrFall();
 		}
 		if (character.frameIndex > 3 && !fired) {
 			fired = true;
-			Projectile? rf;
-			if (!character.isUnderwater()) {
-				rf = new RisingFireProjCharged(
-					new RisingFire(), shootPos, xDir, player, player.getNextActorNetId(), rpc: true);
-				} else {
-				rf = new RisingFireWaterProjCharged(
-					new RisingFire(), shootPos, xDir, player, player.getNextActorNetId(), rpc: true);
-			}
-			
-			if (proj != null && proj.releasePlasma && !proj.hasReleasedPlasma && rf != null) {
-				rf.releasePlasma = true;
-			}
+			releaseProj();
 		}
 	}
 
@@ -213,7 +204,32 @@ public class RisingFireChargedState : CharState {
 
 	public override void onExit(CharState newState) {
 		base.onExit(newState);
-		if (proj != null) proj.destroySelf();
+		if (proj != null) {
+			proj.destroySelf();
+			if (!fired) releaseProj();
+		} 
+	}
+
+	void releaseProj() {
+		Projectile? rf;
+		Point shootPos = character.getShootPos();
+		int xDir = character.xDir;
+
+		if (!character.isUnderwater()) {
+			rf = new RisingFireProjCharged(
+				new RisingFire(), shootPos, xDir, player, 
+				player.getNextActorNetId(), rpc: true
+			);
+		} else {
+			rf = new RisingFireWaterProjCharged(
+				new RisingFire(), shootPos, xDir, player, 
+				player.getNextActorNetId(), rpc: true
+			);
+		}
+		
+		if (proj != null && proj.releasePlasma && !proj.hasReleasedPlasma && rf != null) {
+			rf.releasePlasma = true;
+		}
 	}
 }
 
