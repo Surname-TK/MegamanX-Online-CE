@@ -372,6 +372,7 @@ public class XUPGrabState : CharState {
 	float timeWaiting;
 	public XUPGrabState(Character? victim) : base("unpo_grab", "", "", "") {
 		this.victim = victim;
+		attackCtrl = true;
 		grabTime = UPGrabbed.maxGrabTime;
 	}
 
