@@ -56,7 +56,6 @@ public class VileRevive : CharState {
 	Vile vile;
 
 	public VileRevive(bool isMK5) : base(isMK5 ? "revive_to5" : "revive") {
-		character.stopMoving();
 		useGravity = false;
 		invincible = true;
 		immuneToWind = true;
@@ -108,6 +107,7 @@ public class VileRevive : CharState {
 		base.onEnter(oldState);
 		vile = character as Vile ?? throw new NullReferenceException();
 		//character.setzIndex(ZIndex.Foreground);
+		character.stopMoving();
 		character.playSound("revive");
 		character.addMusicSource("demo_X3", character.getCenterPos(), false, loop: false);
 		if (!isMK5) {

@@ -1241,8 +1241,9 @@ public class LadderClimb : CharState {
 		bool isBlackZero = character is Zero zero && zero.isBlack ||
 			character is PunchyZero kknuckle && kknuckle.isBlack ||
 			character is BusterZero zbuster && zbuster.isBlack;
-
 		// Vile? vile = character as Vile;
+		bool isWhiteAxl = character is Axl gay && gay.isWhiteAxl();
+
 		character.changePos(new Point(snapX, character.pos.y));
 		character.xPushVel = 0;
 		character.vel.x = 0;
@@ -1259,7 +1260,11 @@ public class LadderClimb : CharState {
 		} else {
 			character.frameSpeed = 0;
 		}
-		float climbSpeedMod = !player.hasArmArmor(0) || isBlackZero || player.speedDevil ? 2 : 1;
+		float climbSpeedMod =
+			!player.hasArmArmor(0) ||
+			isBlackZero ||
+			player.speedDevil ||
+			isWhiteAxl ? 2 : 1;
 		if (!isAttacking && character.canClimbLadder()) {
 			if (player.input.isHeld(Control.Up, player)) {
 				character.move(new Point(0, -75 * climbSpeedMod));
