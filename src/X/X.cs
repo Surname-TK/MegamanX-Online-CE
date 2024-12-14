@@ -340,11 +340,11 @@ public partial class MegamanX : Character {
 				UPDamageCooldown += Global.speedMul;
 				if (UPDamageCooldown > unpoDamageMaxCooldown) {
 					UPDamageCooldown = 0;
-					applyDamage(1, player, this, null, null);
+					applyDamage(1, player, this, null, (int)ProjIds.UPSelfDamage);
 				}
 			}
 
-			unpoShotCount = MathInt.Floor(player.weapon.ammo / player.weapon.getAmmoUsage(0));
+			//unpoShotCount = MathInt.Floor(player.weapon.ammo / player.weapon.getAmmoUsage(0));
 		}
 
 		//Giga Helmet Scan.
@@ -455,7 +455,8 @@ public partial class MegamanX : Character {
 			if (player.hasGoldenArmor()) {
 				chargeType = 2;
 			}
-			int level = isHyperX ? unpoShotCount : getChargeLevel();
+			int level = getChargeLevel();
+			if (player.hasArmArmor(ArmorId.Force) && isHyperX) level = forceStocks;
 			var renderGfx = RenderEffectType.ChargeBlue;
 			renderGfx = level switch {
 				1 => RenderEffectType.ChargeBlue,
@@ -464,7 +465,7 @@ public partial class MegamanX : Character {
 				4 when (chargeType == 0) => RenderEffectType.ChargePink,
 				4 when (chargeType == 1) => RenderEffectType.ChargeOrange,
 				4 when (chargeType == 2) => RenderEffectType.ChargeGreen,
-				_ => RenderEffectType.ChargeGreen
+				_ => RenderEffectType.ChargeBlue
 			};
 			addRenderEffect(renderGfx, 0.033333f, 0.1f);			
 			chargeEffect.update(level, chargeType);
@@ -513,12 +514,12 @@ public partial class MegamanX : Character {
 		bool specialPressed = player.input.isPressed(Control.Special1, player);
 		
 		if (isHyperX) {
-			if (shootPressed && upPunchCooldown <= 0 && unpoShotCount <= 0 ) {
+			/* if (shootPressed && upPunchCooldown <= 0 && unpoShotCount <= 0 ) {
 				upPunchCooldown = 30;
 				changeState(new XUPPunchState(grounded), true);
 				return true;
-			} 
-			else if (specialPressed && charState is Dash or AirDash) {
+			}  */
+			if (specialPressed && charState is Dash or AirDash) {
 				charState.isGrabbing = true;
 				changeSpriteFromName("unpo_grab_dash", true);
 				return true;
@@ -698,6 +699,11 @@ public partial class MegamanX : Character {
 				stockX3Saber(false);
 				changeState(new X3SaberState(grounded), true);
 			}
+			return;
+		}
+		if (isHyperX && chargeLevel == 0 && upPunchCooldown <= 0 && forceStocks <= 0) {
+			//upPunchCooldown = 30;
+			changeState(new XUPPunchState(grounded), true);
 			return;
 		}
 
@@ -1627,12 +1633,9 @@ public partial class MegamanX : Character {
 		else if (index == (int)WeaponIds.HyperCharge && ownedByLocalPlayer) {
 			index = player.weapons[player.hyperChargeSlot].index;
 		}
-		
 		else if (sBodyClone != null) index = (int)WeaponIds.SoulBody;
-
-		else if (player.hasGoldenArmor()) {
-			index = 33;
-		} 
+		else if (player.hasGoldenArmor()) index = 33;
+		else if (isHyperX && hasUltimateArmor) index = 40;
 
 		
 		palette = hasUltimateArmor ? player.uaxPaletteShader : player.xPaletteShader;
@@ -1721,9 +1724,9 @@ public partial class MegamanX : Character {
 			uaStockChargeTime += Global.speedMul * factor;
 		}
 
-		if (isHyperX) {
+		/* if (isHyperX) {
 			player.weapon.addAmmo(player.weapon.getAmmoUsage(0) * 0.625f * Global.spf, player);
-		}
+		} */
 	}
 
 

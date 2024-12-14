@@ -2771,7 +2771,10 @@ public partial class Character : Actor, IDamagable {
 			}
 			killPlayer(attacker, null, weaponIndex, projId);
 		} else {
-			if (mmx != null && (player.hasBodyArmor(3) || player.hasGoldenArmor()) && damage > 0) {
+			if (
+				mmx != null && (player.hasBodyArmor(3) || player.hasGoldenArmor()) 
+				&& damage > 0 && projId != (int)ProjIds.UPSelfDamage
+			) {
 				mmx.addBarrier(charState is Hurt);
 			}
 		}

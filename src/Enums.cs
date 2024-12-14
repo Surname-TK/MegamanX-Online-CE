@@ -395,6 +395,7 @@ public enum ProjIds {
 	UPParryBlock,
 	UPParryMelee,
 	UPParryProj,
+	UPSelfDamage,
 	NovaStrike,
 	X6Saber,
 

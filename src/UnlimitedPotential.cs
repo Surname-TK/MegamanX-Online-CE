@@ -372,6 +372,7 @@ public class XUPGrabState : CharState {
 	float timeWaiting;
 	public XUPGrabState(Character? victim) : base("unpo_grab", "", "", "") {
 		this.victim = victim;
+		attackCtrl = true;
 		grabTime = UPGrabbed.maxGrabTime;
 	}
 
@@ -661,8 +662,8 @@ public class XRevive : CharState {
 			player.health = 1;
 			character.addHealth(player.maxHealth);
 
-			player.weapons.RemoveAll(w => w is not XBuster);
-			player.weapons.Add(new RagingChargeBuster());
+			player.weapons.Clear();
+			player.weapons.Add(new XBuster());
 			player.weaponSlot = 0;
 			
 			/* if (player.weapons.Count == 0) {

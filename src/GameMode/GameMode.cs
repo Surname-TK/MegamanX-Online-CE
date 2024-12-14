@@ -2059,6 +2059,11 @@ public class GameMode {
 			if (mainPlayer.character != null && !mainPlayer.character.destroyed) {
 				mmx = mainPlayer.character as MegamanX ?? throw new NullReferenceException();
 			}
+
+			if (weapon is AimingLaser && mmx.aLaserTargets.Count >= 1) {
+				drawWeaponText(x, y, mmx.aLaserTargets.Count.ToString());
+			}
+
 			if (weapon is HyperCharge) {
 				drawWeaponSlotCooldown(x, y, mmx.hyperchargeCooldown / mmx.oldHyperCooldown);
 			} /* else if (weapon is Weapon && selected) {
