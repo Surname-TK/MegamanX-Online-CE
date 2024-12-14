@@ -612,7 +612,7 @@ public class RideArmor : Actor, IDamagable {
 						return;
 					}
 				}
-				chr.dashedInAir = 0;
+				//chr.dashedInAir = 0;
 				putCharInRideArmor(chr);
 			}
 		}
@@ -2214,6 +2214,15 @@ public class InRideArmor : CharState {
 		bool ejectInput = character.player.input.isHeld(Control.Up, player) && character.player.input.isPressed(Control.Jump, player);
 		if (ejectInput) {
 			if (character.canEjectFromRideArmor()) {
+				if (character.rideArmor != null){
+					if (character.rideArmor.isDashing) {
+						character.isDashing = true;
+						character.dashedInAir = 1;
+					} else {
+						character.isDashing = false;
+						character.dashedInAir = 0;
+					}
+				}
 				character.vel.y = -character.getJumpPower();
 				character.changeState(new Jump(), true);
 			}
