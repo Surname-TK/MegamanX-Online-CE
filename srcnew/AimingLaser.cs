@@ -122,6 +122,11 @@ public class AimingLaserHud : Anim {
 
 	public override void update() {
 		base.update();
+		if (!ownedByLocalPlayer) return;
+		if (mmx.destroyed || mmx.charState is Die) {
+			destroySelf();
+			return;
+		}
 
 		if (player.weapon is not AimingLaser) destroySelf();
 
@@ -166,6 +171,7 @@ public class AimingLaserCursor : Projectile {
 
 	public override void update() {
 		base.update();
+		if (!ownedByLocalPlayer) return;
 
 		if (player.weapon is not AimingLaser) destroySelf();
 
