@@ -219,7 +219,7 @@ public class FrostTowerProjCharged : Projectile, IDamagable {
 		Weapon weapon, Point pos, int xDir, 
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 0, 3, player, "frosttowercharged_proj", 
+		weapon, pos, xDir, 0, 2, player, "frosttowercharged_proj", 
 		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 2f;

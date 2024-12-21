@@ -194,7 +194,7 @@ public class Genmu : Weapon {
 	public static Genmu netWeapon = new();
 
 	public Genmu() : base() {
-		index = (int)WeaponIds.Gemnu;
+		index = (int)WeaponIds.Genmu;
 		killFeedIndex = 84;
 	}
 }

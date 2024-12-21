@@ -193,7 +193,7 @@ public class GenmuProj : Projectile {
 		setIndestructableProperties();
 		xScale = 0.75f;
 		yScale = 0.75f;
-		projId = (int)ProjIds.Gemnu;
+		projId = (int)ProjIds.Genmu;
 		if (player.character is Zero zero) {
 			if (zero.isBlack == true) {
 				genericShader = player.zeroPaletteShader;

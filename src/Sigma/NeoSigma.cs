@@ -92,15 +92,15 @@ public class NeoSigma : BaseSigma {
 			return true;
 		}
 		if (grounded && player.input.isPressed(Control.Special1, player) &&
-			flag == null && player.sigmaAmmo >= 14
+			flag == null && player.sigmaAmmo >= 7
 		) {
-			if (player.sigmaAmmo < 28) {
+			if (player.sigmaAmmo >= 14 && player.input.isHeld(Control.Down, player)) {
 				player.sigmaAmmo -= 14;
-				changeState(new SigmaElectricBallState(), true);
+				changeState(new SigmaElectricBall2State(), true);
 				return true;
 			} else {
-				player.sigmaAmmo = 0;
-				changeState(new SigmaElectricBall2State(), true);
+				player.sigmaAmmo -= 7;
+				changeState(new SigmaElectricBallState(), true);
 				return true;
 			}
 		}

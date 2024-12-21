@@ -1480,7 +1480,7 @@ public class GameMode {
 				int floorOrCeil = MathInt.Ceiling(player.sigmaMaxAmmo * ammoDisplayMultiplier);
 				if (player.isSigma2()) {
 					hudWeaponBaseIndex = 51;
-					hudWeaponFullIndex = player.sigmaAmmo < 16 ? 30 : 40;
+					hudWeaponFullIndex = player.sigmaAmmo < 7 ? 30 : 40;
 					floorOrCeil = MathInt.Floor(player.sigmaMaxAmmo * ammoDisplayMultiplier);
 				}
 				baseY += 25;

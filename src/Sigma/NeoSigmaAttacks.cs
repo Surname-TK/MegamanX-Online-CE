@@ -106,11 +106,11 @@ public class SigmaElectricBallProj : Projectile {
 		Weapon weapon, Point pos, float angle, float type, Player
 		player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, 1, 200, 2, player, "sigma2_ball", Global.miniFlinch, 0,
+		weapon, pos, 1, 200, 0, player, "sigma2_ball", 0, 0,
 		netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Sigma2Ball;
-		destroyOnHit = true;
+		destroyOnHit = false;
 		maxTime = 2f;
 		this.type = type;
 		this.vel = Point.createFromAngle(angle).times(200);
@@ -126,9 +126,11 @@ public class SigmaElectricBallProj : Projectile {
 		}
 		if (time >= 0.25 && time < 0.75) {
 			vel = new Point();
+			damager = new Damager(owner, 1, Global.miniFlinch, 0);
+			destroyOnHit = true;
 		} else if (time >= 0.75 + (type / 5)) {
 			if (target == null) {
-				target = Global.level.getClosestTarget(pos, damager.owner.alliance, true, aMaxDist: 200);
+				target = Global.level.getClosestTarget(pos, damager.owner.alliance, false, aMaxDist: 250);
 				if (target != null) {
 					time = 1;
 					vel = pos.directionToNorm(target.getCenterPos()).times(speed);
@@ -179,7 +181,7 @@ public class SigmaElectricBall2Proj : Projectile {
 		Weapon weapon, Point pos, int xDir,
 		Player player, ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, 300, 4, player, "sigma2_ball2",
+		weapon, pos, xDir, 300, 3, player, "sigma2_ball2",
 		Global.halfFlinch, 0.2f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.Sigma2Ball2;
