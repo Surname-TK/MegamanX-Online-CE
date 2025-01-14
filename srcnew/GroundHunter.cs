@@ -72,7 +72,7 @@ public class GroundHunterAnim : Anim {
 
 public class GroundHunterProj : Projectile {
 
-	const float projSpeed = 240;
+	const float projSpeed = 200;
 	public bool downPressed;
 	bool down;
 	Player player;

@@ -939,7 +939,7 @@ public class GameMode {
 		if (Global.level.isRace()) return true;
 		if (level.is1v1()) return false;
 		if (level.mainPlayer == null) return false;
-		if (level.mainPlayer.isX && level.mainPlayer.hasHelmetArmor(3)) {
+		if (level.mainPlayer.isX && (level.mainPlayer.hasHelmetArmor(3) || level.mainPlayer.hasGoldenArmor())) {
 			return true;
 		}
 		if (level.mainPlayer.isAxl && level.boundBlasterAltProjs.Any(b => b.state == 1)) {
@@ -1860,7 +1860,7 @@ public class GameMode {
 		if (player.character is MegamanX mmx && mmx.hasFgMoveEquipped() && mmx.canAffordFgMove()) {
 			int x = gigaWeaponX, y = 159;
 			Global.sprites["hud_weapon_icon"].drawToHUD(mmx.hasHadoukenEquipped() ? 112 : 113, x, y);
-			float cooldown = Helpers.progress(player.fgMoveAmmo, 1920f);
+			float cooldown = Helpers.progress(player.fgMoveAmmo, 600f);
 			drawWeaponSlotCooldown(x, y, cooldown);
 		}
 

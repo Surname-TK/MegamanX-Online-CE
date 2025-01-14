@@ -395,7 +395,7 @@ public class GravityWellChargedState : CharState {
 	MegamanX? mmx;
 
 	public GravityWellChargedState() : base("point_up", "", "", "") {
-		superArmor = true;
+		superArmor = false;
 		useDashJumpSpeed = true;
 	}
 

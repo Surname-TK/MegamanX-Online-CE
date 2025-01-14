@@ -25,6 +25,7 @@ public class Projectile : Actor {
 	public bool reflectableFBurner = false;
 	public int reflectCount;
 	public bool shouldShieldBlock = true;
+	public bool shouldDing = true;
 	public bool neverReflect = false;
 	public int projId;
 	public float speed;
@@ -386,7 +387,9 @@ public class Projectile : Actor {
 					else return;
 
 					owner.character.changeState(new ZeroClang(-owner.character.xDir), true);
-					owner.character.playSound("m10ding", sendRpc: true);
+					if (shouldDing) {
+						owner.character.playSound("m10ding", sendRpc: true);
+					}
 					if (Helpers.randomRange(0, 10) == 5) {
 						otherProj.owner.character.addDamageText("Clang!", 3);
 					}
@@ -486,7 +489,9 @@ public class Projectile : Actor {
 					bool isDestroyable = otherProj is IDamagable;
 					if (shouldShieldBlock && !isDestroyable) {
 						destroySelf(fadeSprite, fadeSound);
-						playSound("m10ding", sendRpc: true);
+						if (shouldDing) {
+							playSound("m10ding", sendRpc: true);
+						}
 						return;
 					}
 				}

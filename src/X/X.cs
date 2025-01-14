@@ -499,7 +499,7 @@ public partial class MegamanX : Character {
 			}
 			if (!player.isAI && (player.hasUltimateArmor() || player.hasBootsArmor(ArmorId.Force)) &&
 				player.input.isPressed(Control.Jump, player) &&
-				canJump() && !isDashing && canAirDash() && flag == null
+				canJump() && canAirDash() && flag == null
 			) {
 				dashedInAir++;
 				changeState(new XHover(), true);
@@ -556,13 +556,11 @@ public partial class MegamanX : Character {
 			shoryukenCheck = player.input.checkShoryuken(player, xDir, Control.Shoot);
 		}
 		if (player.isX && hadokenCheck && canUseFgMove()) {
-			if (!player.hasAllItems()) player.currency -= 3;
 			player.fgMoveAmmo = 0;
 			changeState(new Hadouken(), true);
 			return true;
 		}
 		if (player.isX && shoryukenCheck && canUseFgMove()) {
-			if (!player.hasAllItems()) player.currency -= 3;
 			player.fgMoveAmmo = 0;
 			changeState(new Shoryuken(isUnderwater()), true);
 			return true;
@@ -1511,7 +1509,8 @@ public partial class MegamanX : Character {
 	}
 
 	public bool canAffordFgMove() {
-		return player.currency >= 3 || player.hasAllItems();
+		return player.currency >= 3 || (player.hasAllItems() &&
+		player.health >= player.maxHealth && player.fgMoveAmmo >= player.fgMoveMaxAmmo);
 	}
 
 	public bool canUseFgMove() {
@@ -1520,7 +1519,7 @@ public partial class MegamanX : Character {
 			chargedRollingShieldProj == null && 
 			!stingActive && canAffordFgMove() && 
 			hadoukenCooldownTime == 0 && player.weapon is XBuster && 
-			player.fgMoveAmmo >= player.fgMoveMaxAmmo && grounded;
+			/*player.fgMoveAmmo >= player.fgMoveMaxAmmo &&*/ grounded;
 	}
 
 	public bool shouldDrawFgCooldown() {
@@ -1748,7 +1747,7 @@ public partial class MegamanX : Character {
 	}
 
 	public override bool isCCImmuneHyperMode() {
-		return isHyperX;
+		return false;
 	}
 
 	public bool shouldShowHyperCharge() {

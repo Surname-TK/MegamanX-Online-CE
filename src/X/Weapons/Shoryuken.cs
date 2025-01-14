@@ -21,7 +21,7 @@ public class Shoryuken : CharState {
 
 	public Shoryuken(bool isUnderwater) : base("shoryuken", "", "") {
 		this.isUnderwater = isUnderwater;
-		superArmor = true;
+		superArmor = false;
 	}
 
 	public override void update() {
@@ -32,6 +32,7 @@ public class Shoryuken : CharState {
 		}
 
 		if (character.sprite.frameIndex >= 2 && !jumpedYet) {
+			if (!(player.hasAllItems() && player.health == player.maxHealth)) player.currency -= 3;
 			jumpedYet = true;
 			character.dashedInAir++;
 			character.vel.y = -character.getJumpPower() * 1.55f;

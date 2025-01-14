@@ -540,6 +540,7 @@ public partial class Character : Actor, IDamagable {
 		if (isInvulnerable()) return false;
 		if (player.isDisguisedAxl) return false;
 		if (isCCImmuneHyperMode()) return false;
+		if (player.character is MegamanX mmx && mmx.isHyperX) return false;
 		if (charState is Die || charState is VileRevive || charState is XReviveStart || charState is XRevive) return false;
 		if (player.currentMaverick != null && player.isTagTeam()) return false;
 		if (isWarpOut()) return false;
@@ -2659,13 +2660,13 @@ public partial class Character : Actor, IDamagable {
 			player.trainingDpsTotalDamage += (float)damage;
 		}
 
-		if (damage > 0 && mmx != null) {
+		if (damage > 0 && mmx != null && projId != (int)ProjIds.UPSelfDamage) {
 			mmx.noDamageTime = 0;
 			mmx.rechargeHealthTime = 0;
 		}
 
 		if (damage > 0 && attacker != null) {
-			if (projId != (int)ProjIds.Burn && projId != (int)ProjIds.AcidBurstPoison) {
+			if (projId != (int)ProjIds.Burn && projId != (int)ProjIds.AcidBurstPoison && projId != (int)ProjIds.UPSelfDamage) {
 				player.delaySubtank();
 				player.stopSubtankHeal();
 			}

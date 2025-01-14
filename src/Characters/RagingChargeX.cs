@@ -89,6 +89,6 @@ public class RCX : Character {
 	}
 
 	public override bool isCCImmuneHyperMode() {
-		return true;
+		return false;
 	}
 }

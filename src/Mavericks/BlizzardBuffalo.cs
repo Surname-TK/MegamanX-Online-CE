@@ -17,7 +17,7 @@ public class BlizzardBuffalo : Maverick {
 		player, pos, destPos, xDir, netId, ownedByLocalPlayer
 	) {
 		stateCooldowns.Add(typeof(MShoot), new MaverickStateCooldown(false, true, 0.75f));
-		stateCooldowns.Add(typeof(BBuffaloDashState), new MaverickStateCooldown(false, true, 1f));
+		stateCooldowns.Add(typeof(BBuffaloDashState), new MaverickStateCooldown(true, true, 1f));
 		stateCooldowns.Add(typeof(BBuffaloShootBeamState), new MaverickStateCooldown(false, true, 1f));
 
 		spriteFrameToSounds["bbuffalo_run/2"] = "walkStomp";
@@ -108,24 +108,52 @@ public class BlizzardBuffalo : Maverick {
 		return damagePercent;
 	}
 
-	public override Projectile? getProjFromHitbox(Collider hitbox, Point centerPoint) {
-		if (sprite.name.EndsWith("_dash")) {
+	public override Projectile? getMeleeProjById(int id, Point centerPoint, bool addToLevel = true) {
+		if (sprite.name.EndsWith("_grab")) {
 			return new GenericMeleeProj(
-				weapon, centerPoint, ProjIds.BBuffaloDrag,
-				player, damage: 0, flinch: 0, hitCooldown: 0.5f, owningActor: this
+				weapon, centerPoint, ProjIds.BBuffaloDrag, player, damage: 0,
+				flinch: 0, hitCooldown: 0.5f, owningActor: this, addToLevel: addToLevel
+			);
+		} else if (sprite.name.EndsWith("_dash")) {
+			return new GenericMeleeProj(
+				weapon, centerPoint, ProjIds.BBuffaloDash, player, damage: 3,
+				flinch: Global.defFlinch, hitCooldown: 0.5f, owningActor: this, addToLevel: addToLevel
 			);
 		}
 		if (sprite.name.Contains("fall")) {
 			float damagePercent = getStompDamage();
 			if (damagePercent > 0) {
 				return new GenericMeleeProj(
-					weapon, centerPoint, ProjIds.BBuffaloStomp,
-					player, damage: 4 * damagePercent, flinch: Global.defFlinch, hitCooldown: 0.5f
+					weapon, centerPoint, ProjIds.BBuffaloStomp, player,
+					damage: 3 * damagePercent, flinch: Global.defFlinch, hitCooldown: 0.5f
 				);
 			}
 		}
 		return null;
 	}
+	/*public override Projectile? getProjFromHitbox(Collider hitbox, Point centerPoint) {
+		if (sprite.name.EndsWith("_grab")) {
+			return new GenericMeleeProj(
+				weapon, centerPoint, ProjIds.BBuffaloDrag, player, damage: 0,
+				flinch: 0, hitCooldown: 0.5f, owningActor: this, addToLevel: addToLevel
+			);
+		} else if (sprite.name.EndsWith("_dash")) {
+			return new GenericMeleeProj(
+				weapon, centerPoint, ProjIds.BBuffaloDrag, player, damage: 3,
+				flinch: Global.defFlinch, hitCooldown: 0.5f, owningActor: this, addToLevel: addToLevel
+			);
+		}
+		if (sprite.name.Contains("fall")) {
+			float damagePercent = getStompDamage();
+			if (damagePercent > 0) {
+				return new GenericMeleeProj(
+					weapon, centerPoint, ProjIds.BBuffaloStomp, player,
+					damage: 3 * damagePercent, flinch: Global.defFlinch, hitCooldown: 0.5f
+				);
+			}
+		}
+		return null;
+	}*/
 
 	public override void updateProjFromHitbox(Projectile proj) {
 		if (sprite.name.EndsWith("fall")) {
@@ -200,7 +228,7 @@ public class BBuffaloIceProjGround : Projectile, IDamagable {
 		Weapon weapon, Point pos, float angle, Player player, ushort netProjId, bool sendRpc = false
 	) : base(
 		weapon, pos, 1, 0, 3, player, "bbuffalo_proj_ice",
-		Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		Global.defFlinch, 0.25f, netProjId, player.ownedByLocalPlayer
 	) {
 		maxTime = 5;
 		projId = (int)ProjIds.BBuffaloIceProjGround;
@@ -435,6 +463,7 @@ public class BBuffaloShootBeamState : MaverickState {
 }
 
 public class BBuffaloDashState : MaverickState {
+	bool isGrab = false;
 	float dustTime;
 	Character victim;
 	public BBuffaloDashState() : base("dash", "dash_start") {
@@ -443,8 +472,11 @@ public class BBuffaloDashState : MaverickState {
 	public override void update() {
 		base.update();
 
-		if (inTransition()) return;
-
+		if (inTransition()) {
+			if (input.isPressed(Control.Special1, player)) isGrab = true;
+			return;
+		}
+		if (isGrab) maverick.changeSpriteFromName("dash_grab", false);
 		Helpers.decrementTime(ref dustTime);
 		if (dustTime == 0) {
 			new Anim(maverick.pos.addxy(-maverick.xDir * 30, 0), "dust", maverick.xDir, null, true) { vel = new Point(0, -25) };
@@ -502,7 +534,7 @@ public class BBuffaloDashState : MaverickState {
 	public override bool trySetGrabVictim(Character grabbed) {
 		if (victim == null) {
 			victim = grabbed;
-			maverick.changeSpriteFromName("dash_grab", false);
+			//maverick.changeSpriteFromName("dash_grab", false);
 		}
 		return true;
 	}
@@ -537,5 +569,10 @@ public class BBuffaloDragged : GenericGrabbedState {
 		grabber, maxGrabTime, "_dash", reverseZIndex: true,
 		freeOnHitWall: false, lerp: true, additionalGrabSprite: "_dash_grab"
 	) {
+		superArmor = true;
 	}
+	/*public override void onExit(CharState newState) {
+		base.onExit(newState);
+		character.changeState(new Hurt(character.xDir*-1, Global.defFlinch), true);
+	}*/
 }

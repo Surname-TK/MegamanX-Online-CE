@@ -45,15 +45,15 @@ public class Hadouken : CharState {
 	MegamanX? mmx;
 
 	public Hadouken() : base("hadouken", "", "", "") {
-		superArmor = true;
+		superArmor = false;
 	}
 
 	public override void update() {
 		base.update();
 
 		if (character.frameIndex >= 2 && !fired) {
+			if (!(player.hasAllItems() && player.health == player.maxHealth)) player.currency -= 3;
 			fired = true;
-
 			Weapon weapon = new HadoukenWeapon(player);
 			float x = character.pos.x;
 			float y = character.pos.y;
