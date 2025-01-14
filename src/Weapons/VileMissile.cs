@@ -6,10 +6,18 @@ public enum VileMissileType {
 	None = -1,
 	ElectricShock,
 	HumerusCrush,
-	PopcornDemon
+	PopcornDemon,
+	BanzaiBeetle,
+	LostLamb,
+	SerotinalBullet
 }
 
 public class VileMissile : Weapon {
+	public static VileMissile netWeaponHC = new VileMissile(VileMissileType.HumerusCrush);
+	public static VileMissile netWeaponPD = new VileMissile(VileMissileType.PopcornDemon);
+	public static VileMissile netWeaponBB = new VileMissile(VileMissileType.BanzaiBeetle);
+	public static VileMissile netWeaponLL = new VileMissile(VileMissileType.LostLamb);
+	public static VileMissile netWeaponSB = new VileMissile(VileMissileType.SerotinalBullet);
 	public string projSprite = "";
 	public float vileAmmo;
 
@@ -20,34 +28,56 @@ public class VileMissile : Weapon {
 		weaponSlotIndex = 42;
 		killFeedIndex = 17;
 		type = (int)vileMissileType;
-
-		if (vileMissileType == VileMissileType.None) {
-			displayName = "None";
-			description = new string[] { "Do not equip a Missile." };
-			vileAmmo = 7;
-			killFeedIndex = 126;
-		} else if (vileMissileType == VileMissileType.ElectricShock) {
-			fireRate = 30;
-			displayName = "Electric Shock";
-			vileAmmo = 21;
-			description = new string[] { "Stops enemies in their tracks,", "but deals no damage." };
-			vileWeight = 3;
-		} else if (vileMissileType == VileMissileType.HumerusCrush) {
-			fireRate = 45;
-			displayName = "Humerus Crush";
-			projSprite = "missile_hc_proj";
-			vileAmmo = 7;
-			description = new string[] { "This missile shoots straight", "and deals decent damage." };
-			killFeedIndex = 74;
-			vileWeight = 3;
-		} else if (vileMissileType == VileMissileType.PopcornDemon) {
-			fireRate = 20;
-			displayName = "Popcorn Demon";
-			projSprite = "missile_pd_proj";
-			vileAmmo = 14;
-			description = new string[] { "This missile splits into 3", "and can cause great damage." };
-			killFeedIndex = 76;
-			vileWeight = 3;
+		switch (vileMissileType){
+			case VileMissileType.None:
+				displayName = "None";
+				description = new string[] { "Do not equip a Missile." };
+				vileAmmo = 7;
+				killFeedIndex = 126;
+				break;
+			case VileMissileType.ElectricShock:
+				fireRate = 60;
+				displayName = "Electric Shock";
+				vileAmmo = 14;
+				description = new string[] { "Stops enemies in their tracks,", "but deals no damage." };
+				vileWeight = 3;
+				break;
+			case VileMissileType.HumerusCrush:
+				fireRate = 40;
+				displayName = "Humerus Crush";
+				projSprite = "missile_hc_proj";
+				vileAmmo = 7;
+				description = new string[] { "This missile shoots straight", "and deals decent damage." };
+				killFeedIndex = 74;
+				vileWeight = 3;
+				break;
+			case VileMissileType.PopcornDemon:
+				fireRate = 30;
+				displayName = "Popcorn Demon";
+				projSprite = "missile_pd_proj";
+				vileAmmo = 14;
+				description = new string[] { "This missile splits into 3", "and can cause great damage." };
+				killFeedIndex = 76;
+				vileWeight = 3;
+				break;
+			case VileMissileType.BanzaiBeetle:
+				fireRate = 30;
+				displayName = "Banzai Beetle";
+				projSprite = "missile_pd_proj";
+				vileAmmo = 14;
+				description = new string[] { "This missile splits into 3", "and can cause great damage." };
+				killFeedIndex = 76;
+				vileWeight = 3;
+				break;
+			case VileMissileType.SerotinalBullet:
+				fireRate = 10;
+				displayName = "Serotinal Bullet";
+				projSprite = "missile_hc_proj";
+				vileAmmo = 7;
+				description = new string[] { "This missile is extremely slow,", "but can be set as a trap." };
+				killFeedIndex = 76;
+				vileWeight = 3;
+				break;
 		}
 	}
 
@@ -92,46 +122,104 @@ public class VileMissileProj : Projectile {
 	bool split;
 	int type;
 	public VileMissileProj(VileMissile weapon, Point pos, int xDir, int type, Player player, ushort netProjId, Point? vel = null, bool rpc = false) :
-		base(weapon, pos, xDir, 200, 3, player, weapon.projSprite, 0, 0.15f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 200, 3, player, weapon.projSprite, 0, 0, netProjId, player.ownedByLocalPlayer) {
 		fadeSprite = "explosion";
 		fadeSound = "explosion";
 		projId = (int)ProjIds.VileMissile;
 		maxTime = 0.6f;
 		destroyOnHit = true;
+		destroyOnHitWall = true;
 		fadeOnAutoDestroy = true;
 		missileWeapon = weapon;
 		reflectableFBurner = true;
 		this.type = type;
 		canBeLocal = false; // TODO: Remove the need for this.
-
-		if (weapon.type == (int)VileMissileType.HumerusCrush) {
-			damager.damage = 3;
-			// damager.flinch = Global.halfFlinch;
-			this.vel.x = xDir * 350;
-			maxTime = 0.35f;
+		
+		switch (weapon.type) {
+			case (int)VileMissileType.HumerusCrush:
+				projId = (int)ProjIds.HumerusCrush;
+				damager.damage = 3;
+				this.vel.x = xDir * 350;
+				maxTime = 0.35f;
+				break;
+			case (int)VileMissileType.PopcornDemon:
+				projId = (int)ProjIds.PopcornDemon;
+				damager.damage = 2;
+				if (type == 1) {
+					projId = (int)ProjIds.PopcornDemonSplit;
+					this.xDir = 1;
+					this.vel = vel.Value.times(speed);
+					angle = this.vel.angle;
+					damager.damage = 1;
+					damager.hitCooldown = 0;
+				}
+				break;
+			case (int)VileMissileType.BanzaiBeetle:
+				projId = (int)ProjIds.BanzaiBeetle;
+				damager = new Damager(owner, 2, 0, 0.25f);
+				destroyOnHit = false;
+				this.vel.x = xDir * 20;
+				maxTime = 2f;
+				maxDistance = 250;
+				break;
+			case (int)VileMissileType.LostLamb:
+				projId = (int)ProjIds.LostLamb;
+				damager.damage = 2;
+				this.vel.x = xDir * 10;
+				maxTime = 2f;
+				maxDistance = 250;
+				break;
+			case (int)VileMissileType.SerotinalBullet:
+				projId = (int)ProjIds.SerotinalBullet;
+				damager.damage = 2;
+				this.vel.x = xDir * 20;
+				maxTime = 2f;
+				maxDistance = 250;
+				break;
 		}
-		if (weapon.type == (int)VileMissileType.PopcornDemon) {
-			projId = (int)ProjIds.PopcornDemon;
-			damager.damage = 2;
-		}
-		if (type == 1) {
-			projId = (int)ProjIds.PopcornDemonSplit;
-			this.xDir = 1;
-			this.vel = vel.Value.times(speed);
-			angle = this.vel.angle;
-			damager.damage = 1;
-			damager.hitCooldown = 0;
-		}
-
 		if (rpc) {
-			rpcCreate(pos, player, netProjId, xDir);
+			byte[] extraArgs = new byte[] { (byte)type };
+
+			rpcCreate(pos, player, netProjId, xDir, extraArgs);
 		}
+	}
+	public static Projectile rpcInvoke(ProjParameters args) {
+		VileMissile vileMissile = VileMissile.netWeaponHC;
+		switch (args.projId) {
+			case (int)ProjIds.HumerusCrush:
+				vileMissile = VileMissile.netWeaponHC;
+				break;
+			case (int)ProjIds.PopcornDemon:
+				vileMissile = VileMissile.netWeaponPD;
+				break;
+			case (int)ProjIds.PopcornDemonSplit:
+				vileMissile = VileMissile.netWeaponPD;
+				break;
+			case (int)ProjIds.BanzaiBeetle:
+				vileMissile = VileMissile.netWeaponBB;
+				break;
+			case (int)ProjIds.LostLamb:
+				vileMissile = VileMissile.netWeaponLL;
+				break;
+			case (int)ProjIds.SerotinalBullet:
+				vileMissile = VileMissile.netWeaponSB;
+				break;
+		}
+		return new VileMissileProj(
+			vileMissile, args.pos, args.xDir, args.extraData[0], args.player, args.netId
+		);
 	}
 
 	public override void update() {
 		base.update();
+		if (missileWeapon.type == (int)VileMissileType.SerotinalBullet && time > 0.5f) {
+			if (MathF.Abs(vel.x) >= 400) {
+				vel.x = 400 * xDir;
+			} else {
+				vel.x += 20 * xDir;
+			}
+		}
 		if (!ownedByLocalPlayer) return;
-
 		if (missileWeapon.type == (int)VileMissileType.PopcornDemon && type == 0 && !split) {
 			if (time > 0.3f || owner.input.isPressed(Control.Special1, owner)) {
 				split = true;

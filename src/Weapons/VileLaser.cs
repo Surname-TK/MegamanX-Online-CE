@@ -6,9 +6,11 @@ namespace MMXOnline;
 
 public enum VileLaserType {
 	None = -1,
+	CerberusPhantom,
+	NervousGhost,
 	RisingSpecter,
-	NecroBurst,
 	StraightNightmare,
+	NecroBurst,
 }
 
 public class VileLaser : Weapon {
@@ -17,59 +19,66 @@ public class VileLaser : Weapon {
 		index = (int)WeaponIds.VileLaser;
 		type = (int)vileLaserType;
 
-		if (vileLaserType == VileLaserType.None) {
-			displayName = "None";
-			description = new string[] { "Do not equip a Laser." };
-			killFeedIndex = 126;
-		} else if (vileLaserType == VileLaserType.RisingSpecter) {
-			index = (int)WeaponIds.RisingSpecter;
-			displayName = "Rising Specter";
-			vileAmmoUsage = 7;
-			description = new string[] { "It cannot be aimed,", "but its wide shape covers a large area." };
-			killFeedIndex = 120;
-			vileWeight = 3;
-		} else if (vileLaserType == VileLaserType.NecroBurst) {
-			index = (int)WeaponIds.NecroBurst;
-			displayName = "Necro Burst";
-			vileAmmoUsage = 14;
-			description = new string[] { "Use up all your energy at once to", "unleash a powerful energy burst." };
-			killFeedIndex = 75;
-			vileWeight = 3;
-		} else if (vileLaserType == VileLaserType.StraightNightmare) {
-			index = (int)WeaponIds.StraightNightmare;
-			displayName = "Straight Nightmare";
-			vileAmmoUsage = 7;
-			description = new string[] { "Though slow, this laser can burn", "through multiple enemies in a row." };
-			killFeedIndex = 171;
-			vileWeight = 3;
+		switch (vileLaserType) {
+			case VileLaserType.None:
+				displayName = "None";
+				description = new string[] { "Do not equip a Laser." };
+				killFeedIndex = 126;
+				break;
+			case VileLaserType.CerberusPhantom:
+				displayName = "Cerberus Phantom";
+				vileAmmoUsage = 7;
+				description = new string[] { "Not as powerful as other weapons,", "this laser fires in 3 directions." };
+				killFeedIndex = 120;
+				vileWeight = 3;
+				break;
+			case VileLaserType.NervousGhost:
+				displayName = "Nervous Ghost";
+				vileAmmoUsage = 7;
+				description = new string[] { "This laser can be aimed with the", "up and down directional buttons." };
+				killFeedIndex = 120;
+				vileWeight = 3;
+				break;
+			case VileLaserType.RisingSpecter:
+				displayName = "Rising Specter";
+				vileAmmoUsage = 14;
+				description = new string[] { "It cannot be aimed,", "but its wide shape covers a large area." };
+				killFeedIndex = 120;
+				vileWeight = 3;
+				break;
+			case VileLaserType.StraightNightmare:
+				displayName = "Straight Nightmare";
+				vileAmmoUsage = 21;
+				description = new string[] { "Though slow, this laser can burn", "through multiple enemies in a row." };
+				killFeedIndex = 171;
+				vileWeight = 3;
+				break;
+			case VileLaserType.NecroBurst:
+				displayName = "Necro Burst";
+				vileAmmoUsage = 28;
+				description = new string[] { "Use up all your energy at once to", "unleash a powerful energy burst." };
+				killFeedIndex = 75;
+				vileWeight = 3;
+				break;
 		}
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (type == (int)VileLaserType.NecroBurst) {
-			return 14;
+			return 28;
 		} else {
-			return 7;
+			return vileAmmoUsage;
 		}
 	}
 
 	public override void vileShoot(WeaponIds weaponInput, Vile vile) {
-		if (type == (int)VileLaserType.NecroBurst && vile.charState is InRideArmor inRideArmor) {
-			NecroBurstAttack.shoot(vile);
-			vile.rideArmor?.explode(shrapnel: inRideArmor.isHiding);
-		} else {
-			if (type == (int)VileLaserType.NecroBurst) {
-				vile.changeState(new NecroBurstAttack(vile.grounded), true);
-			} else if (type == (int)VileLaserType.RisingSpecter) {
-				vile.changeState(new RisingSpecterState(vile.grounded), true);
-			} else if (type == (int)VileLaserType.StraightNightmare) {
-				vile.changeState(new StraightNightmareAttack(vile.grounded), true);
-			}
+		if (vile.tryUseVileAmmo(vile.laserWeapon.getAmmoUsage(0))) {
+			vile.changeState(new LaserAttackState(vile.grounded), true);
 		}
 	}
 }
 
-public class RisingSpecterState : CharState {
+/*public class RisingSpecterState : CharState {
 	bool shot = false;
 	bool grounded;
 
@@ -104,15 +113,118 @@ public class RisingSpecterState : CharState {
 	}
 
 	public void shoot(Vile vile) {
-		Point shootPos = vile.setCannonAim(new Point(1.5f, -1));
 
 		if (vile.tryUseVileAmmo(vile.laserWeapon.getAmmoUsage(0))) {
-			new RisingSpecterProj(
-				new VileLaser(VileLaserType.RisingSpecter), shootPos, vile.xDir,
-				vile.player, vile.player.getNextActorNetId(), rpc: true
-			);
-			vile.playSound("risingSpecter", sendRpc: true);
 		}
+	}
+}*/
+
+public class NervousGhostProj : Projectile {
+	public Point destPos;
+	public float sinDampTime = 1;
+	public Anim muzzle;
+	public NervousGhostProj(Weapon weapon, int aimValue, Point poi, int xDir, Player player, ushort netProjId, bool rpc = false) :
+		base(weapon, poi, xDir, 0, 2, player, "empty", Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		maxTime = 0.5f;
+		destroyOnHit = false;
+		shouldShieldBlock = false;
+		vel = new Point();
+		projId = (int)ProjIds.NervousGhost;
+		shouldVortexSuck = false;
+		float destX = xDir * 150;
+		float destY = 100;
+		switch (aimValue) {
+			case 0:
+				destX = xDir * 150;
+				destY = 100;
+				break;
+			case 1:
+				destX = xDir * 200;
+				destY = 0;
+				break;
+			case 2:
+				destX = xDir * 150;
+				destY = -100;
+				break;
+			case 3:
+				destX = xDir * 50;
+				destY = -150;
+				break;
+		}
+		Point toDestPos = new Point(destX, destY);
+		pos = poi.addxy(destX * 0.0225f, destY * 0.0225f);
+		destPos = pos.add(toDestPos);
+
+		muzzle = new Anim(poi, "risingspecter_muzzle", xDir, null, false, host: player.character) {
+			angle = xDir == 1 ? toDestPos.angle : toDestPos.angle + 180
+		};
+
+		float ang = poi.directionTo(destPos).angle;
+		var points = new List<Point>();
+		if (xDir == 1) {
+			float sideY = 5 * Helpers.cosd(ang);
+			float sideX = -5 * Helpers.sind(ang);
+			points.Add(new Point(poi.x - sideX, poi.y - sideY));
+			points.Add(new Point(destPos.x - sideX, destPos.y - sideY));
+			points.Add(new Point(destPos.x + sideX, destPos.y + sideY));
+			points.Add(new Point(poi.x + sideX, poi.y + sideY));
+		} else {
+			float sideY = 5 * Helpers.cosd(ang);
+			float sideX = 5 * Helpers.sind(ang);
+			points.Add(new Point(destPos.x - sideX, destPos.y + sideY));
+			points.Add(new Point(destPos.x + sideX, destPos.y - sideY));
+			points.Add(new Point(poi.x + sideX, poi.y - sideY));
+			points.Add(new Point(poi.x - sideX, poi.y + sideY));
+		}
+
+		globalCollider = new Collider(points, true, null, false, false, 0, Point.zero);
+
+		if (rpc) {
+			rpcCreate(pos, player, netProjId, xDir);
+		}
+	}
+
+	public override void onDestroy() {
+		base.onDestroy();
+		muzzle?.destroySelf();
+	}
+
+	public override void update() {
+		base.update();
+		/*
+		if (muzzle != null)
+		{
+			incPos(muzzle.deltaPos);
+			destPos = destPos.add(muzzle.deltaPos);
+		}
+		*/
+	}
+
+	public override void render(float x, float y) {
+		base.render(x, y);
+
+		var col1 = new Color(48, 200, 10, 128);
+		var col2 = new Color(64, 240, 20, 192);
+		var col3 = new Color(240, 240, 240, 255);
+
+		float sin = MathF.Sin(Global.time * 100);
+		float sinDamp = Helpers.clamp01(1 - (time / maxTime));
+
+		var dirTo = pos.directionToNorm(destPos);
+		float jutX = dirTo.x;
+		float jutY = dirTo.y;
+
+		DrawWrappers.DrawLine(pos.x, pos.y, destPos.x, destPos.y, col1, (15 + sin * 6) * sinDamp, 0, true);
+		DrawWrappers.DrawLine(
+			pos.x - jutX * 2, pos.y - jutY * 2,
+			destPos.x + jutX * 2, destPos.y + jutY * 2,
+			col2, (10 + sin * 4) * sinDamp, 0, true
+		);
+		DrawWrappers.DrawLine(
+			pos.x - jutX * 4, pos.y - jutY * 4,
+			destPos.x + jutX * 4, destPos.y + jutY * 4,
+			col3, (5 + sin * 2) * sinDamp, 0, true
+		);
 	}
 }
 
@@ -121,7 +233,7 @@ public class RisingSpecterProj : Projectile {
 	public float sinDampTime = 1;
 	public Anim muzzle;
 	public RisingSpecterProj(Weapon weapon, Point poi, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, poi, xDir, 0, 4, player, "empty", Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, poi, xDir, 0, 3, player, "empty", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 0.5f;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
@@ -229,13 +341,6 @@ public class NecroBurstAttack : CharState {
 
 	public static void shoot(Vile vile) {
 		if (vile.tryUseVileAmmo(vile.laserWeapon.getAmmoUsage(0))) {
-			Point shootPos = vile.setCannonAim(new Point(1, 0));
-			//character.vileAmmoRechargeCooldown = 3;
-			new NecroBurstProj(
-				new VileLaser(VileLaserType.NecroBurst), shootPos,
-				vile.xDir, vile.player, vile.player.getNextActorNetId(), rpc: true
-			);
-			vile.playSound("necroburst", sendRpc: true);
 		}
 	}
 
@@ -249,7 +354,7 @@ public class NecroBurstProj : Projectile {
 	public float radius = 10;
 	public float attackRadius { get { return radius + 15; } }
 	public NecroBurstProj(Weapon weapon, Point pos, int xDir, Player player, ushort netProjId, bool rpc = false) :
-		base(weapon, pos, xDir, 0, 4, player, "empty", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
+		base(weapon, pos, xDir, 0, 3, player, "empty", Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer) {
 		maxTime = 0.5f;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
@@ -275,11 +380,11 @@ public class NecroBurstProj : Projectile {
 				float dist = actor.getCenterPos().distanceTo(pos);
 				if (dist > attackRadius) continue;
 
-				float overrideDamage = 2 + MathF.Round(2 * (1 - Helpers.clampMin0(dist / 200)));
+				float overrideDamage = 4 - MathF.Round(Helpers.clampMin0(dist / 50));
 				int overrideFlinch = Global.defFlinch;
-				if (overrideDamage == 4) overrideFlinch = (int)(Global.defFlinch * 0.75f);
-				if (overrideDamage <= 3) overrideFlinch = Global.defFlinch / 2;
-				if (overrideDamage == 2) overrideFlinch = 0;
+				if (overrideDamage == 4) overrideFlinch = Global.defFlinch;
+				if (overrideDamage == 3) overrideFlinch = Global.defFlinch / 2;
+				if (overrideDamage <= 2) overrideFlinch = 0;
 				if (isHurtSelf) overrideFlinch = 0;
 				damager.applyDamage(damagable, false, weapon, this, projId, overrideDamage: overrideDamage, overrideFlinch: overrideFlinch);
 			}
@@ -322,10 +427,12 @@ public class RAShrapnelProj : Projectile {
 	}
 }
 
-public class StraightNightmareAttack : CharState {
+public class LaserAttackState : CharState {
 	bool shot = false;
-	public StraightNightmareAttack(bool grounded) : base(grounded ? "idle_shoot" : "cannon_air", "", "", "") {
+	public LaserAttackState(bool grounded) : base(grounded ? "idle_shoot" : "cannon_air", "", "", "") {
 		enterSound = "straightNightmareShoot";
+		useGravity = false;
+		useDashJumpSpeed = true;
 	}
 
 	public override void update() {
@@ -338,18 +445,68 @@ public class StraightNightmareAttack : CharState {
 			}
 		}
 
-		if (character.sprite.isAnimOver()) {
+		if (character.sprite.isAnimOver() && stateTime > 0.5f) {
 			character.changeToIdleOrFall();
+			
 		}
 	}
 
 	public static void shoot(Vile vile) {
-		if (vile.tryUseVileAmmo(vile.laserWeapon.getAmmoUsage(0))) {
-			Point shootPos = vile.setCannonAim(new Point(1, 0));
-			new StraightNightmareProj(new VileLaser(VileLaserType.StraightNightmare), shootPos.addxy(-8 * vile.xDir, 0), vile.xDir, vile.player, vile.player.getNextActorNetId(), sendRpc: true);
+		Point shootPos = vile.setCannonAim(new Point(1, 0));
+		int aimValue;
+		Point aimPoint;
+		vile.vileAmmoRechargeCooldown = 0.5f;
+		if (vile.player.input.isHeld(Control.Down, vile.player)) {
+			aimValue = 0;
+			aimPoint = new Point(1.5f, 1);
+		} else if (vile.player.input.isHeld(Control.Left, vile.player) || vile.player.input.isHeld(Control.Right, vile.player)) {
+			aimValue = 1;
+			aimPoint = new Point(1f, 0);
+		} else if (vile.player.input.isHeld(Control.Up, vile.player)) {
+			aimValue = 3;
+			aimPoint = new Point(0.5f, -1.5f);
+		} else {
+			aimValue = 2;
+			aimPoint = new Point(1.5f, -1);
+		}
+		switch (vile.laserWeapon.type) {
+			case (int)VileLaserType.CerberusPhantom:
+				shootPos = vile.setCannonAim(aimPoint);
+				break;
+			case (int)VileLaserType.NervousGhost:
+				shootPos = vile.setCannonAim(aimPoint);
+				new NervousGhostProj(
+					new VileLaser(VileLaserType.NervousGhost), aimValue, shootPos, vile.xDir,
+					vile.player, vile.player.getNextActorNetId(), rpc: true
+				);
+				vile.playSound("risingSpecter", sendRpc: true);
+				break;
+			case (int)VileLaserType.RisingSpecter:
+				shootPos = vile.setCannonAim(new Point(1.5f, -1));
+				new RisingSpecterProj(
+					new VileLaser(VileLaserType.RisingSpecter), shootPos, vile.xDir,
+					vile.player, vile.player.getNextActorNetId(), rpc: true
+				);
+				vile.playSound("risingSpecter", sendRpc: true);
+				break;
+			case (int)VileLaserType.StraightNightmare:
+				shootPos = vile.setCannonAim(new Point(1, 0));
+				new StraightNightmareProj(
+					new VileLaser(VileLaserType.StraightNightmare), shootPos.addxy(-8 * vile.xDir, 0),
+					vile.xDir, vile.player, vile.player.getNextActorNetId(), sendRpc: true);
+				break;
+			case (int)VileLaserType.NecroBurst:
+				shootPos = vile.setCannonAim(new Point(1, 0));
+				new NecroBurstProj(
+					new VileLaser(VileLaserType.NecroBurst), shootPos,
+					vile.xDir, vile.player, vile.player.getNextActorNetId(), rpc: true
+				);
+				vile.playSound("necroburst", sendRpc: true);
+				break;
 		}
 	}
 }
+
 
 public class StraightNightmareProj : Projectile {
 	public List<Sprite> spriteMids = new List<Sprite>();

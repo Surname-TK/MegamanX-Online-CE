@@ -1779,7 +1779,7 @@ public partial class Character : Actor, IDamagable {
 				clampTo3 = true;
 				break;
 			case Vile vile:
-				clampTo3 = !vile.isVileMK5;
+				clampTo2 = !vile.isVileMK5;
 				break;
 			case BusterZero:
 				clampTo3 = false;

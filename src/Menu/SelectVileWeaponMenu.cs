@@ -21,26 +21,35 @@ public class SelectVileWeaponMenu : IMainMenu {
 			("Vulcan", [
 				new Vulcan(VulcanType.None),
 				new Vulcan(VulcanType.CherryBlast),
+				new Vulcan(VulcanType.ZipZapper),
+				new Vulcan(VulcanType.BuckshotDance),
 				new Vulcan(VulcanType.DistanceNeedler),
-				new Vulcan(VulcanType.BuckshotDance)
+				new Vulcan(VulcanType.TripleSeven),
 			]),
 			("Missile", [
 				new VileMissile(VileMissileType.None),
 				new VileMissile(VileMissileType.ElectricShock),
 				new VileMissile(VileMissileType.HumerusCrush),
-				new VileMissile(VileMissileType.PopcornDemon)
+				new VileMissile(VileMissileType.PopcornDemon),
+				new VileMissile(VileMissileType.BanzaiBeetle),
+				new VileMissile(VileMissileType.SerotinalBullet)
 			]),
 			("R.Punch", [
 				new RocketPunch(RocketPunchType.None),
 				new RocketPunch(RocketPunchType.GoGetterRight),
 				new RocketPunch(RocketPunchType.SpoiledBrat),
+				new RocketPunch(RocketPunchType.EgoisticPill),
+				new RocketPunch(RocketPunchType.GoldenRight),
 				new RocketPunch(RocketPunchType.InfinityGig)
 			]),
 			("Napalm", [
 				new Napalm(NapalmType.NoneBall),
+				new Napalm(NapalmType.BumpityBoom),
 				new Napalm(NapalmType.RumblingBang),
-				new Napalm(NapalmType.FireGrenade),
 				new Napalm(NapalmType.SplashHit),
+				new Napalm(NapalmType.TerritorialPow),
+				new Napalm(NapalmType.BangAwayBomb),
+				new Napalm(NapalmType.FlameRound),
 				new Napalm(NapalmType.NoneFlamethrower)
 			]),
 			("Grenade", [
@@ -62,9 +71,11 @@ public class SelectVileWeaponMenu : IMainMenu {
 				DragonsWrath.netWeapon
 			]),
 			("Laser", [
+				new VileLaser(VileLaserType.CerberusPhantom),
+				new VileLaser(VileLaserType.NervousGhost),
 				new VileLaser(VileLaserType.RisingSpecter),
-				new VileLaser(VileLaserType.NecroBurst),
-				new VileLaser(VileLaserType.StraightNightmare)
+				new VileLaser(VileLaserType.StraightNightmare),
+				new VileLaser(VileLaserType.NecroBurst)
 			]),
 		};
 

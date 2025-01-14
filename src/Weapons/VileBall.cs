@@ -202,18 +202,8 @@ public class AirBombAttack : CharState {
 			var poi = character.getFirstPOI();
 			if (!once && poi != null) {
 				once = true;
-				if (vile.napalmWeapon.type == (int)NapalmType.RumblingBang) {
-					var proj = new NapalmGrenadeProj(vile.napalmWeapon, poi.Value, character.xDir, character.player, character.player.getNextActorNetId(), rpc: true);
-					proj.vel = new Point(character.xDir * 100, 0);
-				}
-				if (vile.napalmWeapon.type == (int)NapalmType.FireGrenade) {
-					var proj = new MK2NapalmGrenadeProj(vile.napalmWeapon, poi.Value, character.xDir, character.player, character.player.getNextActorNetId(), rpc: true);
-					proj.vel = new Point(character.xDir * 100, 0);
-				}
-				if (vile.napalmWeapon.type == (int)NapalmType.SplashHit) {
-					var proj = new SplashHitGrenadeProj(vile.napalmWeapon, poi.Value, character.xDir, character.player, character.player.getNextActorNetId(), rpc: true);
-					proj.vel = new Point(character.xDir * 100, 0);
-				}
+				var proj = new NapalmProj(vile.napalmWeapon, poi.Value, character.xDir, character.player, character.player.getNextActorNetId(), rpc: true);
+				proj.vel = new Point(character.xDir * 100, 0);
 			}
 
 			if (stateTime > 0.25f) {

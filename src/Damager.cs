@@ -37,9 +37,11 @@ public class Damager {
 		{ (int)ProjIds.MechChain, 1 },
 		{ (int)ProjIds.TornadoFangCharged, 0.5f },
 		{ (int)ProjIds.Headbutt, 0.75f },
-		{ (int)ProjIds.RocketPunch, 1 },
-		{ (int)ProjIds.InfinityGig, 1 },
+		{ (int)ProjIds.GoGetterRight, 1 },
 		{ (int)ProjIds.SpoiledBrat, 1 },
+		{ (int)ProjIds.EgoisticPill, 0.5f },
+		{ (int)ProjIds.GoldenRight, 0.5f },
+		{ (int)ProjIds.InfinityGig, 1 },
 		{ (int)ProjIds.SpinningBlade, 0 },
 		{ (int)ProjIds.SpinningBladeCharged, 0.75f },
 		{ (int)ProjIds.Shingetsurin, 1 },
@@ -366,12 +368,12 @@ public class Damager {
 				case (int)ProjIds.RisingFireCharged:
 					character.addBurnTime(owner, new RisingFire(), 1);
 					break;
-				case (int)ProjIds.Napalm2Wall:
-				case (int)ProjIds.Napalm2:
-					character.addBurnTime(owner, new Napalm(NapalmType.FireGrenade), 1); ;
+				case (int)ProjIds.RisingFlameRound:
+				case (int)ProjIds.FlameRound:
+					character.addBurnTime(owner, new Napalm(NapalmType.FlameRound), 1); ;
 					break;
-				case (int)ProjIds.Napalm2Flame:
-					character.addBurnTime(owner, new Napalm(NapalmType.FireGrenade), 0.25f);
+				case (int)ProjIds.FlameRoundTrail:
+					character.addBurnTime(owner, new Napalm(NapalmType.FlameRound), 0.25f);
 					break;
 				case (int)ProjIds.Ryuenjin:
 					character.addBurnTime(owner, RyuenjinWeapon.staticWeapon, 0.75f);
@@ -647,12 +649,12 @@ public class Damager {
 			float tempPush = 0;
 			if (rideArmor.ownedByLocalPlayer && owner != null) {
 				if (rideArmor.raNum == 1 || rideArmor.raNum == 4){
-					tempPush = damage * 32;
+					tempPush = damage * 48;
 				} else {
 					tempPush = damage * 64;}
 			}
 			// Apply push only if the new push is stronger than the current one.
-			if (tempPush >= System.Math.Abs(rideArmor.xFlinchPushVel)) {
+			if (tempPush >= Math.Abs(rideArmor.xFlinchPushVel)) {
 				float pushDirection = -victim.xDir;
 				if (owner != null && owner.character != null) {
 					if (victim.pos.x > owner.character.pos.x) pushDirection = 1;
@@ -1040,8 +1042,8 @@ public class Damager {
 		if (projId >= 0 && (
 			projId == (int)ProjIds.Burn ||
 			projId == (int)ProjIds.SelfDmg ||
-			projId == (int)ProjIds.Napalm ||
-			projId == (int)ProjIds.Napalm2Flame ||
+			projId == (int)ProjIds.RumblingBang ||
+			projId == (int)ProjIds.FlameRoundTrail ||
 			projId == (int)ProjIds.MaroonedTomahawk ||
 			projId == (int)ProjIds.AcidBurstPoison
 		)) {
@@ -1087,22 +1089,18 @@ public class Damager {
 
 	public static bool unassistable(int? projId) {
 		return projId switch {
-			(int)ProjIds.Burn => true,
 			(int)ProjIds.VoltTornado => true,
 			(int)ProjIds.VoltTornadoHyper => true,
 			(int)ProjIds.FlameBurner => true,
 			(int)ProjIds.FlameBurner2 => true,
 			(int)ProjIds.FlameBurnerHyper => true,
-			(int)ProjIds.Napalm2Flame => true,
-			(int)ProjIds.Napalm2Wall => true,
 			(int)ProjIds.RayGun2 => true,
-			(int)ProjIds.Napalm => true,
 			(int)ProjIds.CircleBlaze => true,
 			(int)ProjIds.CircleBlazeExplosion => true,
 			(int)ProjIds.BlastLauncher => true,
 			(int)ProjIds.BlastLauncherSplash => true,
 			(int)ProjIds.BoundBlaster2 => true,
-			(int)ProjIds.NapalmSplashHit => true,
+			(int)ProjIds.SplashHit => true,
 			_ => false
 		};
 	}
@@ -1127,8 +1125,8 @@ public class Damager {
 			(int)ProjIds.FireWaveCharged => true,
 			(int)ProjIds.SpeedBurner => true,
 			(int)ProjIds.SpeedBurnerCharged => true,
-			(int)ProjIds.Napalm2 => true,
-			(int)ProjIds.Napalm2Flame => true,
+			(int)ProjIds.FlameRound => true,
+			(int)ProjIds.RisingFlameRound => true,
 			(int)ProjIds.Ryuenjin => true,
 			(int)ProjIds.FlameBurner => true,
 			(int)ProjIds.FlameBurnerHyper => true,

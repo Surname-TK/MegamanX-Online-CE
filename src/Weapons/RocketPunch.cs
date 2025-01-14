@@ -6,10 +6,17 @@ public enum RocketPunchType {
 	None = -1,
 	GoGetterRight,
 	SpoiledBrat,
+	EgoisticPill,
+	GoldenRight,
 	InfinityGig,
 }
 
 public class RocketPunch : Weapon {
+	public static RocketPunch netWeaponGGR = new RocketPunch(RocketPunchType.GoGetterRight);
+	public static RocketPunch netWeaponSB = new RocketPunch(RocketPunchType.SpoiledBrat);
+	public static RocketPunch netWeaponEP = new RocketPunch(RocketPunchType.EgoisticPill);
+	public static RocketPunch netWeaponGR = new RocketPunch(RocketPunchType.GoldenRight);
+	public static RocketPunch netWeaponIG = new RocketPunch(RocketPunchType.InfinityGig);
 	public float vileAmmoUsage;
 	public string projSprite;
 	public RocketPunch(RocketPunchType rocketPunchType) : base() {
@@ -21,34 +28,56 @@ public class RocketPunch : Weapon {
 		type = (int)rocketPunchType;
 		projSprite = "rocket_punch_proj";
 
-		if (rocketPunchType == RocketPunchType.None) {
-			displayName = "None";
-			description = new string[] { "Do not equip a Rocket Punch." };
-			killFeedIndex = 126;
-		} else if (rocketPunchType == RocketPunchType.GoGetterRight) {
-			fireRate = 60;
-			displayName = "Go-Getter Right";
-			vileAmmoUsage = 7;
-			projSprite = "rocket_punch_proj";
-			description = new string[] { "A rocket punch sends your fist", "flying to teach enemies a lesson." };
-			vileWeight = 3;
-		} else if (rocketPunchType == RocketPunchType.SpoiledBrat) {
-			fireRate = 12;
-			displayName = "Spoiled Brat";
-			vileAmmoUsage = 4;
-			projSprite = "rocket_punch_sb_proj";
-			description = new string[] { "Though lacking in power, this", "rocket punch offers intense speed." };
-			killFeedIndex = 77;
-			vileWeight = 3;
-		}
-		if (rocketPunchType == RocketPunchType.InfinityGig) {
-			fireRate = 60;
-			displayName = "Infinity Gig";
-			vileAmmoUsage = 14;
-			projSprite = "rocket_punch_ig_proj";
-			description = new string[] { "Advanced homing technology can be", "difficult to get a handle on." };
-			killFeedIndex = 78;
-			vileWeight = 3;
+		switch (rocketPunchType) {
+			case RocketPunchType.None:
+				displayName = "None";
+				description = new string[] { "Do not equip a Rocket Punch." };
+				killFeedIndex = 126;
+				break;
+			case RocketPunchType.GoGetterRight:
+				fireRate = 60;
+				displayName = "Go-Getter Right";
+				vileAmmoUsage = 7;
+				projSprite = "rocket_punch_proj";
+				description = new string[] { "A rocket punch sends your fist", "flying to teach enemies a lesson." };
+				vileWeight = 3;
+				break;
+			case RocketPunchType.SpoiledBrat:
+				fireRate = 12;
+				displayName = "Spoiled Brat";
+				vileAmmoUsage = 4;
+				projSprite = "rocket_punch_sb_proj";
+				description = new string[] { "Though lacking in power, this", "rocket punch offers intense speed." };
+				killFeedIndex = (Helpers.randomRange(1, 2) == 2)? 77 : 78;
+				vileWeight = 3;
+				break;
+			case RocketPunchType.EgoisticPill:
+				fireRate = 60;
+				displayName = "Egoistic Pill";
+				vileAmmoUsage = 14;
+				projSprite = "rocket_punch_ep_proj";
+				description = new string[] { "This punch can pierce enemies", "and objects, but can be stubborn." };
+				killFeedIndex = 183;
+				vileWeight = 3;
+				break;
+			case RocketPunchType.GoldenRight:
+				fireRate = 60;
+				displayName = "Golden Right";
+				vileAmmoUsage = 21;
+				projSprite = "rocket_punch_gr_proj";
+				description = new string[] { "Though suffering from a short range,", "this weapon is among the strongest." };
+				killFeedIndex = 184;
+				vileWeight = 3;
+				break;
+			case RocketPunchType.InfinityGig:
+				fireRate = 60;
+				displayName = "Infinity Gig";
+				vileAmmoUsage = 14;
+				projSprite = "rocket_punch_ig_proj";
+				description = new string[] { "Advanced homing technology can be", "difficult to get a handle on." };
+				killFeedIndex = 78;
+				vileWeight = 3;
+				break;
 		}
 	}
 
@@ -81,34 +110,77 @@ public class RocketPunchProj : Projectile {
 		RocketPunch weapon, Point pos, int xDir, Player player,
 		ushort netProjId, bool rpc = false
 	) : base(
-		weapon, pos, xDir, getSpeed(weapon.type), 2,
-		player, weapon.projSprite, Global.defFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
+		weapon, pos, xDir, getSpeed(weapon.type), 2, player,
+		weapon.projSprite, Global.halfFlinch, 0.5f, netProjId, player.ownedByLocalPlayer
 	) {
 		projId = (int)ProjIds.RocketPunch;
 		destroyOnHit = false;
 		shouldShieldBlock = false;
 		if (player.character != null) setzIndex(player.character.zIndex - 100);
 		minTime = 0.2f;
-		maxReverseTime = 0.4f;
-		damager.flinch = Global.halfFlinch;
+		maxReverseTime = 0.35f;
+		fadeOnAutoDestroy = false;
 
-		if (weapon.type == (int)RocketPunchType.SpoiledBrat) {
-			damager.damage = 2;
-			damager.hitCooldown = 0.1f;
-			maxTime = 0.25f;
-			destroyOnHit = true;
-			projId = (int)ProjIds.SpoiledBrat;
-			type = 1;
-		} else if (weapon.type == (int)RocketPunchType.InfinityGig) {
-			projId = (int)ProjIds.InfinityGig;
-			type = 2;
-		} else {
-			maxReverseTime = 0.4f;
-			type = 0;
+		type = weapon.type;
+
+		switch (weapon.type) {
+			case (int)RocketPunchType.GoGetterRight:
+				projId = (int)ProjIds.GoGetterRight;
+				damager = new Damager(owner, 2, Global.halfFlinch, 0.5f);
+				break;
+			case (int)RocketPunchType.SpoiledBrat:
+				projId = (int)ProjIds.SpoiledBrat;
+				damager = new Damager(owner, 2, Global.halfFlinch, 0.1f);
+				maxTime = 0.25f;
+				destroyOnHit = true;
+				fadeSprite = "explosion";
+				fadeSound = "explosion";
+				fadeOnAutoDestroy = true;
+				break;
+			case (int)RocketPunchType.EgoisticPill:
+				projId = (int)ProjIds.EgoisticPill;
+				damager = new Damager(owner, 2, Global.defFlinch, 0.25f);
+				minTime = 0.3f;
+				maxReverseTime = 0.3f;
+				break;
+			case (int)RocketPunchType.GoldenRight:
+				projId = (int)ProjIds.GoldenRight;
+				damager = new Damager(owner, 4, Global.defFlinch, 0.5f);
+				minTime = 0.1f;
+				maxReverseTime = 0.1f;
+				break;
+			case (int)RocketPunchType.InfinityGig:
+				projId = (int)ProjIds.InfinityGig;
+				damager = new Damager(owner, 2, Global.halfFlinch, 0.5f);
+				break;
 		}
+
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
+	}
+	public static Projectile rpcInvoke(ProjParameters args) {
+		RocketPunch rocketPunch = RocketPunch.netWeaponGGR;
+		switch (args.projId){
+			case (int)ProjIds.GoGetterRight:
+				rocketPunch = RocketPunch.netWeaponGGR;
+				break;
+			case (int)ProjIds.SpoiledBrat:
+				rocketPunch = RocketPunch.netWeaponSB;
+				break;
+			case (int)ProjIds.EgoisticPill:
+				rocketPunch = RocketPunch.netWeaponEP;
+				break;
+			case (int)ProjIds.GoldenRight:
+				rocketPunch = RocketPunch.netWeaponGR;
+				break;
+			case (int)ProjIds.InfinityGig:
+				rocketPunch = RocketPunch.netWeaponIG;
+				break;
+		}
+		return new RocketPunchProj(
+			rocketPunch, args.pos, args.xDir, args.player, args.netId
+		);
 	}
 
 	public bool ownerExists => (owner.character?.destroyed == false);
@@ -160,6 +232,9 @@ public class RocketPunchProj : Projectile {
 			reversed = true;
 			vel.x = getSpeed(type) * -xDir;
 		}
+		if (type == (int)RocketPunchType.EgoisticPill && owner.character.charState is Hurt) {
+			destroySelf("explosion", "explosion");
+		}
 		if (reversed && owner.character != null) {
 			vel = new Point(0, 0);
 			if (pos.x > owner.character.pos.x) {
@@ -186,7 +261,7 @@ public class RocketPunchProj : Projectile {
 
 	public static float getSpeed(int type) {
 		return type switch {
-			(int)RocketPunchType.SpoiledBrat => 600,
+			(int)RocketPunchType.SpoiledBrat => 500,
 			(int)RocketPunchType.InfinityGig => 500,
 			_ => 500
 		};
@@ -194,6 +269,7 @@ public class RocketPunchProj : Projectile {
 
 	public override void onHitDamagable(IDamagable damagable) {
 		base.onHitDamagable(damagable);
+		if (type == (int)RocketPunchType.EgoisticPill || type == (int)RocketPunchType.GoldenRight) return;
 		if (locallyControlled) {
 			reversed = true;
 		}

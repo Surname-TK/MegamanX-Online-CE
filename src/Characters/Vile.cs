@@ -13,6 +13,7 @@ public class Vile : Character {
 	float mechBusterCooldown;
 	public bool usedAmmoLastFrame;
 	public int buckshotDanceNum;
+	public int tripleSevenNum;
 	public float vileAmmoRechargeCooldown;
 	public bool isShootingLongshotGizmo;
 	public int longshotGizmoCount;
@@ -75,7 +76,7 @@ public class Vile : Character {
 		vulcanWeapon = new Vulcan((VulcanType)vileLoadout.vulcan);
 		cannonWeapon = new VileCannon((VileCannonType)vileLoadout.cannon);
 		missileWeapon = new VileMissile((VileMissileType)vileLoadout.missile);
-		rocketPunchWeapon = new RocketPunch((RocketPunchType)vileLoadout.vulcan);
+		rocketPunchWeapon = new RocketPunch((RocketPunchType)vileLoadout.rocketPunch);
 		napalmWeapon = new Napalm((NapalmType)vileLoadout.napalm);
 		grenadeWeapon = new VileBall((VileBallType)vileLoadout.ball);
 		cutterWeapon = new VileCutter((VileCutterType)vileLoadout.cutter);
@@ -323,7 +324,7 @@ public class Vile : Character {
 		return base.normalCtrl();
 	}
 	public void shoot(int chargeLevel) {
-		if (chargeLevel >= 3) {
+		if (chargeLevel >= 2) {
 			laserWeapon.vileShoot(WeaponIds.VileLaser, this);
 		}
 		if (chargeLevel == 4 && isVileMK5) {
@@ -343,7 +344,7 @@ public class Vile : Character {
 		return base.canShoot();
 	}
 	public override void chargeLogic(Action<int> shootFunct) {
-		if (chargeButtonHeld() && flag == null && player.vileAmmo >= laserWeapon.getAmmoUsage(0)) {
+		if (chargeButtonHeld() && flag == null) {
 			if (canCharge()) {
 				increaseCharge();
 			}
@@ -569,7 +570,7 @@ public class Vile : Character {
 			vel = new Point(1, 0.5f);
 		}
 
-		if (charState is RisingSpecterState) {
+		if (charState is LaserAttackState) {
 			vel = new Point(1, -0.75f);
 		}
 

@@ -171,41 +171,50 @@ public partial class RPCCreateProj : RPC {
 			case (int)ProjIds.GreenSpinnerSplash:
 				proj = new GreenSpinnerExplosionProj(new Weapon(), pos, xDir, player, 0, null, 1, netProjByte);
 				break;
-			case (int)ProjIds.NapalmGrenade:
-				proj = new NapalmGrenadeProj(new Weapon(), pos, xDir, player, netProjByte);
-				break;
 			case (int)ProjIds.Napalm:
-				proj = new NapalmPartProj(new Weapon(), pos, xDir, player, netProjByte, extraData[0]);
+				proj = new NapalmProj(new Napalm(NapalmType.RumblingBang), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.NapalmGrenade2:
-				proj = new MK2NapalmGrenadeProj(new Napalm(NapalmType.FireGrenade), pos, xDir, player, netProjByte);
+			case (int)ProjIds.BumpityBoomNapalm:
+				proj = new NapalmProj(new Napalm(NapalmType.BumpityBoom), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.Napalm2:
-				proj = new MK2NapalmProj(new Napalm(NapalmType.FireGrenade), pos, xDir, player, netProjByte);
+			case (int)ProjIds.BumpityBoom:
+				proj = new BumpityBoomProj(new Napalm(NapalmType.BumpityBoom), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.Napalm2Wall:
-				proj = new MK2NapalmWallProj(new Napalm(NapalmType.FireGrenade), pos, xDir, player, netProjByte);
+			case (int)ProjIds.RumblingBangNapalm:
+				proj = new NapalmProj(new Napalm(NapalmType.RumblingBang), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.Napalm2Flame:
-				proj = new MK2NapalmFlame(new Napalm(NapalmType.FireGrenade), pos, xDir, player, netProjByte);
+			case (int)ProjIds.RumblingBang:
+				proj = new RumblingBangProj(new Napalm(NapalmType.RumblingBang), pos, xDir, player, netProjByte, extraData[0]);
 				break;
-			case (int)ProjIds.RocketPunch:
-				proj = new RocketPunchProj(new RocketPunch(RocketPunchType.GoGetterRight), pos, xDir, player, netProjByte);
+			case (int)ProjIds.SplashHitNapalm:
+				proj = new NapalmProj(new Napalm(NapalmType.SplashHit), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.SpoiledBrat:
-				proj = new RocketPunchProj(new RocketPunch(RocketPunchType.SpoiledBrat), pos, xDir, player, netProjByte);
+			case (int)ProjIds.SplashHit:
+				proj = new SplashHitProj(new Napalm(NapalmType.SplashHit), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.InfinityGig:
-				proj = new RocketPunchProj(new RocketPunch(RocketPunchType.InfinityGig), pos, xDir, player, netProjByte);
+			case (int)ProjIds.TerritorialPowNapalm:
+				proj = new NapalmProj(new Napalm(NapalmType.TerritorialPow), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.Vulcan:
-				proj = new VulcanProj(new Vulcan(VulcanType.CherryBlast), pos, xDir, player, netProjByte);
+			case (int)ProjIds.TerritorialPow:
+				proj = new TerritorialPowProj(new Napalm(NapalmType.TerritorialPow), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.DistanceNeedler:
-				proj = new VulcanProj(new Vulcan(VulcanType.DistanceNeedler), pos, xDir, player, netProjByte);
+			case (int)ProjIds.BangAwayBombNapalm:
+				proj = new NapalmProj(new Napalm(NapalmType.BangAwayBomb), pos, xDir, player, netProjByte);
 				break;
-			case (int)ProjIds.BuckshotDance:
-				proj = new VulcanProj(new Vulcan(VulcanType.BuckshotDance), pos, xDir, player, netProjByte);
+			case (int)ProjIds.BangAwayBomb:
+				proj = new SplashHitProj(new Napalm(NapalmType.BangAwayBomb), pos, xDir, player, netProjByte);
+				break;
+			case (int)ProjIds.FlameRoundNapalm:
+				proj = new NapalmProj(new Napalm(NapalmType.FlameRound), pos, xDir, player, netProjByte);
+				break;
+			case (int)ProjIds.FlameRound:
+				proj = new FlameRoundProj(new Napalm(NapalmType.FlameRound), pos, xDir, player, netProjByte);
+				break;
+			case (int)ProjIds.RisingFlameRound:
+				proj = new RisingFlameRoundProj(new Napalm(NapalmType.FlameRound), pos, xDir, player, netProjByte);
+				break;
+			case (int)ProjIds.FlameRoundTrail:
+				proj = new FlameRoundTrail(new Napalm(NapalmType.FlameRound), pos, xDir, player, netProjByte);
 				break;
 			case (int)ProjIds.SilkShotShrapnel:
 				proj = new SilkShotProjShrapnel(
@@ -317,35 +326,17 @@ public partial class RPCCreateProj : RPC {
 			case (int)ProjIds.QuakeBlazerFlame:
 				proj = new QuakeBlazerFlamePart(pos, xDir, (int)extraData[0] - 1, player, netProjByte);
 				break;
-			case (int)ProjIds.MechFrogStompShockwave:
-				proj = new MechFrogStompShockwave(new MechFrogStompWeapon(null), pos, xDir, player, netProjByte);
-				break;
-			case (int)ProjIds.NapalmGrenadeSplashHit:
-				proj = new SplashHitGrenadeProj(new Napalm(NapalmType.SplashHit), pos, xDir, player, netProjByte);
-				break;
-			case (int)ProjIds.NapalmSplashHit:
-				proj = new SplashHitProj(new Napalm(NapalmType.SplashHit), pos, xDir, player, netProjByte);
-				break;
 			case (int)ProjIds.ShinMessenkou:
 				proj = new ShinMessenkouProj(new ShinMessenkou(), pos, xDir, player, netProjByte);
 				break;
 			case (int)ProjIds.Shingetsurin:
 				proj = new ShingetsurinProj(pos, xDir, 0, player, netProjByte);
 				break;
-			case (int)ProjIds.VileMissile:
-				proj = new VileMissileProj(new VileMissile(VileMissileType.HumerusCrush), pos, xDir, 0, player, netProjByte);
-				break;
-			case (int)ProjIds.PopcornDemon:
-				proj = new VileMissileProj(new VileMissile(VileMissileType.PopcornDemon), pos, xDir, 0, player, netProjByte);
-				break;
-			case (int)ProjIds.PopcornDemonSplit:
-				proj = new VileMissileProj(
-					new VileMissile(VileMissileType.PopcornDemon),
-					pos, xDir, 1, player, netProjByte, vel: new Point()
-				);
-				break;
-			case (int)ProjIds.Gemnu:
+			case (int)ProjIds.Genmu:
 				proj = new GenmuProj(pos, xDir, extraData[0], player, netProjByte);
+				break;
+			case (int)ProjIds.MechFrogStompShockwave:
+				proj = new MechFrogStompShockwave(new MechFrogStompWeapon(null), pos, xDir, player, netProjByte);
 				break;
 			case (int)ProjIds.PeaceOutRoller:
 				proj = new PeaceOutRollerProj(new VileBall(VileBallType.PeaceOutRoller), pos, xDir, player, 0, netProjByte);
@@ -486,15 +477,6 @@ public partial class RPCCreateProj : RPC {
 				proj = new FlamethrowerProj(
 					DragonsWrath.netWeapon,
 					pos, xDir, extraData[0] == 1, player, netProjByte
-				);
-				break;
-			case (int)ProjIds.RisingSpecter:
-				proj = new RisingSpecterProj(new VileLaser(VileLaserType.RisingSpecter), pos, xDir, player, netProjByte);
-				break;
-			case (int)ProjIds.StraightNightmare:
-				proj = new StraightNightmareProj(
-					new VileLaser(VileLaserType.StraightNightmare),
-					pos, xDir, player, netProjByte
 				);
 				break;
 			case (int)ProjIds.MetteurCrash:

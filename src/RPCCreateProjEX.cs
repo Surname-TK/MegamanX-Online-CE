@@ -122,16 +122,42 @@ public partial class RPCCreateProj : RPC {
 		{ (int)ProjIds.UPParryMelee, UPParryMeleeProj.rpcInvoke },
 		{ (int)ProjIds.UPParryProj, UPParryRangedProj.rpcInvoke },
 		
-		// Vile stuff.
+	// Vile stuff.
+		// Vulcans
+		{ (int)ProjIds.CherryBlast, VulcanProj.rpcInvoke },
+		{ (int)ProjIds.ZipZapper, VulcanProj.rpcInvoke },
+		{ (int)ProjIds.BuckshotDance, VulcanProj.rpcInvoke },
+		{ (int)ProjIds.DistanceNeedler, VulcanProj.rpcInvoke },
+		{ (int)ProjIds.TripleSeven, VulcanProj.rpcInvoke },
+
+		// Missiles
+		{ (int)ProjIds.HumerusCrush, VileMissileProj.rpcInvoke },
+		{ (int)ProjIds.PopcornDemon, VileMissileProj.rpcInvoke },
+		{ (int)ProjIds.BanzaiBeetle, VileMissileProj.rpcInvoke },
+		{ (int)ProjIds.LostLamb, VileMissileProj.rpcInvoke },
+		{ (int)ProjIds.SerotinalBullet, VileMissileProj.rpcInvoke },
+
+		// RocketPunches
+		{ (int)ProjIds.GoGetterRight, RocketPunchProj.rpcInvoke },
+		{ (int)ProjIds.SpoiledBrat, RocketPunchProj.rpcInvoke },
+		{ (int)ProjIds.EgoisticPill, RocketPunchProj.rpcInvoke },
+		{ (int)ProjIds.GoldenRight, RocketPunchProj.rpcInvoke },
+		{ (int)ProjIds.InfinityGig, RocketPunchProj.rpcInvoke },
+
+		// Cannons
 		{ (int)ProjIds.FrontRunner, VileCannonProj.rpcInvoke },
+		{ (int)ProjIds.TridentLine, VileCannonProj.rpcInvoke },
 		{ (int)ProjIds.FatBoy, VileCannonProj.rpcInvoke },
+		{ (int)ProjIds.FireMurrain, VileCannonProj.rpcInvoke },
 		{ (int)ProjIds.LongshotGizmo, VileCannonProj.rpcInvoke },
-		// Buster Zero
+
+	// Buster Zero
 		{ (int)ProjIds.DZBuster, DZBusterProj.rpcInvoke },
 		{ (int)ProjIds.DZBuster2, DZBuster2Proj.rpcInvoke },
 		{ (int)ProjIds.DZBuster3, DZBuster3Proj.rpcInvoke },
 		{ (int)ProjIds.DZBuster4, DZBuster3Proj.rpcInvoke },
-		// Sigma Novelties
+		
+	// Sigma Novelties
 		// Mavericks
 		{ (int)ProjIds.VoltCSuck, VoltCSuckProj.rpcInvoke },
 		// { (int)ProjIds.ChillPIceShot, ChillPIceProj.rpcInvoke },

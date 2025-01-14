@@ -1704,8 +1704,8 @@ public class AI {
 		if (character is Vile vile) {
 			int Vattack = Helpers.randomRange(0, 12);
 			if (vile?.charState?.isGrabbedState == false && !player.isDead && !vile.isInvulnerableAttack()
-				&& !(character.charState is VileRevive or HexaInvoluteState or NecroBurstAttack
-				or StraightNightmareAttack or RisingSpecterState or VileMK2GrabState)) {
+				&& !(character.charState is VileRevive or HexaInvoluteState
+				or LaserAttackState or VileMK2GrabState)) {
 				switch (Vattack) {
 					case 0:
 						player.press(Control.Shoot);
