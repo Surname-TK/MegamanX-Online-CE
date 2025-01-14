@@ -370,6 +370,16 @@ label:
 					weapons.Add(new FrostShield());
 					weapons.Add(new TornadoFang());
 					weapons.Add(new HyperCharge());
+				} else if (xArmor1v1 == 4 || xArmor1v1 == 5) {
+					weapons.Add(new XBuster());
+					weapons.Add(new LightningWeb());
+					weapons.Add(new FrostTower());
+					weapons.Add(new SoulBody());
+					weapons.Add(new RisingFire());
+					weapons.Add(new GroundHunter());
+					weapons.Add(new AimingLaser());
+					weapons.Add(new DoubleCyclone());
+					weapons.Add(new TwinSlasher());
 				}
 
 				foreach (var enemyPlayer in Global.level.players) {

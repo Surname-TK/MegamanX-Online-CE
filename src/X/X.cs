@@ -1467,6 +1467,7 @@ public partial class MegamanX : Character {
 		strikeChainChargedProj?.destroySelf();
 		barrierAnim?.destroySelf();
 		beeSwarm?.destroy();
+		aLaserCursor?.destroySelf();
 		destroyBusterProjs();
 		setShootRaySplasher(false);
 

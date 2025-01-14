@@ -604,6 +604,10 @@ public partial class Player {
 			bodyArmorNum = xArmor1v1;
 			helmetArmorNum = xArmor1v1;
 			armArmorNum = xArmor1v1;
+
+			if (bootsArmorNum > 4) bootsArmorNum = 4;
+			if (bodyArmorNum > 4) bodyArmorNum = 4;
+			if (helmetArmorNum > 4) helmetArmorNum = 4;
 		}
 
 		for (int i = 0; i < charCurrency.Length; i++) {
