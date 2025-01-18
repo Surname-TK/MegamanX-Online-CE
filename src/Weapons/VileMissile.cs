@@ -63,19 +63,28 @@ public class VileMissile : Weapon {
 			case VileMissileType.BanzaiBeetle:
 				fireRate = 30;
 				displayName = "Banzai Beetle";
-				projSprite = "missile_pd_proj";
+				projSprite = "missile_bb_proj";
 				vileAmmo = 14;
-				description = new string[] { "This missile splits into 3", "and can cause great damage." };
-				killFeedIndex = 76;
+				description = new string[] { "A set of wings allows this missile", "to glide, contacting many enemies." };
+				killFeedIndex = 185;
+				vileWeight = 3;
+				break;
+			case VileMissileType.LostLamb:
+				fireRate = 10;
+				displayName = "Lost Lamb";
+				projSprite = "missile_ll_proj";
+				vileAmmo = 7;
+				description = new string[] { "This missile travels at an odd", "angle but can be very useful." };
+				killFeedIndex = 186;
 				vileWeight = 3;
 				break;
 			case VileMissileType.SerotinalBullet:
 				fireRate = 10;
 				displayName = "Serotinal Bullet";
-				projSprite = "missile_hc_proj";
+				projSprite = "missile_sb_proj";
 				vileAmmo = 7;
 				description = new string[] { "This missile is extremely slow,", "but can be set as a trap." };
-				killFeedIndex = 76;
+				killFeedIndex = 187;
 				vileWeight = 3;
 				break;
 		}
@@ -158,14 +167,15 @@ public class VileMissileProj : Projectile {
 				projId = (int)ProjIds.BanzaiBeetle;
 				damager = new Damager(owner, 2, 0, 0.25f);
 				destroyOnHit = false;
-				this.vel.x = xDir * 20;
-				maxTime = 2f;
-				maxDistance = 250;
+				shouldShieldBlock = false;
+				this.vel.x = xDir * 200;
+				maxTime = 0.6f;
+				maxDistance = 200;
 				break;
 			case (int)VileMissileType.LostLamb:
 				projId = (int)ProjIds.LostLamb;
 				damager.damage = 2;
-				this.vel.x = xDir * 10;
+				this.vel.x = xDir * 100;
 				maxTime = 2f;
 				maxDistance = 250;
 				break;
@@ -174,7 +184,7 @@ public class VileMissileProj : Projectile {
 				damager.damage = 2;
 				this.vel.x = xDir * 20;
 				maxTime = 2f;
-				maxDistance = 250;
+				maxDistance = 200;
 				break;
 		}
 		if (rpc) {

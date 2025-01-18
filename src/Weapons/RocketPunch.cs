@@ -126,7 +126,7 @@ public class RocketPunchProj : Projectile {
 		switch (weapon.type) {
 			case (int)RocketPunchType.GoGetterRight:
 				projId = (int)ProjIds.GoGetterRight;
-				damager = new Damager(owner, 2, Global.halfFlinch, 0.5f);
+				damager = new Damager(owner, 2, Global.defFlinch, 0.5f);
 				break;
 			case (int)RocketPunchType.SpoiledBrat:
 				projId = (int)ProjIds.SpoiledBrat;
@@ -139,7 +139,7 @@ public class RocketPunchProj : Projectile {
 				break;
 			case (int)RocketPunchType.EgoisticPill:
 				projId = (int)ProjIds.EgoisticPill;
-				damager = new Damager(owner, 2, Global.defFlinch, 0.25f);
+				damager = new Damager(owner, 2, Global.defFlinch, 0.3f);
 				minTime = 0.3f;
 				maxReverseTime = 0.3f;
 				break;

@@ -29,20 +29,20 @@ public class VileLaser : Weapon {
 				displayName = "Cerberus Phantom";
 				vileAmmoUsage = 7;
 				description = new string[] { "Not as powerful as other weapons,", "this laser fires in 3 directions." };
-				killFeedIndex = 120;
+				killFeedIndex = 192;
 				vileWeight = 3;
 				break;
 			case VileLaserType.NervousGhost:
 				displayName = "Nervous Ghost";
 				vileAmmoUsage = 7;
 				description = new string[] { "This laser can be aimed with the", "up and down directional buttons." };
-				killFeedIndex = 120;
+				killFeedIndex = 193;
 				vileWeight = 3;
 				break;
 			case VileLaserType.RisingSpecter:
 				displayName = "Rising Specter";
 				vileAmmoUsage = 14;
-				description = new string[] { "It cannot be aimed,", "but its wide shape covers a large area." };
+				description = new string[] { "It cannot be aimed, but its wide", "shape covers a large area." };
 				killFeedIndex = 120;
 				vileWeight = 3;
 				break;

@@ -125,7 +125,7 @@ public class Buster3Proj : Projectile {
 		fadeSprite = "buster3_fade";
 		projId = (int)ProjIds.Buster3;
 		reflectable = true;
-		int Charge = player.character.getChargeLevel();
+		// int Charge = player.character.getChargeLevel();
 
 		if (rpc) {
 			byte[] extraArgs = new byte[] { (byte)type};

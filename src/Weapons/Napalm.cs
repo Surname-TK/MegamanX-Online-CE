@@ -38,10 +38,10 @@ public class Napalm : Weapon {
 			case NapalmType.BumpityBoom:
 				displayName = "Bumpity Boom";
 				description = new string[] { "This napalm sports a wide horizontal", "range but cannot attack upward." };
-				vileAmmoUsage = 14;
+				vileAmmoUsage = 7;
 				fireRate = 60;
 				vileWeight = 3;
-				killFeedIndex = 126;
+				killFeedIndex = 191;
 				break;
 			case NapalmType.RumblingBang:
 				displayName = "Rumbling Bang";
@@ -49,7 +49,7 @@ public class Napalm : Weapon {
 				vileAmmoUsage = 14;
 				fireRate = 60 * 2;
 				vileWeight = 3;
-				killFeedIndex = 126;
+				killFeedIndex = 188;
 				break;
 			case NapalmType.SplashHit:
 				displayName = "Splash Hit";
@@ -61,18 +61,19 @@ public class Napalm : Weapon {
 				break;
 			case NapalmType.TerritorialPow:
 				displayName = "Territorial Pow";
-				description = new string[] { "This napalm can attack foes above,", "but has a narrow horizontal range." };
+				description = new string[] { "Though offensively weak, this", "napalm destroys some enemy shots." };
 				vileAmmoUsage = 14;
 				fireRate = 60;
-				killFeedIndex = 79;
+				killFeedIndex = 189;
 				vileWeight = 3;
 				break;
 			case NapalmType.BangAwayBomb:
 				displayName = "Bang Away Bomb";
-				description = new string[] { "This napalm can attack foes above,", "but has a narrow horizontal range." };
+				description = new string[] { "This napalm bounces along the", "ground, laying a path of destruction." };
 				vileAmmoUsage = 21;
+				fireRate = 60 * 3;
 				vileWeight = 3;
-				killFeedIndex = 54;
+				killFeedIndex = 190;
 				break;
 			case NapalmType.FlameRound:
 				displayName = "Flame Round";
@@ -160,6 +161,7 @@ public class NapalmProj : Projectile {
 				projId = (int)ProjIds.BangAwayBombNapalm;
 				netcodeOverride = NetcodeModel.FavorDefender;
 				damager = new Damager(owner, 1, Global.defFlinch, 0.1f);
+				shouldShieldBlock = true;
 				maxTime = 4f;
 				maxBounces = 6;
 				destroyOnHit = false;
@@ -175,7 +177,7 @@ public class NapalmProj : Projectile {
 		if (rpc) {
 			rpcCreate(pos, player, netProjId, xDir);
 		}
-		}
+	}
 	public override void update() {
 		base.update();
 		if (weapon.type == (int)NapalmType.BangAwayBomb) {
