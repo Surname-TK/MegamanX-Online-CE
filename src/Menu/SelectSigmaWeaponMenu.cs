@@ -13,23 +13,27 @@ public class SigmaWeaponCursor {
 	public int startOffset() {
 		if (index < 9) return 0;
 		else if (index >= 9 && index <= 17) return 9;
-		else return 18;
+		else if (index >= 18 && index <= 26) return 18;
+		else return 27;
 	}
 
 	public int numWeapons() {
-		return 9;
+		if (index < 27) return 9;
+		return 1;
 	}
 
 	public void cycleLeft() {
-		if (index < 9) index = 18;
-		else if (index >= 9 && index <= 17) index = 0;
-		else if (index > 17) index = 9;
+		if (index < 9) index = 27; //from x1 page to x4
+		else if (index is >= 9 and <= 17) index = 0; //from x2 page to x1
+		else if (index is >= 18 and <= 26) index = 9; //from x3 page to x2
+		else index = 18; //from x4 page to x3
 	}
 
 	public void cycleRight() {
-		if (index < 9) index = 9;
-		else if (index >= 9 && index <= 17) index = 18;
-		else if (index > 17) index = 0;
+		if (index < 9) index = 9; //from x1 page to x2
+		else if (index is >= 9 and <= 17) index = 18; //from x2 page to x3
+		else if (index is >= 18 and <= 26) index = 27; //from x3 page to x4
+		else index = 0; //from x4 page to x1
 	}
 }
 
@@ -72,15 +76,17 @@ public class SelectSigmaWeaponMenu : IMainMenu {
 			//Helpers.menuLeftRightInc(ref cursors[selCursorIndex].index, 0, 8, playSound: true);
 			if (Global.input.isPressedMenu(Control.MenuLeft)) {
 				cursors[selCursorIndex].index--;
-				if (cursors[selCursorIndex].index == -1) cursors[selCursorIndex].index = 26;
+				if (cursors[selCursorIndex].index == -1) cursors[selCursorIndex].index = 27;
 				else if (cursors[selCursorIndex].index == 8) cursors[selCursorIndex].index = 8;
 				else if (cursors[selCursorIndex].index == 17) cursors[selCursorIndex].index = 17;
+				else if (cursors[selCursorIndex].index == 26) cursors[selCursorIndex].index = 26;
 				Global.playSound("menuX2");
 			} else if (Global.input.isPressedMenu(Control.MenuRight)) {
 				cursors[selCursorIndex].index++;
 				if (cursors[selCursorIndex].index == 9) cursors[selCursorIndex].index = 9;
 				else if (cursors[selCursorIndex].index == 18) cursors[selCursorIndex].index = 18;
-				else if (cursors[selCursorIndex].index == 27) cursors[selCursorIndex].index = 0;
+				else if (cursors[selCursorIndex].index == 27) cursors[selCursorIndex].index = 27;
+				else if (cursors[selCursorIndex].index == 28) cursors[selCursorIndex].index = 0;
 				Global.playSound("menuX2");
 			}
 			if (Global.input.isPressedMenu(Control.WeaponLeft)) {

@@ -582,7 +582,7 @@ public class BaseSigma : Character {
 			if (maverick.state is MorphMCHangState hangState) {
 				return maverick.pos.addxy(camOffsetX, -24 + 17);
 			}
-			return maverick.pos.round().addxy(camOffsetX, -24);
+			return maverick.getCenterPos().round().addxy(camOffsetX, 0);
 		}
 		return base.getCamCenterPos(ignoreZoom);
 	}

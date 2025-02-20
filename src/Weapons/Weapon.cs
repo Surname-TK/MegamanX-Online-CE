@@ -143,6 +143,18 @@ public class Weapon {
 			weapons.Add(new BlastHornetWeapon(player));
 			weapons.Add(new DrDopplerWeapon(player));
 		}
+		
+		if (sigmaForm == null || sigmaForm == 3) {/*
+			weapons.Add(new BlizzardBuffaloWeapon(player));
+			weapons.Add(new ToxicSeahorseWeapon(player));
+			weapons.Add(new TunnelRhinoWeapon(player));
+			weapons.Add(new VoltCatfishWeapon(player));
+			weapons.Add(new CrushCrawfishWeapon(player));
+			weapons.Add(new NeonTigerWeapon(player));
+			weapons.Add(new GravityBeetleWeapon(player));
+			weapons.Add(new BlastHornetWeapon(player));*/
+			weapons.Add(new RepliforceGeneralWeapon(player));
+		}
 
 		return weapons;
 	}

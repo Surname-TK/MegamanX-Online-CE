@@ -138,6 +138,10 @@ public class MaverickWeapon : Weapon {
 			);
 			drDoppler.ballType = ddw.ballType;
 			maverick = drDoppler;
+		} 
+			// X4
+		  else if (this is RepliforceGeneralWeapon) {
+			maverick = new RepliforceGeneral(player, pos, destPos, xDir, player.getNextActorNetId(), true, sendRpc: true);
 		}
 
 		if (maverick == null) {
@@ -392,5 +396,13 @@ public class DrDopplerWeapon : MaverickWeapon {
 		index = (int)WeaponIds.DrDoppler;
 		weaponSlotIndex = 92;
 		displayName = "Dr. Doppler";
+	}
+}
+
+public class RepliforceGeneralWeapon : MaverickWeapon {
+	public RepliforceGeneralWeapon(Player? player) : base(player) {
+		index = (int)WeaponIds.RepliforceGeneral;
+		weaponSlotIndex = 74;
+		displayName = "Repliforce General";
 	}
 }

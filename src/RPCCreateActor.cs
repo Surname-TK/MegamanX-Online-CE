@@ -48,6 +48,7 @@ public enum NetActorCreateId {
 	GravityBeetle,
 	BlastHornet,
 	DrDoppler,
+	RepliforceGeneral,
 	RideChaser,
 }
 
@@ -110,6 +111,8 @@ public class RPCCreateActor : RPC {
 			new LargeAmmoPickup(player, pos, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.SmallAmmo) {
 			new SmallAmmoPickup(player, pos, netProjByte, false);
+
+
 		} else if (createId == (int)NetActorCreateId.WireSponge) {
 			new WireSponge(player, pos, pos, xDir, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.WheelGator) {
@@ -140,6 +143,8 @@ public class RPCCreateActor : RPC {
 			new Mechaniloid(pos, player, xDir, new MechaniloidWeapon(player, MechaniloidType.Hopper), MechaniloidType.Hopper, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.MechaniloidFish) {
 			new Mechaniloid(pos, player, xDir, new MechaniloidWeapon(player, MechaniloidType.Fish), MechaniloidType.Fish, netProjByte, false);
+		
+
 		} else if (createId == (int)NetActorCreateId.BlizzardBuffalo) {
 			new BlizzardBuffalo(player, pos, pos, xDir, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.ToxicSeahorse) {
@@ -158,6 +163,10 @@ public class RPCCreateActor : RPC {
 			new BlastHornet(player, pos, pos, xDir, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.DrDoppler) {
 			new DrDoppler(player, pos, pos, xDir, netProjByte, false);
+
+
+		} else if (createId == (int)NetActorCreateId.RepliforceGeneral) {
+			new RepliforceGeneral(player, pos, pos, xDir, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.RideChaser) {
 			new RideChaser(player, pos, 0, netProjByte, false);
 		}

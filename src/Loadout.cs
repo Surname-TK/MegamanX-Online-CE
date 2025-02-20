@@ -300,7 +300,7 @@ public class SigmaLoadout {
 	[ProtoMember(5)] public int commandMode;
 
 	private int startMaverick { get { return (int)WeaponIds.ChillPenguin; } }
-	private int endMaverick { get { return 26; } }
+	private int endMaverick { get { return 27; } }
 
 	public List<int> getWeaponIndices() {
 		return new List<int>() { (int)WeaponIds.Sigma, maverick1 + startMaverick, maverick2 + startMaverick };
@@ -333,7 +333,7 @@ public class SigmaLoadout {
 
 	public static SigmaLoadout createRandom() {
 		List<int> weaponPool = new List<int>();
-		for (int i = (int)WeaponIds.ChillPenguin; i <= (int)WeaponIds.DrDoppler; i++) {
+		for (int i = (int)WeaponIds.ChillPenguin; i <= (int)WeaponIds.RepliforceGeneral; i++) {
 			weaponPool.Add(i);
 		}
 

@@ -150,6 +150,7 @@ public class Maverick : Actor, IDamagable {
 		if (this is MorphMothCocoon) width = 20;
 		if (this is MorphMoth) width = 18;
 		if (this is BlizzardBuffalo) width = 30;
+		if (this is RepliforceGeneral) height = 120;
 
 		int heightInt = (int)height;
 
@@ -415,6 +416,8 @@ public class Maverick : Actor, IDamagable {
 		if (this is GravityBeetle) return 157;
 		if (this is BlastHornet) return 158;
 		if (this is DrDoppler) return 159;
+
+		if (this is RepliforceGeneral) return 159;
 
 		return 0;
 	}
@@ -988,6 +991,10 @@ public class Maverick : Actor, IDamagable {
 		}
 		if (this is BlastHornet) {
 			return 60;
+		}
+		if (this is RepliforceGeneral rg) {
+			if (rg.state is MJumpStart or MLand) return 100;
+			else return 140;
 		}
 		return height;
 	}
