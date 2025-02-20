@@ -557,6 +557,16 @@ public partial class Level {
 			} else if (objectName == "Node") {
 				var node = new NavMeshNode(instanceName, pos, instance.properties);
 				navMeshNodes.Add(node);
+
+			} else if (objectName == "Upgrade Capsule") {
+				if (!pickupRestricted(instance)) {
+					itemSpawners.Add(new ItemSpawner(pos, typeof(UpgradeCapsule), 0, 15, xDir));
+				}
+			} else if (objectName == "Hyper Capsule") {
+				if (!pickupRestricted(instance)) {
+					itemSpawners.Add(new ItemSpawner(pos, typeof(HyperCapsule), 0, 15, xDir));
+				}
+				
 			} else if (objectName == "Heart Tank") {
 				if (!pickupRestricted(instance)) {
 					itemSpawners.Add(new ItemSpawner(pos, typeof(HeartTankPickup), 0, 15, xDir));

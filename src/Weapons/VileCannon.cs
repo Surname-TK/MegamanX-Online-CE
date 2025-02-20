@@ -44,7 +44,7 @@ public class VileCannon : Weapon {
 				description = new string[] { "This cannon not only offers power,", "but can be aimed up and down." };
 				vileWeight = 2;
 				break;
-				case VileCannonType.TridentLine:
+			case VileCannonType.TridentLine:
 				break;
 			case VileCannonType.FatBoy:
 				fireRate = 30;
@@ -57,7 +57,7 @@ public class VileCannon : Weapon {
 				description = new string[] { "The most powerful cannon around,", "it consumes a lot of energy." };
 				vileWeight = 3;
 				break;
-				case VileCannonType.FireMurrain:
+			case VileCannonType.FireMurrain:
 				break;
 			case VileCannonType.LongshotGizmo:
 				fireRate = 6;

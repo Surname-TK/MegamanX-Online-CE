@@ -100,7 +100,7 @@ public class ItemSpawner {
 
 		if (!Global.isHost) return;
 		if (Global.level.isTraining() && !Global.spawnTrainingHealth &&
-			(itemType == typeof(HeartTankPickup) || itemType == typeof(SubTankPickup) || itemType == typeof(LargeAmmoPickup) || itemType == typeof(SmallAmmoPickup) || itemType == typeof(LargeHealthPickup) || itemType == typeof(SmallHealthPickup))) {
+			(itemType == typeof(UpgradeCapsule) || itemType == typeof(HyperCapsule) || itemType == typeof(HeartTankPickup) || itemType == typeof(SubTankPickup) || itemType == typeof(LargeAmmoPickup) || itemType == typeof(SmallAmmoPickup) || itemType == typeof(LargeHealthPickup) || itemType == typeof(SmallHealthPickup))) {
 			return;
 		}
 
@@ -113,10 +113,17 @@ public class ItemSpawner {
 		if (Global.level.levelData.isTraining()) respawnTime = 1;
 		if (time > respawnTime) {
 			time = 0;
-			if (itemType == typeof(HeartTankPickup)) {
+			// Koringa Spaghetti
+			if (itemType == typeof(UpgradeCapsule)) {
+				currentItem = new UpgradeCapsule(Global.level.mainPlayer, pos.clone(), Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
+			} else if (itemType == typeof(HyperCapsule)) {
+				currentItem = new HyperCapsule(Global.level.mainPlayer, pos.clone(), Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
+			} else if (itemType == typeof(HeartTankPickup)) {
 				currentItem = new HeartTankPickup(Global.level.mainPlayer, pos.clone(), Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
 			} else if (itemType == typeof(SubTankPickup)) {
 				currentItem = new SubTankPickup(Global.level.mainPlayer, pos.clone(), Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
+
+			// Normal Spaghetti
 			} else if (itemType == typeof(LargeAmmoPickup)) {
 				currentItem = new LargeAmmoPickup(Global.level.mainPlayer, pos.clone(), Global.level.mainPlayer.getNextActorNetId(), true, sendRpc: true);
 			} else if (itemType == typeof(SmallAmmoPickup)) {

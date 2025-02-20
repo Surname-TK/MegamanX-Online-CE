@@ -18,6 +18,8 @@ public enum NetActorCreateId {
 	Velguarder,
 	WolfSigmaHead,
 	WolfSigmaHand,
+	UpgradeCapsule,
+	HyperCapsule,
 	HeartTank,
 	SubTank,
 	LargeHealth,
@@ -99,10 +101,17 @@ public class RPCCreateActor : RPC {
 			new WolfSigmaHead(pos, player, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.WolfSigmaHand) {
 			new WolfSigmaHand(pos, player, false, netProjByte, false);
+
+		// Koringa Spaghetti
+		} else if (createId == (int)NetActorCreateId.UpgradeCapsule) {
+			new UpgradeCapsule(player, pos, netProjByte, false);
+		} else if (createId == (int)NetActorCreateId.HyperCapsule) {
+			new HyperCapsule(player, pos, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.HeartTank) {
 			new HeartTankPickup(player, pos, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.SubTank) {
 			new SubTankPickup(player, pos, netProjByte, false);
+
 		} else if (createId == (int)NetActorCreateId.LargeHealth) {
 			new LargeHealthPickup(player, pos, netProjByte, false);
 		} else if (createId == (int)NetActorCreateId.SmallHealth) {
