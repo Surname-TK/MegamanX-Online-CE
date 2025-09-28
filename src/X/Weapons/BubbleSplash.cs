@@ -38,7 +38,7 @@ public class BubbleSplash : Weapon {
 			}
 			return 7;
 		}
-		return 0.45f;
+		return 0.125f;
 	}
 
 	public override bool canShoot(int chargeLevel, Player player) {

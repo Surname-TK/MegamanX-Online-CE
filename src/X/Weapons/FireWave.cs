@@ -23,15 +23,15 @@ public class FireWave : Weapon {
 		hitcooldown = "12/20";
 
 		ammoDisplayScale = 7;
-		maxAmmo = 196;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel >= 3) {
-			return 49;
+			return 7;
 		}
-		return 1;
+		return 0.14f;
 	}
 
 	public override void shoot(Character character, int[] args) {

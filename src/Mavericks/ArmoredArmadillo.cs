@@ -38,8 +38,8 @@ public class ArmoredArmadillo : Maverick {
 		// Ammo.
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
+		ammo = 28;
+		maxAmmo = 28;
 		grayAmmoLevel = 2;
 		barIndexes = (56, 45);
 		height = 34;

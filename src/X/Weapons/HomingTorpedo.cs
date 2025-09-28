@@ -20,7 +20,7 @@ public class HomingTorpedo : Weapon {
 		effect = "Both:Destroys on contact with projectiles or enemies.\nBesides of its homing capabilities.";
 		hitcooldown = "0";
 		flinch = "0/13";
-		maxAmmo = 16;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 	}
 

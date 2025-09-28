@@ -47,8 +47,8 @@ public class StingChameleon : Maverick {
 
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
+		ammo = 28;
+		maxAmmo = 28;
 		grayAmmoLevel = 8;
 		barIndexes = (57, 46);
 		height = 32;

@@ -36,7 +36,7 @@ public class XBuster : Weapon {
 		killFeedIndex = 180;
 
 		// Ammo variables
-		maxAmmo = 12;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 		allowSmallBar = false;
 		ammoGainMultiplier = 2;

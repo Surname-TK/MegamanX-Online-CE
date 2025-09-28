@@ -50,7 +50,7 @@ public class Napalm : Weapon {
 			effect = "Equip Flamethrower.";
 		} else if (napalmType == NapalmType.RumblingBang) {
 			displayName = "Rumbling Bang";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			fireRate = 60 * 2;
 			description = new string[] { "This napalm sports a wide horizontal", "range but cannot attack upward." };
 			vileWeight = 3;
@@ -61,7 +61,7 @@ public class Napalm : Weapon {
 		}
 		if (napalmType == NapalmType.FireGrenade) {
 			displayName = "Flame Round";
-			vileAmmoUsage = 16;
+			vileAmmoUsage = 14;
 			fireRate = 60 * 4;
 			description = new string[] { "This napalm travels along the", "ground, laying a path of fire." };
 			killFeedIndex = 54;
@@ -73,7 +73,7 @@ public class Napalm : Weapon {
 		}
 		if (napalmType == NapalmType.SplashHit) {
 			displayName = "Splash Hit";
-			vileAmmoUsage = 16;
+			vileAmmoUsage = 14;
 			fireRate = 60 * 3;
 			description = new string[] { "This napalm can attack foes above,", "but has a narrow horizontal range." };
 			killFeedIndex = 79;

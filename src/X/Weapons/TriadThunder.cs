@@ -22,14 +22,14 @@ public class TriadThunder : Weapon {
 		hitcooldown = "30";
 		flinch = "6/26";
 		flinchCD = "2.25/0";
-		maxAmmo = 10;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 		hasCustomChargeAnim = true;
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
-		if (chargeLevel >= 3) { return 2.5f; }
-		return 1;
+		if (chargeLevel >= 3) { return 7; }
+		return 4;
 	}
 
 	public override void shoot(Character character, int[] args) {

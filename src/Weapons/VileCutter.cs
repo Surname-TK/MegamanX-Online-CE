@@ -32,7 +32,7 @@ public class VileCutter : Weapon {
 		}
 		if (vileCutterType == VileCutterType.QuickHomesick) {
 			displayName = "Quick Homesick";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "This cutter travels in an arc like a", "boomerang. Use it to pick up items!" };
 			killFeedIndex = 114;
 			vileWeight = 3;
@@ -42,7 +42,7 @@ public class VileCutter : Weapon {
 			effect = "Can carry items.";
 		} else if (vileCutterType == VileCutterType.ParasiteSword) {
 			displayName = "Parasite Sword";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "Fires cutters that grow as they fly", "and can pierce enemies." };
 			killFeedIndex = 115;
 			vileWeight = 3;
@@ -52,7 +52,7 @@ public class VileCutter : Weapon {
 			effect = "Won't Destroy on hit.";
 		} else if (vileCutterType == VileCutterType.MaroonedTomahawk) {
 			displayName = "Marooned Tomahawk";
-			vileAmmoUsage = 16;
+			vileAmmoUsage = 14;
 			description = new string[] { "This long-lasting weapon spins", "in place and goes through objects." };
 			killFeedIndex = 116;
 			vileWeight = 3;

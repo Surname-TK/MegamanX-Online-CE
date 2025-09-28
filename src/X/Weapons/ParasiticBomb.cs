@@ -24,7 +24,7 @@ public class ParasiticBomb : Weapon {
 		hitcooldown = "0";
 		flinch = "26/26";
 		flinchCD = "0";
-		maxAmmo = 16;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 	}
 	

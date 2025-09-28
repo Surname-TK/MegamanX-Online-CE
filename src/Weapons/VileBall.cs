@@ -51,7 +51,7 @@ public class VileBall : Weapon {
 		} else if (vileBallType == VileBallType.ExplosiveRound) {
 			displayName = "Explosive Round";
 			fireRate = 60;
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "These bombs split into two", "upon contact with the ground." };
 			vileWeight = 3;
 			ammousage = vileAmmoUsage;
@@ -70,7 +70,7 @@ public class VileBall : Weapon {
 			effect = "Stuns Enemies. CD: 2";
 		} else if (vileBallType == VileBallType.PeaceOutRoller) {
 			displayName = "Peace Out Roller";
-			vileAmmoUsage = 16;
+			vileAmmoUsage = 14;
 			fireRate = 75;
 			description = new string[] { "This electric bombs splits into two upon", "upon contact with the ground." };
 			killFeedIndex = 80;

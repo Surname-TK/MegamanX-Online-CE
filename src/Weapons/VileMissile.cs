@@ -37,7 +37,7 @@ public class VileMissile : Weapon {
 		} else if (vileMissileType == VileMissileType.ElectricShock) {
 			fireRate = 45;
 			displayName = "Electric Shock";
-			vileAmmo = 8;
+			vileAmmo = 7;
 			description = new string[] { "Stops enemies in their tracks,", "but deals no damage." };
 			vileWeight = 3;
 			vileWeight = 2;
@@ -49,7 +49,7 @@ public class VileMissile : Weapon {
 			fireRate = 45;
 			displayName = "Humerus Crush";
 			projSprite = "missile_hc_proj";
-			vileAmmo = 8;
+			vileAmmo = 7;
 			description = new string[] { "This missile shoots straight", "and deals decent damage." };
 			killFeedIndex = 74;
 			vileWeight = 3;

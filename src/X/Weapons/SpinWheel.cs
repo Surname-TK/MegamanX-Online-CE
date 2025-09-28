@@ -21,7 +21,7 @@ public class SpinWheel : Weapon {
 		effect = "U:Inflicts Slowdown on contact. Bounces on walls.\nProjectile won't destroy on hit nor give assists.";
 		hitcooldown = "12/0";
 		flinch = "0/26";
-		maxAmmo = 16;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 	}
 

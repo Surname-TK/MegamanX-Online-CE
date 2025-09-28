@@ -38,8 +38,8 @@ public class CrystalSnail : Maverick {
 
 		usesAmmo = true;
 		canHealAmmo = true;
-		ammo = 32;
-		maxAmmo = 32;
+		ammo = 28;
+		maxAmmo = 28;
 		barIndexes = (54, 43);
 
 		armorClass = ArmorClass.Light;
@@ -65,7 +65,7 @@ public class CrystalSnail : Maverick {
 				ammoTime = 0.5f;
 				ammo--;
 				if (ammo <= 0) {
-					ammo = 32;
+					ammo = 28;
 					changeState(new CSnailWeaknessState(false));
 				}
 			}
@@ -73,7 +73,7 @@ public class CrystalSnail : Maverick {
 			if (ammoTime == 0) {
 				ammoTime = 0.25f;
 				ammo++;
-				if (ammo >= 32) ammo = 32;
+				if (ammo >= 32) ammo = 28;
 			}
 		}
 

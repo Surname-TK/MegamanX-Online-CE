@@ -24,7 +24,7 @@ public class BlastLauncher : AxlWeapon {
 
 	public override float getAmmoUsage(int chargeLevel) {
 		if (chargeLevel < 3) return 4;
-		return 8;
+		return 7;
 	}
 
 	public override float whiteAxlFireRateMod() {

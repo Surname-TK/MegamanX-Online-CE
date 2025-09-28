@@ -20,7 +20,7 @@ public class FrostShield : Weapon {
 		damage = "2+2/3+3";
 		hitcooldown = "0/60";
 		flinch = "0/26-26";
-		maxAmmo = 16;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 		effect = "Both:Only Fire type weapons can damage it.\nBlocks projectiles, Clangs Zero, Leaves spikes.\nC:Tackle or Shoot it.";
 	}

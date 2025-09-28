@@ -33,11 +33,11 @@ public class VileLaser : Weapon {
 		} else if (vileLaserType == VileLaserType.RisingSpecter) {
 			index = (int)WeaponIds.RisingSpecter;
 			displayName = "Rising Specter";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "It cannot be aimed,", "but its wide shape covers a large area." };
 			killFeedIndex = 120;
 			vileWeight = 3;
-			ammousage = 24;
+			ammousage = 21;
 			damage = "6";
 			hitcooldown = "0.5";
 			flinch = "26";
@@ -49,7 +49,7 @@ public class VileLaser : Weapon {
 			description = new string[] { "Use up all your energy at once to", "unleash a powerful energy burst." };
 			killFeedIndex = 75;
 			vileWeight = 3;
-			ammousage = 32;
+			ammousage = 28;
 			damage = "6";
 			hitcooldown = "0.5";
 			flinch = "26";
@@ -57,11 +57,11 @@ public class VileLaser : Weapon {
 		} else if (vileLaserType == VileLaserType.StraightNightmare) {
 			index = (int)WeaponIds.StraightNightmare;
 			displayName = "Straight Nightmare";
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			description = new string[] { "Though slow, this laser can burn", "through multiple enemies in a row." };
 			killFeedIndex = 171;
 			vileWeight = 3;
-			ammousage = 24;
+			ammousage = 21;
 			damage = "1";
 			hitcooldown = "0.15";
 			effect = "Won't destroy on hit.";

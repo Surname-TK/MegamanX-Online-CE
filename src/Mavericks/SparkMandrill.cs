@@ -36,8 +36,8 @@ public class SparkMandrill : Maverick {
 
 		usesAmmo = false;
 		canHealAmmo = false;
-		ammo = 32;
-		maxAmmo = 32;
+		ammo = 28;
+		maxAmmo = 28;
 		grayAmmoLevel = 31;
 		ammoRoundDown = true;
 		barIndexes = (55, 44);

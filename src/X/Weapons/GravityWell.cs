@@ -19,7 +19,7 @@ public class GravityWell : Weapon {
 		effect = "U:Disables Gravity to the enemy.\nProjectile won't give assists.\nC:Grants Flinch Immunity.";
 		hitcooldown = "30";
 		flinch = "0/26";
-		maxAmmo = 16;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 		hasCustomChargeAnim = true;
 	}

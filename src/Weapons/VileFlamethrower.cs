@@ -98,7 +98,7 @@ public class WildHorseKick : VileFlamethrower {
 	}
 
 	public override float getAmmoUsage(int chargeLevel) {
-		return 8;
+		return 7;
 	}
 
 	public override void vileShoot(WeaponIds weaponInput, Vile vile) {

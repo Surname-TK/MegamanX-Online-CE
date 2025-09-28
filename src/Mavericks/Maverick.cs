@@ -62,8 +62,8 @@ public class Maverick : Actor, IDamagable {
 	public Character? ownerChar;
 
 	// New ammo variables.
-	public float ammo = 32;
-	public float maxAmmo = 32;
+	public float ammo = 28;
+	public float maxAmmo = 28;
 	public float grayAmmoLevel = 0;
 	public bool usesAmmo = false;
 	public bool canHealAmmo = false;
@@ -256,7 +256,7 @@ public class Maverick : Actor, IDamagable {
 		if (ammoRechargeTime <= 0) {
 			ammoRechargeTime = ammoRechargeCooldown;
 			ammo++;
-			if (ammo > 32) ammo = 32;
+			if (ammo > 28) ammo = 28;
 		}
 	}
 
@@ -1037,7 +1037,7 @@ public class Maverick : Actor, IDamagable {
 	public void applyDamage(float damage, Player? owner, Actor? actor, int? weaponIndex, int? projId) {
 		if (this is FakeZero fz && fz.state is FakeZeroGuardState && damage > 0) {
 			ammo += MathF.Ceiling(damage * 1.5f);
-			if (ammo > 32) { ammo = 32; }
+			if (ammo > 28) { ammo = 28; }
 			damage = MathF.Floor(damage * 0.5f);
 		}
 

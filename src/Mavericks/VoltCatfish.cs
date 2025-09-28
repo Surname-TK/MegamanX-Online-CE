@@ -44,7 +44,7 @@ public class VoltCatfish : Maverick {
 		usesAmmo = true;
 		canHealAmmo = true;
 		ammo = 0;
-		maxAmmo = 32;
+		maxAmmo = 28;
 		grayAmmoLevel = 8;
 		barIndexes = (65, 54);
 		gameMavs = GameMavs.X3;

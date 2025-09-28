@@ -1575,8 +1575,8 @@ public class GameMode {
 	const int grayAmmoIndex = 30;
 	public void renderAmmo(
 		float baseX, ref float baseY, int baseIndex,
-		int barIndex, float ammo, float grayAmmo = 0, float maxAmmo = 32,
-		bool allowSmall = true
+		int barIndex, float ammo, float grayAmmo = 0, float maxAmmo = 28,
+		bool allowSmall = false
 	) {
 		baseY += 25;
 		Global.sprites["hud_weapon_base"].drawToHUD(baseIndex, baseX, baseY);

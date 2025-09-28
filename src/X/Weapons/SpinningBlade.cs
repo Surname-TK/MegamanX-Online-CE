@@ -24,7 +24,7 @@ public class SpinningBlade : Weapon {
 		hitcooldown = "0/30";
 		flinch = "0/26";
 		flinchCD = "0/1";
-		maxAmmo = 16;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 	}
 

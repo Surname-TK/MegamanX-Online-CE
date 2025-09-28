@@ -23,7 +23,7 @@ public class CrystalHunter : Weapon {
 		effect = "U:Crystalize enemies on contact.\nC:Slows down the area by 25%.";
 		hitcooldown = "0-1/0";
 		flinch = "0-26/0";
-		maxAmmo = 16;
+		maxAmmo = 28;
 		ammo = maxAmmo;
 	}
 

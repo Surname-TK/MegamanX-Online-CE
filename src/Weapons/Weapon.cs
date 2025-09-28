@@ -34,7 +34,7 @@ public class Weapon {
 	public float? timeSinceLastShoot;
 
 	// Ammo display vars.
-	public bool allowSmallBar = true;
+	public bool allowSmallBar = false;
 	public float ammoDisplayScale = 1;
 
 	// Ammo recharge vars.
@@ -66,8 +66,8 @@ public class Weapon {
 	public float altRechargeAmmoCooldown;
 
 	public Weapon() {
-		ammo = 32;
-		maxAmmo = 32;
+		ammo = 28;
+		maxAmmo = 28;
 		fireRate = 9;
 		effect = "";
 		damage = "0";
@@ -287,7 +287,7 @@ public class Weapon {
 
 	// ToDo: Remove default values from this.
 	public virtual float getAmmoUsage(int chargeLevel) {
-		if (chargeLevel >= 3) return 8;
+		if (chargeLevel >= 3) return 7;
 		else return 1;
 	}
 

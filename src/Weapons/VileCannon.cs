@@ -38,7 +38,7 @@ public class VileCannon : Weapon {
 			vileWeight = 0;
 		} else if (vileCannonType == VileCannonType.FrontRunner) {
 			fireRate = 45;
-			vileAmmoUsage = 8;
+			vileAmmoUsage = 7;
 			ammousage = vileAmmoUsage;
 			damage = "3";
 			displayName = "Front Runner";
@@ -51,7 +51,7 @@ public class VileCannon : Weapon {
 			fireRate = 45;
 			damage = "4";
 			flinch = "26";
-			vileAmmoUsage = 24;
+			vileAmmoUsage = 21;;
 			ammousage = vileAmmoUsage;
 			displayName = "Fat Boy";
 			projSprite = "vile_mk2_fb_proj";

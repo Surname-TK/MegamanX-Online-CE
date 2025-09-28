@@ -43,7 +43,7 @@ public class MorphMothCocoon : Maverick {
 		usesAmmo = true;
 		canHealAmmo = true;
 		ammo = 0;
-		maxAmmo = 32;
+		maxAmmo = 28;
 		barIndexes = (52, 41);
 
 		armorClass = ArmorClass.Light;

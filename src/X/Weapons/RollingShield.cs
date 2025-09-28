@@ -28,7 +28,7 @@ public class RollingShield : Weapon {
 				freeAmmoNextCharge = false;
 				return 0;
 			}
-			return 8;
+			return 7;
 		}
 		return 1;
 	}

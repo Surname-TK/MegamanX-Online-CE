@@ -89,7 +89,7 @@ public partial class Player {
 	public int axlBulletType;
 	public List<bool> axlBulletTypeBought = new List<bool>() { true, false, false, false, false, false, false };
 	public List<float> axlBulletTypeAmmo = new List<float>() { 0, 0, 0, 0, 0, 0, 0 };
-	public List<float> axlBulletTypeLastAmmo = new List<float>() { 32, 32, 32, 32, 32, 32, 32 };
+	public List<float> axlBulletTypeLastAmmo = new List<float>() { 28, 28, 28, 28, 28, 28, 28 };
 	public int lastDNACoreIndex = 4;
 	public DNACore? lastDNACore;
 	
