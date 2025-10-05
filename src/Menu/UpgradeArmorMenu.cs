@@ -45,8 +45,8 @@ public class UpgradeArmorMenu : IMainMenu {
 			}
 		} else if (Global.input.isPressedMenu(Control.MenuRight)) {
 			xGame++;
-			if (xGame > 3) {
-				xGame = 3;
+			if (xGame > 6) {
+				xGame = 6;
 				if (!Global.level.server.disableHtSt) {
 					UpgradeMenu.onUpgradeMenu = true;
 					Menu.change(new UpgradeMenu(prevMenu));
@@ -224,10 +224,26 @@ public class UpgradeArmorMenu : IMainMenu {
 
 	public static void upgradeBodyArmor(Player player, int type) {
 		player.bodyArmorNum = type;
-		if (type == 2) {
-			player.addGigaCrush();
-		} else {
-			player.removeGigaCrush();
+		switch (type) {
+			case 2:
+				player.removeGigaAttacks();
+				player.addGigaCrush();
+				break;
+			case 4:
+				player.removeGigaAttacks();
+				player.addNovaStrike();
+				break;
+			case 5:
+				player.removeGigaAttacks();
+				player.addGigaSpears();
+				break;
+			case 6:
+				player.removeGigaAttacks();
+				player.addGigaBlade();
+				break;
+			default: 
+				player.removeGigaAttacks();
+				break;
 		}
 		if (player.character is MegamanX mmx) {
 			mmx.chestArmor = (ArmorId)type;
@@ -284,6 +300,9 @@ public class UpgradeArmorMenu : IMainMenu {
 			1 => "Light Armor",
 			2 => "Giga Armor",
 			3 => "Max Armor",
+			4 => "Force Armor",
+			5 => "Falcon Armor",
+			6 => "Blade Armor",
 			_ => "ERROR"
 		};
 		Fonts.drawText(
@@ -298,12 +317,18 @@ public class UpgradeArmorMenu : IMainMenu {
 				1 when stEnabled => "Items",
 				2 => "Light",
 				3 => "Giga",
+				4 => "Max",
+				5 => "Force",
+				6 => "Falcon",
 				_ => ""
 			};
 			string rightText = xGame switch {
 				1 => "Giga",
 				2 => "Max",
-				3 when stEnabled => "Items",
+				3 => "Force",
+				4 => "Falcon",
+				5 => "Blade",
+				6 when stEnabled => "Items",
 				_ => ""
 			};
 			if (leftText != "") {
@@ -338,27 +363,39 @@ public class UpgradeArmorMenu : IMainMenu {
 		bool showChips = mainPlayer.hasAllX3Armor() && xGame == 3;
 
 		switch (xGame) {
-			case 1: case 2: case 3: Global.sprites["menu_xdefault"].drawToHUD(0, 300, 110); break;
+			case 1: case 2: case 3: case 4: case 5: case 6: Global.sprites["menu_xdefault"].drawToHUD(0, 300, 110); break;
 		} 
 		switch (mainPlayer.helmetArmorNum) {
 			case 1: Global.sprites["menu_xhelmet"].drawToHUD(0, 300, 110); break;
 			case 2: Global.sprites["menu_xhelmet2"].drawToHUD(0, 300, 110); break;
 			case 3: Global.sprites["menu_xhelmet3"].drawToHUD(0, 300, 110); break;
+			case 4: Global.sprites["menu_xhelmet4"].drawToHUD(0, 300, 110); break;
+			case 5: Global.sprites["menu_xhelmet5"].drawToHUD(0, 300, 110); break;
+			case 6: Global.sprites["menu_xhelmet6"].drawToHUD(0, 300, 110); break;
 		}
 		switch (mainPlayer.bodyArmorNum) {
 			case 1: Global.sprites["menu_xbody"].drawToHUD(0, 300, 110); break;
 			case 2: Global.sprites["menu_xbody2"].drawToHUD(0, 300, 110); break;
 			case 3: Global.sprites["menu_xbody3"].drawToHUD(0, 300, 110); break;
+			case 4: Global.sprites["menu_xbody4"].drawToHUD(0, 300, 110); break;
+			case 5: Global.sprites["menu_xbody5"].drawToHUD(0, 300, 110); break;
+			case 6: Global.sprites["menu_xbody6"].drawToHUD(0, 300, 110); break;
 		}
 		switch (mainPlayer.armArmorNum) {
 			case 1: Global.sprites["menu_xarm"].drawToHUD(0, 300, 110); break;
 			case 2: Global.sprites["menu_xarm2"].drawToHUD(0, 300, 110); break;
 			case 3: Global.sprites["menu_xarm3"].drawToHUD(0, 300, 110); break;
+			case 4: Global.sprites["menu_xarm4"].drawToHUD(0, 300, 110); break;
+			case 5: Global.sprites["menu_xarm5"].drawToHUD(0, 300, 110); break;
+			case 6: Global.sprites["menu_xarm6"].drawToHUD(0, 300, 110); break;
 		}
 		switch (mainPlayer.legArmorNum) {
 			case 1: Global.sprites["menu_xboots"].drawToHUD(0, 300, 110); break;
 			case 2: Global.sprites["menu_xboots2"].drawToHUD(0, 300, 110); break;
 			case 3: Global.sprites["menu_xboots3"].drawToHUD(0, 300, 110); break;
+			case 4: Global.sprites["menu_xboots4"].drawToHUD(0, 300, 110); break;
+			case 5: Global.sprites["menu_xboots5"].drawToHUD(0, 300, 110); break;
+			case 6: Global.sprites["menu_xboots6"].drawToHUD(0, 300, 110); break;
 		}
 		Fonts.drawText(FontType.Yellow, "Head Parts", optionPos1.x, optionPos1.y, selected: selectArrowPosY == 0 && !showChips);
 		Fonts.drawText(FontType.Green, getHeadArmorMessage(), optionPos1.x + 60, optionPos1.y);
@@ -415,6 +452,33 @@ public class UpgradeArmorMenu : IMainMenu {
 					if (mmx.hyperArmActive) Global.sprites["menu_chip"].drawToHUD(0, 262, optionPos3.y-8);
 					if (mmx.hyperLegActive) Global.sprites["menu_chip"].drawToHUD(0, 278, optionPos4.y+6);
 				}
+				break;
+			case 4: //Force
+				Fonts.drawText(FontType.Blue, "Grants unlimited weapon shots", optionPos1.x + 5, optionPos1.y + 10);
+				Fonts.drawText(FontType.Blue, "but doubles Charge Shot ammo.", optionPos1.x + 5, optionPos1.y + 20);
+				Fonts.drawText(FontType.Blue, "Grants the Nova Strike attack", optionPos2.x + 5, optionPos2.y + 10);
+				Fonts.drawText(FontType.Blue, "Reduces Damage by 12.5%", optionPos2.x + 5, optionPos2.y + 20);
+				Fonts.drawText(FontType.Blue, "Grants 4 Stock Shots.", optionPos3.x + 5, optionPos3.y + 10);
+				Fonts.drawText(FontType.Blue, "Grants the Plasma Shot.", optionPos3.x + 5, optionPos3.y + 20);
+				Fonts.drawText(FontType.Blue, "Grants hover.", optionPos4.x + 5, optionPos4.y + 10);
+				break;
+			case 5: //Falcon
+				Fonts.drawText(FontType.Blue, "Se ve papiador", optionPos1.x + 5, optionPos1.y + 10);
+				Fonts.drawText(FontType.Blue, "Y nada mas la vdd.", optionPos1.x + 5, optionPos1.y + 20);
+				Fonts.drawText(FontType.Blue, "Grants the Giga Spears attack,", optionPos2.x + 5, optionPos2.y + 10);
+				Fonts.drawText(FontType.Blue, "Reduces Damage by 12.5%", optionPos2.x + 5, optionPos2.y + 20);
+				Fonts.drawText(FontType.Blue, "Grants the Spear-Buster.", optionPos3.x + 5, optionPos3.y + 10);
+				Fonts.drawText(FontType.Blue, "All attacks pierce defense.", optionPos3.x + 5, optionPos3.y + 20);
+				Fonts.drawText(FontType.Blue, "Air dash to the moon.", optionPos4.x + 5, optionPos4.y + 10);
+				break;
+			case 6: //Blade
+				Fonts.drawText(FontType.Blue, "Grants the X-Saber attack", optionPos1.x + 5, optionPos1.y + 10);
+				Fonts.drawText(FontType.Blue, "by pressing SPECIAL button.", optionPos1.x + 5, optionPos1.y + 20);
+				Fonts.drawText(FontType.Blue, "Grants the Giga Blade attack,", optionPos2.x + 5, optionPos2.y + 10);
+				Fonts.drawText(FontType.Blue, "Reduces Damage by 12.5%", optionPos2.x + 5, optionPos2.y + 20);
+				Fonts.drawText(FontType.Blue, "Grants the Charged Slash,", optionPos3.x + 5, optionPos3.y + 10);
+				Fonts.drawText(FontType.Blue, "by holding UP on release.", optionPos3.x + 5, optionPos3.y + 20);
+				Fonts.drawText(FontType.Blue, "Grants the Mach Dash attack.", optionPos4.x + 5, optionPos4.y + 10);
 				break;
 		} 
 		//drawHyperArmorUpgrades(mainPlayer, 0);

@@ -55,7 +55,7 @@ public class CustomMatchSettings {
 			sameCharNum = -1,
 			redSameCharNum = -1,
 			maxHeartTanks = 8,
-			maxSubTanks = 2,
+			maxSubTanks = 4,
 			heartTankHp = 1,
 			heartTankCost = 2,
 			currencyGain = 1,
