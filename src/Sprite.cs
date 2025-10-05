@@ -345,15 +345,6 @@ public class Sprite {
 			if (armors[3] > 0) {
 				compositeBitmaps.Add(xArmorArmBitmap[armors[3] - 1]);
 			}
-			if (armors[4] > 0) {
-				compositeBitmaps.Add(xArmorBodyBitmap[armors[4] - 1]);
-			}
-			if (armors[5] > 0) {
-				compositeBitmaps.Add(xArmorHelmetBitmap[armors[5] - 1]);
-			}
-			if (armors[6] > 0) {
-				compositeBitmaps.Add(xArmorArmBitmap[armors[6] - 1]);
-			}
 			if (compositeBitmaps.Count > 1) {
 				isCompositeSprite = true;
 			}
@@ -392,14 +383,14 @@ public class Sprite {
 				compositeBitmaps.Add(xSaberBitmap[0]);
 			}
 			compositeBitmaps.Add(bitmap);
-			if (armors[2] > 0) {
-				compositeBitmaps.Add(xArmorHelmetBitmap[armors[2] - 1]);
-			}
 			if (armors[0] > 0) {
 				compositeBitmaps.Add(xArmorBootsBitmap[armors[0] - 1]);
 			}
 			if (armors[1] > 0) {
 				compositeBitmaps.Add(xArmorBodyBitmap[armors[1] - 1]);
+			}
+			if (armors[2] > 0) {
+				compositeBitmaps.Add(xArmorHelmetBitmap[armors[2] - 1]);
 			}
 			if (armors[3] > 0) {
 				compositeBitmaps.Add(xArmorArmBitmap[armors[3] - 1]);

@@ -450,10 +450,10 @@ public partial class Player {
 	public ExplodeDieEffect? explodeDieEffect;
 	public bool suicided;
 
-	public bool[] headArmorsPurchased = new bool[] { false, false, false };
-	public bool[] bodyArmorsPurchased = new bool[] { false, false, false };
-	public bool[] armArmorsPurchased = new bool[] { false, false, false };
-	public bool[] bootsArmorsPurchased = new bool[] { false, false, false };
+	public bool[] headArmorsPurchased = new bool[] { false, false, false, false, false, false };
+	public bool[] bodyArmorsPurchased = new bool[] { false, false, false, false, false, false };
+	public bool[] armArmorsPurchased = new bool[] { false, false, false, false, false, false };
+	public bool[] bootsArmorsPurchased = new bool[] { false, false, false, false, false, false };
 
 	public float lastMashAmount;
 	public int lastMashAmountSetFrame;
