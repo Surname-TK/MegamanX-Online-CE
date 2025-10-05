@@ -15,6 +15,7 @@ public class Hurt : CharState {
 
 	public Hurt(int dir, int flinchFrames, bool spiked = false, float? oldComboPos = null) : base("hurt") {
 		this.flinchTime = flinchFrames;
+		useDashJumpSpeed = true;
 		hurtDir = dir;
 		hurtSpeed = dir * 1.6f;
 		flinchTime = flinchFrames;

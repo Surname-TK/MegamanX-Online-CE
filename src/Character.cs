@@ -2827,18 +2827,22 @@ public partial class Character : Actor, IDamagable {
 				damageDebt += (originalDamage * extraDamage);
 			}
 			if (mmx != null) {
-				if (mmx.barrierActiveTime > 0) {
-					if (mmx.hyperChestArmor == ArmorId.Max) {
-						damageSavings += (originalDamage * 0.5m);
-					} else {
-						damageSavings += (originalDamage * 0.25m);
-					}
-				}
-				if (mmx.chestArmor == ArmorId.Light) {
-					damageSavings += (originalDamage * 0.125m);
-				}
-				if (mmx.chestArmor == ArmorId.Giga) {
-					damageSavings += (originalDamage * 0.125m);
+				switch (mmx.chestArmor) {
+					case ArmorId.None:
+						damageSavings += 0;
+						break;
+					case ArmorId.Max:
+						if (mmx.barrierActiveTime > 0) {
+							if (mmx.hyperChestArmor == ArmorId.Max) {
+								damageSavings += (originalDamage * 0.5m);
+							} else {
+								damageSavings += (originalDamage * 0.25m);
+							}
+						}
+						break;
+					default:
+						damageSavings += (originalDamage * 0.125m);
+						break;
 				}
 			}
 			if (vile != null && vile.hasFrozenCastle && charState is not Die or VileRevive) {

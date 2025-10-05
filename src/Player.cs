@@ -30,8 +30,7 @@ public partial class Player {
 			-1, GameMode.neutralAlliance, "NULL", null, 0
 		)
 	);
-	
-	
+
 	public SpawnPoint? firstSpawn;
 	public Input input;
 	public Character? character;
@@ -92,7 +91,6 @@ public partial class Player {
 	public List<float> axlBulletTypeLastAmmo = new List<float>() { 28, 28, 28, 28, 28, 28, 28 };
 	public int lastDNACoreIndex = 4;
 	public DNACore? lastDNACore;
-	
 	public float zoomRange {
 		get {
 			if (character is Axl axl && (axl.isWhiteAxl() || axl.hyperAxlStillZoomed)) return 100000;
@@ -332,7 +330,7 @@ public partial class Player {
 	public bool speedDevil;
 
 	public Disguise? disguise;
-	
+
 	// Not sure what this is useful for,
 	// seems like a pointless clone of alliance that needs to be kept in sync.
 	public int newAlliance;
@@ -491,16 +489,18 @@ public partial class Player {
 	}
 
 	public int getStartHeartTanksForChar() {
-		if (!Global.level.server.disableHtSt && Global.level?.server?.customMatchSettings == null && !Global.level.gameMode.isTeamMode) {
+		if (!Global.level.server.disableHtSt && !Global.level.gameMode.isTeamMode) {
 			int leaderKills = Global.level.getLeaderKills();
-			if (leaderKills >= 32) return 8;
-			if (leaderKills >= 28) return 7;
-			if (leaderKills >= 24) return 6;
-			if (leaderKills >= 20) return 5;
-			if (leaderKills >= 16) return 4;
-			if (leaderKills >= 12) return 3;
-			if (leaderKills >= 8) return 2;
-			if (leaderKills >= 4) return 1;
+			float playingTo = Global.level.gameMode.playingTo;
+			int maxHT = UpgradeMenu.getMaxHeartTanks();
+			if (leaderKills >= (playingTo * 0.8f)) return maxHT;
+			if (leaderKills >= (playingTo * 0.7f)) return (int)MathF.Round(maxHT * 0.875f);
+			if (leaderKills >= (playingTo * 0.6f)) return (int)MathF.Round(maxHT * 0.75f);
+			if (leaderKills >= (playingTo * 0.5f)) return (int)MathF.Round(maxHT * 0.625f);
+			if (leaderKills >= (playingTo * 0.4f)) return (int)MathF.Round(maxHT * 0.5f);
+			if (leaderKills >= (playingTo * 0.3f)) return (int)MathF.Round(maxHT * 0.375f);
+			if (leaderKills >= (playingTo * 0.2f)) return (int)MathF.Round(maxHT * 0.25f);
+			if (leaderKills >= (playingTo * 0.1f)) return (int)MathF.Round(maxHT * 0.125f);
 		}
 		return 0;
 	}
@@ -514,12 +514,14 @@ public partial class Player {
 	}
 
 	public int getStartSubTanksForChar() {
-		if (!Global.level.server.disableHtSt && Global.level?.server?.customMatchSettings == null && !Global.level.gameMode.isTeamMode) {
+		if (!Global.level.server.disableHtSt && !Global.level.gameMode.isTeamMode) {
 			int leaderKills = Global.level.getLeaderKills();
-			if (leaderKills >= 32) return 4;
-			if (leaderKills >= 24) return 3;
-			if (leaderKills >= 16) return 2;
-			if (leaderKills >= 8) return 1;
+			float playingTo = Global.level.gameMode.playingTo;
+			int maxST = UpgradeMenu.getMaxSubTanks();
+			if (leaderKills >= (playingTo * 0.8f)) return maxST;
+			if (leaderKills >= (playingTo * 0.6f)) return (int)MathF.Round(maxST * 0.75f);
+			if (leaderKills >= (playingTo * 0.4f)) return (int)MathF.Round(maxST * 0.5f);
+			if (leaderKills >= (playingTo * 0.2f)) return (int)MathF.Round(maxST * 0.25f);
 		}
 
 		return 0;
@@ -872,8 +874,7 @@ public partial class Player {
 					reviveVile(true);
 				}
 			}
-		}
-		else if (character is BaseSigma) {
+		} else if (character is BaseSigma) {
 			/*if (isSelectingCommand()) {
 				if (maverickWeapon.selCommandIndexX == 1) {
 					if (input.isPressedMenu(Control.MenuDown)) {
@@ -959,8 +960,7 @@ public partial class Player {
 						int spawnPointIndex = Global.level.spawnPoints.IndexOf(spawnPoint);
 						spawnCharAtSpawnIndex(spawnPointIndex, charNetId, true);
 					}
-				}
-				else {
+				} else {
 					var spawnPoint = Global.level.getSpawnPoint(this, !warpedInOnce);
 					if (spawnPoint == null) return;
 					int spawnPointIndex = Global.level.spawnPoints.IndexOf(spawnPoint);
@@ -1016,7 +1016,6 @@ public partial class Player {
 		);
 	}
 
-	
 	public byte[] getCharSpawnData(int charNum, bool sendData = true, LoadoutData? loadout = null) {
 		if (ownedByLocalPlayer && sendData) {
 			applyLoadoutChange();
@@ -1440,7 +1439,7 @@ public partial class Player {
 				sigmaForm = data.extraData[0],
 				maverick1 = data.extraData[1],
 				maverick2 = data.extraData[2],
-				commandMode =  data.extraData[3]
+				commandMode = data.extraData[3]
 			};
 			if (data.extraData[0] == 2) {
 				retChar = new Doppma(
@@ -1489,8 +1488,7 @@ public partial class Player {
 				true, data.dnaNetId, false, isWarpIn: false,
 				heartTanks: oldChar.heartTanks, isATrans: true
 			);
-		}
-		else if (data.charNum == (int)CharIds.RagingChargeX) {
+		} else if (data.charNum == (int)CharIds.RagingChargeX) {
 			retChar = new RagingChargeX(
 				this, oldChar.pos.x, oldChar.pos.y, oldChar.xDir,
 				true, data.dnaNetId, false, isWarpIn: false,
@@ -1548,8 +1546,7 @@ public partial class Player {
 		if (oldATrans) {
 			if (dnaCore.charNum == (int)CharIds.RagingChargeX) {
 				dnaCore.charNum = (int)CharIds.X;
-			}
-			else if (dnaCore.charNum == (int)CharIds.KaiserSigma) {
+			} else if (dnaCore.charNum == (int)CharIds.KaiserSigma) {
 				dnaCore.charNum = (int)CharIds.Sigma;
 			}
 		}
@@ -1666,7 +1663,7 @@ public partial class Player {
 				loadout: atLoadout.pzeroLoadout.clone(),
 				heartTanks: oldChar.heartTanks, isATrans: true
 			);
-		} else if  (spawnCharNum == (int)CharIds.KaiserSigma) {
+		} else if (spawnCharNum == (int)CharIds.KaiserSigma) {
 			retChar = new KaiserSigma(
 				this, oldChar.pos.x, oldChar.pos.y, oldChar.xDir,
 				true, dnaNetId, ownedByLocalPlayer,
@@ -1886,11 +1883,9 @@ public partial class Player {
 				this, oldChar.pos.x, oldChar.pos.y, oldChar.xDir,
 				true, backupNetId, ownedByLocalPlayer, false
 			);
-		}
-		else if (newChar == null) {
+		} else if (newChar == null) {
 			throw new Exception("Error: Null newChar on ATrans tranform.");
-		}
-		else {
+		} else {
 			Global.level.addGameObject(newChar);
 		}
 		newChar.pos = oldChar.pos;
@@ -2008,7 +2003,9 @@ public partial class Player {
 	}
 
 	public bool hasAllX3Armor() {
-		return bodyArmorNum >= 3 && legArmorNum >= 3 && armArmorNum >= 3 && helmetArmorNum >= 3;
+		if (character is MegamanX mmx) {
+			return mmx.hasFullHyperMaxArmor || (bodyArmorNum == 3 && legArmorNum == 3 && armArmorNum == 3 && helmetArmorNum == 3);
+		} else return false;
 	}
 
 	public void destroy() {
