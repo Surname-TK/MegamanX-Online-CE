@@ -89,7 +89,11 @@ public enum WeaponIds {
 	UPPunch,
 	UPParry,
 	NovaStrike,
+	GigaSpears,
+	GigaKikosho,
 	X6Saber,
+	GigaBlade,
+	GigaCrescent,
 	RagingChargeBuster,
 
 	// DO NOT CHANGE THE ORDER OF THESE SIGMA WEAPONS

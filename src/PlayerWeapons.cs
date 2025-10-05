@@ -302,7 +302,31 @@ label:
 			weapons.Insert(getLastWeaponIndex(), new HyperCharge());
 		}
 	}
-
+	public void addNovaStrike() {
+		if (!weapons.Any(w => w is HyperNovaStrike)) {
+			weapons.Add(new HyperNovaStrike());
+		}
+	}
+	public void addGigaSpears() {
+		if (!weapons.Any(w => w is HyperNovaStrike)) {
+			weapons.Add(new HyperNovaStrike());
+		}
+	}
+	public void addGigaKikosho() {
+		if (!weapons.Any(w => w is HyperNovaStrike)) {
+			weapons.Add(new HyperNovaStrike());
+		}
+	}
+	public void addGigaBlade() {
+		if (!weapons.Any(w => w is HyperNovaStrike)) {
+			weapons.Add(new HyperNovaStrike());
+		}
+	}
+	public void addGigaCrescent() {
+		if (!weapons.Any(w => w is HyperNovaStrike)) {
+			weapons.Add(new HyperNovaStrike());
+		}
+	}
 	public void removeNovaStrike() {
 		if (weapon is HyperNovaStrike) {
 			weaponSlot = 0;
@@ -325,6 +349,13 @@ label:
 			weaponSlot = 0;
 		}
 		weapons.RemoveAll(w => w is GigaCrush);
+	}
+
+	public void removeGigaAttacks() {
+		if (weapon is GigaCrush or HyperNovaStrike) {
+			weaponSlot = 0;
+		}
+		weapons.RemoveAll(w => w is GigaCrush or HyperNovaStrike);
 	}
 
 	public void updateWeapons() {

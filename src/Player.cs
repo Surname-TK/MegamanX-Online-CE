@@ -619,7 +619,7 @@ public partial class Player {
 	}
 
 	public static int getHeartTankModifier() {
-		return Global.level.server?.customMatchSettings?.heartTankHp ?? 1;
+		return Global.level.server?.customMatchSettings?.heartTankHp ?? 2;
 	}
 
 	public float getMaverickMaxHp(MaverickModeId controlMode) {

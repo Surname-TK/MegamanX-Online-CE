@@ -55,7 +55,7 @@ public class UpgradeMenu : IMainMenu {
 	}
 
 	public static int getMaxSubTanks() {
-		return Global.level.server?.customMatchSettings?.maxSubTanks ?? 2;
+		return Global.level.server?.customMatchSettings?.maxSubTanks ?? 4;
 	}
 
 	public Player mainPlayer {

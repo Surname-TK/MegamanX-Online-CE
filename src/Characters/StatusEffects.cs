@@ -117,7 +117,7 @@ public class GenericStun : CharState {
 	public float yFall = 0;
 	public bool shake = false;
 
-	public GenericStun() : base("hurt") {
+	public GenericStun() : base("") {
 
 	}
 
@@ -142,6 +142,8 @@ public class GenericStun : CharState {
 				character.useGravity = true;
 				useGravity = true;
 			}
+		} else if (character.frozenTime != 0) {
+			character.useGravity = true;
 		}
 		if (hurtSpeed != 0) {
 			hurtSpeed = Helpers.toZero(hurtSpeed, 1.6f / flinchMaxTime * Global.speedMul, hurtDir);
@@ -150,8 +152,10 @@ public class GenericStun : CharState {
 
 		if (changeAnim) {
 			string stunAnim = getStunAnim();
-			character.changeSpriteFromName(getStunAnim(), true);
-			if (stunAnim == "idle") {
+			if (character.crystalizedTime == 0) {
+				character.changeSpriteFromName(getStunAnim(), true);
+			} else {
+				character.changeSprite(getStunAnim(), true);
 				character.sprite.frameSpeed = 0;
 			}
 		}
@@ -243,7 +247,7 @@ public class GenericStun : CharState {
 			return "frozen";
 		}
 		if (character.isCrystalized) {
-			return "idle";
+			return character.sprite.name;
 		}
 		if (character.paralyzedTime > 0 && character.grounded) {
 			return "lose";
@@ -279,7 +283,8 @@ public class GenericStun : CharState {
 
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
-		character.stopMoving();
+		if (character.frozenTime == 0) character.stopMoving();
+		character.useGravity = false;
 		hurtDir = -character.xDir;
 		// To continue the flinch if was flinched before the stun.
 		if (oldState is Hurt hurtState) {
@@ -307,6 +312,7 @@ public class GenericStun : CharState {
 		character.paralyzedTime = 0;
 		character.frozenTime = 0;
 		character.crystalizedTime = 0;
+		character.useGravity = true;
 
 		base.onExit(newState);
 	}

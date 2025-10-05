@@ -1583,8 +1583,8 @@ public class GameMode {
 		baseY -= 16;
 
 		// Puppeteer small energy bars.
-		bool forceSmallBarsOff = false;
 		if (!Options.main.smallBarsEx || !allowSmall && maxAmmo > 16) {
+		bool forceSmallBarsOff = true;
 			forceSmallBarsOff = true;
 		}
 
