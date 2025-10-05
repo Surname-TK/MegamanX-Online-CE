@@ -391,7 +391,7 @@ public class MegamanX : Character {
 		}
 		if (currentWeapon != null && canShoot() && (
 				player.input.isPressed(Control.Shoot, player) && !isCharging() ||
-				currentWeapon.isStream && getChargeLevel() < 2 &&
+				currentWeapon.isStream && getChargeLevel() < 3 &&
 				player.input.isHeld(Control.Shoot, player)
 			)
 		) {

@@ -14,7 +14,7 @@ public class BubbleSplash : Weapon {
 	public BubbleSplash() : base() {
 		displayName = "Bubble Splash";
 		shootSounds = new string[] { "bubbleSplash", "bubbleSplash", "bubbleSplash", "bubbleSplashCharged" };
-		fireRate = 6;
+		fireRate = 2;
 		isStream = true;
 		index = (int)WeaponIds.BubbleSplash;
 		weaponBarBaseIndex = 10;
@@ -55,9 +55,9 @@ public class BubbleSplash : Weapon {
 		for (int i = bubblesOnField.Count - 1; i >= 0; i--) {
 			if (bubblesOnField[i].destroyed) {
 				float timeCutShort = bubblesOnField[i].maxTime - bubblesOnField[i].time;
-				bubbleAfterlifeTimes.Add(0.4f);
+				bubbleAfterlifeTimes.Add(0.6f);
 				bubblesOnField.RemoveAt(i);
-				continue;
+			continue;
 			}
 		}
 
@@ -111,63 +111,101 @@ public class BubbleSplash : Weapon {
 
 public class BubbleSplashProj : Projectile {
 	int size;
+	float randY;
+	float randT;
+	int randColor;
 
 	public BubbleSplashProj(
 		int type, Point pos, int xDir, Actor owner, Player player, ushort? netId,
-		int? size = null, int? randX = null, int? randY = null,
+		int? size = null, int? randX = null, int? randY = null, float? randT = null,
 		bool rpc = false
 	) : base(
-		pos, xDir, owner, "bubblesplash_proj_start", netId, player	
+		pos, xDir, owner, "bubblesplash_start", netId, player	
 	) {
 		weapon = BubbleSplash.netWeapon;
-		damager.damage = 1;
+		projId = (int)ProjIds.BubbleSplash;
+		damager.damage = 0.5f;
 		vel = new Point(75 * xDir, 0);
+		useGravity = false;
+
 		// RNG shenanigans.
-		if (randX == null) {
-			randX = Helpers.randomRange(75, 125);
+		if (randX == null)
+		{
+			randX = player.character.deltaPos.x == 0 ?
+			Helpers.randomRange(75, 125) : !player.character.isDashing?
+			Helpers.randomRange(125, 175) : Helpers.randomRange(175, 250);
 		}
 		if (randY == null) {
 			randY = Helpers.randomRange(75, 125);
 		}
-		if (size == null) {
-			size = Helpers.randomRange(0, spriteVariants.Length - 1);
+		if (randT == null) {
+			randT = Helpers.randomRange(75, 125);
 		}
+		if (size == null) {
+			size = Helpers.randomRange(0, 2);
+		}
+		randColor = Helpers.randomRange(0, spriteVariants.Length - 1);
+
 		// Create variables.
 		this.size = size.Value;
-		maxTime = 0.75f;
+		this.randY = (float)randY;
+		this.randT = (float)randT / 100f;
 		useGravity = false;
-
 		vel.x *= randX.Value / 100f;
-		vel.y = -20 * (randY.Value / 100f);
+		vel.y = 0;
+		maxTime = this.randT;
 
-		if (type == 0) {
-			vel.y *= 0.5f;
-			vel.x *= 1.75f;
-		} else {
-			vel.y *= 3;
+		switch (size) {
+			case 0: fadeSprite = "bubblesplash_pop_small";
+			break;
+			case 1: fadeSprite = "bubblesplash_pop_medium";
+			break;
+			case 2: fadeSprite = "bubblesplash_pop_large";
+			break;
 		}
-
-		fadeSprite = "bubblesplash_pop";
 		fadeSound = "bubbleSplashPop";
 		fadeOnAutoDestroy = true;
-		projId = (int)ProjIds.BubbleSplash;
 
 		if (rpc) {
-			rpcCreate(pos, owner, ownerPlayer, netId, xDir, (byte)type, (byte)size, (byte)randX, (byte)randY);
+			rpcCreate(pos, owner, ownerPlayer, netId, xDir, (byte)type, (byte)size, (byte)randX, (byte)randY, (byte)randT);
 		}
 	}
 
 	public override void update() {
 		base.update();
-		vel.y -= 1.65f;
-
-		if (sprite.name == "bubblesplash_proj_start" && isAnimOver()) {
-			changeSprite(spriteVariants[size], true);
+		
+		if (sprite.name.Contains("start")) {
+			vel.y = 0;
+			if (isAnimOver()) {
+				changeSprite(spriteVariants[randColor], true);
+			}
+		} else {
+			if (vel.y == 0) { 
+				vel.y = -20 * (randY / 100f);
+			} 
+			if (isUnderwater()) {
+				vel.y -= 6f;
+			} else {
+				vel.y -= 1.5f;
+			}
+			if (sprite.name.Contains("proj")) {
+				switch (size) {
+					case 0:
+						if (frameIndex > 0) { frameSpeed = 0; }
+						break;
+					case 1:
+						if (frameIndex > 1) { frameSpeed = 0; }
+						break;
+					case 2:
+						if (frameIndex > 2) { frameSpeed = 0; }
+						break;
+				}
+			}
 		}
 	}
 
 	public static string[] spriteVariants = {
-		"bubblesplash_proj",
+		"bubblesplash_proj1",
 		"bubblesplash_proj2",
 		"bubblesplash_proj3",
 	};
@@ -175,7 +213,7 @@ public class BubbleSplashProj : Projectile {
 	public static Projectile rpcInvoke(ProjParameters arg) {
 		return new BubbleSplashProj(
 			arg.extraData[0], arg.pos, arg.xDir, arg.owner, arg.player, arg.netId,
-			arg.extraData[1], arg.extraData[2], arg.extraData[3]
+			arg.extraData[1], arg.extraData[2], arg.extraData[3], arg.extraData[4]
 		);
 	}
 }

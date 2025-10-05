@@ -81,6 +81,8 @@ public class SonicSlicerStart : Projectile {
 
 public class SonicSlicerProj : Projectile {
 	public Sprite twin;
+	public float Curve = 1;
+	public float BounceTime = 0;
 	int type;
 	public SonicSlicerProj(
 		Point pos, int xDir, int type, Actor owner, Player player, ushort? netId, bool rpc = false
@@ -89,8 +91,8 @@ public class SonicSlicerProj : Projectile {
 	) {
 		weapon = SonicSlicer.netWeapon;
 		damager.damage = 2;
-		vel = new Point(200 * xDir, 0);
-		maxTime = 0.75f;
+		vel = new Point(0 * xDir, 0);
+		maxTime = 2f;
 		this.type = type;
 		if (collider != null) {
 			collider.wallOnly = true;
@@ -98,15 +100,6 @@ public class SonicSlicerProj : Projectile {
 		projId = (int)ProjIds.SonicSlicer;
 
 		twin = new Sprite("sonicslicer_twin");
-
-		vel.y = 50;
-		if (type == 1) {
-			vel.x *= 1.25f;
-			frameIndex = 1;
-		}
-		if (type == 1) {
-			vel.y = 0;
-		}
 
 		if (rpc) {
 			rpcCreate(pos, owner, ownerPlayer, netId, xDir, (byte)type);
@@ -121,16 +114,32 @@ public class SonicSlicerProj : Projectile {
 
 	public override void update() {
 		base.update();
-		if (type == 0) vel.y -= Global.spf * 100;
-		else vel.y -= Global.spf * 50;
-
+		if (time > 0.25f) {
+			Curve -= 0.05f;
+			if (type == 0) {
+				vel.x = 150 * xDir;
+				vel.y = (Curve * 30) + 10;
+			} else {
+				vel.x = 200 * xDir;
+				vel.y = (Curve * 30);
+			}
+		}
 		var collideData = Global.level.checkTerrainCollisionOnce(this, xDir, 0, vel);
 		if (collideData != null && collideData.hitData != null) {
 			playSound("dingX2");
 			xDir *= -1;
 			vel.x *= -1;
+			if (BounceTime > 1f) {
+				destroySelfNoEffect();
+			}
+			BounceTime += 0.2f;
+			time -= 0.25f;
 			new Anim(pos, "sonicslicer_sparks", xDir, null, true);
 			//RPC.actorToggle.sendRpc(netId, RPCActorToggleType.SonicSlicerBounce);
+		} else {
+			if (BounceTime >= 0.2f) {
+				BounceTime -= 0.2f;
+			}
 		}
 
 		int velYSign = MathF.Sign(vel.y);
@@ -139,8 +148,18 @@ public class SonicSlicerProj : Projectile {
 			if (collideData != null && collideData.hitData != null) {
 				playSound("dingX2");
 				vel.y *= -1;
+				if (BounceTime > 1f) {
+					destroySelfNoEffect();
+				}
+				BounceTime += 0.2f;
+				time -= 0.25f;
+				Curve *= -1;
 				new Anim(pos, "sonicslicer_sparks", xDir, null, true);
 				//RPC.actorToggle.sendRpc(netId, RPCActorToggleType.SonicSlicerBounce);
+			} else {
+				if (BounceTime >= 0.2f) {
+					BounceTime -= 0.2f;
+				}
 			}
 		}
 	}

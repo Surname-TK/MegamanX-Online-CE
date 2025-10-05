@@ -114,6 +114,8 @@ public class GenericStun : CharState {
 
 	public float flinchTime;
 	public float flinchMaxTime;
+	public float yFall = 0;
+	public bool shake = false;
 
 	public GenericStun() : base("hurt") {
 
@@ -125,7 +127,22 @@ public class GenericStun : CharState {
 		crystalizeLogic();
 		paralizeAnimLogic();
 		freezeLogic();
-
+		stateTime += 1;
+		
+		if (character.crystalizedTime != 0) {
+			if (!character.grounded) {
+				yFall = character.vel.y;
+				if (yFall >= 150) shake = true;
+			} else if (character.grounded && shake) {
+				character.vel.y = -yFall/2;
+				character.shakeCamera(sendRpc: true);
+				shake = false;
+			} 
+			if (stateTime >= 21) {
+				character.useGravity = true;
+				useGravity = true;
+			}
+		}
 		if (hurtSpeed != 0) {
 			hurtSpeed = Helpers.toZero(hurtSpeed, 1.6f / flinchMaxTime * Global.speedMul, hurtDir);
 			character.move(new Point(hurtSpeed * 60f, 0));
