@@ -1069,7 +1069,7 @@ public class SNESArmorHandler : IMenuHandler {
 			canLock = player => player.character is MegamanX mmx && mmx.hyperHelmetActive,
 			unlock = (player) => { if (player.character is MegamanX mmx) mmx.hyperHelmetActive = true; },
 			lockit = (player) => { if (player.character is MegamanX mmx) mmx.hyperHelmetActive = false; },
-			description = "ENHANCEMENT CHIP\nSlowly regenerate Health after not taking Damage.",
+			description = "ENHANCEMENT CHIP\nSlowly regenerate Health after not taking DMG.",
 			price = "0",
 		};
 		menu[(4, 2)] = new Skill {
@@ -1316,7 +1316,7 @@ public class UpgradeArmorMenuEX : IMainMenu {
 	Player mainP => Global.level.mainPlayer;
 	uint ghw => Global.halfScreenW;
 	uint ghh => Global.halfScreenH;
-	
+	public float changeMenuTime;
 
 	public void update() {
 		if (mainP.character is MegamanX mmx && mmx != null) {
@@ -1337,6 +1337,11 @@ public class UpgradeArmorMenuEX : IMainMenu {
 					break;
 			}
 		}
+		if (Global.input.isHeldMenu(Control.MenuLeft) || Global.input.isHeldMenu(Control.MenuRight)) {
+			changeMenuTime += Global.gameSpeed;
+		} else {
+			changeMenuTime = 0;
+		}
 		slotLogic();
 		xGameV();
 	}
@@ -1346,6 +1351,7 @@ public class UpgradeArmorMenuEX : IMainMenu {
 		DrawWrappers.DrawRect(364, 40, 20, 180, true, new Color(0, 0, 0, 100), 1,
 		ZIndex.HUD, false, outlineColor: Color.White);
 		menu.drawToHUD(0, ghw, ghh, 0.5f);
+		Global.sprites["hud_killfeed_weapon"].drawToHUD(175, ghw+164, ghh+40, changeMenuTime/55);
 		menuX();
 		DrawTextStuff();
 		LowerMenuText();
@@ -1381,6 +1387,9 @@ public class UpgradeArmorMenuEX : IMainMenu {
 			}
 		} else if (Global.input.isPressedMenu(Control.MenuBack)) {
 			Menu.change(prevMenu);
+		} else if (changeMenuTime > 30) {
+			UpgradeMenu.onUpgradeMenu = true;
+			Menu.change(new UpgradeMenu(prevMenu));
 		}
 	}
 	public void DrawTextStuff() {
