@@ -65,6 +65,58 @@ public class Buster2Proj : Projectile {
 		);
 	}
 }
+
+public class BusterGaeaProj : Projectile {
+	public BusterGaeaProj(
+		Point pos, int xDir, Actor owner, Player player, ushort? netId, bool rpc = false
+	) : base(
+		pos, xDir, owner, "bustergaea", netId, player	
+	) {
+		weapon = XBuster.netWeapon;
+		damager.damage = 2;
+		vel = new Point(350 * xDir, 0);
+		fadeSprite = "bustergaea_fade";
+		reflectable = true;
+		maxTime = 0.4f;
+		projId = (int)ProjIds.BusterGaea;
+		fadeOnAutoDestroy = true;
+		if (rpc) {
+			rpcCreate(pos, owner, ownerPlayer, netId, xDir);
+		}
+	}
+
+	public static Projectile rpcInvoke(ProjParameters args) {
+		return new BusterGaeaProj(
+			args.pos, args.xDir, args.owner, args.player, args.netId
+		);
+	}
+}
+
+public class Buster2GaeaProj : Projectile {
+	public Buster2GaeaProj(
+		Point pos, int xDir, Actor owner, Player player, ushort? netId, bool rpc = false
+	) : base(
+		pos, xDir, owner, "bustergaea2", netId, player	
+	) {
+		weapon = XBuster.netWeapon;
+		damager = new Damager (player, 3, Global.defFlinch, 0);
+		vel = new Point(350 * xDir, 0);
+		fadeSprite = "bustergaea_fade";
+		reflectable = false;
+		maxTime = 0.2f;
+		projId = (int)ProjIds.Buster2Gaea;
+		fadeOnAutoDestroy = true;
+		if (rpc) {
+			rpcCreate(pos, owner, ownerPlayer, netId, xDir);
+		}
+	}
+
+	public static Projectile rpcInvoke(ProjParameters args) {
+		return new Buster2GaeaProj(
+			args.pos, args.xDir, args.owner, args.player, args.netId
+		);
+	}
+}
 public class Buster3LightProj : Projectile {
 	public Buster3LightProj(
 		Point pos, int xDir, Actor owner, Player player, ushort? netId, bool rpc = false

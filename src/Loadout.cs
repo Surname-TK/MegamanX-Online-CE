@@ -39,7 +39,7 @@ public class XLoadout {
 			weapon3 = 2;
 		}
 
-		if (melee != 0 && melee != 1) { melee = 0; }
+		//if (melee != 0 && melee != 1) { melee = 0; }
 	}
 
 	public List<Weapon> getWeaponsFromLoadout(Player player) {

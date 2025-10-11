@@ -811,8 +811,8 @@ public partial class Character : Actor, IDamagable {
 			return;
 		}
 
-		if (other.gameObject is KillZone killZone && !isInvulnerable(true)) {
-			killZone.applyDamage(this);
+		if (other.gameObject is KillZone killZone && (!isInvulnerable(true))) {
+			if (!(this is MegamanX mmx && (mmx.hasGaeaArmor || mmx.hasShadowArmor))) killZone.applyDamage(this);
 		}
 
 		// Crystal break.
@@ -2164,9 +2164,11 @@ public partial class Character : Actor, IDamagable {
 			float yOff = 0;
 			if (sprite.name.Contains("ra_idle")) yOff = 12;
 			if (this is BaseSigma) yOff = -7;
-			Global.sprites["crystalhunter_crystal"].draw(
-				0, pos.x + x, pos.y + y + yOff, xDir, 1, null, 1, 1, 1, zIndex + 1
-			);
+			if (charState is GenericStun stun && stun.stateTime >= 16) {
+				Global.sprites["crystalhunter_crystal"].draw(
+					0, pos.x + x, pos.y + y + yOff, xDir, 1, null, 1, 1, 1, zIndex + 1
+				);
+			}
 		}
 		List<Player> nonSpecPlayers = Global.level.nonSpecPlayers();
 
@@ -2827,7 +2829,7 @@ public partial class Character : Actor, IDamagable {
 				damageDebt += (originalDamage * extraDamage);
 			}
 			if (mmx != null) {
-				switch (mmx.chestArmor) {
+				switch (mmx.bodyArmor) {
 					case ArmorId.None:
 						damageSavings += 0;
 						break;
@@ -3009,7 +3011,7 @@ public partial class Character : Actor, IDamagable {
 			}
 			killPlayer(attacker, null, weaponIndex, projId);
 		} else {
-			if (mmx != null && mmx.chestArmor == ArmorId.Max && damage > 0) {
+			if (mmx != null && mmx.bodyArmor == ArmorId.Max && damage > 0) {
 				mmx.activateMaxBarrier(
 					charState is Hurt or GenericGrabbedState or VileMK2Grabbed or GenericStun
 				);
@@ -3249,11 +3251,14 @@ public partial class Character : Actor, IDamagable {
 
 	public void crystalizeStart() {
 		isCrystalized = true;
+		float yOff = -2;
+		if (this is BaseSigma) yOff = 5;
+		if (sprite.name.Contains("ra_idle")) yOff = 10;
 		if (globalCollider != null) {
 			globalCollider.isClimbable = true;
 		}
-		new Anim(getCenterPos(), "crystalhunter_activate", 1, null, true);
 		playSound("crystalize");
+		new Anim(new Point(getCenterPos().x, getCenterPos().y + yOff), "crystalhunter_activate", 1, null, true);
 	}
 
 	public void crystalizeEnd() {

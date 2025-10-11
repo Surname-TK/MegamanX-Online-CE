@@ -257,7 +257,7 @@ public class StrikeChainProj : Projectile {
 				float momentum = 0.25f * (distRetracted / maxDist);
 				mmx.xSwingVel = toWallVel.x * (0.25f + momentum) * 0.5f / 60f;
 				//Yes, X2 Boots increase it.
-				if (mmx.isDashing && mmx.legArmor == ArmorId.Giga && mmx.flag == null) {
+				if (mmx.isDashing && mmx.legsArmor == ArmorId.Giga && mmx.flag == null) {
 					mmx.xSwingVel *= 1.1f;
 				}
 				mmx.vel.y = toWallVel.y;
@@ -495,7 +495,7 @@ public class StrikeChainProjCharged : Projectile {
 				destroySelf();
 				float momentum = 0.25f * (distRetracted / maxDist);
 				mmx.xSwingVel = toWallVel.x * (0.25f + momentum) * 0.5f;
-				if (mmx.isDashing && mmx.legArmor == ArmorId.Giga && mmx.flag == null) {
+				if (mmx.isDashing && mmx.legsArmor == ArmorId.Giga && mmx.flag == null) {
 					mmx.xSwingVel *= 1.1f;
 				}
 				mmx.vel.y = toWallVel.y;

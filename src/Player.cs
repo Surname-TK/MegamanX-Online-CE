@@ -91,6 +91,7 @@ public partial class Player {
 	public List<float> axlBulletTypeLastAmmo = new List<float>() { 28, 28, 28, 28, 28, 28, 28 };
 	public int lastDNACoreIndex = 4;
 	public DNACore? lastDNACore;
+
 	public float zoomRange {
 		get {
 			if (character is Axl axl && (axl.isWhiteAxl() || axl.hyperAxlStillZoomed)) return 100000;
@@ -123,7 +124,9 @@ public partial class Player {
 	public const int reviveSigmaCost = 10;
 	public const int reviveXCost = 10;
 	public const int goldenArmorCost = 5;
-	public const int ultimateArmorCost = 10;
+	public const int ultimateArmorCost = 5;
+	public const int gaeaArmorCost = 5;
+	public const int shadowArmorCost = 5;
 	public bool lastDeathCanRevive;
 	public int vileFormToRespawnAs;
 	public bool hyperSigmaRespawn;
@@ -326,6 +329,7 @@ public partial class Player {
 
 	// Note: Every time you add an armor, add an "old" version and update DNA Core code appropriately
 	public ushort armorFlag;
+	public int[] armorEra = [0, 0, 0, 0];
 	public bool frozenCastle;
 	public bool speedDevil;
 
@@ -452,7 +456,7 @@ public partial class Player {
 
 	public bool[] headArmorsPurchased = new bool[] { false, false, false, false, false, false };
 	public bool[] bodyArmorsPurchased = new bool[] { false, false, false, false, false, false };
-	public bool[] armArmorsPurchased = new bool[] { false, false, false, false, false, false };
+	public bool[] armsArmorsPurchased = new bool[] { false, false, false, false, false, false };
 	public bool[] bootsArmorsPurchased = new bool[] { false, false, false, false, false, false };
 
 	public float lastMashAmount;
@@ -575,10 +579,10 @@ public partial class Player {
 
 		xArmor1v1 = playerData?.armorSet ?? 1;
 		if (Global.level.is1v1() && charNum == (int)CharIds.X) {
-			legArmorNum = xArmor1v1;
+			legsArmorNum = xArmor1v1;
 			bodyArmorNum = xArmor1v1;
-			helmetArmorNum = xArmor1v1;
-			armArmorNum = xArmor1v1;
+			headArmorNum = xArmor1v1;
+			armsArmorNum = xArmor1v1;
 		}
 
 		foreach (int key in charCurrency.Keys) {
@@ -1015,6 +1019,7 @@ public partial class Player {
 			new Point(spawnPoint.pos.x, spawnPoint.getGroundY()), spawnPoint.xDir, charNetId, sendRpc
 		);
 	}
+
 
 	public byte[] getCharSpawnData(int charNum, bool sendData = true, LoadoutData? loadout = null) {
 		if (ownedByLocalPlayer && sendData) {
@@ -1991,20 +1996,20 @@ public partial class Player {
 	}
 
 	public bool hasArmor() {
-		return bodyArmorNum > 0 || legArmorNum > 0 || armArmorNum > 0 || helmetArmorNum > 0;
+		return bodyArmorNum > 0 || legsArmorNum > 0 || armsArmorNum > 0 || headArmorNum > 0;
 	}
 
 	public bool hasArmor(int version) {
-		return bodyArmorNum == version || legArmorNum == version || armArmorNum == version || helmetArmorNum == version;
+		return bodyArmorNum == version || legsArmorNum == version || armsArmorNum == version || headArmorNum == version;
 	}
 
 	public bool hasAllArmor() {
-		return bodyArmorNum > 0 && legArmorNum > 0 && armArmorNum > 0 && helmetArmorNum > 0;
+		return bodyArmorNum > 0 && legsArmorNum > 0 && armsArmorNum > 0 && headArmorNum > 0;
 	}
 
 	public bool hasAllX3Armor() {
 		if (character is MegamanX mmx) {
-			return mmx.hasFullHyperMaxArmor || (bodyArmorNum == 3 && legArmorNum == 3 && armArmorNum == 3 && helmetArmorNum == 3);
+			return mmx.hasFullHyperMaxArmor || (bodyArmorNum == 3 && legsArmorNum == 3 && armsArmorNum == 3 && headArmorNum == 3);
 		} else return false;
 	}
 
@@ -2134,13 +2139,10 @@ public partial class Player {
 		if (axlBulletType == (int)AxlBulletWeaponType.AncientGun && character is Axl) {
 			return;
 		}
-		if (character is RagingChargeX or KaiserSigma or ViralSigma or WolfSigma) {
+		if (character is KaiserSigma or ViralSigma or WolfSigma) {
 			return;
 		}
 		if (character?.rideArmor?.raNum == 4 && character.charState is InRideArmor) {
-			return;
-		}
-		if (character is MegamanX mmx && mmx.hasUltimateArmor) {
 			return;
 		}
 		if (Global.level?.server?.customMatchSettings != null) {
@@ -2512,8 +2514,8 @@ public partial class Player {
 
 	// 0000 0000 0000 0000 [boots][body][helmet][arm]
 	// 0000 = none, 0001 = x1, 0010 = x2, 0011 = x3, 1111 = chip
-	public static int getArmorNum(int armorFlag, int armorIndex, bool isChipCheck) {
-		List<string> bits = Convert.ToString(armorFlag, 2).Select(s => s.ToString()).ToList();
+	public static int getArmorNum(int armorFlag, int era, int armorIndex, bool isChipCheck) {
+		List<string> bits = Convert.ToString(/*era == 1 ? armorFlag-2 : */armorFlag, 2).Select(s => s.ToString()).ToList();
 		while (bits.Count < 16) {
 			bits.Insert(0, "0");
 		}
@@ -2525,11 +2527,12 @@ public partial class Player {
 		if (armorIndex == 3) bitStr = bits[12] + bits[13] + bits[14] + bits[15];
 
 		int retVal = Convert.ToInt32(bitStr, 2);
-		if (retVal > 3 && !isChipCheck) retVal = 3;
+		//if (retVal > 3 && !isChipCheck) retVal = 3;
+		//if (era == 1) retVal += 3;
 		return retVal;
 	}
 
-	public void setArmorNum(int armorIndex, int val) {
+	public void setArmorNum(int armorIndex, int val, int era) {
 		List<string> bits = Convert.ToString(armorFlag, 2).Select(s => s.ToString()).ToList();
 		while (bits.Count < 16) {
 			bits.Insert(0, "0");
@@ -2547,47 +2550,36 @@ public partial class Player {
 		bits[i + 3] = valBits[3];
 
 		armorFlag = Convert.ToUInt16(string.Join("", bits), 2);
+		//if (era == 1) armorFlag += 3;
 	}
 
-	public int legArmorNum {
-		get { return getArmorNum(armorFlag, 0, false); }
-		set { setArmorNum(0, value); }
-	}
-	public int bodyArmorNum {
-		get { return getArmorNum(armorFlag, 1, false); }
-		set { setArmorNum(1, value); }
-	}
-	public int helmetArmorNum {
-		get { return getArmorNum(armorFlag, 2, false); }
-		set { setArmorNum(2, value); }
-	}
-	public int armArmorNum {
-		get { return getArmorNum(armorFlag, 3, false); }
-		set { setArmorNum(3, value); }
-	}
+	public int legsArmorNum;
+	public int bodyArmorNum;
+	public int headArmorNum;
+	public int armsArmorNum;
 
-	public bool hasHelmetArmor(ArmorId armorId) { return helmetArmorNum == (int)armorId; }
-	public bool hasArmArmor(ArmorId armorId) { return armArmorNum == (int)armorId; }
-	public bool hasBootsArmor(int xGame) { return legArmorNum == xGame; }
+	public bool hasHelmetArmor(ArmorId armorId) { return headArmorNum == (int)armorId; }
+	public bool hasArmArmor(ArmorId armorId) { return armsArmorNum == (int)armorId; }
+	public bool hasBootsArmor(int xGame) { return legsArmorNum == xGame; }
 	public bool hasBodyArmor(int xGame) { return bodyArmorNum == xGame; }
-	public bool hasHelmetArmor(int xGame) { return helmetArmorNum == xGame; }
-	public bool hasArmArmor(int xGame) { return armArmorNum == xGame; }
+	public bool hasHelmetArmor(int xGame) { return headArmorNum == xGame; }
+	public bool hasArmArmor(int xGame) { return armsArmorNum == xGame; }
 
 	public bool isHeadArmorPurchased(int xGame) { return headArmorsPurchased[xGame - 1]; }
 	public bool isBodyArmorPurchased(int xGame) { return bodyArmorsPurchased[xGame - 1]; }
-	public bool isArmArmorPurchased(int xGame) { return armArmorsPurchased[xGame - 1]; }
+	public bool isArmArmorPurchased(int xGame) { return armsArmorsPurchased[xGame - 1]; }
 	public bool isBootsArmorPurchased(int xGame) { return bootsArmorsPurchased[xGame - 1]; }
 
 	public void setHeadArmorPurchased(int xGame) { headArmorsPurchased[xGame - 1] = true; }
 	public void setBodyArmorPurchased(int xGame) { bodyArmorsPurchased[xGame - 1] = true; }
-	public void setArmArmorPurchased(int xGame) { armArmorsPurchased[xGame - 1] = true; }
+	public void setArmArmorPurchased(int xGame) { armsArmorsPurchased[xGame - 1] = true; }
 	public void setBootsArmorPurchased(int xGame) { bootsArmorsPurchased[xGame - 1] = true; }
 
 	public bool hasAllArmorsPurchased() {
 		for (int i = 0; i < 3; i++) {
 			if (!headArmorsPurchased[i]) return false;
 			if (!bodyArmorsPurchased[i]) return false;
-			if (!armArmorsPurchased[i]) return false;
+			if (!armsArmorsPurchased[i]) return false;
 			if (!bootsArmorsPurchased[i]) return false;
 		}
 		return true;
@@ -2597,14 +2589,14 @@ public partial class Player {
 		for (int i = 0; i < 3; i++) {
 			if (headArmorsPurchased[i]) return true;
 			if (bodyArmorsPurchased[i]) return true;
-			if (armArmorsPurchased[i]) return true;
+			if (armsArmorsPurchased[i]) return true;
 			if (bootsArmorsPurchased[i]) return true;
 		}
 		return false;
 	}
 
 	public bool hasAnyArmor() {
-		return legArmorNum > 0 || armArmorNum > 0 || bodyArmorNum > 0 || helmetArmorNum > 0;
+		return legsArmorNum > 0 || armsArmorNum > 0 || bodyArmorNum > 0 || headArmorNum > 0;
 	}
 
 	public void press(string inputMapping) {

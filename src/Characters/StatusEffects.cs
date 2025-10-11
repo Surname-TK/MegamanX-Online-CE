@@ -40,10 +40,10 @@ public class Hurt : CharState {
 	public override void onEnter(CharState oldState) {
 		base.onEnter(oldState);
 		if (character is MegamanX mmx) {
-			if (mmx.chestArmor == ArmorId.Light) {
+			if (mmx.bodyArmor == ArmorId.Light) {
 				flinchTime = MathF.Floor(flinchTime * 0.75f);
 			}
-			if (mmx.chestArmor != ArmorId.None && hurtDir == -mmx.xDir) {
+			if (mmx.bodyArmor != ArmorId.None && hurtDir == -mmx.xDir) {
 				sprite = "hurt2";
 				character.changeSpriteFromName("hurt2", true);
 			}
@@ -134,6 +134,7 @@ public class GenericStun : CharState {
 				yFall = character.vel.y;
 				if (yFall >= 150) shake = true;
 			} else if (character.grounded && shake) {
+				//character.grounded = false;
 				character.vel.y = -yFall/2;
 				character.shakeCamera(sendRpc: true);
 				shake = false;
@@ -257,7 +258,7 @@ public class GenericStun : CharState {
 
 	public void activateFlinch(int flinchFrames, int xDir) {
 		hurtDir = xDir;
-		if (character is MegamanX mmx && mmx.chestArmor == ArmorId.Light) {
+		if (character is MegamanX mmx && mmx.bodyArmor == ArmorId.Light) {
 			flinchFrames = MathInt.Floor(flinchFrames * 0.75f);
 		}
 		if (flinchTime > flinchFrames) {

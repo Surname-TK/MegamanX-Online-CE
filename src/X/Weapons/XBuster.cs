@@ -90,10 +90,10 @@ public class XBuster : Weapon {
 			0 => "buster",
 			1 => "buster2",
 			2 => "buster3",
-			_ when isStock || mmx.armArmor == ArmorId.Giga => "buster4X2",
+			_ when isStock || mmx.armsArmor == ArmorId.Giga => "buster4X2",
 			_ => "buster4"
 		};
-		if (mmx.armArmor == ArmorId.Giga && !isStock) {
+		if (mmx.armsArmor == ArmorId.Giga && !isStock) {
 			shootSound = chargeLevel switch {
 				0 => "busterX2",
 				1 => "buster2X2",
@@ -101,7 +101,7 @@ public class XBuster : Weapon {
 				3 => "buster4X2",
 				_ => shootSound
 			};
-		} else if (mmx.armArmor == ArmorId.Max && !isStock) {
+		} else if (mmx.armsArmor == ArmorId.Max && !isStock) {
 			shootSound = chargeLevel switch {
 				0 => "busterX3",
 				1 => "buster2X3",
@@ -110,8 +110,18 @@ public class XBuster : Weapon {
 				_ => shootSound
 			};
 		}
-
-		if (mmx.hasUltimateArmor && chargeLevel >= 3 && !isStock && mmx.armArmor != ArmorId.Max) {
+		if (mmx.hasGaeaArmor) {
+			if (chargeLevel <= 1) {
+				new BusterGaeaProj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
+				shootSound = "buster2X3";
+			} else {
+				new Buster2GaeaProj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
+				shootSound = "plasmaShot";
+			}
+			character.playSound(shootSound, sendRpc: true);
+			return;
+        }
+		else if (mmx.hasUltimateArmor && chargeLevel >= 3 && !isStock && mmx.armsArmor != ArmorId.Max) {
 			new Anim(pos, "buster4_muzzle_flash", xDir, null, true);
 			new BusterPlasmaProj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
 			character.playSound("plasmaShot", sendRpc: true);	
@@ -141,18 +151,18 @@ public class XBuster : Weapon {
 		} else if (chargeLevel == 1) {
 			new Buster2Proj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
 		} else if (chargeLevel == 2) {
-			if (mmx.armArmor == ArmorId.Light || mmx.armArmor == ArmorId.None) {
+			if (mmx.armsArmor == ArmorId.Light || mmx.armsArmor == ArmorId.None) {
 				new Buster3LightProj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
-			} else if (mmx.armArmor == ArmorId.Giga) {
+			} else if (mmx.armsArmor == ArmorId.Giga) {
 				new Buster3GigaProj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
-			} else if (mmx.armArmor == ArmorId.Max) {
+			} else if (mmx.armsArmor == ArmorId.Max) {
 				new Buster3MaxProj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
 			}
 		} else if (chargeLevel >= 3) {
 			if (isStock) {
 				new Buster4Giga2Proj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
 			}
-			else if (mmx.armArmor == ArmorId.Max) {
+			else if (mmx.armsArmor == ArmorId.Max) {
 				mmx.stockedMaxBusterLv += 2;
 				if (!mmx.charState.attackCtrl ||
 					!mmx.charState.normalCtrl ||
@@ -172,7 +182,7 @@ public class XBuster : Weapon {
 					return;
 				}
 			}
-			else if (mmx.armArmor == ArmorId.Giga) {
+			else if (mmx.armsArmor == ArmorId.Giga) {
 				new Buster4GigaProj(pos, xDir, mmx, player, player.getNextActorNetId(), true);
 			} else {
 				shootLightBuster4(mmx, pos, xDir);

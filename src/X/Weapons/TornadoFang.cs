@@ -259,7 +259,7 @@ public class TornadoFangProjCharged : Projectile {
 				changePos(mmx.pos.add(offset));
 			} else {
 				int busterOffset = 2;
-				if (mmx.armArmor == ArmorId.Max) {
+				if (mmx.armsArmor == ArmorId.Max) {
 					busterOffset = 3;
 				}
 				Point busterPos = mmx.getShootPos().addxy(-busterOffset * xDir, -1);

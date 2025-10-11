@@ -1583,10 +1583,10 @@ public class GameMode {
 		baseY -= 16;
 
 		// Puppeteer small energy bars.
-		if (!Options.main.smallBarsEx || !allowSmall && maxAmmo > 16) {
 		bool forceSmallBarsOff = true;
+		/*if (!Options.main.smallBarsEx || !allowSmall && maxAmmo > 16) {
 			forceSmallBarsOff = true;
-		}
+		}*/
 
 		// Small Bars option.
 		float ammoDisplayMultiplier = 1;
@@ -3236,9 +3236,9 @@ public class GameMode {
 		if (charNum == 0) {
 			charName = "X";
 			if (is1v1) {
-				if (player.legArmorNum == 1) charName += "1";
-				else if (player.legArmorNum == 2) charName += "2";
-				else if (player.legArmorNum == 3) charName += "3";
+				if (player.legsArmorNum == 1) charName += "1";
+				else if (player.legsArmorNum == 2) charName += "2";
+				else if (player.legsArmorNum == 3) charName += "3";
 			}
 		} else if (charNum == 1) charName = "Zero";
 		else if (charNum == 2) charName = "Vile";
@@ -3256,9 +3256,10 @@ public class GameMode {
 		return charName;
 	}
 
-	public void drawTeamTopHUD() {
+	public void drawTeamTopHUD()
+	{
 		int teamSide = Global.level.mainPlayer.teamAlliance ?? -1;
-		if (teamSide < 0 || Global.level.mainPlayer.isSpectator) {
+		if (teamSide < 0 || Global.level.mainPlayer.isSpectator) { 
 			drawAllTeamsHUD();
 			return;
 		}

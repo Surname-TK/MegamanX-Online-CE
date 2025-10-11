@@ -192,16 +192,19 @@ public class Sprite {
 		bool hyperBusterReady = false;
 		bool isUPX = false;
 		bool isUltX = false;
+		bool isGaeaX = false;
+		bool isShadowX = false;
 
 		if (actor is Character character) {
 			if (character is MegamanX mmx) {
 				armors = [
-					(int)mmx.legArmor,
-					(int)mmx.chestArmor,
-					(int)mmx.helmetArmor,
-					(int)mmx.armArmor
+					(int)mmx.legsArmor,
+					(int)mmx.bodyArmor,
+					(int)mmx.headArmor,
+					(int)mmx.armsArmor
 				];
-				drawXSaber = !mmx.hasAnyArmor && mmx.specialButtonMode == 1 || mmx.hasFullHyperMaxArmor;
+				drawXSaber = (!mmx.hasAnyArmor && mmx.specialButtonMode == 1) ||
+				mmx.hasFullHyperMaxArmor || mmx.headArmor == ArmorId.Blade;
 			}
 			if (character.flattenedTime > 0) {
 				scaleY = 0.5f;
@@ -211,6 +214,8 @@ public class Sprite {
 			}
 			isUPX = character is RagingChargeX;
 			isUltX = character is MegamanX { hasUltimateArmor: true };
+			isGaeaX = character is MegamanX { hasGaeaArmor: true };
+			isShadowX = character is MegamanX { hasShadowArmor: true };
 		}
 
 		Frame currentFrame = getCurrentFrame(frameIndex);
@@ -296,14 +301,21 @@ public class Sprite {
 		float extraW = 0;
 		float flippedExtraW = 0;
 
+		if (isUPX) {
+			bitmap = Global.textures["XUP"];
+			drawXSaber = true;
+		}
 		if (isUltX) {
 			//extraYOff = 3;
 			//extraY = 3;
-			armors = [4, 4, 4, 4];
+			armors = [7, 7, 7, 7];
 		}
-
-		if (isUPX) {
-			bitmap = Global.textures["XUP"];
+		if (isGaeaX) {
+			bitmap = Global.textures["XGaea"];
+			drawXSaber = true;
+		}
+		if (isShadowX) {
+			bitmap = Global.textures["XShadow"];
 			drawXSaber = true;
 		}
 

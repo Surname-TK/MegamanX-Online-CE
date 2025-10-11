@@ -1156,10 +1156,12 @@ public class WallSlide : CharState {
 					}
 				}
 			}
-			character.move(new Point(0, 100));
+			if (!(character is MegamanX && (mmx.hasGaeaArmor || mmx.hasShadowArmor)))
+				character.move(new Point(0, 100));
 		}
-
-		dustTime += Global.speedMul;
+		
+		if (!(character is MegamanX && (mmx.hasGaeaArmor || mmx.hasShadowArmor)))
+			dustTime += Global.speedMul;
 		if (stateFrames > 12 && dustTime > 6) {
 			dustTime = 0;
 			generateDust(character);
@@ -1204,13 +1206,15 @@ public class WallSlideAttack : CharState {
 			character.changeToIdleOrFall();
 			return;
 		}
-		if (!character.grounded) {
-			character.move(new Point(0, 100));
-			dustTime += Global.speedMul;
-		}
-		if (stateFrames > 12 && dustTime > 6) {
-			dustTime = 0;
-			WallSlide.generateDust(character);
+		if (!(character is MegamanX mmx && (mmx.hasGaeaArmor || mmx.hasShadowArmor))) {
+			if (!character.grounded) {
+				character.move(new Point(0, 100));
+				dustTime += Global.speedMul;
+			}
+			if (stateFrames > 12 && dustTime > 6) {
+				dustTime = 0;
+				WallSlide.generateDust(character);
+			}
 		}
 		if (exitOnAnimEnd && character.isAnimOver()) {
 			WallSlide wallSlideState = new WallSlide(wallDir, wallCollider) { enterSound = "", stateFrames = 14 };

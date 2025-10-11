@@ -14,29 +14,29 @@ public class MegamanX : Character {
 	public int specialButtonMode;
 
 	// Armor variables.
-	public ArmorId chestArmor;
-	public ArmorId armArmor;
-	public ArmorId legArmor;
-	public ArmorId helmetArmor;
+	public ArmorId bodyArmor;
+	public ArmorId armsArmor;
+	public ArmorId legsArmor;
+	public ArmorId headArmor;
 
-	public ArmorId hyperChestArmor => (hyperChestActive ? helmetArmor : ArmorId.None);
-	public ArmorId hyperArmArmor => (hyperArmActive ? armArmor : ArmorId.None);
-	public ArmorId hyperLegArmor => (hyperLegActive ? legArmor : ArmorId.None);
-	public ArmorId hyperHelmetArmor => (hyperHelmetActive ? helmetArmor : ArmorId.None);
+	public ArmorId hyperChestArmor => (hyperChestActive ? bodyArmor : ArmorId.None);
+	public ArmorId hyperArmArmor => (hyperArmActive ? armsArmor : ArmorId.None);
+	public ArmorId hyperLegArmor => (hyperLegActive ? legsArmor : ArmorId.None);
+	public ArmorId hyperHelmetArmor => (hyperHelmetActive ? headArmor : ArmorId.None);
 
 	public ArmorId fullArmor => (
-		chestArmor == armArmor &&
-		armArmor == legArmor &&
-		legArmor == helmetArmor
-		? chestArmor
+		bodyArmor == armsArmor &&
+		armsArmor == legsArmor &&
+		legsArmor == headArmor
+		? bodyArmor
 		: 0
 	);
 
 	public bool anyFullArmor => (
-		chestArmor > 0 &&
-		armArmor > 0 &&
-		legArmor > 0 &&
-		helmetArmor > 0
+		bodyArmor > 0 &&
+		armsArmor > 0 &&
+		legsArmor > 0 &&
+		headArmor > 0
 	);
 
 	public bool hyperChestActive;
@@ -45,8 +45,8 @@ public class MegamanX : Character {
 	public bool hyperHelmetActive;
 
 	public const int headArmorCost = 2;
-	public const int chestArmorCost = 3;
-	public const int armArmorCost = 3;
+	public const int bodyArmorCost = 3;
+	public const int armsArmorCost = 3;
 	public const int bootsArmorCost = 2;
 
 	public float headbuttAirTime = 0;
@@ -59,18 +59,20 @@ public class MegamanX : Character {
 	public float maxShoryukenCooldownTime = 60;
 
 	// HyperX stuff.
-	public bool hasUltimateArmor;
 	public bool hasFullHyperMaxArmor => (
 		hyperChestArmor == ArmorId.Max &&
 		hyperArmArmor == ArmorId.Max &&
 		hyperLegArmor == ArmorId.Max &&
 		hyperHelmetArmor == ArmorId.Max
 	);
+	public bool hasUltimateArmor;
+	public bool hasGaeaArmor;
+	public bool hasShadowArmor;
 	public bool hasAnyArmor => (
-		chestArmor != 0 ||
-		armArmor != 0 ||
-		legArmor != 0 ||
-		helmetArmor != 0
+		bodyArmor != 0 ||
+		armsArmor != 0 ||
+		legsArmor != 0 ||
+		headArmor != 0
 	);
 	public bool hasAnyHyperArmor => (
 		hyperChestActive ||
@@ -166,10 +168,10 @@ public class MegamanX : Character {
 			specialBuster = new XBuster();
 		}
 		// Armor shenanigas.
-		chestArmor = (ArmorId)player.bodyArmorNum;
-		armArmor = (ArmorId)player.armArmorNum;
-		legArmor = (ArmorId)player.legArmorNum;
-		helmetArmor = (ArmorId)player.helmetArmorNum;
+		bodyArmor = (ArmorId)player.bodyArmorNum;
+		armsArmor = (ArmorId)player.armsArmorNum;
+		legsArmor = (ArmorId)player.legsArmorNum;
+		headArmor = (ArmorId)player.headArmorNum;
 	}
 	public override CharState getTauntState() {
 		return new XTaunt();
@@ -309,7 +311,7 @@ public class MegamanX : Character {
 		quickArmorUpgrade();
 		fastChipActivation();
 		if (grounded) {
-			if (legArmor == ArmorId.Max &&
+			if (legsArmor == ArmorId.Max &&
 				player.input.isPressed(Control.Dash, player) &&
 				player.input.isHeld(Control.Up, player) &&
 				canDash() && ctfFlag == null
@@ -317,7 +319,7 @@ public class MegamanX : Character {
 				changeState(new UpDash(Control.Dash));
 				return true;
 			}
-			if (legArmor == ArmorId.Light && grounded &&
+			if (legsArmor == ArmorId.Light && grounded &&
 				player.dashPressed(out string dashControlL) &&
 				canDash()
 			) {
@@ -325,7 +327,7 @@ public class MegamanX : Character {
 				return true;
 			}
 		} else if (!grounded) {
-			if (legArmor == ArmorId.Max &&
+			if (legsArmor == ArmorId.Max &&
 				player.input.isPressed(Control.Dash, player) &&
 				player.input.isHeld(Control.Up, player) &&
 				canAirDash() && canDash() && ctfFlag == null
@@ -333,7 +335,7 @@ public class MegamanX : Character {
 				changeState(new UpDash(Control.Dash));
 				return true;
 			}
-			if (legArmor == ArmorId.Giga && !grounded &&
+			if (legsArmor == ArmorId.Giga && !grounded &&
 				player.dashPressed(out string dashControlG) &&
 				canAirDash() && canDash()
 			) {
@@ -353,7 +355,7 @@ public class MegamanX : Character {
 	}
 
 	public override bool attackCtrl() {
-		if (player.input.isPressed(Control.Special1, player) && helmetArmor == ArmorId.Giga &&
+		if (player.input.isPressed(Control.Special1, player) && headArmor == ArmorId.Giga &&
 			itemTracer.shootCooldown == 0
 		) {
 			itemTracer.shoot(this, [0, hyperHelmetArmor == ArmorId.Giga ? 1 : 0]);
@@ -363,20 +365,22 @@ public class MegamanX : Character {
 			changeState(new XMaxWaveSaberState(), true);
 			return true;
 		}
-		if (player.input.isPressed(Control.Special1, player) && !hasAnyArmor &&
+		if (gigaAttackSpecialOption()) {
+			return true;
+		}
+		if (player.input.isPressed(Control.Special1, player) &&
 			stingActiveTime <= 0
 		) {
-			if (specialButtonMode == 1 && specialSaberCooldown <= 0 && !hasLockingProj()) {
+			if (!hasLockingProj() &&
+			(specialButtonMode == 1 && !hasAnyArmor || player.hasHelmetArmor((int)ArmorId.Blade))) {
 				changeState(new X6SaberState(grounded), true);
-				specialSaberCooldown = 60;
+				//specialSaberCooldown = 60;
 				return true;
-			} else if (specialButtonMode == 0 && specialBuster.shootCooldown <= 0 && !isCharging()) {
+			} else if (specialBuster.shootCooldown <= 0 && !isCharging() &&
+			(specialButtonMode == 0 && !hasAnyArmor || player.hasHelmetArmor((int)ArmorId.Falcon))) {
 				shoot(0, specialBuster, false);
 				return true;
 			}
-		}
-		if (gigaAttackSpecialOption()) {
-			return true;
 		}
 		if (bufferedShotPressed && stockedMaxBusterLv >= 1) {
 			shoot(1, specialBuster, false);
@@ -476,7 +480,7 @@ public class MegamanX : Character {
 		// Calls the weapon shoot function.
 		bool useCrossShotAnim = false;
 		bool isStockActive = busterStock;
-		if (chargeLevel >= 3 && armArmor == ArmorId.Giga || busterStock) {
+		if (chargeLevel >= 3 && armsArmor == ArmorId.Giga || busterStock) {
 			if (!busterStock) {
 				stockedBusterLv = 2;
 				isStockActive = true;
@@ -536,7 +540,7 @@ public class MegamanX : Character {
 			hyperProgress = 0;
 			return;
 		}
-		if (health <= 0 || hasUltimateArmor) {
+		if (health <= 0 || hasUltimateArmor || hasGaeaArmor || hasShadowArmor) {
 			hyperProgress = 0;
 			return;
 		}
@@ -549,13 +553,15 @@ public class MegamanX : Character {
 			hyperProgress = 0;
 			return;
 		}
-		if (charState is not WarpIn && anyFullArmor) {
+		if (charState is not WarpIn) {
 			hyperProgress += Global.spf;
 		}
 		if (hyperProgress < 1) {
 			return;
 		}
 		hyperProgress = 0;
+
+		// golden here
 		if (fullArmor == ArmorId.Max && !hasFullHyperMaxArmor) {
 			player.currency -= Player.goldenArmorCost;
 			hyperChestActive = true;
@@ -565,13 +571,34 @@ public class MegamanX : Character {
 			Global.playSound("ching");
 			return;
 		}
-		// Ultimate or Seraph armor.
-		player.currency -= Player.ultimateArmorCost;
-		hasUltimateArmor = true;
-		if (!weapons.Any(w => w is HyperNovaStrike)) {
-			weapons.Add(new HyperNovaStrike());
+
+		// Ultimate and not Seraph armor.
+		if (fullArmor == ArmorId.Force && !hasUltimateArmor) {
+			player.currency -= Player.ultimateArmorCost;
+			hasUltimateArmor = true;
+			if (!weapons.Any(w => w is HyperNovaStrike)) {
+				weapons.Add(new HyperNovaStrike());
+			}
+			Global.playSound("chingX4");
+			return;
 		}
-		Global.playSound("chingX4");
+
+		// gaea & shadow sharing like siblings
+		if (!hasAnyArmor) {
+			switch (specialButtonMode) {
+				case 0:
+					player.currency -= Player.gaeaArmorCost;
+					hasGaeaArmor = true;
+					break;
+				case 1:
+					player.currency -= Player.shadowArmorCost;
+					hasShadowArmor = true;
+					break;
+
+			}
+			Global.playSound("ching");
+			return;
+		}
 		return;
 	}
 
@@ -615,17 +642,22 @@ public class MegamanX : Character {
 
 	// Movement related stuff.
 	public override float getRunSpeed() {
+		if (hasGaeaArmor) return Physics.WalkSpeed * 0.75f * getRunDebuffs();
+		if (hasShadowArmor) return Physics.WalkSpeed * 1.25f * getRunDebuffs();
 		if (charState is XHover) {
-			return 2 * getRunDebuffs();
-		}
+				return 2 * getRunDebuffs();
+			}
 		return base.getRunSpeed();
 	}
 
 	public override float getDashSpeed() {
+		float dashSpeed = 3.45f;
+		if (hasGaeaArmor) return dashSpeed * 0.75f * getRunDebuffs();
+		if (hasShadowArmor) return dashSpeed * 1.25f * getRunDebuffs();
 		if (flag != null || !isDashing) {
 			return getRunSpeed();
 		}
-		return 3.5f * getRunDebuffs();
+		return dashSpeed * getRunDebuffs();
 	}
 
 	public override void onFlagPickup(Flag flag) {
@@ -690,7 +722,7 @@ public class MegamanX : Character {
 			return null;
 		}
 		Point busterOffset = busterOffsetPos.Value;
-		if (armArmor == ArmorId.Max && sprite.needsX3BusterCorrection()) {
+		if (armsArmor == ArmorId.Max && sprite.needsX3BusterCorrection()) {
 			if (busterOffset.x > 0) { busterOffset.x += 4; } else if (busterOffset.x < 0) { busterOffset.x -= 4; }
 		}
 		busterOffset.x *= xDir;
@@ -728,7 +760,11 @@ public class MegamanX : Character {
 	}
 
 	public override void increaseCharge() {
-		if (armArmor == ArmorId.Light) {
+		if (hasGaeaArmor) {
+			chargeTime += speedMul * 2.5f;
+			return;
+        }
+		if (armsArmor == ArmorId.Light) {
 			chargeTime += speedMul * 1.5f;
 			return;
 		}
@@ -904,10 +940,10 @@ public class MegamanX : Character {
 			"mmx_nova_strike" or "mmx_nova_strike_down" or "mmx_nova_strike_up" => MeleeIds.NovaStrike,
 			// Light  Helmet.
 			"mmx_jump" or "mmx_jump_shoot" or "mmx_wall_kick" or "mmx_wall_kick_shoot"
-			when helmetArmor == ArmorId.Light && stingActiveTime == 0 && invulnTime == 0 => MeleeIds.LightHeadbutt,
+			when headArmor == ArmorId.Light && stingActiveTime == 0 && invulnTime == 0 => MeleeIds.LightHeadbutt,
 			// Light Helmet when it up-dashes.
 			"mmx_up_dash" or "mmx_up_dash_shoot"
-			when helmetArmor == ArmorId.Light && stingActiveTime == 0 && invulnTime == 0 => MeleeIds.LightHeadbuttEX,
+			when headArmor == ArmorId.Light && stingActiveTime == 0 && invulnTime == 0 => MeleeIds.LightHeadbuttEX,
 			// Nothing.
 			_ => MeleeIds.None
 		});
@@ -1112,7 +1148,7 @@ public class MegamanX : Character {
 			int chargeType = 0;
 			if (hasFullHyperMaxArmor) {
 				chargeType = 3;
-			} else if (armArmor == ArmorId.Max) {
+			} else if (armsArmor == ArmorId.Max) {
 				chargeType = 0;
 			}
 			chargeEffect.update(getChargeLevel(), chargeType);
@@ -1121,10 +1157,10 @@ public class MegamanX : Character {
 
 	public override string getAltSound(string sound, string options = "") {
 		int gameSound = options.ToLower() switch {
-			"larmor" => (int)legArmor,
-			"aarmor" => (int)armArmor,
-			"carmor" => (int)chestArmor,
-			"harmor" => (int)helmetArmor,
+			"larmor" => (int)legsArmor,
+			"aarmor" => (int)armsArmor,
+			"carmor" => (int)bodyArmor,
+			"harmor" => (int)headArmor,
 			_ => 0
 		};
 		string apendix = gameSound switch {
@@ -1211,7 +1247,7 @@ public class MegamanX : Character {
 				1 => Player.XBlueC,
 				2 => Player.XYellowC,
 				3 when hasFullHyperMaxArmor => Player.XGreenC,
-				3 when armArmor == ArmorId.Max => Player.XOrangeC,
+				3 when armsArmor == ArmorId.Max => Player.XOrangeC,
 				_ => Player.XPinkC,
 			};
 			chargePalletes.Add(defaultChargePallete);
@@ -1250,10 +1286,10 @@ public class MegamanX : Character {
 	}
 
 	public ushort getArmorByte() {
-		int armorByte = (byte)chestArmor;
-		armorByte += (byte)armArmor << 4;
-		armorByte += (byte)legArmor << 8;
-		armorByte += (byte)helmetArmor << 12;
+		int armorByte = (byte)bodyArmor;
+		armorByte += (byte)armsArmor << 4;
+		armorByte += (byte)legsArmor << 8;
+		armorByte += (byte)headArmor << 12;
 
 		return (ushort)armorByte;
 	}
@@ -1265,10 +1301,10 @@ public class MegamanX : Character {
 			int offB = i * 4;
 			values[i] = ((armorByte >> offF << offF) ^ armorByte) >> offB;
 		}
-		chestArmor = (ArmorId)values[0];
-		armArmor = (ArmorId)values[1];
-		legArmor = (ArmorId)values[2];
-		helmetArmor = (ArmorId)values[3];
+		bodyArmor = (ArmorId)values[0];
+		armsArmor = (ArmorId)values[1];
+		legsArmor = (ArmorId)values[2];
+		headArmor = (ArmorId)values[3];
 	}
 
 	public static int[] getArmorVals(int armorByte) {
@@ -1314,7 +1350,9 @@ public class MegamanX : Character {
 			hyperArmActive,
 			hyperLegActive,
 			hyperHelmetActive,
-			hasUltimateArmor
+			hasUltimateArmor,
+			hasGaeaArmor,
+			hasShadowArmor
 		]));
 
 		return customData;
@@ -1342,12 +1380,14 @@ public class MegamanX : Character {
 		hyperChargeActive = boolData[4];
 
 		// Hyper Armor Flags.
-		bool[] armorBoolData = Helpers.byteToBoolArray(data[5]);
+		bool[] armorBoolData = Helpers.byteToBoolArray(data[7]);
 		hyperChestActive = armorBoolData[0];
 		hyperArmActive = armorBoolData[1];
 		hyperLegActive = armorBoolData[2];
 		hyperHelmetActive = armorBoolData[3];
 		hasUltimateArmor = armorBoolData[4];
+		hasGaeaArmor = armorBoolData[5];
+		hasShadowArmor = armorBoolData[6];
 	}
 
 	public override void aiAttack(Actor? target) {
@@ -1415,7 +1455,7 @@ public class MegamanX : Character {
 					player.release(Control.Shoot);
 					break;
 				case 6 when hyperBuster?.ammo >= hyperBuster?.getAmmoUsage(0) &&
-					isFacingTarget && armArmor == ArmorId.Max:
+					isFacingTarget && armsArmor == ArmorId.Max:
 					player.changeWeaponSlot(hyperbuster);
 					player.press(Control.Shoot);
 					player.release(Control.Shoot);
@@ -1446,25 +1486,18 @@ public class MegamanX : Character {
 				if (upgradeNumber == 0 && player.currency >= MegamanX.bootsArmorCost) {
 					UpgradeArmorMenu.upgradeBootsArmor(player, player.aiArmorPath);
 					player.aiArmorUpgradeIndex++;
-				} else if (upgradeNumber == 1 && player.currency >= MegamanX.chestArmorCost) {
+				} else if (upgradeNumber == 1 && player.currency >= MegamanX.bodyArmorCost) {
 					UpgradeArmorMenu.upgradeBodyArmor(player, player.aiArmorPath);
 					player.aiArmorUpgradeIndex++;
 				} else if (upgradeNumber == 2 && player.currency >= MegamanX.headArmorCost) {
 					UpgradeArmorMenu.upgradeHelmetArmor(player, player.aiArmorPath);
 					player.aiArmorUpgradeIndex++;
-				} else if (upgradeNumber == 3 && player.currency >= MegamanX.armArmorCost) {
+				} else if (upgradeNumber == 3 && player.currency >= MegamanX.armsArmorCost) {
 					UpgradeArmorMenu.upgradeArmArmor(player, player.aiArmorPath);
 					player.aiArmorUpgradeIndex++;
 				}
 			}
 			if (health >= maxHealth) {
-				if (!hasUltimateArmor && player.currency >= Player.ultimateArmorCost) {
-					player.currency -= Player.ultimateArmorCost;
-					hasUltimateArmor = true;
-					if (!weapons.Any(w => w is HyperNovaStrike)) {
-						weapons.Add(new HyperNovaStrike());
-					}
-				}
 				if (fullArmor == ArmorId.Max && !hasFullHyperMaxArmor &&
 					player.currency >= Player.goldenArmorCost
 				) {
@@ -1473,6 +1506,13 @@ public class MegamanX : Character {
 					hyperArmActive = true;
 					hyperLegActive = true;
 					hyperHelmetActive = true;
+				}
+				if (!hasUltimateArmor && player.currency >= Player.ultimateArmorCost) {
+					player.currency -= Player.ultimateArmorCost;
+					hasUltimateArmor = true;
+					if (!weapons.Any(w => w is HyperNovaStrike)) {
+						weapons.Add(new HyperNovaStrike());
+					}
 				}
 			}
 		}

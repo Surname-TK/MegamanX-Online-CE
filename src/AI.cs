@@ -408,13 +408,13 @@ public class AI {
 			if (upgradeNumber == 0 && player.currency >= MegamanX.bootsArmorCost) {
 				UpgradeArmorMenu.upgradeBootsArmor(player, player.aiArmorPath);
 				player.aiArmorUpgradeIndex++;
-			} else if (upgradeNumber == 1 && player.currency >= MegamanX.chestArmorCost) {
+			} else if (upgradeNumber == 1 && player.currency >= MegamanX.bodyArmorCost) {
 				UpgradeArmorMenu.upgradeBodyArmor(player, player.aiArmorPath);
 				player.aiArmorUpgradeIndex++;
 			} else if (upgradeNumber == 2 && player.currency >= MegamanX.headArmorCost) {
 				UpgradeArmorMenu.upgradeHelmetArmor(player, player.aiArmorPath);
 				player.aiArmorUpgradeIndex++;
-			} else if (upgradeNumber == 3 && player.currency >= MegamanX.armArmorCost) {
+			} else if (upgradeNumber == 3 && player.currency >= MegamanX.armsArmorCost) {
 				UpgradeArmorMenu.upgradeArmArmor(player, player.aiArmorPath);
 				player.aiArmorUpgradeIndex++;
 			}

@@ -373,7 +373,7 @@ public class SelectWeaponMenu : IMainMenu {
 
 			Fonts.drawText(FontType.Green, effect, 27, 136);
 			if (weapon is XBuster) {
-				effect = (ArmorId)(Global.level?.mainPlayer.armArmorNum ?? 0) switch {
+				effect = (ArmorId)(Global.level?.mainPlayer.armsArmorNum ?? 0) switch {
 					ArmorId.Light => "Mega Buster Mark 17 with Spiral Shot.",
 					ArmorId.Giga => "Mega Buster Mark 17 with Double Shot.",
 					ArmorId.Max => "Mega Buster Mark 17 with Cross Shot.",

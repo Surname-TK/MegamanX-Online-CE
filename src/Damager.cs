@@ -651,11 +651,11 @@ public class Damager {
 					} else if (character.altSoundId == Character.AltSoundIds.X3) {
 						victim.playSound("hitX3");
 					}
-					if (mmx?.chestArmor == ArmorId.Light || mmx?.chestArmor == ArmorId.None) {
+					if (mmx?.bodyArmor == ArmorId.Light || mmx?.bodyArmor == ArmorId.None) {
 						victim.playSound("hit");
-					} else if (mmx?.chestArmor == ArmorId.Giga) {
+					} else if (mmx?.bodyArmor == ArmorId.Giga) {
 						victim.playSound("hitX2");
-					} else if (mmx?.chestArmor == ArmorId.Max) {
+					} else if (mmx?.bodyArmor == ArmorId.Max) {
 						victim.playSound("hitX3");
 					}
 				}
